@@ -1,0 +1,56 @@
+Inicar MySql desde la terminal
+    mysql -u root -pNfr06950
+
+
+Inicar back con Nest Js
+    npm run start:dev
+
+Desde Thunder Probar las peticiones:
+
+    Post: Crear Usuarios y/o Empleados
+    Ejemplo: {
+                "nombre":"Mateo",
+                "apellido":"Quiroga",
+                "nacimiento":"2001-01-01",
+                "rol":"Administrativo"
+            }
+
+    Get: Busqueda
+    /empleados/id
+
+    Delete: Eliminar por ID
+    
+    Patch: Para actualizar
+
+La ruta auth/register crea usuarios con el hash de constrasena
+La ruta auth/login realiza el inicio de sesion validando el token y si es valido te muestra la informacion publica de ese usuario que aparece en Jwt.
+
+
+DTO (Data Transfer Object):
+
+Define cómo se debe estructurar y validar los datos que se reciben en las solicitudes HTTP. 
+En esencia, es un contrato que describe cómo deben ser los datos entrantes.
+
+Controller:
+
+Gestiona las solicitudes HTTP y define las rutas (endpoints) de la API. 
+Los controladores se encargan de recibir las solicitudes, validarlas usando los DTOs y pasar los datos al servicio correspondiente.
+
+Service:
+Contiene la lógica de negocio y la interacción con la base de datos. 
+Los servicios manejan las operaciones CRUD de manera independiente a la forma en que se reciben los datos.
+
+Module:
+
+Agrupa los controladores y servicios relacionados, organizando la estructura de la aplicación. 
+Cada módulo encapsula un conjunto de funcionalidades y puede importar otros módulos si es necesario.
+
+bcrypt:
+
+Una biblioteca para realizar el hashing de contraseñas. bcrypt se usa para asegurar las contraseñas de los usuarios mediante 
+la creación de un hash seguro, lo que dificulta que las contraseñas se vean comprometidas en caso de una brecha de datos.
+
+JWT (JSON Web Token):
+
+Un estándar para la creación de tokens de acceso que se utilizan para autenticar usuarios. 
+Un token JWT contiene información del usuario y una firma digital, permitiendo verificar su autenticidad.
