@@ -11,7 +11,7 @@ export class NecesidadHoraria {
     id:number
 
     @ManyToOne(()=> Servicio, servicio => servicio.necesidades)
-    @JoinColumn({name:'id'})
+    @JoinColumn({name:'servicio_id'})
     servicio: Servicio;
 
     @Column({type: 'tinyint'})

@@ -11,7 +11,7 @@ export class DisponibilidadHoraria {
     id:number;
 
     @ManyToOne(()=> Empleado, empleado => empleado.disponibilidades)
-    @JoinColumn({name: 'id'})
+    @JoinColumn({name: 'empleado_id'})
     empleado: Empleado;
 
     @Column({type: 'tinyint'})

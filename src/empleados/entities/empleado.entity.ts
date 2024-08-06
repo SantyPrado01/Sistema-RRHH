@@ -46,6 +46,6 @@ export class Empleado {
     disponibilidades: DisponibilidadHoraria[];
 
     @ManyToOne(()=> Ciudad, ciudad => ciudad.empleados)
-    ciudad: Ciudad[];
+    ciudad: Ciudad[]
 
 }

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { RolUsuario } from "src/rol-usuario/entities/rol-usuario.entity"
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from "typeorm"
 
 @Entity({
     name: 'Usuarios'
@@ -18,7 +19,7 @@ export class User {
     @Column()
     password: string
 
-    @Column()
-    rol: string
+    @ManyToOne(() => RolUsuario, rol => rol.usuarios)
+    rol: RolUsuario;
 
 }

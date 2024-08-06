@@ -1,4 +1,3 @@
-import { ColdObservable } from "rxjs/internal/testing/ColdObservable";
 import { Empleado } from "src/empleados/entities/empleado.entity";
 import { Servicio } from "src/servicios/entities/servicio.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";

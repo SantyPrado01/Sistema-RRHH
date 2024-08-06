@@ -36,8 +36,7 @@ export class Servicio {
     @Column()
     elimindado: number
 
-    @OneToMany(()=> NecesidadHoraria, necesidad => necesidad.servicio)
+    @OneToMany(() => NecesidadHoraria, necesidad => necesidad.servicio)
     necesidades: NecesidadHoraria[];
-
 }
 

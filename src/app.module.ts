@@ -12,6 +12,7 @@ import { NecesidadHorariaModule } from './necesidad-horaria/necesidad-horaria.mo
 import { CiudadModule } from './ciudad/ciudad.module';
 import { CategoriaEmpleadoModule } from './categoria-empleado/categoria-empleado.module';
 import { CategoriaServicioModule } from './categoria-servicio/categoria-servicio.module';
+import { RolUsuarioModule } from './rol-usuario/rol-usuario.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { CategoriaServicioModule } from './categoria-servicio/categoria-servicio
     NecesidadHorariaModule,
     CiudadModule,
     CategoriaEmpleadoModule,
-    CategoriaServicioModule],
+    CategoriaServicioModule,
+    RolUsuarioModule],
   controllers: [AppController],
   providers: [AppService],
 })
