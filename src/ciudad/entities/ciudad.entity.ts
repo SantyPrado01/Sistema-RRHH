@@ -15,9 +15,11 @@ export class Ciudad {
     @Column()
     name:string
 
-    @OneToMany(()=> Empleado, empleado => empleado.ciudad)
+    @OneToMany(()=> Empleado, empleados => empleados.ciudad)
     empleados: Empleado[];
 
-    @OneToMany(()=> Servicio, servicio => servicio.ciudad)
+    @OneToMany(()=> Servicio, servicios => servicios.ciudad)
+    servicios: Servicio[];
+
 
 }

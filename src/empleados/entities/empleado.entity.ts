@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from "typeorm";
 import { DisponibilidadHoraria } from "src/disponibilidad-horaria/entities/disponibilidad-horaria.entity";
 import { CategoriaEmpleado } from "src/categoria-empleado/entities/categoria-empleado.entity";
+import { Ciudad } from "src/ciudad/entities/ciudad.entity";
 
 @Entity({
     name: 'Empleados'
@@ -43,5 +44,8 @@ export class Empleado {
 
     @OneToMany(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleado)
     disponibilidades: DisponibilidadHoraria[];
+
+    @ManyToOne(()=> Ciudad, ciudad => ciudad.empleados)
+    ciudad: Ciudad[];
 
 }
