@@ -7,7 +7,7 @@ export declare class AuthService {
     private readonly userService;
     private readonly jwtService;
     constructor(userService: UsersService, jwtService: JwtService);
-    register({ username, password }: RegisterDto): Promise<import("../users/user.entity").User | HttpException>;
+    register({ username, password, rolID }: RegisterDto): Promise<import("../users/user.entity").User | HttpException>;
     login({ username, password }: loginDto): Promise<HttpException | {
         token: string;
         username: string;

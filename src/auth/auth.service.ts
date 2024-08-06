@@ -4,6 +4,7 @@ import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 
 
@@ -15,19 +16,22 @@ export class AuthService {
         private readonly jwtService: JwtService
     ){}
 
-    async register({username, password}: RegisterDto){
-
-        const user = await this.userService.getUsername(username)
-
-        if (user){
-            return new HttpException('El usuario ya existe', HttpStatus.NOT_ACCEPTABLE)
+    async register({ username, password, rolID }: RegisterDto) {
+        const user = await this.userService.getUsername(username);
+    
+        if (user) {
+          throw new HttpException('El usuario ya existe', HttpStatus.NOT_ACCEPTABLE);
+        }
+    
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const createUserDto: CreateUserDto = {
+          username,
+          password: hashedPassword,
+          rolID,
         };
-
-        return await this.userService.createUser({
-            username, 
-            password: await bcrypt.hash(password,10)
-        });
-    };
+    
+        return await this.userService.createUser(createUserDto);
+      }
 
     async login({username, password}: loginDto){
         const user = await this.userService.getUsername(username);

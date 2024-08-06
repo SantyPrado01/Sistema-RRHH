@@ -33,7 +33,7 @@ export class Empleado {
     @Column()
     email: string
 
-    @Column({type: 'date'})
+    @Column({ type: 'date' })
     fechaIngreso: Date
 
     @Column()

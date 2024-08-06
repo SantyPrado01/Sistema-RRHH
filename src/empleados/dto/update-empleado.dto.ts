@@ -3,9 +3,15 @@ import { CreateEmpleadoDto } from './create-empleado.dto';
 
 export class UpdateEmpleadoDto extends PartialType(CreateEmpleadoDto) {
 
-    nombre?:string
-    apellido?:string
-    nacimiento?: Date
-    rol?: string
-    
+    legajo?: number
+    nombre?: string
+    apellido?: string
+    nroDocumento?: number
+    telefono?: number
+    email?: string
+    fechaIngreso?: Date
+    eliminado?: number
+    categoriasID?: number
+    disponibilidadID?: number
+    ciudadID?: number
 }

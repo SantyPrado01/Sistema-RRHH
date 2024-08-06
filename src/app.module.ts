@@ -22,7 +22,7 @@ import { RolUsuarioModule } from './rol-usuario/rol-usuario.module';
       port: 3306,
       username: 'root',
       password:'Nfr06950',
-      database: 'nestdb',
+      database: 'CorsacorNestJS',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], //Podemos leer cualquier archivo entity
       synchronize:true
     }),

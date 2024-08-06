@@ -19,18 +19,19 @@ let AuthService = class AuthService {
         this.userService = userService;
         this.jwtService = jwtService;
     }
-    async register({ username, password }) {
+    async register({ username, password, rolID }) {
         const user = await this.userService.getUsername(username);
         if (user) {
-            return new common_1.HttpException('El usuario ya existe', common_1.HttpStatus.NOT_ACCEPTABLE);
+            throw new common_1.HttpException('El usuario ya existe', common_1.HttpStatus.NOT_ACCEPTABLE);
         }
-        ;
-        return await this.userService.createUser({
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const createUserDto = {
             username,
-            password: await bcrypt.hash(password, 10)
-        });
+            password: hashedPassword,
+            rolID,
+        };
+        return await this.userService.createUser(createUserDto);
     }
-    ;
     async login({ username, password }) {
         const user = await this.userService.getUsername(username);
         if (!user) {

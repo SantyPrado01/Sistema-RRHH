@@ -1,1 +1,5 @@
-export class CreateCategoriaEmpleadoDto {}
+export class CreateCategoriaEmpleadoDto {
+
+    name:string
+
+}

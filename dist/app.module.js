@@ -14,6 +14,13 @@ const users_module_1 = require("./users/users.module");
 const typeorm_1 = require("@nestjs/typeorm");
 const auth_module_1 = require("./auth/auth.module");
 const empleados_module_1 = require("./empleados/empleados.module");
+const servicios_module_1 = require("./servicios/servicios.module");
+const disponibilidad_horaria_module_1 = require("./disponibilidad-horaria/disponibilidad-horaria.module");
+const necesidad_horaria_module_1 = require("./necesidad-horaria/necesidad-horaria.module");
+const ciudad_module_1 = require("./ciudad/ciudad.module");
+const categoria_empleado_module_1 = require("./categoria-empleado/categoria-empleado.module");
+const categoria_servicio_module_1 = require("./categoria-servicio/categoria-servicio.module");
+const rol_usuario_module_1 = require("./rol-usuario/rol-usuario.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,13 +33,20 @@ exports.AppModule = AppModule = __decorate([
                 port: 3306,
                 username: 'root',
                 password: 'Nfr06950',
-                database: 'nestdb',
+                database: 'CorsacorNestJS',
                 entities: [__dirname + '/**/*.entity{.ts,.js}'],
                 synchronize: true
             }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
-            empleados_module_1.EmpleadosModule
+            empleados_module_1.EmpleadosModule,
+            servicios_module_1.ServiciosModule,
+            disponibilidad_horaria_module_1.DisponibilidadHorariaModule,
+            necesidad_horaria_module_1.NecesidadHorariaModule,
+            ciudad_module_1.CiudadModule,
+            categoria_empleado_module_1.CategoriaEmpleadoModule,
+            categoria_servicio_module_1.CategoriaServicioModule,
+            rol_usuario_module_1.RolUsuarioModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

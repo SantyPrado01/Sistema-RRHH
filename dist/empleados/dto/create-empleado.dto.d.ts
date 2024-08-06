@@ -1,6 +1,13 @@
 export declare class CreateEmpleadoDto {
+    legajo: number;
     nombre: string;
     apellido: string;
-    nacimiento: Date;
-    rol: string;
+    nroDocumento: number;
+    telefono: number;
+    email: string;
+    fechaIngreso?: Date;
+    eliminado: number;
+    categoriasID: number;
+    disponibilidadID: number;
+    ciudadID: number;
 }
