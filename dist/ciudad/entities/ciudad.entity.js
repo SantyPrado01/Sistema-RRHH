@@ -19,11 +19,11 @@ exports.Ciudad = Ciudad;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], Ciudad.prototype, "id", void 0);
+], Ciudad.prototype, "idCiudad", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Ciudad.prototype, "name", void 0);
+], Ciudad.prototype, "nombreCiudad", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => empleado_entity_1.Empleado, empleados => empleados.ciudad),
     __metadata("design:type", Array)

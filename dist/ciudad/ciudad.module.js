@@ -10,11 +10,14 @@ exports.CiudadModule = void 0;
 const common_1 = require("@nestjs/common");
 const ciudad_service_1 = require("./ciudad.service");
 const ciudad_controller_1 = require("./ciudad.controller");
+const typeorm_1 = require("@nestjs/typeorm");
+const ciudad_entity_1 = require("./entities/ciudad.entity");
 let CiudadModule = class CiudadModule {
 };
 exports.CiudadModule = CiudadModule;
 exports.CiudadModule = CiudadModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([ciudad_entity_1.Ciudad])],
         controllers: [ciudad_controller_1.CiudadController],
         providers: [ciudad_service_1.CiudadService],
     })

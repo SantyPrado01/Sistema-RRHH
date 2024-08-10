@@ -22,19 +22,19 @@ let CiudadController = class CiudadController {
         this.ciudadService = ciudadService;
     }
     create(createCiudadDto) {
-        return this.ciudadService.create(createCiudadDto);
+        return this.ciudadService.createCiudad(createCiudadDto);
     }
     findAll() {
-        return this.ciudadService.findAll();
+        return this.ciudadService.getCiudades();
     }
     findOne(id) {
-        return this.ciudadService.findOne(+id);
+        return this.ciudadService.getCiudad(id);
     }
     update(id, updateCiudadDto) {
-        return this.ciudadService.update(+id, updateCiudadDto);
+        return this.ciudadService.updateCiudad(+id, updateCiudadDto);
     }
     remove(id) {
-        return this.ciudadService.remove(+id);
+        return this.ciudadService.deleteCiudad(id);
     }
 };
 exports.CiudadController = CiudadController;
@@ -63,14 +63,14 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_ciudad_dto_1.UpdateCiudadDto]),
+    __metadata("design:paramtypes", [Number, update_ciudad_dto_1.UpdateCiudadDto]),
     __metadata("design:returntype", void 0)
 ], CiudadController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], CiudadController.prototype, "remove", null);
 exports.CiudadController = CiudadController = __decorate([

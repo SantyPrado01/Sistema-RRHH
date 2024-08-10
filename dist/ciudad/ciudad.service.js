@@ -5,28 +5,88 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CiudadService = void 0;
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("@nestjs/typeorm");
+const ciudad_entity_1 = require("./entities/ciudad.entity");
+const typeorm_2 = require("typeorm");
 let CiudadService = class CiudadService {
-    create(createCiudadDto) {
-        return 'This action adds a new ciudad';
+    constructor(ciudadRepository) {
+        this.ciudadRepository = ciudadRepository;
     }
-    findAll() {
-        return `This action returns all ciudad`;
+    async createCiudad(ciudad) {
+        const ciudadFound = await this.ciudadRepository.findOne({
+            where: {
+                nombreCiudad: ciudad.nombre
+            }
+        });
+        if (ciudadFound) {
+            return new common_1.HttpException('La Ciudad ya existe. Prueba nuevamente.', common_1.HttpStatus.CONFLICT);
+        }
+        const newCiudad = this.ciudadRepository.create({ nombreCiudad: ciudad.nombre });
+        await this.ciudadRepository.save(newCiudad);
+        return {
+            message: 'Ciudad creada exitosamente',
+            ciudad: newCiudad,
+        };
     }
-    findOne(id) {
-        return `This action returns a #${id} ciudad`;
+    getCiudades() {
+        return this.ciudadRepository.find();
     }
-    update(id, updateCiudadDto) {
-        return `This action updates a #${id} ciudad`;
+    async getCiudad(nombreCiudad) {
+        const ciudadFound = await this.ciudadRepository.findOne({
+            where: {
+                nombreCiudad
+            }
+        });
+        if (!ciudadFound) {
+            return null;
+        }
+        return ciudadFound;
     }
-    remove(id) {
-        return `This action removes a #${id} ciudad`;
+    async getCiudadId(idCiudad) {
+        const ciudadFound = await this.ciudadRepository.findOne({
+            where: {
+                idCiudad
+            }
+        });
+        if (!ciudadFound) {
+            return new common_1.HttpException("Ciudad no encontrada.", common_1.HttpStatus.NOT_FOUND);
+        }
+    }
+    async deleteCiudad(idCiudad) {
+        const ciudadFound = await this.ciudadRepository.findOne({
+            where: { idCiudad }
+        });
+        if (!ciudadFound) {
+            return new common_1.HttpException("Ciudad no encontrada.", common_1.HttpStatus.NOT_FOUND);
+        }
+        return this.ciudadRepository.delete({ idCiudad }), new common_1.HttpException("Ciudad Eliminado.", common_1.HttpStatus.ACCEPTED);
+    }
+    async updateCiudad(idCiudad, ciudad) {
+        const ciudadFound = await this.ciudadRepository.findOne({
+            where: {
+                idCiudad
+            }
+        });
+        if (!ciudadFound) {
+            return new common_1.HttpException("Ciudad no encontrada.", common_1.HttpStatus.NOT_FOUND);
+        }
+        const updateCiudad = Object.assign(ciudadFound, ciudad);
+        return this.ciudadRepository.save(updateCiudad);
     }
 };
 exports.CiudadService = CiudadService;
 exports.CiudadService = CiudadService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(ciudad_entity_1.Ciudad)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], CiudadService);
 //# sourceMappingURL=ciudad.service.js.map

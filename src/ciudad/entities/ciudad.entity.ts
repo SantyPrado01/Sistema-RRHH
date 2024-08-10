@@ -9,10 +9,10 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 export class Ciudad {
 
     @PrimaryGeneratedColumn({type:'int', name:'id'})
-    id:number
+    idCiudad:number
 
     @Column()
-    name:string
+    nombreCiudad:string
 
     @OneToMany(()=> Empleado, empleados => empleados.ciudad)
     empleados: Empleado[];

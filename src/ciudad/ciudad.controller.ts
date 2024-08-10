@@ -9,26 +9,26 @@ export class CiudadController {
 
   @Post()
   create(@Body() createCiudadDto: CreateCiudadDto) {
-    return this.ciudadService.create(createCiudadDto);
+    return this.ciudadService.createCiudad(createCiudadDto);
   }
 
   @Get()
   findAll() {
-    return this.ciudadService.findAll();
+    return this.ciudadService.getCiudades();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.ciudadService.findOne(+id);
+    return this.ciudadService.getCiudad(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCiudadDto: UpdateCiudadDto) {
-    return this.ciudadService.update(+id, updateCiudadDto);
+  update(@Param('id') id: number, @Body() updateCiudadDto: UpdateCiudadDto) {
+    return this.ciudadService.updateCiudad(+id, updateCiudadDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ciudadService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.ciudadService.deleteCiudad(id);
   }
 }
