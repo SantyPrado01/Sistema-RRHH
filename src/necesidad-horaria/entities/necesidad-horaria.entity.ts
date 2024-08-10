@@ -8,7 +8,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 't
 export class NecesidadHoraria {
 
     @PrimaryGeneratedColumn({type:'int', name:'id'})
-    id:number
+    necesidadHorariaId:number
 
     @ManyToOne(()=> Servicio, servicio => servicio.necesidades)
     @JoinColumn({name:'servicio_id'})

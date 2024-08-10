@@ -10,10 +10,10 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "ty
 export class Servicio {
 
     @PrimaryGeneratedColumn({type:'int', name:'id'})
-    id:number
+    servicioId:number
 
     @Column()
-    nombre:string
+    servicioNombre:string
 
     @Column()
     CUIT: number

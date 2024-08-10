@@ -8,7 +8,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 export class CategoriaServicio {
 
     @PrimaryGeneratedColumn({type:'int', name:'id'})
-    id:number
+    categoriaServicioId:number
 
     @Column()
     name:string

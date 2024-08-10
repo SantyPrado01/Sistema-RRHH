@@ -13,13 +13,12 @@ export class Empleado {
         type: 'int',
         name:'id'
     })
-    id:number
        
     @Column()
     legajo:number
 
     @Column()
-    nombre:string
+    empleadoNombre:string
 
     @Column()
     apellido:string
