@@ -1,5 +1,5 @@
 export class CreateCategoriaEmpleadoDto {
 
-    name:string
+    nombre:string
 
 }

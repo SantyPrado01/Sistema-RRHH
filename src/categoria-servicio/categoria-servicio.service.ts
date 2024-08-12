@@ -1,26 +1,84 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCategoriaServicioDto } from './dto/create-categoria-servicio.dto';
 import { UpdateCategoriaServicioDto } from './dto/update-categoria-servicio.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CategoriaServicio } from './entities/categoria-servicio.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CategoriaServicioService {
-  create(createCategoriaServicioDto: CreateCategoriaServicioDto) {
-    return 'This action adds a new categoriaServicio';
+
+  constructor(@InjectRepository(CategoriaServicio) private categoriaServicioRepository: Repository<CategoriaServicio>){}
+
+  async createCategoriaServicio(categoriaServicio: CreateCategoriaServicioDto){
+    const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
+      where:{
+        nombreCategoriaServico: categoriaServicio.nombre
+      }
+    });
+    if(categoriaServicioFound){
+      return new HttpException('La Categoria ya existe. Prueba nuevamanete.', HttpStatus.CONFLICT)
+    }
+
+    const newCategoriaServicio = this.categoriaServicioRepository.create({nombreCategoriaServico: categoriaServicio.nombre})
+    await this.categoriaServicioRepository.save(newCategoriaServicio);
+    return{
+      message: 'Categoria creada exitosamente',
+      categoriaServicio: newCategoriaServicio,
+    };
   }
 
-  findAll() {
-    return `This action returns all categoriaServicio`;
+  getCategoriasServicios(){
+    return this.categoriaServicioRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} categoriaServicio`;
+
+  async getCategoriaServicio (nombreCategoriaServico: string) {
+    const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
+      where:{
+        nombreCategoriaServico
+      }
+    })
+    if (!nombreCategoriaServico){
+      return null;
+    }
+    return categoriaServicioFound;
   }
 
-  update(id: number, updateCategoriaServicioDto: UpdateCategoriaServicioDto) {
-    return `This action updates a #${id} categoriaServicio`;
+  async getCategoriaServicioId(categoriaServicioId:number){
+    const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
+      where:{
+        categoriaServicioId
+      }
+    })
+    if(!categoriaServicioFound){
+      return new HttpException('Categoria no encontrada.', HttpStatus.NOT_FOUND)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} categoriaServicio`;
+  async deleteCategoriaServicio(categoriaServicioId:number){
+    const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
+      where:{
+        categoriaServicioId
+      }
+    })
+    if (!categoriaServicioFound){
+      return new HttpException('Categoria no encontrada.', HttpStatus.NOT_FOUND)
+    }
+    return this.categoriaServicioRepository.delete({categoriaServicioId}), new HttpException('Categoria eliminada.', HttpStatus.ACCEPTED)
   }
+
+  async updateCategoriaServicio(categoriaServicioId:number, categoriaServicio: UpdateCategoriaServicioDto){
+    const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
+      where:{
+        categoriaServicioId
+      }
+    });
+    if(!categoriaServicioFound){
+      return new HttpException('Categoria no encontrada', HttpStatus.NOT_FOUND)
+    }
+    const updateCategoriaServicio = Object.assign(categoriaServicioFound, categoriaServicio);
+    return this.categoriaServicioRepository.save(updateCategoriaServicio);
+  }
+
 }
