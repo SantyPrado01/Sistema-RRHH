@@ -21,10 +21,10 @@ export class EmpleadosService {
     return this.empleadoRepository.find()
   }
 
-  async getEmpleado(id: number){
+  async getEmpleado(empleadoId: number){
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{
-        id
+        empleadoId
       }
     })
     if (!empleadoFound){
@@ -33,23 +33,23 @@ export class EmpleadosService {
     return empleadoFound
   }
 
-  async deleteEmpleado(id:number){
+  async deleteEmpleado(empleadoId:number){
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{
-        id
+        empleadoId
       }
     })
     if (!empleadoFound){
       return new HttpException('Empleado no encontrado', HttpStatus.NOT_FOUND)
     }
-    return this.empleadoRepository.delete({id}), new HttpException('Empleado eliminado con exito', HttpStatus.ACCEPTED)
+    return this.empleadoRepository.delete({empleadoId}), new HttpException('Empleado eliminado con exito', HttpStatus.ACCEPTED)
   }
 
-  async updateEmpleado(id:number, empleado: UpdateEmpleadoDto){
+  async updateEmpleado(empleadoId:number, empleado: UpdateEmpleadoDto){
     
     const empleadoFound = this.empleadoRepository.findOne({
       where:{
-        id
+        empleadoId
       }
     });
     if(!empleadoFound){

@@ -13,6 +13,7 @@ export class Empleado {
         type: 'int',
         name:'id'
     })
+    empleadoId: number
        
     @Column()
     legajo:number

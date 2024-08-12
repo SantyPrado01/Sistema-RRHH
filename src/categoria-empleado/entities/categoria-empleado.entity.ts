@@ -8,10 +8,10 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 export class CategoriaEmpleado {
 
     @PrimaryGeneratedColumn({type:'int', name:'id'})
-    id:number
+    categoriaeEmpleadoId:number
 
     @Column()
-    name: string
+    empleadoNombre: string
 
     @OneToMany(()=> Empleado, empleado => empleado.categorias)
     empleados: Empleado

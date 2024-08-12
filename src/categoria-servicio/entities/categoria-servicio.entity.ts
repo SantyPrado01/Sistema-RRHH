@@ -11,7 +11,7 @@ export class CategoriaServicio {
     categoriaServicioId:number
 
     @Column()
-    name:string
+    nombreCategoriaServico:string
 
     @OneToMany(()=> Servicio, servicios => servicios.categoria)
     servicios: Servicio[];
