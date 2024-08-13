@@ -71,7 +71,9 @@ export class UsersService {
          if (!userFound){
             return new HttpException('Usuario no encontrado.',HttpStatus.NOT_FOUND)
          }
-         return this.userRepository.delete({id}), new HttpException('Usuario eliminado.', HttpStatus.ACCEPTED)
+         userFound.eliminado = true;
+         await this.userRepository.save(userFound); 
+         throw new HttpException('Usuario eliminado.', HttpStatus.ACCEPTED)
 
     }
 

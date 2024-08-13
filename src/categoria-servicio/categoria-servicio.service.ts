@@ -29,7 +29,9 @@ export class CategoriaServicioService {
   }
 
   getCategoriasServicios(){
-    return this.categoriaServicioRepository.find()
+    return this.categoriaServicioRepository.find({
+      where:{eliminado:false}
+    })
   }
 
 
@@ -54,6 +56,7 @@ export class CategoriaServicioService {
     if(!categoriaServicioFound){
       return new HttpException('Categoria no encontrada.', HttpStatus.NOT_FOUND)
     }
+    return categoriaServicioFound;
   }
 
   async deleteCategoriaServicio(categoriaServicioId:number){
@@ -65,7 +68,9 @@ export class CategoriaServicioService {
     if (!categoriaServicioFound){
       return new HttpException('Categoria no encontrada.', HttpStatus.NOT_FOUND)
     }
-    return this.categoriaServicioRepository.delete({categoriaServicioId}), new HttpException('Categoria eliminada.', HttpStatus.ACCEPTED)
+    categoriaServicioFound.eliminado = true;
+    await this.categoriaServicioRepository.save(categoriaServicioFound);
+    throw new HttpException('Categoria eliminada.', HttpStatus.ACCEPTED);
   }
 
   async updateCategoriaServicio(categoriaServicioId:number, categoriaServicio: UpdateCategoriaServicioDto){

@@ -14,6 +14,9 @@ export class Ciudad {
     @Column()
     nombreCiudad:string
 
+    @Column({default: false})
+    eliminado: boolean
+
     @OneToMany(()=> Empleado, empleados => empleados.ciudad)
     empleados: Empleado[];
 

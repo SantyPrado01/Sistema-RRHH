@@ -13,6 +13,9 @@ export class CategoriaEmpleado {
     @Column()
     categoriaEmpleadoNombre: string
 
+    @Column({default: false})
+    eliminado: boolean;
+
     @OneToMany(()=> Empleado, empleado => empleado.categorias)
     empleados: Empleado
 

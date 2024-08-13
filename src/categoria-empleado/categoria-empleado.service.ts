@@ -28,7 +28,9 @@ export class CategoriaEmpleadoService {
   }
 
   getCategoriasEmpleados(){
-    return this.categoriaEmpleadoRepository.find()
+    return this.categoriaEmpleadoRepository.find({
+      where:{eliminado:false}
+    })
   }
 
   async getCategoriaEmpleado(categoriaEmpleadoNombre:string){
@@ -52,6 +54,7 @@ export class CategoriaEmpleadoService {
     if (!categoriaEmpleadoFound){
       return new HttpException('Categoria no encontrada.', HttpStatus.NOT_FOUND)
     }
+    return categoriaEmpleadoFound;
   }
 
   async deleteCategoriaServicio(categoriaEmpleadoId:number){
@@ -63,7 +66,10 @@ export class CategoriaEmpleadoService {
     if(!categoriaEmpleadoFound){
       return new HttpException('Categoria no encontrada', HttpStatus.NOT_FOUND)
     }
-    return this.categoriaEmpleadoRepository.delete({categoriaEmpleadoId}), new HttpException('Categoria Eliminada.', HttpStatus.ACCEPTED)
+    categoriaEmpleadoFound.eliminado = true;
+    await this.categoriaEmpleadoRepository.save(categoriaEmpleadoFound)
+    throw new HttpException('Categoria Eliminada.', HttpStatus.ACCEPTED)
+    
   }
 
   async updateCategoriaEmpleado(categoriaEmpleadoId:number, categoriaEmpleado: UpdateCategoriaEmpleadoDto){

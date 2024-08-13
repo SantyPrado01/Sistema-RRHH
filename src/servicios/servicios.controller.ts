@@ -9,26 +9,26 @@ export class ServiciosController {
 
   @Post()
   create(@Body() createServicioDto: CreateServicioDto) {
-    return this.serviciosService.create(createServicioDto);
+    return this.serviciosService.createServicio(createServicioDto);
   }
 
   @Get()
   findAll() {
-    return this.serviciosService.findAll();
+    return this.serviciosService.getServicios();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.serviciosService.findOne(+id);
+    return this.serviciosService.getServicioId(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateServicioDto: UpdateServicioDto) {
-    return this.serviciosService.update(+id, updateServicioDto);
+    return this.serviciosService.updateServicio(+id, updateServicioDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.serviciosService.remove(+id);
+    return this.serviciosService.deleteServicio(+id);
   }
 }

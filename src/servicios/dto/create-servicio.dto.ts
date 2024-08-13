@@ -7,7 +7,7 @@ export class CreateServicioDto {
     telefono: number
     categoriaID: number
     descripcion: string
-    eliminado: number
+    eliminado: boolean
     necesidadHorariaID:number
 
 }

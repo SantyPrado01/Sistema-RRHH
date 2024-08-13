@@ -36,8 +36,8 @@ export class Empleado {
     @Column({ type: 'date' })
     fechaIngreso: Date
 
-    @Column()
-    eliminado: number
+    @Column({default: false})
+    eliminado: boolean
 
     @OneToMany(()=> CategoriaEmpleado, categoria => categoria.empleados)
     categorias: CategoriaEmpleado

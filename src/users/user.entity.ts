@@ -19,6 +19,9 @@ export class User {
     @Column()
     password: string
 
+    @Column({default:false})
+    eliminado: boolean
+
     @ManyToOne(() => RolUsuario, rol => rol.usuarios)
     rol: RolUsuario;
 

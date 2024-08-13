@@ -53,6 +53,7 @@ export class CiudadService {
     if (!ciudadFound){
       return new HttpException("Ciudad no encontrada.", HttpStatus.NOT_FOUND)
     }
+    return ciudadFound
   }
 
   async deleteCiudad(idCiudad: number){
@@ -63,7 +64,10 @@ export class CiudadService {
     if (!ciudadFound){
       return new HttpException("Ciudad no encontrada.", HttpStatus.NOT_FOUND)
     }
-    return this.ciudadRepository.delete({idCiudad}), new HttpException("Ciudad Eliminado.", HttpStatus.ACCEPTED)
+    ciudadFound.eliminado = true;
+    await this.ciudadRepository.save(ciudadFound);
+    throw new HttpException('Ciudad eliminada.', HttpStatus.ACCEPTED);
+
 
   }
 

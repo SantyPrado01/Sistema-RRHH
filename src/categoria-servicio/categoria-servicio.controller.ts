@@ -9,26 +9,26 @@ export class CategoriaServicioController {
 
   @Post()
   create(@Body() createCategoriaServicioDto: CreateCategoriaServicioDto) {
-    return this.categoriaServicioService.create(createCategoriaServicioDto);
+    return this.categoriaServicioService.createCategoriaServicio(createCategoriaServicioDto);
   }
 
   @Get()
   findAll() {
-    return this.categoriaServicioService.findAll();
+    return this.categoriaServicioService.getCategoriasServicios();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.categoriaServicioService.findOne(+id);
+    return this.categoriaServicioService.getCategoriaServicioId(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoriaServicioDto: UpdateCategoriaServicioDto) {
-    return this.categoriaServicioService.update(+id, updateCategoriaServicioDto);
+    return this.categoriaServicioService.updateCategoriaServicio(+id, updateCategoriaServicioDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.categoriaServicioService.remove(+id);
+    return this.categoriaServicioService.deleteCategoriaServicio(+id);
   }
 }

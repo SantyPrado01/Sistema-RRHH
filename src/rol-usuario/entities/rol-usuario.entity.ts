@@ -14,7 +14,10 @@ export class RolUsuario {
     id:number
 
     @Column()
-    nombre: string
+    nombreRolUsuario: string
+
+    @Column({default: false})
+    eliminado: boolean
 
     @OneToMany(() => User, user => user.rol)
     usuarios: User[];

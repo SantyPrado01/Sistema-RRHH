@@ -13,6 +13,9 @@ export class CategoriaServicio {
     @Column()
     nombreCategoriaServico:string
 
+    @Column({default: false})
+    eliminado: boolean
+
     @OneToMany(()=> Servicio, servicios => servicios.categoria)
     servicios: Servicio[];
 

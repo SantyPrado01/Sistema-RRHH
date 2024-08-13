@@ -9,26 +9,26 @@ export class RolUsuarioController {
 
   @Post()
   create(@Body() createRolUsuarioDto: CreateRolUsuarioDto) {
-    return this.rolUsuarioService.create(createRolUsuarioDto);
+    return this.rolUsuarioService.createRolUsuario(createRolUsuarioDto);
   }
 
   @Get()
   findAll() {
-    return this.rolUsuarioService.findAll();
+    return this.rolUsuarioService.getRolUsuarios();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.rolUsuarioService.findOne(+id);
+    return this.rolUsuarioService.getRolUsuarioId(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRolUsuarioDto: UpdateRolUsuarioDto) {
-    return this.rolUsuarioService.update(+id, updateRolUsuarioDto);
+    return this.rolUsuarioService.updateRolUsuario(+id, updateRolUsuarioDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.rolUsuarioService.remove(+id);
+    return this.rolUsuarioService.deleteRolUsuario(+id);
   }
 }
