@@ -1,5 +1,6 @@
 import { CategoriaServicio } from "src/categoria-servicio/entities/categoria-servicio.entity";
 import { Ciudad } from "src/ciudad/entities/ciudad.entity";
+import { Factura } from "src/facturas/entities/factura.entity";
 import { NecesidadHoraria } from "src/necesidad-horaria/entities/necesidad-horaria.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -38,5 +39,8 @@ export class Servicio {
 
     @OneToMany(() => NecesidadHoraria, necesidad => necesidad.servicio)
     necesidades: NecesidadHoraria[];
+
+    @OneToMany(() => Factura, factura => factura.servicio)
+    facturas: Factura[];
 }
 

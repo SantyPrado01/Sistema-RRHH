@@ -13,6 +13,8 @@ import { CiudadModule } from './ciudad/ciudad.module';
 import { CategoriaEmpleadoModule } from './categoria-empleado/categoria-empleado.module';
 import { CategoriaServicioModule } from './categoria-servicio/categoria-servicio.module';
 import { RolUsuarioModule } from './rol-usuario/rol-usuario.module';
+import { FacturasModule } from './facturas/facturas.module';
+import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
 
 @Module({
   imports: [
@@ -35,7 +37,9 @@ import { RolUsuarioModule } from './rol-usuario/rol-usuario.module';
     CiudadModule,
     CategoriaEmpleadoModule,
     CategoriaServicioModule,
-    RolUsuarioModule],
+    RolUsuarioModule,
+    FacturasModule,
+    ItemsFacturasModule],
   controllers: [AppController],
   providers: [AppService],
 })
