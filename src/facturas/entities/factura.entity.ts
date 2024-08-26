@@ -18,7 +18,7 @@ export class Factura {
     numero: number
 
     @Column('date')
-    fecha: string
+    fecha: Date
 
     @Column()
     total: number
