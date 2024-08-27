@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "CorsacorAngular": {
+    "front-angular": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/corsacor-angular",
+            "outputPath": "dist/front-angular",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "CorsacorAngular:build:production"
+              "buildTarget": "front-angular:build:production"
             },
             "development": {
-              "buildTarget": "CorsacorAngular:build:development"
+              "buildTarget": "front-angular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -97,5 +97,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "d4a66253-9bb7-4d14-97c0-ebf07e833ad8"
   }
 }

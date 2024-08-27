@@ -1,0 +1,15 @@
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+input {
+    padding-right: 0px; /* Espacio para el ícono del ojo */
+}
+
+i {
+    position: relative;
+    right: 0px;
+    cursor: pointer;
+}
