@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'CorsacorAngular' title`, () => {
+  it(`should have the 'front-angular' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('CorsacorAngular');
+    expect(app.title).toEqual('front-angular');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, CorsacorAngular');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, front-angular');
   });
 });
