@@ -1,6 +1,6 @@
-import { Servicio } from 'src/servicios/entities/servicio.entity';
+import { Servicio } from '../../servicios/entities/servicio.entity';
 export declare class NecesidadHoraria {
-    id: number;
+    necesidadHorariaId: number;
     servicio: Servicio;
     diaSemana: number;
     horaInicio: string;

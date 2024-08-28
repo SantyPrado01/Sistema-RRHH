@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegisterDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const typeorm_1 = require("typeorm");
 class RegisterDto {
 }
 exports.RegisterDto = RegisterDto;
@@ -27,4 +28,12 @@ __decorate([
     (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], RegisterDto.prototype, "rolID", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], RegisterDto.prototype, "eliminado", void 0);
 //# sourceMappingURL=register.dto.js.map

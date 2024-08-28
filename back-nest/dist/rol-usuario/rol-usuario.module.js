@@ -10,11 +10,14 @@ exports.RolUsuarioModule = void 0;
 const common_1 = require("@nestjs/common");
 const rol_usuario_service_1 = require("./rol-usuario.service");
 const rol_usuario_controller_1 = require("./rol-usuario.controller");
+const rol_usuario_entity_1 = require("./entities/rol-usuario.entity");
+const typeorm_1 = require("@nestjs/typeorm");
 let RolUsuarioModule = class RolUsuarioModule {
 };
 exports.RolUsuarioModule = RolUsuarioModule;
 exports.RolUsuarioModule = RolUsuarioModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([rol_usuario_entity_1.RolUsuario])],
         controllers: [rol_usuario_controller_1.RolUsuarioController],
         providers: [rol_usuario_service_1.RolUsuarioService],
     })

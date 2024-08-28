@@ -22,19 +22,19 @@ let ServiciosController = class ServiciosController {
         this.serviciosService = serviciosService;
     }
     create(createServicioDto) {
-        return this.serviciosService.create(createServicioDto);
+        return this.serviciosService.createServicio(createServicioDto);
     }
     findAll() {
-        return this.serviciosService.findAll();
+        return this.serviciosService.getServicios();
     }
     findOne(id) {
-        return this.serviciosService.findOne(+id);
+        return this.serviciosService.getServicioId(+id);
     }
     update(id, updateServicioDto) {
-        return this.serviciosService.update(+id, updateServicioDto);
+        return this.serviciosService.updateServicio(+id, updateServicioDto);
     }
     remove(id) {
-        return this.serviciosService.remove(+id);
+        return this.serviciosService.deleteServicio(+id);
     }
 };
 exports.ServiciosController = ServiciosController;

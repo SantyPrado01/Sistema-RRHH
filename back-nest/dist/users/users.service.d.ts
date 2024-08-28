@@ -11,5 +11,5 @@ export declare class UsersService {
     getUsername(username: string): Promise<User>;
     getUserId(id: number): Promise<User | HttpException>;
     deleteUser(id: number): Promise<HttpException>;
-    updateUser(id: number, user: UpdateUserDto): Promise<User | HttpException>;
+    updateUser(id: number, user: UpdateUserDto): Promise<HttpException | (User & UpdateUserDto)>;
 }

@@ -22,19 +22,19 @@ let RolUsuarioController = class RolUsuarioController {
         this.rolUsuarioService = rolUsuarioService;
     }
     create(createRolUsuarioDto) {
-        return this.rolUsuarioService.create(createRolUsuarioDto);
+        return this.rolUsuarioService.createRolUsuario(createRolUsuarioDto);
     }
     findAll() {
-        return this.rolUsuarioService.findAll();
+        return this.rolUsuarioService.getRolUsuarios();
     }
     findOne(id) {
-        return this.rolUsuarioService.findOne(+id);
+        return this.rolUsuarioService.getRolUsuarioId(+id);
     }
     update(id, updateRolUsuarioDto) {
-        return this.rolUsuarioService.update(+id, updateRolUsuarioDto);
+        return this.rolUsuarioService.updateRolUsuario(+id, updateRolUsuarioDto);
     }
     remove(id) {
-        return this.rolUsuarioService.remove(+id);
+        return this.rolUsuarioService.deleteRolUsuario(+id);
     }
 };
 exports.RolUsuarioController = RolUsuarioController;

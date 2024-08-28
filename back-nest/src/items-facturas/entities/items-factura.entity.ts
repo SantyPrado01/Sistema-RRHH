@@ -1,4 +1,4 @@
-import { Factura } from "src/facturas/entities/factura.entity";
+import { Factura } from "../../facturas/entities/factura.entity";
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 
 

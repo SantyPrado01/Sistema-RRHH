@@ -18,7 +18,7 @@ exports.NecesidadHoraria = NecesidadHoraria;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], NecesidadHoraria.prototype, "id", void 0);
+], NecesidadHoraria.prototype, "necesidadHorariaId", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => servicio_entity_1.Servicio, servicio => servicio.necesidades),
     (0, typeorm_1.JoinColumn)({ name: 'servicio_id' }),

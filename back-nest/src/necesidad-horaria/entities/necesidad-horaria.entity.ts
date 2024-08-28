@@ -1,4 +1,4 @@
-import { Servicio } from 'src/servicios/entities/servicio.entity';
+import { Servicio } from '../../servicios/entities/servicio.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity({

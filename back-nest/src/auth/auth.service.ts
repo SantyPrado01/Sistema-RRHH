@@ -1,10 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 
 
@@ -16,7 +16,7 @@ export class AuthService {
         private readonly jwtService: JwtService
     ){}
 
-    async register({ username, password, rolID }: RegisterDto) {
+    async register({ username, password, rolID, eliminado }: RegisterDto) {
         const user = await this.userService.getUsername(username);
     
         if (user) {
@@ -28,6 +28,8 @@ export class AuthService {
           username,
           password: hashedPassword,
           rolID,
+          eliminado
+    
         };
     
         return await this.userService.createUser(createUserDto);

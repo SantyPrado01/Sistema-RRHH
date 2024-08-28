@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Servicio = void 0;
 const categoria_servicio_entity_1 = require("../../categoria-servicio/entities/categoria-servicio.entity");
 const ciudad_entity_1 = require("../../ciudad/entities/ciudad.entity");
+const factura_entity_1 = require("../../facturas/entities/factura.entity");
 const necesidad_horaria_entity_1 = require("../../necesidad-horaria/entities/necesidad-horaria.entity");
 const typeorm_1 = require("typeorm");
 let Servicio = class Servicio {
@@ -20,11 +21,11 @@ exports.Servicio = Servicio;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], Servicio.prototype, "id", void 0);
+], Servicio.prototype, "servicioId", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Servicio.prototype, "nombre", void 0);
+], Servicio.prototype, "servicioNombre", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
@@ -50,13 +51,17 @@ __decorate([
     __metadata("design:type", String)
 ], Servicio.prototype, "descripcion", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
 ], Servicio.prototype, "elimindado", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => necesidad_horaria_entity_1.NecesidadHoraria, necesidad => necesidad.servicio),
     __metadata("design:type", Array)
 ], Servicio.prototype, "necesidades", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => factura_entity_1.Factura, factura => factura.servicio),
+    __metadata("design:type", Array)
+], Servicio.prototype, "facturas", void 0);
 exports.Servicio = Servicio = __decorate([
     (0, typeorm_1.Entity)({
         name: 'Servicios'

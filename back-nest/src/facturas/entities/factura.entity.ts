@@ -1,5 +1,5 @@
-import { ItemsFactura } from "src/items-facturas/entities/items-factura.entity";
-import { Servicio } from "src/servicios/entities/servicio.entity";
+import { ItemsFactura } from "../../items-facturas/entities/items-factura.entity";
+import { Servicio } from "../../servicios/entities/servicio.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 
 @Entity({

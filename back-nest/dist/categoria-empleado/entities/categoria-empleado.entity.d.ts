@@ -1,6 +1,7 @@
-import { Empleado } from "src/empleados/entities/empleado.entity";
+import { Empleado } from "../../empleados/entities/empleado.entity";
 export declare class CategoriaEmpleado {
-    id: number;
-    name: string;
+    categoriaEmpleadoId: number;
+    categoriaEmpleadoNombre: string;
+    eliminado: boolean;
     empleados: Empleado;
 }

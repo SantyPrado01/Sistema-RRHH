@@ -1,4 +1,4 @@
-import { Empleado } from "src/empleados/entities/empleado.entity";
+import { Empleado } from "../../empleados/entities/empleado.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({

@@ -10,7 +10,7 @@ export class UpdateServicioDto extends PartialType(CreateServicioDto) {
     telefono?: number
     categoriaID?: number
     descripcion?: string
-    eliminado?: number
+    eliminado?: boolean
     necesidadHorariaID?:number
 
 }

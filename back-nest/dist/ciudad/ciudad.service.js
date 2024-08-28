@@ -60,6 +60,7 @@ let CiudadService = class CiudadService {
         if (!ciudadFound) {
             return new common_1.HttpException("Ciudad no encontrada.", common_1.HttpStatus.NOT_FOUND);
         }
+        return ciudadFound;
     }
     async deleteCiudad(idCiudad) {
         const ciudadFound = await this.ciudadRepository.findOne({
@@ -68,7 +69,9 @@ let CiudadService = class CiudadService {
         if (!ciudadFound) {
             return new common_1.HttpException("Ciudad no encontrada.", common_1.HttpStatus.NOT_FOUND);
         }
-        return this.ciudadRepository.delete({ idCiudad }), new common_1.HttpException("Ciudad Eliminado.", common_1.HttpStatus.ACCEPTED);
+        ciudadFound.eliminado = true;
+        await this.ciudadRepository.save(ciudadFound);
+        throw new common_1.HttpException('Ciudad eliminada.', common_1.HttpStatus.ACCEPTED);
     }
     async updateCiudad(idCiudad, ciudad) {
         const ciudadFound = await this.ciudadRepository.findOne({

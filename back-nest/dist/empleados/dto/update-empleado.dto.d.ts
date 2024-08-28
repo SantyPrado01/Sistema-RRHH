@@ -8,7 +8,7 @@ export declare class UpdateEmpleadoDto extends UpdateEmpleadoDto_base {
     telefono?: number;
     email?: string;
     fechaIngreso?: Date;
-    eliminado?: number;
+    eliminado?: boolean;
     categoriasID?: number;
     disponibilidadID?: number;
     ciudadID?: number;

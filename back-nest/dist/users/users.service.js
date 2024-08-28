@@ -66,10 +66,12 @@ let UsersService = class UsersService {
         if (!userFound) {
             return new common_2.HttpException('Usuario no encontrado.', common_2.HttpStatus.NOT_FOUND);
         }
-        return this.userRepository.delete({ id }), new common_2.HttpException('Usuario eliminado.', common_2.HttpStatus.ACCEPTED);
+        userFound.eliminado = true;
+        await this.userRepository.save(userFound);
+        throw new common_2.HttpException('Usuario eliminado.', common_2.HttpStatus.ACCEPTED);
     }
     async updateUser(id, user) {
-        const userFound = this.userRepository.findOne({
+        const userFound = await this.userRepository.findOne({
             where: {
                 id
             }

@@ -10,5 +10,5 @@ export declare class UsersController {
     getUsername(username: string): Promise<User>;
     getUser(id: number): Promise<User | import("@nestjs/common").HttpException>;
     deleteUser(id: number): Promise<import("@nestjs/common").HttpException>;
-    updateUser(id: number, user: UpdateUserDto): Promise<User | import("@nestjs/common").HttpException>;
+    updateUser(id: number, user: UpdateUserDto): Promise<import("@nestjs/common").HttpException | (User & UpdateUserDto)>;
 }

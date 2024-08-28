@@ -1,15 +1,17 @@
-import { CategoriaServicio } from "src/categoria-servicio/entities/categoria-servicio.entity";
-import { Ciudad } from "src/ciudad/entities/ciudad.entity";
-import { NecesidadHoraria } from "src/necesidad-horaria/entities/necesidad-horaria.entity";
+import { CategoriaServicio } from "../../categoria-servicio/entities/categoria-servicio.entity";
+import { Ciudad } from "../../ciudad/entities/ciudad.entity";
+import { Factura } from "../../facturas/entities/factura.entity";
+import { NecesidadHoraria } from "../../necesidad-horaria/entities/necesidad-horaria.entity";
 export declare class Servicio {
-    id: number;
-    nombre: string;
+    servicioId: number;
+    servicioNombre: string;
     CUIT: number;
     direccion: string;
     ciudad: Ciudad[];
     telefono: number;
     categoria: CategoriaServicio[];
     descripcion: string;
-    elimindado: number;
+    elimindado: boolean;
     necesidades: NecesidadHoraria[];
+    facturas: Factura[];
 }

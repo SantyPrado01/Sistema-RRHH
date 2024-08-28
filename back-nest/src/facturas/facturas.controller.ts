@@ -9,17 +9,17 @@ export class FacturasController {
 
   @Post()
   create(@Body() createFacturaDto: CreateFacturaDto) {
-    return this.facturasService.create(createFacturaDto);
+    return this.facturasService.createFactura(createFacturaDto);
   }
 
   @Get()
   findAll() {
-    return this.facturasService.findAll();
+    return this.facturasService.getFacturas();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.facturasService.findOne(+id);
+    return this.facturasService.getFactura(+id);
   }
 
   @Patch(':id')

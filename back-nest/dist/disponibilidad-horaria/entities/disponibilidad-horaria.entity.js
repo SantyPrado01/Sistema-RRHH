@@ -18,7 +18,7 @@ exports.DisponibilidadHoraria = DisponibilidadHoraria;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], DisponibilidadHoraria.prototype, "id", void 0);
+], DisponibilidadHoraria.prototype, "disponibilidadHorariaId", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => empleado_entity_1.Empleado, empleado => empleado.disponibilidades),
     (0, typeorm_1.JoinColumn)({ name: 'empleado_id' }),

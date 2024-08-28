@@ -25,6 +25,10 @@ __decorate([
     __metadata("design:type", String)
 ], Ciudad.prototype, "nombreCiudad", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], Ciudad.prototype, "eliminado", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => empleado_entity_1.Empleado, empleados => empleados.ciudad),
     __metadata("design:type", Array)
 ], Ciudad.prototype, "empleados", void 0);

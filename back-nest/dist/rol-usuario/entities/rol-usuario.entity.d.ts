@@ -1,6 +1,7 @@
-import { User } from "src/users/user.entity";
+import { User } from "../../users/user.entity";
 export declare class RolUsuario {
     id: number;
-    nombre: string;
+    nombreRolUsuario: string;
+    eliminado: boolean;
     usuarios: User[];
 }

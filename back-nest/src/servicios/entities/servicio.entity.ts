@@ -1,7 +1,7 @@
-import { CategoriaServicio } from "src/categoria-servicio/entities/categoria-servicio.entity";
-import { Ciudad } from "src/ciudad/entities/ciudad.entity";
-import { Factura } from "src/facturas/entities/factura.entity";
-import { NecesidadHoraria } from "src/necesidad-horaria/entities/necesidad-horaria.entity";
+import { CategoriaServicio } from "../../categoria-servicio/entities/categoria-servicio.entity";
+import { Ciudad } from "../../ciudad/entities/ciudad.entity";
+import { Factura } from "../../facturas/entities/factura.entity";
+import { NecesidadHoraria } from "../../necesidad-horaria/entities/necesidad-horaria.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({

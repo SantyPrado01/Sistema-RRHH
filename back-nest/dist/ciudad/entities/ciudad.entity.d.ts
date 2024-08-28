@@ -1,8 +1,9 @@
-import { Empleado } from "src/empleados/entities/empleado.entity";
-import { Servicio } from "src/servicios/entities/servicio.entity";
+import { Empleado } from "../../empleados/entities/empleado.entity";
+import { Servicio } from "../../servicios/entities/servicio.entity";
 export declare class Ciudad {
     idCiudad: number;
     nombreCiudad: string;
+    eliminado: boolean;
     empleados: Empleado[];
     servicios: Servicio[];
 }

@@ -25,7 +25,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], RolUsuario.prototype, "nombre", void 0);
+], RolUsuario.prototype, "nombreRolUsuario", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], RolUsuario.prototype, "eliminado", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => user_entity_1.User, user => user.rol),
     __metadata("design:type", Array)

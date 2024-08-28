@@ -10,11 +10,14 @@ exports.CategoriaEmpleadoModule = void 0;
 const common_1 = require("@nestjs/common");
 const categoria_empleado_service_1 = require("./categoria-empleado.service");
 const categoria_empleado_controller_1 = require("./categoria-empleado.controller");
+const categoria_empleado_entity_1 = require("./entities/categoria-empleado.entity");
+const typeorm_1 = require("@nestjs/typeorm");
 let CategoriaEmpleadoModule = class CategoriaEmpleadoModule {
 };
 exports.CategoriaEmpleadoModule = CategoriaEmpleadoModule;
 exports.CategoriaEmpleadoModule = CategoriaEmpleadoModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([categoria_empleado_entity_1.CategoriaEmpleado])],
         controllers: [categoria_empleado_controller_1.CategoriaEmpleadoController],
         providers: [categoria_empleado_service_1.CategoriaEmpleadoService],
     })

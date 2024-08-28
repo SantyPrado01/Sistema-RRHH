@@ -8,7 +8,7 @@ export declare class UpdateServicioDto extends UpdateServicioDto_base {
     telefono?: number;
     categoriaID?: number;
     descripcion?: string;
-    eliminado?: number;
+    eliminado?: boolean;
     necesidadHorariaID?: number;
 }
 export {};

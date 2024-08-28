@@ -23,7 +23,7 @@ __decorate([
         name: 'id'
     }),
     __metadata("design:type", Number)
-], Empleado.prototype, "id", void 0);
+], Empleado.prototype, "empleadoId", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
@@ -31,7 +31,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Empleado.prototype, "nombre", void 0);
+], Empleado.prototype, "empleadoNombre", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
@@ -53,8 +53,8 @@ __decorate([
     __metadata("design:type", Date)
 ], Empleado.prototype, "fechaIngreso", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
 ], Empleado.prototype, "eliminado", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => categoria_empleado_entity_1.CategoriaEmpleado, categoria => categoria.empleados),

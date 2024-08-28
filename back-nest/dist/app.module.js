@@ -21,6 +21,8 @@ const ciudad_module_1 = require("./ciudad/ciudad.module");
 const categoria_empleado_module_1 = require("./categoria-empleado/categoria-empleado.module");
 const categoria_servicio_module_1 = require("./categoria-servicio/categoria-servicio.module");
 const rol_usuario_module_1 = require("./rol-usuario/rol-usuario.module");
+const facturas_module_1 = require("./facturas/facturas.module");
+const items_facturas_module_1 = require("./items-facturas/items-facturas.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -46,7 +48,9 @@ exports.AppModule = AppModule = __decorate([
             ciudad_module_1.CiudadModule,
             categoria_empleado_module_1.CategoriaEmpleadoModule,
             categoria_servicio_module_1.CategoriaServicioModule,
-            rol_usuario_module_1.RolUsuarioModule
+            rol_usuario_module_1.RolUsuarioModule,
+            facturas_module_1.FacturasModule,
+            items_facturas_module_1.ItemsFacturasModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

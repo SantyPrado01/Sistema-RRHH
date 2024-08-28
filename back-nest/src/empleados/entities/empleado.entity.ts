@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from "typeorm";
-import { DisponibilidadHoraria } from "src/disponibilidad-horaria/entities/disponibilidad-horaria.entity";
-import { CategoriaEmpleado } from "src/categoria-empleado/entities/categoria-empleado.entity";
-import { Ciudad } from "src/ciudad/entities/ciudad.entity";
+import { DisponibilidadHoraria } from "../../disponibilidad-horaria/entities/disponibilidad-horaria.entity";
+import { CategoriaEmpleado } from "../../categoria-empleado/entities/categoria-empleado.entity";
+import { Ciudad } from "../../ciudad/entities/ciudad.entity";
 
 @Entity({
     name: 'Empleados'

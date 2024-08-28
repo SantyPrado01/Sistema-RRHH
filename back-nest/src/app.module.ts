@@ -1,5 +1,6 @@
 //Este archivo es la raiz del proyecto para realizar las importaciones de modulos, creacion de clases...
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -40,6 +41,7 @@ import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
     RolUsuarioModule,
     FacturasModule,
     ItemsFacturasModule],
+
   controllers: [AppController],
   providers: [AppService],
 })

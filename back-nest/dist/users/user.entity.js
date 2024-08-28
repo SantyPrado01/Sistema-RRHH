@@ -31,6 +31,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], User.prototype, "eliminado", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => rol_usuario_entity_1.RolUsuario, rol => rol.usuarios),
     __metadata("design:type", rol_usuario_entity_1.RolUsuario)
 ], User.prototype, "rol", void 0);

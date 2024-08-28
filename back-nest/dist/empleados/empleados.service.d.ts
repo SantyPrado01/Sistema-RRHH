@@ -8,7 +8,7 @@ export declare class EmpleadosService {
     constructor(empleadoRepository: Repository<Empleado>);
     createEmpleado(Empleado: CreateEmpleadoDto): HttpException;
     getEmpleados(): Promise<Empleado[]>;
-    getEmpleado(id: number): Promise<HttpException | Empleado>;
-    deleteEmpleado(id: number): Promise<HttpException>;
-    updateEmpleado(id: number, empleado: UpdateEmpleadoDto): Promise<HttpException | Empleado>;
+    getEmpleado(empleadoId: number): Promise<HttpException | Empleado>;
+    deleteEmpleado(empleadoId: number): Promise<HttpException>;
+    updateEmpleado(empleadoId: number, empleado: UpdateEmpleadoDto): Promise<HttpException | (Empleado & UpdateEmpleadoDto)>;
 }

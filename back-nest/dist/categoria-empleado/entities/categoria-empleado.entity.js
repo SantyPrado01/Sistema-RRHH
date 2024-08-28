@@ -18,11 +18,15 @@ exports.CategoriaEmpleado = CategoriaEmpleado;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], CategoriaEmpleado.prototype, "id", void 0);
+], CategoriaEmpleado.prototype, "categoriaEmpleadoId", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CategoriaEmpleado.prototype, "name", void 0);
+], CategoriaEmpleado.prototype, "categoriaEmpleadoNombre", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], CategoriaEmpleado.prototype, "eliminado", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => empleado_entity_1.Empleado, empleado => empleado.categorias),
     __metadata("design:type", empleado_entity_1.Empleado)

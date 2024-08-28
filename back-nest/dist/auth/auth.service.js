@@ -19,7 +19,7 @@ let AuthService = class AuthService {
         this.userService = userService;
         this.jwtService = jwtService;
     }
-    async register({ username, password, rolID }) {
+    async register({ username, password, rolID, eliminado }) {
         const user = await this.userService.getUsername(username);
         if (user) {
             throw new common_1.HttpException('El usuario ya existe', common_1.HttpStatus.NOT_ACCEPTABLE);
@@ -29,6 +29,7 @@ let AuthService = class AuthService {
             username,
             password: hashedPassword,
             rolID,
+            eliminado
         };
         return await this.userService.createUser(createUserDto);
     }

@@ -1,3 +1,4 @@
 export declare class CreateCategoriaEmpleadoDto {
-    name: string;
+    nombre: string;
+    eliminado: boolean;
 }

@@ -1,6 +1,7 @@
-import { Servicio } from "src/servicios/entities/servicio.entity";
+import { Servicio } from "../../servicios/entities/servicio.entity";
 export declare class CategoriaServicio {
-    id: number;
-    name: string;
+    categoriaServicioId: number;
+    nombreCategoriaServico: string;
+    eliminado: boolean;
     servicios: Servicio[];
 }
