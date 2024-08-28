@@ -23,6 +23,9 @@ export class Factura {
     @Column()
     total: number
 
+    @Column({default: false})
+    eliminado: boolean
+
     @ManyToOne(() => Servicio, servicio => servicio.facturas)
     @JoinColumn({ name: 'servicioId' })
     servicio: Servicio;
