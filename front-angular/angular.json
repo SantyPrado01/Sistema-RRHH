@@ -27,7 +27,6 @@
               }
             ],
             "styles": [
-              "node_modules/ngx-toaster/toastr.css",
               "src/styles.css"
             ],
             "scripts": [],
