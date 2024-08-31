@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 
@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { GlobalConfig } from 'rxjs';
 
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withFetch()), 
@@ -17,5 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     BrowserAnimationsModule,
     provideToastr(),
+    FormsModule
+    
   ]
+
 };

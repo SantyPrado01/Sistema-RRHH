@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Ciudad } from '../../models/ciudad';
+import { Ciudad } from '../../models/ciudad.models';
 import { CiudadService } from '../../services/ciudad.service';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-ciudad-list',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './ciudad-list.component.html',
   styleUrl: './ciudad-list.component.css'
 })
@@ -32,8 +34,5 @@ export class CiudadListComponent implements OnInit {
       }
     });
   }
-
-
-
 
 }

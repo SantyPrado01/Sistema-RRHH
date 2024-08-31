@@ -1,5 +1,5 @@
 export class Ciudad {
-    idCiudad: number;
+    idCiudad?: number;
     nombreCiudad: string;
     eliminado: boolean;
   
