@@ -1,22 +1,21 @@
-<app-nabvar></app-nabvar>
-<div class="row">
-    <div class="col-sm-4 offset-sm-4">
-      <div class="card card-body">
-  
-        <form (submit)="createUser()">
-  
-          <div class="form-group">
-            <input type="text" name="name" [(ngModel)]="usuario.username" class="form-control" placeholder="Nombre de Usuario" autofocus>
-          </div>
-          <div class="form-group">
-            <input type="text" name="description" [(ngModel)]="usuario.password" class="form-control" placeholder="Contrasena">
-          </div>
-
-          <button type="submit" class="btn btn-primary btn-block">
-            Guardar
-          </button>
-        </form>
-      </div>
-    </div>
+<div class="modal-overlay" (click)="closeModal()"></div>
+<div class="modal-content">
+  <div class="modal-header">
+    <h2>Agregar Nuevo Usuario</h2>
+    <button class="close-btn" (click)="closeModal()">&times;</button>
   </div>
+  <form (submit)="createUser()">
+    <div class="form-group">
+      <input type="text" name="name" [(ngModel)]="usuario.username" class="form-control" placeholder="Nombre de Usuario" autofocus>
+    </div>
+    <div class="form-group">
+      <input type="password" name="description" [(ngModel)]="usuario.password" class="form-control" placeholder="Contraseña">
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-save">Guardar</button>
+      <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
+    </div>
+  </form>
+</div>
+
 

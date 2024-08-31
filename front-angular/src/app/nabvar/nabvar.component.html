@@ -1,36 +1,79 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-       
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/"><i class="far fa-list-alt"></i> Inicio</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"  routerLink="/nuevo"><i class="fas fa-plus-circle"></i>Empleados</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/"><i class="far fa-list-alt"></i>Servicios</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"  routerLink="/nuevo"><i class="fas fa-plus-circle"></i>Ordenes de Trabajo</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/"><i class="far fa-list-alt"></i>Horarios</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"  routerLink="/nuevo"><i class="fas fa-plus-circle"></i> Informes</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/"><i class="far fa-list-alt"></i>Facturacion</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"  routerLink="/nuevo"><i class="fas fa-plus-circle"></i>Usuario</a>
-        </li>
-        
+<nav class="navbar">
+  <a class="navbar-brand" href="#">
+      <i class="fas fa-home"></i> Inicio
+  </a>
+  <div class="navbar-collapse">
+      <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="empleadosDropdown" role="button">
+                   Empleados
+                  <i class="fas dropdown-arrow"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="empleadosDropdown">
+                  <a class="dropdown-item" href="#">Nuevo Empleado</a>
+                  <a class="dropdown-item" href="#">Visualizar Empleados</a>
+              </div>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="serviciosDropdown" role="button">
+                   Servicios
+                  <i class="fas dropdown-arrow"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="serviciosDropdown">
+                  <a class="dropdown-item" href="#">Nuevo Servicio</a>
+                  <a class="dropdown-item" href="#">Visualizar Servicios</a>
+              </div>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="ordenesDropdown" role="button">
+                   Ordenes de Trabajo
+                  <i class="fas dropdown-arrow"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="ordenesDropdown">
+                  <a class="dropdown-item" href="#">Subopción 1</a>
+                  <a class="dropdown-item" href="#">Subopción 2</a>
+              </div>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="horariosDropdown" role="button">
+                  Horarios
+                  <i class="fas dropdown-arrow"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="horariosDropdown">
+                  <a class="dropdown-item" href="#">Cargar Horarios</a>
+                  <a class="dropdown-item" href="#">Visualizar Horarios</a>
+              </div>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="informesDropdown" role="button">
+                  Informes
+                  <i class="fas dropdown-arrow"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="informesDropdown">
+                  <a class="dropdown-item" href="#">Subopción 1</a>
+                  <a class="dropdown-item" href="#">Subopción 2</a>
+              </div>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="facturacionDropdown" role="button">
+                  Facturación
+                  <i class="fas dropdown-arrow"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="facturacionDropdown">
+                  <a class="dropdown-item" href="#">Nueva Factura</a>
+                  <a class="dropdown-item" href="#">Visualizar Facturas</a>
+              </div>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="usuarioDropdown" role="button">
+                  <i class="fas fa-user"></i> Usuario
+                  <i class="fas dropdown-arrow"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="usuarioDropdown">
+                  <a class="dropdown-item" href="#">Nombre Usuario</a>
+                  <a class="dropdown-item" href="#">Cerrar Sesion</a>
+              </div>
+          </li>
       </ul>
-    </div>
+  </div>
 </nav>

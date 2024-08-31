@@ -1,31 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from "../../../nabvar/nabvar.component";
-import { Usuario } from '../../models/ususario.models';
 import { FormsModule } from '@angular/forms';
+import { Usuario } from '../../models/ususario.models';
+import { NabvarComponent } from '../../../nabvar/nabvar.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-usuario-new',
   standalone: true,
-  imports: [NabvarComponent, FormsModule],
+  imports: [FormsModule, NabvarComponent, CommonModule],
   templateUrl: './usuario-new.component.html',
-  styleUrl: './usuario-new.component.css'
+  styleUrls: ['./usuario-new.component.css']
 })
 export class UsuarioNewComponent implements OnInit {
 
   usuario: Usuario = {
     username: '',
-    password:''
-  }
+    password: ''
+  };
+
+  isModalOpen = false; // Controla la visibilidad del modal
 
   ngOnInit(): void {
-    
+    // Inicialización si es necesario
   }
 
-  createUser(){
-    console.log(this.usuario)
+  openModal() {
+    this.isModalOpen = true;
   }
 
-  updateUser(){}
+  closeModal() {
+    this.isModalOpen = false;
+  }
 
+  createUser() {
+    console.log('Usuario creado:', this.usuario);
+    this.closeModal(); // Cierra el modal después de guardar
+  }
 
 }

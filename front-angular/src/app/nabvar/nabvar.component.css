@@ -1,0 +1,130 @@
+/* Estilos generales de la navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribuye los elementos */
+    background-color: #CC5600; /* Fondo de la navbar */
+    padding: 0.5rem 1rem;
+    flex-wrap: nowrap; /* Evita que los elementos se apilen */
+    margin-bottom: 2em;
+}
+
+.navbar-brand {
+    color: #ffffff; /* Detalles en blanco */
+    font-size: 1.5rem;
+    text-decoration: none;
+    margin-right: 2rem; /* Añade espacio después del título */
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand i {
+    margin-right: 0.5rem; /* Espacio entre el icono y el texto */
+}
+
+.navbar-collapse {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center; /* Asegura que los items estén alineados verticalmente */
+    flex-grow: 1;
+    flex-wrap: nowrap; /* Evita que los elementos se apilen */
+}
+
+.navbar-nav {
+    display: flex; /* Alinea los items horizontalmente */
+    flex-direction: row; /* Asegura que los elementos estén en una fila */
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    position: relative;
+    margin-left: 1rem; /* Espaciado entre los items */
+}
+
+.nav-link {
+    color: #ffffff; /* Detalles en blanco */
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link i {
+    margin-right: 0.5rem; /* Espacio entre el icono y el texto */
+}
+
+.nav-link:hover {
+    background-color: #b04b00; /* Un tono más oscuro del color de fondo */
+    color: #ffffff;
+}
+
+/* Estilos para los dropdowns */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #ffffff; /* Fondo blanco */
+    border: 1px solid #000000; /* Bordes negros */
+    color: #000000; /* Texto negro */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 0.5rem;
+    z-index: 1000;
+    min-width: 160px;
+    border-radius: 4px; /* Bordes redondeados */
+}
+
+.dropdown-item {
+    color: #000000; /* Texto negro */
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+}
+
+/* Mostrar el menú desplegable al hacer hover */
+.nav-item:hover .dropdown-menu,
+.dropdown-menu:hover {
+    display: block; /* Muestra el menú desplegable mientras el cursor está sobre él */
+}
+
+/* Añadir la flecha a la derecha de los dropdowns */
+.dropdown-arrow {
+    margin-left: 0.5rem;
+}
+
+/* Estilos para la flecha de los dropdowns */
+.nav-link .dropdown-arrow {
+    font-size: 0.75rem;
+}
+
+/* Estilos responsivos para móviles */
+@media (max-width: 768px) {
+    .navbar-toggler {
+        display: block;
+    }
+
+    .navbar-collapse {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navbar-collapse.active {
+        display: flex;
+    }
+
+    .dropdown-menu {
+        position: relative;
+        margin-top: 0;
+        box-shadow: none;
+    }
+}

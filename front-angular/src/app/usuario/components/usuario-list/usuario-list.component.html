@@ -1,1 +1,7 @@
-<p>usuario-list works!</p>
+<app-navbar></app-navbar>
+<!-- Botón para abrir el formulario emergente -->
+<button (click)="openModal()" class="btn btn-primary">+</button>
+
+<!-- Condicional para mostrar el componente modal -->
+<app-usuario-new *ngIf="isModalOpen" (close)="closeModal()"></app-usuario-new>
+
