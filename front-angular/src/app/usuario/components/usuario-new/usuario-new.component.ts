@@ -15,7 +15,8 @@ export class UsuarioNewComponent implements OnInit {
 
   usuario: Usuario = {
     username: '',
-    password: ''
+    password: '',
+    rolID: 1
   };
 
   isModalOpen = false; // Controla la visibilidad del modal

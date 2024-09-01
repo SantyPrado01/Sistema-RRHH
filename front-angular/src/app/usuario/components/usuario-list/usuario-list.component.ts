@@ -22,10 +22,10 @@ export class UsuarioListComponent implements OnInit {
   constructor(private usuarioService: UsuarioService) {}
 
   ngOnInit(): void {
-    this.loadCiudades();
+    this.loadUsuarios();
   }
 
-  loadCiudades(): void {
+  loadUsuarios(): void {
     this.usuarioService.getUsuarios().subscribe({
       next: (data: Usuario[]) => {
         this.usuarios = data;

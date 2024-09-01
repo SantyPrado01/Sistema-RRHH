@@ -8,14 +8,26 @@
     <div class="form-group">
       <input type="text" name="name" [(ngModel)]="usuario.username" class="form-control" placeholder="Nombre de Usuario" autofocus>
     </div>
+
     <div class="form-group">
-      <input type="password" name="description" [(ngModel)]="usuario.password" class="form-control" placeholder="Contraseña">
+      <div class="input-wrapper">
+        <input type="text" name="employee" [(ngModel)]="usuario.password" class="form-control" placeholder="Ingresar Empleado">
+        <button type="button" class="btn-search">
+          🔍
+        </button>
+      </div>
     </div>
+
+    <div class="form-group">
+      <input type="password" name="description" [(ngModel)]="usuario.rolID" class="form-control" placeholder="Ingresar Rol">
+    </div>
+
     <div class="modal-footer">
-      <button type="submit" class="btn btn-save">Guardar</button>
+      <button type="submit" class="btn btn-save">Guardar Usuario</button>
       <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
     </div>
   </form>
 </div>
+
 
 

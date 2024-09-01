@@ -8,7 +8,7 @@ import { UsuarioNewComponent } from './usuario/components/usuario-new/usuario-ne
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LoginComponent, ReactiveFormsModule, NabvarComponent, UsuarioNewComponent],
+  imports: [NabvarComponent, RouterOutlet, LoginComponent, ReactiveFormsModule, UsuarioNewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

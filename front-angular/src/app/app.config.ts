@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import { ApplicationConfig, ApplicationModule, provideZoneChangeDetection} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 
@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { GlobalConfig } from 'rxjs';
+import { NabvarComponent } from './nabvar/nabvar.component';
 
 
 export const appConfig: ApplicationConfig = {
@@ -18,7 +19,8 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     BrowserAnimationsModule,
     provideToastr(),
-    FormsModule
+    FormsModule,
+    NabvarComponent
     
   ]
 
