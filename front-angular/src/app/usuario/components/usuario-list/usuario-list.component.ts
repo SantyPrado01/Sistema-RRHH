@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/ususario.models';
-import { NabvarComponent } from '../../../nabvar/nabvar.component';
 import { UsuarioNewComponent } from '../usuario-new/usuario-new.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NabvarComponent } from '../../../nabvar/nabvar.component';
 
 @Component({
   selector: 'app-usuario-list',
   standalone: true,
-  imports: [NabvarComponent, UsuarioNewComponent, FormsModule, CommonModule],
+  imports: [NabvarComponent,UsuarioNewComponent, FormsModule, CommonModule],
   templateUrl: './usuario-list.component.html',
   styleUrls: ['./usuario-list.component.css']
 })

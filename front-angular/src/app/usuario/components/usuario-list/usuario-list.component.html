@@ -1,7 +1,66 @@
-<app-navbar></app-navbar>
-<!-- Botón para abrir el formulario emergente -->
-<button (click)="openModal()" class="btn btn-primary">+</button>
+<app-nabvar></app-nabvar>
+<div class="content-container">
+<!-- Título -->
+<h2>Visualizar Usuarios</h2>
+<div class="line"></div>
+
+<!-- Contenedor para la barra de búsqueda y los filtros -->
+<div class="search-filter-container">
+  <!-- Input de búsqueda con icono de lupa -->
+  <div class="search-bar">
+    <input type="text" placeholder="Buscar usuario..." />
+    <button class="search-btn">
+      🔍
+    </button>
+    <!-- Botón para abrir el modal -->
+    <button (click)="openModal()" class="btn btn-primary">+</button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters">
+    <div class="filter">
+      <label for="visualizarPor">Visualizar por:</label>
+      <select id="visualizarPor">
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+    </div>
+
+    <div class="filter">
+      <label for="ordenarPor">Ordenar por:</label>
+      <select id="ordenarPor">
+        <option value="rol1">Rol 1</option>
+        <option value="rol2">Rol 2</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- Tabla de usuarios -->
+<table>
+  <thead>
+    <tr>
+      <th>Usuario</th>
+      <th>Rol</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let usuario of usuarios">
+      <td>{{ usuario.username }}</td>
+      <td>{{ usuario.rolID }}</td>
+      <td>{{ usuario.username }}</td>
+      <td>{{ usuario.username }}</td>
+      <td>
+        <button class="btn-edit">✏️</button>
+        <button class="btn-delete">🗑️</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- Condicional para mostrar el componente modal -->
 <app-usuario-new *ngIf="isModalOpen" (close)="closeModal()"></app-usuario-new>
-
+</div>
