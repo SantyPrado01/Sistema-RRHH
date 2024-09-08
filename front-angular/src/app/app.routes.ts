@@ -7,6 +7,10 @@ import { CiudadListComponent } from './ciudad/components/ciudad-list/ciudad-list
 import { CiudadNewComponent } from './ciudad/components/ciudad-new/ciudad-new.component';
 import path from 'path';
 import { CiudadEditComponent } from './ciudad/components/ciudad-edit/ciudad-edit.component';
+import { EmpleadosListComponent } from './empleados/empleados-list/empleados-list.component';
+import { EmpleadosNewComponent } from './empleados/empleados-new/empleados-new.component';
+import { EmpleadosEditComponent } from './empleados/empleados-edit/empleados-edit.component';
+import { EmpleadosDetailComponent } from './empleados/empleados-detail/empleados-detail.component';
 
 export const routes: Routes = [
     {
@@ -29,6 +33,28 @@ export const routes: Routes = [
         path:'user/edit/:id',
         component: UsuarioEditComponent
     },
+    {
+        path:'employee',
+        component: EmpleadosListComponent
+    },
+    {
+        path:'employee/create',
+        component: EmpleadosNewComponent
+    },
+    {
+        path:'employee/profile',
+        component: EmpleadosDetailComponent
+    },
+    {
+        path:'employee/edit/:id',
+        component: EmpleadosEditComponent
+    },
+
+
+
+
+
+
     {
         path:'city',
         component: CiudadListComponent

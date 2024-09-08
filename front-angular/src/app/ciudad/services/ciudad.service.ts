@@ -7,7 +7,7 @@ import { Ciudad } from '../models/ciudad.models';
   providedIn: 'root'
 })
 export class CiudadService {
-  private baseUrl = 'http://localhost:3000/api/ciudades';  // Cambia esta URL a la de tu API
+  private baseUrl = 'http://localhost:3000/ciudad';  // Cambia esta URL a la de tu API
 
   constructor(private http: HttpClient) { }
 

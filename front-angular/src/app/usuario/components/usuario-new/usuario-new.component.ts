@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Usuario } from '../../models/ususario.models';
 import { NabvarComponent } from '../../../nabvar/nabvar.component';
@@ -29,9 +29,12 @@ export class UsuarioNewComponent implements OnInit {
     this.isModalOpen = true;
   }
 
+  @Output() close = new EventEmitter<void>();
+
   closeModal() {
-    this.isModalOpen = false;
+    this.close.emit();
   }
+
 
   createUser() {
     console.log('Usuario creado:', this.usuario);

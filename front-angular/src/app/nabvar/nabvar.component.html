@@ -5,12 +5,12 @@
   <div class="navbar-collapse">
       <ul class="navbar-nav">
           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="empleadosDropdown" role="button">
+              <a class="nav-link dropdown-toggle" routerLink="/employee" id="empleadosDropdown" role="button">
                    Empleados
                   <i class="fas dropdown-arrow"></i>
               </a>
               <div class="dropdown-menu" aria-labelledby="empleadosDropdown">
-                  <a class="dropdown-item" href="#">Nuevo Empleado</a>
+                  <a class="dropdown-item" routerLink='/employee/create' routerLinkActive="active">Nuevo Empleado</a>
                   <a class="dropdown-item" href="#">Visualizar Empleados</a>
               </div>
           </li>
@@ -77,3 +77,4 @@
       </ul>
   </div>
 </nav>
+<router-outlet></router-outlet>
