@@ -22,7 +22,7 @@ export class Empleado {
       categoriasID: number,
       disponibilidadID: number,
       ciudadID: number,
-      fechaIngreso?: Date
+      fechaIngreso?: Date,
     ) {
       this.legajo = legajo;
       this.nombre = nombre;
@@ -35,5 +35,6 @@ export class Empleado {
       this.categoriasID = categoriasID;
       this.disponibilidadID = disponibilidadID;
       this.ciudadID = ciudadID;
+    
     }
   }

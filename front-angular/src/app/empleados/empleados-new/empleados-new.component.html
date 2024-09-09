@@ -1,2 +1,109 @@
 <app-nabvar></app-nabvar>
-<h1>Usuario Nuevo</h1>
+
+<div class="content-container">
+  <!-- Título -->
+  <h2>Registrar Nuevo Empleado</h2>
+  <div class="line"></div>
+
+  <div class="content-form">
+  <!-- Formulario para registrar un nuevo empleado -->
+  <form (ngSubmit)="guardarEmpleado()" class="form-container">
+
+    <div class="form-row">
+      <!-- Fecha de Contratación (Calendario Desplegable) -->
+      <div class="form-group">
+        <label for="fechaContratacion">Fecha de Contratación:</label>
+        <input type="date" id="fechaContratacion" [(ngModel)]="empleado.fechaIngreso" name="fechaContratacion" class="form-control" required />
+      </div>
+
+      <!-- Categoría de Empleado (Desplegable) -->
+      <div class="form-group">
+        <label for="categoriaEmpleado">Categoría de Empleado:</label>
+        <select id="categoriaEmpleado" [(ngModel)]="empleado.categoriasID" name="categoriasID" class="form-control" required>
+          <option value="" disabled selected>Seleccione una categoría</option>
+          <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.nombre }}</option>
+        </select>
+      </div>
+      <!-- Legajo -->
+      <div class="form-group">
+        <label for="legajo">Legajo:</label>
+        <input type="number" id="legajo" [(ngModel)]="empleado.legajo" name="legajo" class="form-control" placeholder="Ingrese el legajo" required />
+      </div>
+
+    </div>
+
+    <div class="form-row">
+
+      <!-- Nombre -->
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre" required />
+      </div>
+
+      <!-- Apellido -->
+      <div class="form-group">
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" [(ngModel)]="empleado.apellido" name="apellido" class="form-control" placeholder="Ingrese el apellido" required />
+      </div>
+      
+      <!-- Tipo de Documento (Desplegable) -->
+      <div class="form-group">
+        <label for="tipoDocumento">Tipo de Documento:</label>
+        <select id="tipoDocumento" name="tipoDocumento" class="form-control" required>
+          <option value="" disabled selected>Seleccione el tipo de documento</option>
+          <option value="DNI">DNI</option>
+          <option value="Pasaporte">Pasaporte</option>
+          <option value="Libreta Cívica">Libreta Cívica</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="form-row">
+      <!-- Número de Documento -->
+      <div class="form-group">
+        <label for="nroDocumento">Número de Documento:</label>
+        <input type="text" id="nroDocumento" [(ngModel)]="empleado.nroDocumento" name="nroDocumento" class="form-control" placeholder="Ingrese el número de documento" required />
+      </div>
+
+      <!-- Teléfono -->
+      <div class="form-group">
+        <label for="telefono">Teléfono:</label>
+        <input type="tel" id="telefono" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" placeholder="Ingrese el teléfono" required />
+      </div>
+
+      <!-- Ciudad -->
+      <div class="form-group">
+        <label for="ciudad">Ciudad:</label>
+        <input type="text" id="ciudad" [(ngModel)]="empleado.ciudadID" name="ciudad" class="form-control" placeholder="Ingrese la ciudad" required />
+      </div>
+
+    </div>
+
+    <div class="form-row">
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" id="email" [(ngModel)]="empleado.email" name="email" class="form-control" placeholder="Ingrese el email" required />
+      </div>
+    </div>
+
+    <div class="form-row">
+
+      <!-- Observaciones (Campo de Texto) -->
+      <div class="form-row full-width">
+        <div class="form-group">
+          <label for="observaciones">Observaciones:</label>
+          <textarea id="observaciones" name="observaciones" class="form-control" rows="3" placeholder="Ingrese observaciones"></textarea>
+        </div>
+
+    </div>
+
+    <!-- Botones de Guardar y Cancelar -->
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-save">Guardar Empleado</button>
+      <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
+    </div>
+    </form>
+</div>
+</div>
