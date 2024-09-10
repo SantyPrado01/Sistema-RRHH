@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NabvarComponent } from "./nabvar/nabvar.component";
 import { UsuarioNewComponent } from './usuario/components/usuario-new/usuario-new.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
