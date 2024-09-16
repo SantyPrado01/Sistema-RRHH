@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NabvarComponent } from '../../nabvar/nabvar.component';
 import { Empleado } from '../models/empleado.models';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-empleados-new',
@@ -12,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './empleados-new.component.html',
   styleUrls: ['./empleados-new.component.css']
 })
-export class EmpleadosNewComponent {
+export class EmpleadosNewComponent implements OnInit{
 
   empleado: Empleado = {
     legajo: 0,
@@ -28,16 +30,23 @@ export class EmpleadosNewComponent {
     ciudadID: 0
   };
 
-  categorias = [
-    { id: 1, nombre: 'Administración' },
-    { id: 2, nombre: 'Ventas' },
-    { id: 3, nombre: 'Soporte Técnico' }
-  ];
-
+  categorias: any[] = []
   ciudades: any[] = [];
   provinciaCórdobaId = 14;
+  ciudadNombre: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService) {}
+
+  ngOnInit() {
+    this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
+      next: (data) => {
+        this.categorias = data; // Asignar los datos de las categorías obtenidos desde el back-end
+      },
+      error: (err) => {
+        console.error('Error al obtener las categorías', err);
+      }
+    });
+  }
 
   buscarCiudad(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -65,9 +74,25 @@ export class EmpleadosNewComponent {
       this.ciudades = [];
     }
   }
+  seleccionarCiudad(event: any) {
+    const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
+    if (selectedCity) {
+      this.empleado.ciudadID = selectedCity.id;  // Asigna el ID de la ciudad al empleado
+    }
+  }
 
   guardarEmpleado() {
-    // Lógica para guardar el empleado
+    const url = 'http://localhost:3000/empleados'; // URL del endpoint para guardar empleados
+
+    this.http.post(url, this.empleado).subscribe({
+      next: (response) => {
+        console.log('Empleado guardado con éxito:', response);
+        // Redirigir a otra página después de guardar
+      },
+      error: (err) => {
+        console.error('Error al guardar el empleado:', err);
+      }
+    });
   }
   
   cancelar() {

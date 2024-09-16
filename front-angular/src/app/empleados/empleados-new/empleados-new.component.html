@@ -19,7 +19,7 @@
           <label for="categoriaEmpleado">Categoría de Empleado:</label>
           <select id="categoriaEmpleado" [(ngModel)]="empleado.categoriasID" name="categoriasID" class="form-control" required>
             <option value="" disabled selected>Seleccione una categoría</option>
-            <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.nombre }}</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.categoriaEmpleadoNombre }}</option>
           </select>
         </div>
 
@@ -69,11 +69,12 @@
           <input
             type="text"
             id="ciudad"
-            [(ngModel)]="empleado.ciudadID"
-            name="ciudad"
+            [(ngModel)]="ciudadNombre"
+            name="ciudadNombre"
             class="form-control"
             placeholder="Ingrese la ciudad"
             (input)="buscarCiudad($event)"
+            (change)="seleccionarCiudad($event)"  
             list="ciudadesList"
             required
           />

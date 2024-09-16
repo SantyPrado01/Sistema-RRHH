@@ -22,6 +22,7 @@ let EmpleadosService = class EmpleadosService {
         this.empleadoRepository = empleadoRepository;
     }
     createEmpleado(Empleado) {
+        console.log(Empleado);
         const newEmpleado = this.empleadoRepository.create(Empleado);
         return this.empleadoRepository.save(newEmpleado), new common_1.HttpException('El Empleado se guardo con exito', common_1.HttpStatus.ACCEPTED);
     }

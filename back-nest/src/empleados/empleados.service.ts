@@ -11,10 +11,10 @@ export class EmpleadosService {
   constructor(@InjectRepository(Empleado) private empleadoRepository:Repository<Empleado>){}
 
   createEmpleado(Empleado: CreateEmpleadoDto){
-
+    console.log(Empleado)
     const newEmpleado = this.empleadoRepository.create(Empleado)
     return this.empleadoRepository.save(newEmpleado), new HttpException('El Empleado se guardo con exito', HttpStatus.ACCEPTED)
-
+    
   }
 
   getEmpleados(){
