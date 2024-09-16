@@ -7,10 +7,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export class RolUsuario {
 
-    @PrimaryGeneratedColumn({
-        type:'int',
-        name:'id'
-    })
+    @PrimaryGeneratedColumn({type:'int', name:'id'})
     id:number
 
     @Column()

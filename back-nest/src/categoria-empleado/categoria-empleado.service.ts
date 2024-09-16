@@ -16,7 +16,7 @@ export class CategoriaEmpleadoService {
         categoriaEmpleadoNombre: categoriaEmpleado.nombre
       }
     });
-    if(!categoriaEmpleadoFound){
+    if(categoriaEmpleadoFound){
       return new HttpException('La Categoria ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
     }
     const newCategoriaEmpleado = this.categoriaEmpleadoRepository.create({categoriaEmpleadoNombre: categoriaEmpleado.nombre})

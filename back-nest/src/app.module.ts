@@ -27,7 +27,7 @@ import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
       password:'Nfr06950',
       database: 'CorsacorNestJS',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], //Podemos leer cualquier archivo entity
-      synchronize:true
+      synchronize:false,
     }),
     UsersModule,
     AuthModule,

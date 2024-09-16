@@ -27,7 +27,7 @@ let CategoriaEmpleadoService = class CategoriaEmpleadoService {
                 categoriaEmpleadoNombre: categoriaEmpleado.nombre
             }
         });
-        if (!categoriaEmpleadoFound) {
+        if (categoriaEmpleadoFound) {
             return new common_1.HttpException('La Categoria ya existe. Prueba nuevamente.', common_1.HttpStatus.CONFLICT);
         }
         const newCategoriaEmpleado = this.categoriaEmpleadoRepository.create({ categoriaEmpleadoNombre: categoriaEmpleado.nombre });

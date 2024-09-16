@@ -16,10 +16,7 @@ let RolUsuario = class RolUsuario {
 };
 exports.RolUsuario = RolUsuario;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)({
-        type: 'int',
-        name: 'id'
-    }),
+    (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
 ], RolUsuario.prototype, "id", void 0);
 __decorate([

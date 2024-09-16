@@ -27,10 +27,12 @@ let RolUsuarioService = class RolUsuarioService {
                 nombreRolUsuario: rolUsuario.nombre
             }
         });
+        console.log(rolUsuario.nombre);
         if (rolUsuarioFound) {
-            return new common_1.HttpException('El rol de ususario ya existe. Prueba nuevamente.', common_1.HttpStatus.CONFLICT);
+            return new common_1.HttpException('El rol de ususario  ya existe. Prueba nuevamente.', common_1.HttpStatus.CONFLICT);
         }
-        const newRolUsuario = this.rolUsuarioRepository.create(rolUsuario);
+        console.log("PASO", rolUsuario.nombre);
+        const newRolUsuario = this.rolUsuarioRepository.create({ nombreRolUsuario: rolUsuario.nombre });
         await this.rolUsuarioRepository.save(newRolUsuario);
         return {
             message: 'Rol creado con exito.',

@@ -17,9 +17,9 @@ export class RolUsuarioService {
       }
     });
     if(rolUsuarioFound){
-      return new HttpException('El rol de ususario ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
+      return new HttpException('El rol de ususario  ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
     }
-    const newRolUsuario = this.rolUsuarioRepository.create(rolUsuario)
+    const newRolUsuario = this.rolUsuarioRepository.create({nombreRolUsuario: rolUsuario.nombre})
     await this.rolUsuarioRepository.save(newRolUsuario);
     return{
       message: 'Rol creado con exito.',
