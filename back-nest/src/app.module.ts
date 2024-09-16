@@ -24,8 +24,8 @@ import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
       host:'localhost',
       port: 3306,
       username: 'root',
-      password:'Nfr06950',
-      database: 'CorsacorNestJS',
+      password:'1008', //1008 en Windows //Nfr06950 en Mac
+      database: 'corsacorsql',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], //Podemos leer cualquier archivo entity
       synchronize:false,
     }),

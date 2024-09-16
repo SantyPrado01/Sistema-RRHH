@@ -77,13 +77,21 @@ export class EmpleadosNewComponent implements OnInit{
   seleccionarCiudad(event: any) {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
     if (selectedCity) {
-      this.empleado.ciudadID = selectedCity.id;  // Asigna el ID de la ciudad al empleado
+      this.empleado.ciudadID = selectedCity.id; 
+    }
+  }
+
+  seleccionarCategoria(event: any) {
+    const selectedCategoryName = event.target.value;
+    const selectedCategory = this.categorias.find(c => c.categoriaEmpleadoNombre === selectedCategoryName);
+    if (selectedCategory) {
+      this.empleado.categoriasID = selectedCategory.id;
+      console.log(this.empleado.categoriasID = selectedCategory.id)
     }
   }
 
   guardarEmpleado() {
     const url = 'http://localhost:3000/empleados'; // URL del endpoint para guardar empleados
-
     this.http.post(url, this.empleado).subscribe({
       next: (response) => {
         console.log('Empleado guardado con éxito:', response);

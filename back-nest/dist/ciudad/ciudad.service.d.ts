@@ -12,7 +12,7 @@ export declare class CiudadService {
     }>;
     getCiudades(): Promise<Ciudad[]>;
     getCiudad(nombreCiudad: string): Promise<Ciudad>;
-    getCiudadId(idCiudad: number): Promise<Ciudad | HttpException>;
+    getCiudadId(idCiudad: number): Promise<HttpException | Ciudad>;
     deleteCiudad(idCiudad: number): Promise<HttpException>;
     updateCiudad(idCiudad: number, ciudad: UpdateCiudadDto): Promise<HttpException | (Ciudad & UpdateCiudadDto)>;
 }

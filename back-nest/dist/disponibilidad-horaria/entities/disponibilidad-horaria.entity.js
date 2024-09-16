@@ -20,7 +20,7 @@ __decorate([
     __metadata("design:type", Number)
 ], DisponibilidadHoraria.prototype, "disponibilidadHorariaId", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => empleado_entity_1.Empleado, empleado => empleado.disponibilidades),
+    (0, typeorm_1.ManyToOne)(() => empleado_entity_1.Empleado, empleado => empleado.disponibilidad),
     (0, typeorm_1.JoinColumn)({ name: 'empleado_id' }),
     __metadata("design:type", empleado_entity_1.Empleado)
 ], DisponibilidadHoraria.prototype, "empleado", void 0);

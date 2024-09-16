@@ -7,11 +7,12 @@ export class UpdateEmpleadoDto extends PartialType(CreateEmpleadoDto) {
     nombre?: string
     apellido?: string
     nroDocumento?: number
-    telefono?: number
+    telefono?: string
     email?: string
     fechaIngreso?: Date
     eliminado?: boolean
+    ciudad?: number
     categoriasID?: number
     disponibilidadID?: number
-    ciudadID?: number
+    
 }

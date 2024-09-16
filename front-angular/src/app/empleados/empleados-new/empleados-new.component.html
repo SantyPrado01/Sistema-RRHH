@@ -19,7 +19,9 @@
           <label for="categoriaEmpleado">Categoría de Empleado:</label>
           <select id="categoriaEmpleado" [(ngModel)]="empleado.categoriasID" name="categoriasID" class="form-control" required>
             <option value="" disabled selected>Seleccione una categoría</option>
-            <option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.categoriaEmpleadoNombre }}</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.id">
+              {{ categoria.categoriaEmpleadoNombre }}
+            </option>
           </select>
         </div>
 

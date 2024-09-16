@@ -10,7 +10,7 @@ export class DisponibilidadHoraria {
     @PrimaryGeneratedColumn({type:'int', name:'id'})
     disponibilidadHorariaId:number;
 
-    @ManyToOne(()=> Empleado, empleado => empleado.disponibilidades)
+    @ManyToOne(()=> Empleado, empleado => empleado.disponibilidad)
     @JoinColumn({name: 'empleado_id'})
     empleado: Empleado;
 

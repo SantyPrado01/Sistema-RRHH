@@ -28,7 +28,7 @@ __decorate([
     __metadata("design:type", Boolean)
 ], CategoriaEmpleado.prototype, "eliminado", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => empleado_entity_1.Empleado, empleado => empleado.categorias),
+    (0, typeorm_1.OneToMany)(() => empleado_entity_1.Empleado, empleado => empleado.categoria),
     __metadata("design:type", empleado_entity_1.Empleado)
 ], CategoriaEmpleado.prototype, "empleados", void 0);
 exports.CategoriaEmpleado = CategoriaEmpleado = __decorate([

@@ -13,7 +13,6 @@ exports.Empleado = void 0;
 const typeorm_1 = require("typeorm");
 const disponibilidad_horaria_entity_1 = require("../../disponibilidad-horaria/entities/disponibilidad-horaria.entity");
 const categoria_empleado_entity_1 = require("../../categoria-empleado/entities/categoria-empleado.entity");
-const ciudad_entity_1 = require("../../ciudad/entities/ciudad.entity");
 let Empleado = class Empleado {
 };
 exports.Empleado = Empleado;
@@ -29,9 +28,9 @@ __decorate([
     __metadata("design:type", Number)
 ], Empleado.prototype, "legajo", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ name: 'empleadoNombre' }),
     __metadata("design:type", String)
-], Empleado.prototype, "empleadoNombre", void 0);
+], Empleado.prototype, "nombre", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
@@ -42,7 +41,7 @@ __decorate([
 ], Empleado.prototype, "nroDocumento", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Empleado.prototype, "telefono", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -57,17 +56,19 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Empleado.prototype, "eliminado", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => categoria_empleado_entity_1.CategoriaEmpleado, categoria => categoria.empleados),
-    __metadata("design:type", categoria_empleado_entity_1.CategoriaEmpleado)
-], Empleado.prototype, "categorias", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => disponibilidad_horaria_entity_1.DisponibilidadHoraria, disponibilidad => disponibilidad.empleado),
-    __metadata("design:type", Array)
-], Empleado.prototype, "disponibilidades", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => ciudad_entity_1.Ciudad, ciudad => ciudad.empleados),
-    __metadata("design:type", Array)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
 ], Empleado.prototype, "ciudad", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => categoria_empleado_entity_1.CategoriaEmpleado, categoria => categoria.empleados, { eager: true }),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", categoria_empleado_entity_1.CategoriaEmpleado)
+], Empleado.prototype, "categoria", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => disponibilidad_horaria_entity_1.DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true }),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", disponibilidad_horaria_entity_1.DisponibilidadHoraria)
+], Empleado.prototype, "disponibilidad", void 0);
 exports.Empleado = Empleado = __decorate([
     (0, typeorm_1.Entity)({
         name: 'Empleados'
