@@ -1,20 +1,22 @@
-<body>
+<div class="body">
     <div class="container">
         <div class="titulo">
             <h1>Iniciar Sesión</h1>
         </div>
 
-        <form class="form">
-            <span class="input-span">
-                <label for="usuario" class="label">Usuario</label>
-                <input type="text" name="usuario" id="usuario" />
-            </span>
-            <span class="input-span">
-                <label for="password" class="label">Contraseña</label>
-                <input type="password" name="password" id="password" />
-            </span>
-            <br>
-            <button class="submit" type="submit">Iniciar Sesión</button>
-        </form>
+        <div class="form">
+            <form class="form" [formGroup]="loginForm" (ngSubmit)="inicioSesion()">
+               <span class="input-span">
+                    <label for="usuario" class="label">Usuario</label>
+                    <input type="text" name="usuario" id="usuario" formControlName='username'/>
+                </span>
+                <span class="input-span">
+                    <label for="password" class="label">Contraseña</label>
+                    <input type="password" formControlName='password' name="password" id="password"/>
+                </span>
+                <br>
+                <button class="submit" type="submit">Iniciar Sesión</button> 
+            </form>
+        </div>
     </div>
-</body>
+</div>

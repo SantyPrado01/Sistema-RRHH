@@ -8,9 +8,14 @@ import { EmpleadosListComponent } from './empleados/empleados-list/empleados-lis
 import { EmpleadosNewComponent } from './empleados/empleados-new/empleados-new.component';
 import { EmpleadosEditComponent } from './empleados/empleados-edit/empleados-edit.component';
 import { EmpleadosDetailComponent } from './empleados/empleados-detail/empleados-detail.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './home-user/home.component';
+import { HomeAdminComponent } from './home-admin/home-admin.component';
 
 export const routes: Routes = [
+    {
+        path:'home-admin',
+        component: HomeAdminComponent
+    },
     {
         path:'home',
         component: HomeComponent
@@ -51,6 +56,5 @@ export const routes: Routes = [
         path:'employee/edit/:id',
         component: EmpleadosEditComponent
     }
-
 
 ];

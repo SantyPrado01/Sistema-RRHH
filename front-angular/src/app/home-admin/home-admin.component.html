@@ -1,19 +1,30 @@
 <app-nabvar></app-nabvar>
 <div class="home-container">
+
+  <div class="title-container">
+    <div class="title-item">
+      <h1> Bienvenido Administrador</h1>
+    </div>    
+  </div>
+
   <!-- Fila de Horas Proyectadas y Horas Reales -->
   <div class="hours-container">
     <div class="hours-item">
       <label for="horasProyectadas">Horas Proyectadas:</label>
-      <input type="number" id="horasProyectadas" placeholder="Ingrese horas proyectadas" />
+      <input type="number" id="horasProyectadas"/>
     </div>
     <div class="hours-item">
       <label for="horasReales">Horas Reales:</label>
-      <input type="number" id="horasReales" placeholder="Ingrese horas reales" />
+      <input type="number" id="horasReales"/>
     </div>
   </div>
 
   <!-- Botones de acción rápida -->
   <div class="action-buttons">
+    <button class="action-btn" routerLink="/empleados">
+        <img src="assets/icons/employees-icon.svg" alt="Empleados" />
+        <span>Usuarios</span>
+      </button>
     <button class="action-btn" routerLink="/empleados">
       <img src="assets/icons/employees-icon.svg" alt="Empleados" />
       <span>Empleados</span>

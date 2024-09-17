@@ -6,8 +6,6 @@ import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 
-
-
 @Injectable()
 export class AuthService {
 
