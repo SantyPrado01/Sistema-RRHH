@@ -11,6 +11,7 @@ export declare class Empleado {
     fechaIngreso: Date;
     eliminado: boolean;
     ciudad: number;
+    observaciones: string;
     categoria: CategoriaEmpleado;
     disponibilidad: DisponibilidadHoraria;
 }

@@ -1,4 +1,5 @@
 export class Empleado {
+    id: number;
     legajo: number;
     nombre: string;
     apellido: string;
@@ -7,11 +8,13 @@ export class Empleado {
     email: string;
     fechaIngreso?: Date;
     eliminado: boolean;
-    categoriasID: number;
+    ciudad:number;
+    observaciones:string;
+    categoria: number;
     disponibilidadID: number;
-    ciudadID: number;
   
     constructor(
+      id: number,
       legajo: number,
       nombre: string,
       apellido: string,
@@ -19,11 +22,13 @@ export class Empleado {
       telefono: number,
       email: string,
       eliminado: boolean,
-      categoriasID: number,
+      ciudad: number,
+      categoria: number,
+      observaciones: string,
       disponibilidadID: number,
-      ciudadID: number,
       fechaIngreso?: Date,
     ) {
+      this.id = id;
       this.legajo = legajo;
       this.nombre = nombre;
       this.apellido = apellido;
@@ -32,9 +37,10 @@ export class Empleado {
       this.email = email;
       this.fechaIngreso = fechaIngreso;
       this.eliminado = eliminado;
-      this.categoriasID = categoriasID;
+      this.categoria = categoria;
+      this.observaciones = observaciones
       this.disponibilidadID = disponibilidadID;
-      this.ciudadID = ciudadID;
+      this.ciudad = ciudad;
     
     }
   }

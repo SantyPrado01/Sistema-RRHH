@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-empleados-new',
   standalone: true,
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
 export class EmpleadosNewComponent implements OnInit{
 
   empleado: Empleado = {
+    id: 0,
     legajo: 0,
     nombre: '',
     apellido: '',
@@ -25,9 +27,10 @@ export class EmpleadosNewComponent implements OnInit{
     email: '',
     fechaIngreso: undefined,
     eliminado: false,
-    categoriasID: 0,
+    observaciones:'',
+    ciudad:0,
+    categoria: 0,
     disponibilidadID: 0,
-    ciudadID: 0
   };
 
   categorias: any[] = []
@@ -40,6 +43,7 @@ export class EmpleadosNewComponent implements OnInit{
   ngOnInit() {
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
       next: (data) => {
+        console.log('Categorías obtenidas:', data);
         this.categorias = data; // Asignar los datos de las categorías obtenidos desde el back-end
       },
       error: (err) => {
@@ -74,34 +78,50 @@ export class EmpleadosNewComponent implements OnInit{
       this.ciudades = [];
     }
   }
+
   seleccionarCiudad(event: any) {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
     if (selectedCity) {
-      this.empleado.ciudadID = selectedCity.id; 
+      this.empleado.ciudad = selectedCity.id; 
     }
   }
-
-  seleccionarCategoria(event: any) {
-    const selectedCategoryName = event.target.value;
-    const selectedCategory = this.categorias.find(c => c.categoriaEmpleadoNombre === selectedCategoryName);
-    if (selectedCategory) {
-      this.empleado.categoriasID = selectedCategory.id;
-      console.log(this.empleado.categoriasID = selectedCategory.id)
-    }
-  }
-
+  
   guardarEmpleado() {
     const url = 'http://localhost:3000/empleados'; // URL del endpoint para guardar empleados
     this.http.post(url, this.empleado).subscribe({
       next: (response) => {
         console.log('Empleado guardado con éxito:', response);
-        // Redirigir a otra página después de guardar
+        // Mostrar un mensaje de éxito
+        alert('Empleado guardado con éxito');
+        // Limpiar los campos del formulario
+        this.limpiarFormulario();
+        // Redirigir a otra página después de guardar (opcional)
+        // this.router.navigate(['/empleados']);
       },
       error: (err) => {
         console.error('Error al guardar el empleado:', err);
       }
     });
   }
+
+  limpiarFormulario() {
+    this.empleado = {
+      id: 0,
+      legajo: 0,
+      nombre: '',
+      apellido: '',
+      nroDocumento: 0,
+      telefono: 0,
+      email: '',
+      fechaIngreso: undefined,
+      eliminado: false,
+      ciudad: 0,
+      categoria: 0,
+      disponibilidadID: 0,
+      observaciones:''
+    };
+  }
+  
   
   cancelar() {
     // Lógica para cancelar el registro

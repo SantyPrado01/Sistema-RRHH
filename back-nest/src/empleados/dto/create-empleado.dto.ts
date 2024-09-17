@@ -9,6 +9,7 @@ export class CreateEmpleadoDto {
     fechaIngreso?: Date
     eliminado: boolean
     ciudad: number
+    observaciones: string
     categoriasID: number
     disponibilidadID: number
     

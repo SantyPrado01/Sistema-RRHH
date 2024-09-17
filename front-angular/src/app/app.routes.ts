@@ -8,8 +8,13 @@ import { EmpleadosListComponent } from './empleados/empleados-list/empleados-lis
 import { EmpleadosNewComponent } from './empleados/empleados-new/empleados-new.component';
 import { EmpleadosEditComponent } from './empleados/empleados-edit/empleados-edit.component';
 import { EmpleadosDetailComponent } from './empleados/empleados-detail/empleados-detail.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
+    {
+        path:'home',
+        component: HomeComponent
+    },
     {
         path:'',
         component: LoginComponent

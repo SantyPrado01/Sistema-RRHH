@@ -43,12 +43,15 @@ export class Empleado {
     @Column()
     ciudad: number;
 
+    @Column()
+    observaciones: string;
+
     @ManyToOne(() => CategoriaEmpleado, categoria => categoria.empleados, { eager: true })
-    @JoinTable()
+    @JoinTable({name: "categoria"})
     categoria: CategoriaEmpleado;
 
     @ManyToOne(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true })
-    @JoinTable()
+    @JoinTable({name:'disponibilidad'})
     disponibilidad: DisponibilidadHoraria;
 
 }
