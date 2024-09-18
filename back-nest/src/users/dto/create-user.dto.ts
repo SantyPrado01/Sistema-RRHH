@@ -3,7 +3,7 @@
 export class CreateUserDto {
     username: string
     password: string
-    rolID: number
+    rol: string
     eliminado:boolean
 
 }

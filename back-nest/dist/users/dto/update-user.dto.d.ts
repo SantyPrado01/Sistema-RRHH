@@ -3,6 +3,6 @@ declare const UpdateUserDto_base: import("@nestjs/mapped-types").MappedType<Part
 export declare class UpdateUserDto extends UpdateUserDto_base {
     username?: string;
     password?: string;
-    rolID?: number;
+    rol?: string;
 }
 export {};

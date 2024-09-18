@@ -1,5 +1,4 @@
 import { CategoriaServicio } from "../../categoria-servicio/entities/categoria-servicio.entity";
-import { Ciudad } from "../../ciudad/entities/ciudad.entity";
 import { Factura } from "../../facturas/entities/factura.entity";
 import { NecesidadHoraria } from "../../necesidad-horaria/entities/necesidad-horaria.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -22,8 +21,8 @@ export class Servicio {
     @Column()
     direccion: string
 
-    @ManyToOne(()=> Ciudad, ciudad => ciudad.servicios)
-    ciudad: Ciudad[];
+    @Column()
+    ciudad: number;
 
     @Column()
     telefono: number

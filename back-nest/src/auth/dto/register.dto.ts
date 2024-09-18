@@ -1,6 +1,7 @@
 import { Transform } from "class-transformer";
 import { IsString, MinLength } from "class-validator";
-import { Column } from "typeorm";
+import { Column, ManyToOne } from "typeorm";
+
 
 export class RegisterDto{
 
@@ -14,8 +15,8 @@ export class RegisterDto{
     @MinLength(6)
     password: string;
 
-    @Column()
-    rolID: number;
+    @Column({default: 'user'})
+    rol: string;
 
     @Column({default: false})
     eliminado: boolean

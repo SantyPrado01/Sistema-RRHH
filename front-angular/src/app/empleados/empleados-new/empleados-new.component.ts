@@ -115,7 +115,7 @@ export class EmpleadosNewComponent implements OnInit{
       email: '',
       fechaIngreso: undefined,
       eliminado: false,
-      ciudad: 0,
+      ciudad: 12112120,
       categoria: 0,
       disponibilidadID: 0,
       observaciones:''

@@ -1,4 +1,3 @@
-import { RolUsuario } from "../rol-usuario/entities/rol-usuario.entity"
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from "typeorm"
 
 @Entity({
@@ -19,10 +18,9 @@ export class User {
     @Column()
     password: string
 
+    @Column({default:'user'})
+    rol: string;
+
     @Column({default:false})
     eliminado: boolean
-
-    @ManyToOne(() => RolUsuario, rol => rol.usuarios)
-    rol: RolUsuario;
-
 }

@@ -1,8 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinTable } from "typeorm";
 import { DisponibilidadHoraria } from "../../disponibilidad-horaria/entities/disponibilidad-horaria.entity";
 import { CategoriaEmpleado } from "../../categoria-empleado/entities/categoria-empleado.entity";
-import { Ciudad } from "../../ciudad/entities/ciudad.entity";
-
 
 @Entity({
     name: 'Empleados'

@@ -29,9 +29,9 @@ __decorate([
     __metadata("design:type", String)
 ], RegisterDto.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], RegisterDto.prototype, "rolID", void 0);
+    (0, typeorm_1.Column)({ default: 'user' }),
+    __metadata("design:type", String)
+], RegisterDto.prototype, "rol", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)

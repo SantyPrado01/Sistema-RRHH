@@ -14,7 +14,7 @@ export class AuthService {
         private readonly jwtService: JwtService
     ){}
 
-    async register({ username, password, rolID, eliminado }: RegisterDto) {
+    async register({ username, password, rol, eliminado }: RegisterDto) {
         const user = await this.userService.getUsername(username);
     
         if (user) {
@@ -25,7 +25,7 @@ export class AuthService {
         const createUserDto: CreateUserDto = {
           username,
           password: hashedPassword,
-          rolID,
+          rol,
           eliminado
     
         };

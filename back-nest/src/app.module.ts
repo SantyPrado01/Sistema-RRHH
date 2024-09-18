@@ -10,10 +10,8 @@ import { EmpleadosModule } from './empleados/empleados.module';
 import { ServiciosModule } from './servicios/servicios.module';
 import { DisponibilidadHorariaModule } from './disponibilidad-horaria/disponibilidad-horaria.module';
 import { NecesidadHorariaModule } from './necesidad-horaria/necesidad-horaria.module';
-import { CiudadModule } from './ciudad/ciudad.module';
 import { CategoriaEmpleadoModule } from './categoria-empleado/categoria-empleado.module';
 import { CategoriaServicioModule } from './categoria-servicio/categoria-servicio.module';
-import { RolUsuarioModule } from './rol-usuario/rol-usuario.module';
 import { FacturasModule } from './facturas/facturas.module';
 import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
 
@@ -27,7 +25,7 @@ import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
       password:'Nfr06950', //1008 en Windows //Nfr06950 en Mac
       database: 'corsacorsql',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], //Podemos leer cualquier archivo entity
-      synchronize:false,
+      synchronize:true,
     }),
     UsersModule,
     AuthModule,
@@ -35,10 +33,8 @@ import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
     ServiciosModule,
     DisponibilidadHorariaModule,
     NecesidadHorariaModule,
-    CiudadModule,
     CategoriaEmpleadoModule,
     CategoriaServicioModule,
-    RolUsuarioModule,
     FacturasModule,
     ItemsFacturasModule],
 

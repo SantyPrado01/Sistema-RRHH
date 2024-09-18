@@ -1,6 +1,6 @@
 export declare class RegisterDto {
     username: string;
     password: string;
-    rolID: number;
+    rol: string;
     eliminado: boolean;
 }

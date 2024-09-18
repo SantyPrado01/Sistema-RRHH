@@ -17,10 +17,8 @@ const empleados_module_1 = require("./empleados/empleados.module");
 const servicios_module_1 = require("./servicios/servicios.module");
 const disponibilidad_horaria_module_1 = require("./disponibilidad-horaria/disponibilidad-horaria.module");
 const necesidad_horaria_module_1 = require("./necesidad-horaria/necesidad-horaria.module");
-const ciudad_module_1 = require("./ciudad/ciudad.module");
 const categoria_empleado_module_1 = require("./categoria-empleado/categoria-empleado.module");
 const categoria_servicio_module_1 = require("./categoria-servicio/categoria-servicio.module");
-const rol_usuario_module_1 = require("./rol-usuario/rol-usuario.module");
 const facturas_module_1 = require("./facturas/facturas.module");
 const items_facturas_module_1 = require("./items-facturas/items-facturas.module");
 let AppModule = class AppModule {
@@ -37,7 +35,7 @@ exports.AppModule = AppModule = __decorate([
                 password: 'Nfr06950',
                 database: 'corsacorsql',
                 entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                synchronize: false,
+                synchronize: true,
             }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
@@ -45,10 +43,8 @@ exports.AppModule = AppModule = __decorate([
             servicios_module_1.ServiciosModule,
             disponibilidad_horaria_module_1.DisponibilidadHorariaModule,
             necesidad_horaria_module_1.NecesidadHorariaModule,
-            ciudad_module_1.CiudadModule,
             categoria_empleado_module_1.CategoriaEmpleadoModule,
             categoria_servicio_module_1.CategoriaServicioModule,
-            rol_usuario_module_1.RolUsuarioModule,
             facturas_module_1.FacturasModule,
             items_facturas_module_1.ItemsFacturasModule
         ],

@@ -21,7 +21,6 @@ export class UsersService {
                 username: user.username
             }
         })
-
         if (userFound){
             return new HttpException('El usuario ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
         }
@@ -82,8 +81,10 @@ export class UsersService {
         const userFound = await this.userRepository.findOne({
             where:{
                 id
-            }
-        });
+            } 
+        })
+        console.log("Se Actualizo");
+        ;
         if (!userFound){
             return new HttpException('Usuario no encontrado.', HttpStatus.NOT_FOUND)
         }

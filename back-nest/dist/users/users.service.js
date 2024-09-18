@@ -76,6 +76,8 @@ let UsersService = class UsersService {
                 id
             }
         });
+        console.log("Se Actualizo");
+        ;
         if (!userFound) {
             return new common_2.HttpException('Usuario no encontrado.', common_2.HttpStatus.NOT_FOUND);
         }
