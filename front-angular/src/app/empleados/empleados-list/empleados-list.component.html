@@ -57,14 +57,15 @@
         <td>{{ empleado.telefono }}</td>
         <td>{{ empleado.email }}</td>
         <td>
-            <button class="btn-view" >👁️</button>
-            <button class="btn-edit" (click)="editarEmpleado(empleado)">✏️</button>
+          <a [routerLink]="">
+            <button class="btn-view">👁️</button>
+          </a>
+            <button class="btn-edit" [routerLink]="['/employee/edit', empleado.empleadoId]">✏️</button>
             <button class="btn-delete" (click)="eliminarEmpleado(empleado)">🗑️</button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  
 </div>
 

@@ -6,7 +6,7 @@ import { UsuarioEditComponent } from './usuario/components/usuario-edit/usuario-
 
 import { EmpleadosListComponent } from './empleados/empleados-list/empleados-list.component';
 import { EmpleadosNewComponent } from './empleados/empleados-new/empleados-new.component';
-import { EmpleadosEditComponent } from './empleados/empleados-edit/empleados-edit.component';
+import { EditEmpleadoComponent } from './empleados/empleados-edit/empleados-edit.component';
 import { EmpleadosDetailComponent } from './empleados/empleados-detail/empleados-detail.component';
 import { HomeComponent } from './home-user/home.component';
 import { HomeAdminComponent } from './home-admin/home-admin.component';
@@ -53,8 +53,8 @@ export const routes: Routes = [
         component: EmpleadosDetailComponent
     },
     {
-        path:'employee/edit/:id',
-        component: EmpleadosEditComponent
+        path: 'employee/edit/:id', 
+        component: EditEmpleadoComponent 
     }
 
 ];

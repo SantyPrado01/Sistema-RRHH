@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 export class EmpleadosNewComponent implements OnInit{
 
   empleado: Empleado = {
-    id: 0,
+    empleadoId: 0,
     legajo: 0,
     nombre: '',
     apellido: '',
@@ -38,7 +38,7 @@ export class EmpleadosNewComponent implements OnInit{
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
 
-  constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService) {}
+  constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService, private router: Router) {}
 
   ngOnInit() {
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
@@ -95,8 +95,7 @@ export class EmpleadosNewComponent implements OnInit{
         alert('Empleado guardado con éxito');
         // Limpiar los campos del formulario
         this.limpiarFormulario();
-        // Redirigir a otra página después de guardar (opcional)
-        // this.router.navigate(['/empleados']);
+        this.router.navigate(['/empleados']);
       },
       error: (err) => {
         console.error('Error al guardar el empleado:', err);
@@ -106,7 +105,7 @@ export class EmpleadosNewComponent implements OnInit{
 
   limpiarFormulario() {
     this.empleado = {
-      id: 0,
+      empleadoId: 0,
       legajo: 0,
       nombre: '',
       apellido: '',

@@ -1,5 +1,5 @@
 export class Empleado {
-    id: number;
+    empleadoId: number;
     legajo: number;
     nombre: string;
     apellido: string;
@@ -14,7 +14,7 @@ export class Empleado {
     disponibilidadID: number;
   
     constructor(
-      id: number,
+      empleadoId: number,
       legajo: number,
       nombre: string,
       apellido: string,
@@ -28,7 +28,7 @@ export class Empleado {
       disponibilidadID: number,
       fechaIngreso?: Date,
     ) {
-      this.id = id;
+      this.empleadoId = empleadoId;
       this.legajo = legajo;
       this.nombre = nombre;
       this.apellido = apellido;

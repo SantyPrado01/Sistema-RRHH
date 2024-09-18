@@ -1,1 +1,112 @@
-<p>empleados-edit works!</p>
+<app-nabvar></app-nabvar>
+<div class="content-container">
+  <!-- Título -->
+  <h2>Editar Empleado</h2>
+  <div class="line"></div>
+
+  <div class="content-form">
+    <!-- Formulario para editar un empleado -->
+    <form (ngSubmit)="actualizarEmpleado()" class="form-container">
+
+      <!-- Fila 1 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fechaContratacion">Fecha de Contratación:</label>
+          <input type="date" id="fechaContratacion" [(ngModel)]="empleado.fechaIngreso" name="fechaContratacion" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="categoriaEmpleado">Categoría de Empleado:</label>
+          <select id="categoria" [(ngModel)]="empleado.categoria" name="categoria" class="form-control" required>
+            <option value="" disabled>Seleccione una categoría</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.categoriaEmpleadoId">
+              {{ categoria.categoriaEmpleadoNombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="legajo">Legajo:</label>
+          <input type="number" id="legajo" [(ngModel)]="empleado.legajo" name="legajo" class="form-control" placeholder="Ingrese el legajo" required readonly />
+        </div>
+      </div>
+
+      <!-- Fila 2 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre" required />
+        </div>
+
+        <div class="form-group">
+          <label for="apellido">Apellido:</label>
+          <input type="text" id="apellido" [(ngModel)]="empleado.apellido" name="apellido" class="form-control" placeholder="Ingrese el apellido" required />
+        </div>
+
+        <div class="form-group">
+          <label for="tipoDocumento">Tipo de Documento:</label>
+          <select id="tipoDocumento" name="tipoDocumento" class="form-control" required>
+            <option value="" disabled>Seleccione el tipo de documento</option>
+            <option value="DNI">DNI</option>
+            <option value="Pasaporte">Pasaporte</option>
+            <option value="Libreta Cívica">Libreta Cívica</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Fila 3 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nroDocumento">Número de Documento:</label>
+          <input type="text" id="nroDocumento" [(ngModel)]="empleado.nroDocumento" name="nroDocumento" class="form-control" placeholder="Ingrese el número de documento" required />
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono:</label>
+          <input type="tel" id="telefono" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" placeholder="Ingrese el teléfono" required />
+        </div>
+
+        <div class="form-group autocomplete-group">
+          <label for="ciudad">Ciudad:</label>
+          <input
+            type="text"
+            id="ciudad"
+            [(ngModel)]="ciudadNombre"
+            name="ciudadNombre"
+            class="form-control"
+            placeholder="Ingrese la ciudad"
+            (input)="buscarCiudad($event)"
+            (change)="seleccionarCiudad($event)"  
+            list="ciudadesList"
+            required
+          />
+          <datalist id="ciudadesList">
+            <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
+          </datalist>
+        </div>
+      </div>
+
+      <!-- Fila 4: Email -->
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="email">Email:</label>
+          <input type="text" id="email" [(ngModel)]="empleado.email" name="email" class="form-control" placeholder="Ingrese el email" required />
+        </div>
+      </div>
+
+      <!-- Fila 5: Observaciones -->
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="observaciones">Observaciones:</label>
+          <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" placeholder="Ingrese observaciones"></textarea>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-save">Actualizar Empleado</button>
+        <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

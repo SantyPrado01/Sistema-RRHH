@@ -4,6 +4,9 @@ import { Empleado } from '../models/empleado.models';
 import { EmpleadoService } from '../services/empleado.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-empleados-list',
@@ -20,10 +23,13 @@ export class EmpleadosListComponent implements OnInit {
   filtroOrdenar: string = 'nombre';     
   isModalOpen: boolean = false;
 
-  constructor(private empleadoService: EmpleadoService) {}
+  constructor(private empleadoService: EmpleadoService, private route: ActivatedRoute, 
+    private router: Router, private http: HttpClient ) {}
 
   ngOnInit(): void {
     this.obtenerEmpleados();
+    this.empleadosFiltrados.forEach(empleado => {
+      console.log('Empleado ID:', empleado.empleadoId);})
   }
 
   obtenerEmpleados() {
@@ -40,7 +46,7 @@ export class EmpleadosListComponent implements OnInit {
   filtrarEmpleados() {
     this.empleadosFiltrados = this.empleados
       .filter(empleado => 
-        (this.filtroVisualizar === 'activo' ? !empleado.eliminado : empleado.eliminado) &&
+        !empleado.eliminado && 
         (empleado.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
          empleado.apellido.toLowerCase().includes(this.searchTerm.toLowerCase()))
       )
@@ -56,24 +62,24 @@ export class EmpleadosListComponent implements OnInit {
       });
   }
 
-  openModal() {
-    this.isModalOpen = true;
-  }
-
-  closeModal() {
-    this.isModalOpen = false;
-    this.obtenerEmpleados();  // Refrescar la lista después de agregar un empleado
-  }
-
-  editarEmpleado(empleado: Empleado) {
-    // Lógica para editar empleado
-  }
-
+  //Es solo un actualizar que cambia el estado
   eliminarEmpleado(empleado: Empleado) {
-    if (confirm('¿Estás seguro de que deseas eliminar este empleado?')) {
-      this.empleadoService.deleteEmpleado(empleado.id).subscribe(() => {
-        this.obtenerEmpleados();
+    if (confirm('¿Estás seguro de que deseas marcar a este empleado como inactivo?')) {
+      const empleadoId = empleado.empleadoId;
+
+      this.http.patch<Empleado>(`http://localhost:3000/empleados/${empleadoId}`, {eliminado: true}).subscribe({
+        next: (response) => {
+          console.log('Empleado eliminado con éxito:', response);
+          alert('Empleado eliminado con éxito');
+          this.router.navigate(['/employee']);
+        },
+        error: (err) => {
+          console.log('ID del empleado:', empleadoId);
+          console.error('Error al eliminar el empleado:', err);
+        }
       });
+    } else{
+      console.log('Operación cancelada');
     }
   }
 }

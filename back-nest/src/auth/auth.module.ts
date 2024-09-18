@@ -12,6 +12,7 @@ import { UsersService } from '../users/users.service';
   controllers: [AuthController],
   providers: [AuthService],
   imports: [UsersModule,
+    
     JwtModule.register({
       global:true,
       secret: jwtCosntants.secret,
