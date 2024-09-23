@@ -62,7 +62,7 @@ export class EmpleadosListComponent implements OnInit {
       });
   }
 
-  //Es solo un actualizar que cambia el estado
+  //Cambia el estado
   eliminarEmpleado(empleado: Empleado) {
     if (confirm('¿Estás seguro de que deseas marcar a este empleado como inactivo?')) {
       const empleadoId = empleado.empleadoId;

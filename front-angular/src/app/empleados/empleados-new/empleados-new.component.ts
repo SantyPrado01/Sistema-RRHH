@@ -17,23 +17,23 @@ import { Router } from '@angular/router';
 })
 export class EmpleadosNewComponent implements OnInit{
 
-  empleado: Empleado = {
-    empleadoId: 0,
-    legajo: 0,
-    nombre: '',
-    apellido: '',
-    nroDocumento: 0,
-    telefono: 0,
-    email: '',
-    fechaIngreso: undefined,
-    eliminado: false,
-    observaciones:'',
-    ciudad:0,
-    categoria: 0,
-    disponibilidadID: 0,
-  };
-
-  categorias: any[] = []
+  // empleado: Empleado = {
+  //  empleadoId: 0,
+  //  legajo: 0,
+  //  nombre: '',
+  //  apellido: '',
+  //  nroDocumento: 0,
+  //  telefono: 0,
+  //  email: '',
+  //  fechaIngreso: undefined,
+  //  eliminado: false,
+  //  observaciones:'',
+  //  ciudad:0,
+  //  categoria: 0,
+  //  disponibilidadID: 0,
+  //};
+  empleado: any = {};
+  categorias: any[] = [];
   ciudades: any[] = [];
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
@@ -44,7 +44,7 @@ export class EmpleadosNewComponent implements OnInit{
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
       next: (data) => {
         console.log('Categorías obtenidas:', data);
-        this.categorias = data; // Asignar los datos de las categorías obtenidos desde el back-end
+        this.categorias = data; 
       },
       error: (err) => {
         console.error('Error al obtener las categorías', err);
@@ -87,13 +87,11 @@ export class EmpleadosNewComponent implements OnInit{
   }
   
   guardarEmpleado() {
-    const url = 'http://localhost:3000/empleados'; // URL del endpoint para guardar empleados
+    const url = 'http://localhost:3000/empleados'; 
     this.http.post(url, this.empleado).subscribe({
       next: (response) => {
         console.log('Empleado guardado con éxito:', response);
-        // Mostrar un mensaje de éxito
         alert('Empleado guardado con éxito');
-        // Limpiar los campos del formulario
         this.limpiarFormulario();
         this.router.navigate(['/empleados']);
       },
@@ -123,6 +121,6 @@ export class EmpleadosNewComponent implements OnInit{
   
   
   cancelar() {
-    // Lógica para cancelar el registro
+    this.router.navigate(['/employee']);
   }
 }

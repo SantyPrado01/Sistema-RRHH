@@ -17,9 +17,11 @@ const common_1 = require("@nestjs/common");
 const empleados_service_1 = require("./empleados.service");
 const create_empleado_dto_1 = require("./dto/create-empleado.dto");
 const update_empleado_dto_1 = require("./dto/update-empleado.dto");
+const axios_1 = require("@nestjs/axios");
 let EmpleadosController = class EmpleadosController {
-    constructor(empleadosService) {
+    constructor(empleadosService, httpService) {
         this.empleadosService = empleadosService;
+        this.httpService = httpService;
     }
     createEmpleado(createEmpleadoDto) {
         return this.empleadosService.createEmpleado(createEmpleadoDto);
@@ -75,6 +77,7 @@ __decorate([
 ], EmpleadosController.prototype, "deleteEmpleado", null);
 exports.EmpleadosController = EmpleadosController = __decorate([
     (0, common_1.Controller)('empleados'),
-    __metadata("design:paramtypes", [empleados_service_1.EmpleadosService])
+    __metadata("design:paramtypes", [empleados_service_1.EmpleadosService,
+        axios_1.HttpService])
 ], EmpleadosController);
 //# sourceMappingURL=empleados.controller.js.map

@@ -2,10 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from 
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
+import { HttpService } from '@nestjs/axios'; // Cambia HttpClient por HttpService
 
 @Controller('empleados')
 export class EmpleadosController {
-  constructor(private readonly empleadosService: EmpleadosService) {}
+  constructor(
+    private readonly empleadosService: EmpleadosService,
+    private readonly httpService: HttpService // Cambia HttpClient por HttpService
+  ) {}
 
   @Post()
   createEmpleado(@Body() createEmpleadoDto: CreateEmpleadoDto) {
