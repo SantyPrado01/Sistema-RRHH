@@ -8,7 +8,7 @@ export declare class ServiciosService {
     constructor(servicioRepository: Repository<Servicio>);
     createServicio(servicio: CreateServicioDto): Promise<HttpException>;
     getServicios(): Promise<Servicio[]>;
-    getServicio(servicioNombre: string): Promise<Servicio>;
+    getServicio(nombre: string): Promise<Servicio>;
     getServicioId(servicioId: number): Promise<HttpException | Servicio>;
     deleteServicio(servicioId: number): Promise<HttpException>;
     updateServicio(servicioId: number, servicio: UpdateServicioDto): Promise<HttpException | Servicio>;

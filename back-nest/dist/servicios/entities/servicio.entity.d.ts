@@ -3,11 +3,11 @@ import { Factura } from "../../facturas/entities/factura.entity";
 import { NecesidadHoraria } from "../../necesidad-horaria/entities/necesidad-horaria.entity";
 export declare class Servicio {
     servicioId: number;
-    servicioNombre: string;
-    CUIT: number;
+    nombre: string;
+    cuit: string;
     direccion: string;
     ciudad: number;
-    telefono: number;
+    telefono: string;
     categoria: CategoriaServicio[];
     descripcion: string;
     elimindado: boolean;

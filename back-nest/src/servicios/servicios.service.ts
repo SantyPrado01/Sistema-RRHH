@@ -14,7 +14,7 @@ export class ServiciosService {
   async createServicio(servicio: CreateServicioDto){
     const servicioFound = await this.servicioRepository.findOne({
       where:{
-        servicioNombre: servicio.nombre
+        nombre: servicio.nombre
       }
     });
     if(servicioFound){
@@ -34,13 +34,13 @@ export class ServiciosService {
     })
   }
 
-  async getServicio(servicioNombre: string){
+  async getServicio(nombre: string){
     const servicioFound = await this.servicioRepository.findOne({
       where:{
-        servicioNombre
+        nombre
       }
     });
-    if(!servicioNombre){
+    if(!nombre){
       return null;
     }
     return servicioFound

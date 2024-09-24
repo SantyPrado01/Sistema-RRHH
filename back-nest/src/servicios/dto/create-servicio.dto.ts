@@ -1,10 +1,10 @@
 export class CreateServicioDto {
 
     nombre: string
-    CUIT: number
+    cuit: string
     direccion: string
-    ciudadID: number
-    telefono: number
+    ciudad: number
+    telefono: string
     categoriaID: number
     descripcion: string
     eliminado: boolean

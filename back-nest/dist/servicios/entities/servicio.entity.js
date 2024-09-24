@@ -24,11 +24,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Servicio.prototype, "servicioNombre", void 0);
+], Servicio.prototype, "nombre", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Servicio.prototype, "CUIT", void 0);
+    __metadata("design:type", String)
+], Servicio.prototype, "cuit", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
@@ -39,7 +39,7 @@ __decorate([
 ], Servicio.prototype, "ciudad", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Servicio.prototype, "telefono", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => categoria_servicio_entity_1.CategoriaServicio, categoria => categoria.servicios),

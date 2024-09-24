@@ -13,10 +13,10 @@ export class Servicio {
     servicioId:number
 
     @Column()
-    servicioNombre:string
+    nombre:string
 
     @Column()
-    CUIT: number
+    cuit: string
 
     @Column()
     direccion: string
@@ -25,7 +25,7 @@ export class Servicio {
     ciudad: number;
 
     @Column()
-    telefono: number
+    telefono: string;
 
     @ManyToOne(()=> CategoriaServicio, categoria => categoria.servicios)
     categoria: CategoriaServicio[];

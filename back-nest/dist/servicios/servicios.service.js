@@ -24,7 +24,7 @@ let ServiciosService = class ServiciosService {
     async createServicio(servicio) {
         const servicioFound = await this.servicioRepository.findOne({
             where: {
-                servicioNombre: servicio.nombre
+                nombre: servicio.nombre
             }
         });
         if (servicioFound) {
@@ -40,13 +40,13 @@ let ServiciosService = class ServiciosService {
             }
         });
     }
-    async getServicio(servicioNombre) {
+    async getServicio(nombre) {
         const servicioFound = await this.servicioRepository.findOne({
             where: {
-                servicioNombre
+                nombre
             }
         });
-        if (!servicioNombre) {
+        if (!nombre) {
             return null;
         }
         return servicioFound;

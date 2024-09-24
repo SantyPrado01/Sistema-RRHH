@@ -10,12 +10,12 @@ import { Router } from '@angular/router';
   selector: 'app-empresas-new',
   standalone: true,
   imports: [NabvarComponent, FormsModule, CommonModule],
-  templateUrl: './empresas-new.component.html',
-  styleUrls: ['./empresas-new.component.css']
+  templateUrl: './servicios-new.component.html',
+  styleUrls: ['./servicios-new.component.css']
 })
-export class EmpresasNewComponent implements OnInit {
+export class ServiciosNewComponent implements OnInit {
 
-  empresa: any = {};
+  servicio: any = {};
   categorias: any[] = [];
   ciudades: any[] = [];
   provinciaCórdobaId = 14;
@@ -65,13 +65,13 @@ export class EmpresasNewComponent implements OnInit {
   seleccionarCiudad(event: any) {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
     if (selectedCity) {
-      this.empresa.ciudadID = selectedCity.id; 
+      this.servicio.ciudad = selectedCity.id; 
     }
   }
   
   guardarEmpresa() {
-    const url = 'http://localhost:3000/empresas'; 
-    this.http.post(url, this.empresa).subscribe({
+    const url = 'http://localhost:3000/servicios'; 
+    this.http.post(url, this.servicio).subscribe({
       next: (response) => {
         console.log('Empresa guardada con éxito:', response);
         alert('Empresa guardada con éxito');
@@ -85,7 +85,7 @@ export class EmpresasNewComponent implements OnInit {
   }
 
   limpiarFormulario() {
-    this.empresa = {
+    this.servicio = {
       nombre: '',
       CUIT: null,
       direccion: '',

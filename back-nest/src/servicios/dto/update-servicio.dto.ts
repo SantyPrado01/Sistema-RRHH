@@ -4,10 +4,10 @@ import { CreateServicioDto } from './create-servicio.dto';
 export class UpdateServicioDto extends PartialType(CreateServicioDto) {
 
     nombre?: string
-    CUIT?: number
+    cuit?: string
     direccion?: string
     ciudadID?: number
-    telefono?: number
+    telefono?: string
     categoriaID?: number
     descripcion?: string
     eliminado?: boolean

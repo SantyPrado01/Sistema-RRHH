@@ -17,21 +17,6 @@ import { Router } from '@angular/router';
 })
 export class EmpleadosNewComponent implements OnInit{
 
-  // empleado: Empleado = {
-  //  empleadoId: 0,
-  //  legajo: 0,
-  //  nombre: '',
-  //  apellido: '',
-  //  nroDocumento: 0,
-  //  telefono: 0,
-  //  email: '',
-  //  fechaIngreso: undefined,
-  //  eliminado: false,
-  //  observaciones:'',
-  //  ciudad:0,
-  //  categoria: 0,
-  //  disponibilidadID: 0,
-  //};
   empleado: any = {};
   categorias: any[] = [];
   ciudades: any[] = [];
@@ -104,17 +89,17 @@ export class EmpleadosNewComponent implements OnInit{
   limpiarFormulario() {
     this.empleado = {
       empleadoId: 0,
-      legajo: 0,
+      legajo: null,
       nombre: '',
       apellido: '',
-      nroDocumento: 0,
-      telefono: 0,
+      nroDocumento: null,
+      telefono: null,
       email: '',
       fechaIngreso: undefined,
       eliminado: false,
-      ciudad: 12112120,
-      categoria: 0,
-      disponibilidadID: 0,
+      ciudad: null,
+      categoria: null,
+      disponibilidadID: null,
       observaciones:''
     };
   }

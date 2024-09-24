@@ -10,6 +10,9 @@ import { EditEmpleadoComponent } from './empleados/empleados-edit/empleados-edit
 import { EmpleadosDetailComponent } from './empleados/empleados-detail/empleados-detail.component';
 import { HomeComponent } from './home-user/home.component';
 import { HomeAdminComponent } from './home-admin/home-admin.component';
+import { ServiciosNewComponent } from './servicios/servicios-new/servicios-new.component';
+import path from 'path';
+import { ServiciosListComponent } from './servicios/servicios-list/servicios-list.component';
 
 export const routes: Routes = [
     {
@@ -55,6 +58,14 @@ export const routes: Routes = [
     {
         path: 'employee/edit/:id', 
         component: EditEmpleadoComponent 
+    },
+    {
+        path:'service/create',
+        component:ServiciosNewComponent
+    },
+    {
+        path:'service',
+        component: ServiciosListComponent
     }
 
 ];
