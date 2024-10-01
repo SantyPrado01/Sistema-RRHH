@@ -37,9 +37,6 @@ export class EditEmpleadoComponent implements OnInit {
         console.error('Error al obtener las categorías', err);
       }
     });
-
-    this.obtenerCiudades();
-
     // Obtener el ID del empleado de la URL y luego cargar el empleado
     const empleadoId = this.route.snapshot.paramMap.get('id');
     if (empleadoId) {
@@ -47,35 +44,46 @@ export class EditEmpleadoComponent implements OnInit {
     }
   }
 
-  obtenerCiudades() {
-    const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}`; // Ajusta max según necesidad
-
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
-        this.ciudades = response.localidades.map((localidad: any) => ({
-          id: localidad.id,
-          nombre: localidad.nombre,
-        }));
-      },
-      error: (err) => {
-        console.error('Error al obtener las ciudades', err);
-      }
-    });
-  }
-
   cargarEmpleado(empleadoId: string) {
     this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
       next: (data) => {
         this.empleado = data;
-        // Setear el nombre de la ciudad basado en el ID
-        const ciudadSeleccionada = this.ciudades.find(c => c.id === this.empleado.ciudad);
-        this.ciudadNombre = ciudadSeleccionada ? ciudadSeleccionada.nombre : '';
+  
+        if (this.empleado.ciudad) {
+          this.obtenerNombreCiudad(this.empleado.ciudad.toString()).subscribe({
+            next: (response) => {
+              console.log('Respuesta de la API:', response);
+              
+              // Verifica que la propiedad localidades_censales esté presente
+              if (response.localidades_censales && response.localidades_censales.length > 0) {
+                this.ciudadNombre = response.localidades_censales[0].nombre;
+                console.log('Nombre de la ciudad encontrado:', this.ciudadNombre);
+              } else {
+                console.log('localidades_censales está vacío o no existe', response.localidades_censales);
+                this.ciudadNombre = 'Desconocido'; 
+              }
+            },
+            error: (err) => {
+              console.error('Error al obtener el nombre de la ciudad', err);
+              this.ciudadNombre = 'Error';
+            }
+          });
+        } else {
+          console.log('ID de ciudad no encontrado:', this.empleado.ciudad);
+          this.ciudadNombre = 'Desconocido'; 
+        }
       },
       error: (err) => {
         console.error('Error al cargar los datos del empleado', err);
       }
     });
   }
+  
+  obtenerNombreCiudad(idCiudad: string) {
+    const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}&aplanar=true&campos=nombre&exacto=true`;
+    return this.http.get<any>(url);
+  }
+  
 
   buscarCiudad(event: Event) {
     const input = event.target as HTMLInputElement;

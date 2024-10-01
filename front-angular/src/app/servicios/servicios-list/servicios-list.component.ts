@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { Empresa } from '../models/servicio.models';
 import { ServicioService } from '../services/servicio.service';
 import { CategoriaEmpleadoService } from '../../empleados/services/categoria-empleado.service';
+import { catchError, forkJoin, map, of } from 'rxjs';
+import { CategoriaServicioService } from '../services/categoria-servicios.service';
 
 @Component({
   selector: 'app-servicios-list',
@@ -23,33 +25,66 @@ export class ServiciosListComponent implements OnInit {
   filtroVisualizar: string = 'activo';  
   filtroOrdenar: string = 'nombre';     
   isModalOpen: boolean = false;
-  ciudades: any[] = [];
+  provincias: any[] = []; // Cambié a plural si necesitas más provincias
   provinciaCórdobaId: number = 14;
 
   constructor(
     private servicioService: ServicioService, 
     private router: Router, 
     private http: HttpClient,
-    private categoria: CategoriaEmpleadoService
+    private categoria: CategoriaServicioService
   ) {}
 
   ngOnInit(): void {
+    this.buscarServicios();
     this.obtenerServicios();
     this.obtenerCategorias();
   }
 
   obtenerServicios(): void {
     this.servicioService.getServicios().subscribe((data: Empresa[]) => {
-      this.empresas = data;
-      this.filtrarServicios();
+        this.empresas = data;
+        console.log(data)
+
+        // Crea un array de observables para las llamadas a obtenerNombreCiudad
+        const ciudadRequests = this.empresas.map(empresa => {
+            if (empresa.ciudad) {
+                return this.obtenerNombreCiudad(empresa.ciudad.toString()).pipe(
+                    // Agrega un manejo para mapear la respuesta
+                    map(response => {
+                        const nombreCiudad = response.localidades_censales[0]?.nombre || 'Desconocido';
+                        empresa.ciudad = nombreCiudad; // Actualiza el nombre de la ciudad
+                        return empresa; // Devuelve la empresa actualizada
+                    }),
+                    catchError(() => {
+                        console.error('Error al obtener el nombre de la ciudad');
+                        return of(empresa); 
+                    })
+                );
+            } else {
+                return of(empresa);
+            }
+        });
+
+        // Usa forkJoin para esperar todas las llamadas
+        forkJoin(ciudadRequests).subscribe((empresasActualizadas) => {
+            this.empresas = empresasActualizadas; 
+            this.filtrarServicios(); 
+        });
     });
   }
 
-  obtenerCategorias(): void {
-    this.categoria.getCategoriasEmpleados().subscribe((data: any[]) => {
-      this.categorias = data;
-    });
+  obtenerNombreCiudad(idCiudad: string) {
+    const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}&aplanar=true&campos=nombre&exacto=true`;
+    return this.http.get<any>(url);
   }
+
+  obtenerCategorias(): void {
+    this.categoria.getCategoriasServicio().subscribe((data: any[]) => {
+        this.categorias = data;
+        console.log('Categorías cargadas:', this.categorias); // Agregar este log
+    });
+}
 
   getCategoriaNombre(id: number): string {
     const categoria = this.categorias.find(c => c.idCategoria === id);
@@ -57,7 +92,7 @@ export class ServiciosListComponent implements OnInit {
   }
 
   buscarServicios(): void {
-    this.filtrarServicios()
+    this.filtrarServicios();
   }
 
   filtrarServicios(): void {
@@ -65,7 +100,7 @@ export class ServiciosListComponent implements OnInit {
       .filter(empresa => 
         !empresa.eliminado && 
         (empresa.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()))
-      )
+      );
   }
 
   eliminarServicio(empresa: Empresa): void {
@@ -87,5 +122,5 @@ export class ServiciosListComponent implements OnInit {
       console.log('Operación cancelada');
     }
   }
-
 }
+
