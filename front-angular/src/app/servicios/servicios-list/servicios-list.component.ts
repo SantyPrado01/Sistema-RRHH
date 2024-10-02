@@ -82,13 +82,13 @@ export class ServiciosListComponent implements OnInit {
   obtenerCategorias(): void {
     this.categoria.getCategoriasServicio().subscribe((data: any[]) => {
         this.categorias = data;
-        console.log('Categorías cargadas:', this.categorias); // Agregar este log
     });
 }
 
   getCategoriaNombre(id: number): string {
-    const categoria = this.categorias.find(c => c.idCategoria === id);
-    return categoria ? categoria.nombreCategoria : 'Desconocido';
+    const categoria = this.categorias.find(c => c.categoria === id);
+    console.log(categoria)
+    return categoria ? categoria.nombreCategoriaServico : 'Desconocido';
   }
 
   buscarServicios(): void {
@@ -104,10 +104,10 @@ export class ServiciosListComponent implements OnInit {
   }
 
   eliminarServicio(empresa: Empresa): void {
-    if (confirm('¿Estás seguro de que deseas marcar a esta empresa como inactiva?')) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta empresa?')) {
       const empresaId = empresa.servicioId;
 
-      this.http.patch<Empresa>(`http://localhost:3000/servicio/${empresaId}`, { eliminado: true }).subscribe({
+      this.http.patch<Empresa>(`http://localhost:3000/servicios/${empresaId}`, { eliminado: true }).subscribe({
         next: (response) => {
           console.log('Servicio eliminada con éxito:', response);
           alert('Servicio eliminada con éxito');

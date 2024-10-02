@@ -13,7 +13,7 @@
         🔍
       </button>
       <!-- Botón para abrir el modal -->
-      <button routerLink='/empresa/create' class="btn btn-primary">+</button>
+      <button routerLink='/service/create' class="btn btn-primary">+</button>
     </div>
 
     <!-- Filtros -->
@@ -22,7 +22,7 @@
         <label for="visualizarPor">Visualizar por:</label>
         <select id="visualizarPor">
           <option value="activo">Activo</option>
-          <option value="inactivo">Inactivo</option>
+          <option value="inactivo">Eliminado</option>
         </select>
       </div>
 
@@ -54,10 +54,10 @@
         <td>{{ empresa.ciudad }}</td>
         <td>{{ getCategoriaNombre(empresa.categoria) }}</td>
         <td>
-          <a [routerLink]="['/empresa/view', empresa.servicioId]">
+          <a [routerLink]="['/service/view', empresa.servicioId]">
             <button class="btn-view">👁️</button>
           </a>
-          <button class="btn-edit" [routerLink]="['/empresa/edit', empresa.servicioId]">✏️</button>
+          <button class="btn-edit" [routerLink]="['/service/edit', empresa.servicioId]">✏️</button>
           <button class="btn-delete" (click)="eliminarServicio(empresa)">🗑️</button>
         </td>
       </tr>

@@ -13,6 +13,7 @@ import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { ServiciosNewComponent } from './servicios/servicios-new/servicios-new.component';
 import path from 'path';
 import { ServiciosListComponent } from './servicios/servicios-list/servicios-list.component';
+import { ServiciosEditComponent } from './servicios/servicios-edit/servicios-edit.component';
 
 export const routes: Routes = [
     {
@@ -66,6 +67,11 @@ export const routes: Routes = [
     {
         path:'service',
         component: ServiciosListComponent
+    },
+    {
+        path:'service/edit/:id',
+        component: ServiciosEditComponent    
     }
+
 
 ];

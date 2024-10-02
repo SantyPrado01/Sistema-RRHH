@@ -117,6 +117,8 @@ export class EditEmpleadoComponent implements OnInit {
     }
   }
 
+
+
   actualizarEmpleado() {
     const empleadoId = this.route.snapshot.paramMap.get('id');
     if (empleadoId) {

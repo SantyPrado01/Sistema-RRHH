@@ -12,27 +12,27 @@ export class ServicioService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener todos los empleados
+  // Obtener todos los servicios
   getServicios(): Observable<Empresa[]> {
     return this.http.get<Empresa[]>(`${this.apiUrl}`);
   }
 
-  // Obtener un empleado por su ID
+  // Obtener un servicio por su ID
   getServicioById(id: number): Observable<Empresa> {
     return this.http.get<Empresa>(`${this.apiUrl}/${id}`);
   }
 
-  // Crear un nuevo empleado
-  createServicio(empleado: Empresa): Observable<Empresa> {
-    return this.http.post<Empresa>(this.apiUrl, empleado);
+  // Crear un nuevo servicio
+  createServicio(empresa: Empresa): Observable<Empresa> {
+    return this.http.post<Empresa>(this.apiUrl, empresa);
   }
 
-  // Actualizar un empleado existente
-  updateServicio(id: number, empleado: Empresa): Observable<Empresa> {
-    return this.http.put<Empresa>(`${this.apiUrl}/${id}`, empleado);
+  // Actualizar un servicio existente
+  updateServicio(id: number, empresa: Empresa): Observable<Empresa> {
+    return this.http.put<Empresa>(`${this.apiUrl}/${id}`, empresa);
   }
 
-  // Eliminar un empleado
+  // Eliminar un servicio
   deleteServicio(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

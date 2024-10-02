@@ -52,7 +52,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
-], Servicio.prototype, "elimindado", void 0);
+], Servicio.prototype, "eliminado", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => necesidad_horaria_entity_1.NecesidadHoraria, necesidad => necesidad.servicio),
     __metadata("design:type", Array)

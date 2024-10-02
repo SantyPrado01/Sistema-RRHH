@@ -1,1 +1,126 @@
-<p>servicios-edit works!</p>
+<app-nabvar></app-nabvar>
+<div class="content-container">
+  <!-- Título -->
+  <h2>Editar Servicio</h2>
+  <div class="line"></div>
+
+  <div class="content-form">
+    <!-- Formulario para editar una empresa -->
+    <form (ngSubmit)="actualizarEmpresa()" class="form-container">
+      
+      <!-- Fila 1 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombreEmpresa">Nombre de la Empresa:</label>
+          <input
+            type="text"
+            id="nombreEmpresa"
+            [(ngModel)]="servicio.nombre"
+            name="nombreEmpresa"
+            class="form-control"
+            placeholder="Ingrese el nombre"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="cuitEmpresa">CUIT:</label>
+          <input
+            type="number"
+            id="cuitEmpresa"
+            [(ngModel)]="servicio.cuit"
+            name="cuitEmpresa"
+            class="form-control"
+            placeholder="Ingrese el CUIT"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="categoriaEmpresa">Categoría de Empresa:</label>
+          <select
+            id="categoriaEmpresa"
+            [(ngModel)]="servicio.categoria"
+            name="categoriaEmpresa"
+            class="form-control"
+            required
+          >
+            <option value="" disabled selected>Seleccione una categoría</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.categoriaCategoriaServicioId">
+              {{ categoria.nombreCategoriaServico }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Fila 2 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="direccionEmpresa">Dirección:</label>
+          <input
+            type="text"
+            id="direccionEmpresa"
+            [(ngModel)]="servicio.direccion"
+            name="direccionEmpresa"
+            class="form-control"
+            placeholder="Ingrese la dirección"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="telefonoEmpresa">Teléfono:</label>
+          <input
+            type="tel"
+            id="telefonoEmpresa"
+            [(ngModel)]="servicio.telefono"
+            name="telefonoEmpresa"
+            class="form-control"
+            placeholder="Ingrese el teléfono"
+            required
+          />
+        </div>
+
+        <div class="form-group autocomplete-group">
+          <label for="ciudadEmpresa">Ciudad:</label>
+          <input
+            type="text"
+            id="ciudadEmpresa"
+            [(ngModel)]="ciudadNombre"
+            name="ciudadNombre"
+            class="form-control"
+            placeholder="Ingrese la ciudad"
+            (input)="buscarCiudad($event)"
+            (change)="seleccionarCiudad($event)"
+            list="ciudadesList"
+            required
+          />
+          <datalist id="ciudadesList">
+            <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
+          </datalist>
+        </div>
+      </div>
+
+      <!-- Fila 3: Descripción -->
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="descripcionEmpresa">Descripción:</label>
+          <textarea
+            id="descripcionEmpresa"
+            [(ngModel)]="servicio.descripcion"
+            name="descripcionEmpresa"
+            class="form-control"
+            rows="3"
+            placeholder="Ingrese una descripción"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-save" (click)="actualizarEmpresa()">Actualizar Servicio</button>
+        <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

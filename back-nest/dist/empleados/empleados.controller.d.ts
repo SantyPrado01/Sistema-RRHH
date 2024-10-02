@@ -8,7 +8,7 @@ export declare class EmpleadosController {
     constructor(empleadosService: EmpleadosService, httpService: HttpService);
     createEmpleado(createEmpleadoDto: CreateEmpleadoDto): import("@nestjs/common").HttpException;
     getEmpleados(): Promise<import("./entities/empleado.entity").Empleado[]>;
-    getEmpleado(id: string): Promise<import("@nestjs/common").HttpException | import("./entities/empleado.entity").Empleado>;
+    getEmpleado(id: string): Promise<import("./entities/empleado.entity").Empleado | import("@nestjs/common").HttpException>;
     updateEmpleado(id: string, updateEmpleadoDto: UpdateEmpleadoDto): Promise<import("@nestjs/common").HttpException | (import("./entities/empleado.entity").Empleado & UpdateEmpleadoDto)>;
     deleteEmpleado(id: string): Promise<import("@nestjs/common").HttpException>;
 }

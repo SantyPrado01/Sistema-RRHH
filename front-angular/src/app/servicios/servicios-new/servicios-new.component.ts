@@ -97,6 +97,6 @@ export class ServiciosNewComponent implements OnInit {
   }
   
   cancelar() {
-    this.router.navigate(['/empresas']);
+    this.router.navigate(['/service']);
   }
 }

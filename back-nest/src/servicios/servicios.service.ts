@@ -29,7 +29,7 @@ export class ServiciosService {
   getServicios(){
     return this.servicioRepository.find({
       where:{
-        elimindado:false
+        eliminado:false
       }
     })
   }
@@ -68,25 +68,23 @@ export class ServiciosService {
       return new HttpException('Servicio no encontrado.', HttpStatus.NOT_FOUND)
     }
 
-    servicioFound.elimindado = true;
+    servicioFound.eliminado = true;
     await this.servicioRepository.save(servicioFound);
     throw new HttpException('Servicio Eliminado', HttpStatus.ACCEPTED)
   }
   
-  
-  
-  async updateServicio(servicioId:number, servicio: UpdateServicioDto){
-
-    const servicioFound = this.servicioRepository.findOne({
-      where:{
-        servicioId
-      }
+  async updateServicio(servicioId: number, servicio: UpdateServicioDto) {
+    const servicioFound = await this.servicioRepository.findOne({
+        where: {
+            servicioId,
+        },
     });
-    if(!servicioFound){
-      return new HttpException('Servicio no encontrado.', HttpStatus.NOT_FOUND)
+
+    if (!servicioFound) {
+        throw new HttpException('Servicio no encontrado.', HttpStatus.NOT_FOUND);
     }
+    console.log('DTO recibido:', servicio);
     const updateServicio = Object.assign(servicioFound, servicio);
     return this.servicioRepository.save(updateServicio);
-
-  }
+}
 }

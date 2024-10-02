@@ -68,7 +68,7 @@
     border: 1px solid #000000; /* Bordes negros */
     color: #000000; /* Texto negro */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 0.5rem;
+    margin-top: 0.1rem;
     z-index: 1000;
     min-width: 160px;
     border-radius: 4px; /* Bordes redondeados */

@@ -10,7 +10,7 @@ export declare class Servicio {
     telefono: string;
     categoria: CategoriaServicio[];
     descripcion: string;
-    elimindado: boolean;
+    eliminado: boolean;
     necesidades: NecesidadHoraria[];
     facturas: Factura[];
 }

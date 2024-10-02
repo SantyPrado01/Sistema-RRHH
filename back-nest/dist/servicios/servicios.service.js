@@ -36,7 +36,7 @@ let ServiciosService = class ServiciosService {
     getServicios() {
         return this.servicioRepository.find({
             where: {
-                elimindado: false
+                eliminado: false
             }
         });
     }
@@ -71,19 +71,20 @@ let ServiciosService = class ServiciosService {
         if (!servicioFound) {
             return new common_1.HttpException('Servicio no encontrado.', common_1.HttpStatus.NOT_FOUND);
         }
-        servicioFound.elimindado = true;
+        servicioFound.eliminado = true;
         await this.servicioRepository.save(servicioFound);
         throw new common_1.HttpException('Servicio Eliminado', common_1.HttpStatus.ACCEPTED);
     }
     async updateServicio(servicioId, servicio) {
-        const servicioFound = this.servicioRepository.findOne({
+        const servicioFound = await this.servicioRepository.findOne({
             where: {
-                servicioId
-            }
+                servicioId,
+            },
         });
         if (!servicioFound) {
-            return new common_1.HttpException('Servicio no encontrado.', common_1.HttpStatus.NOT_FOUND);
+            throw new common_1.HttpException('Servicio no encontrado.', common_1.HttpStatus.NOT_FOUND);
         }
+        console.log('DTO recibido:', servicio);
         const updateServicio = Object.assign(servicioFound, servicio);
         return this.servicioRepository.save(updateServicio);
     }

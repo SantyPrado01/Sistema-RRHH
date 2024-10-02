@@ -11,5 +11,5 @@ export declare class ServiciosService {
     getServicio(nombre: string): Promise<Servicio>;
     getServicioId(servicioId: number): Promise<HttpException | Servicio>;
     deleteServicio(servicioId: number): Promise<HttpException>;
-    updateServicio(servicioId: number, servicio: UpdateServicioDto): Promise<HttpException | Servicio>;
+    updateServicio(servicioId: number, servicio: UpdateServicioDto): Promise<Servicio & UpdateServicioDto>;
 }

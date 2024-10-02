@@ -34,7 +34,7 @@ export class Servicio {
     descripcion: string
 
     @Column({default:false})
-    elimindado: boolean
+    eliminado: boolean
 
     @OneToMany(() => NecesidadHoraria, necesidad => necesidad.servicio)
     necesidades: NecesidadHoraria[];
