@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import jwt_decode from 'jwt-decode';
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +22,12 @@ export class LoginService{
     register(data:any): Observable<any>{
         return this.http.post<any>(`${this.baseUrl}/register`, data);
     }
+    getUserRole(): string | null {
+        const token = localStorage.getItem('token'); // Asegúrate de que el token esté almacenado
+        if (!token) return null;
 
+        const decodedToken: any = jwt_decode(token);
+        return decodedToken.rol; // Suponiendo que el rol está en el payload del token
+    }
 
 }

@@ -11,13 +11,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
-const jwt_constant_1 = require("../constants/jwt.constant");
 const jwt_1 = require("@nestjs/jwt");
+const core_1 = require("@nestjs/core");
+const jwt_constant_1 = require("../constants/jwt.constant");
 let AuthGuard = class AuthGuard {
-    constructor(jwtService) {
+    constructor(jwtService, reflector) {
         this.jwtService = jwtService;
+        this.reflector = reflector;
     }
     async canActivate(context) {
+        const requiredRoles = this.reflector.getAllAndOverride('roles', [
+            context.getHandler(),
+            context.getClass(),
+        ]);
         const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
         if (!token) {
@@ -25,9 +31,12 @@ let AuthGuard = class AuthGuard {
         }
         try {
             const payload = await this.jwtService.verifyAsync(token, {
-                secret: jwt_constant_1.jwtCosntants.secret
+                secret: jwt_constant_1.jwtCosntants.secret,
             });
             request['user'] = payload;
+            if (requiredRoles && !requiredRoles.includes(payload.role)) {
+                throw new common_1.ForbiddenException('No tienes permiso para acceder a esta ruta');
+            }
         }
         catch {
             throw new common_1.UnauthorizedException();
@@ -36,12 +45,13 @@ let AuthGuard = class AuthGuard {
     }
     extractTokenFromHeader(request) {
         const [type, token] = request.headers.authorization?.split(' ') ?? [];
-        return type == 'Bearer' ? token : undefined;
+        return type === 'Bearer' ? token : undefined;
     }
 };
 exports.AuthGuard = AuthGuard;
 exports.AuthGuard = AuthGuard = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService])
+    __metadata("design:paramtypes", [jwt_1.JwtService,
+        core_1.Reflector])
 ], AuthGuard);
 //# sourceMappingURL=auth.guard.js.map

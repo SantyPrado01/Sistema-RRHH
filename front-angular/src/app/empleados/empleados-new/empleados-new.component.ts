@@ -22,8 +22,28 @@ export class EmpleadosNewComponent implements OnInit{
   ciudades: any[] = [];
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
+  contadorCaracteres: number = 0;
 
   constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService, private router: Router) {}
+
+  // Validaciones 
+
+  actualizarContador(event: Event) {
+    const inputElement = event.target as HTMLTextAreaElement;
+    this.contadorCaracteres = inputElement.value.length;
+  }
+
+  validarTelefono(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');
+    this.empleado.telefono = input.value;
+  }
+
+  validarSoloLetras(event: any) {
+    const input = event.target;
+    input.value = input.value.replace(/[^a-zA-Z ]/g, '');
+  }
+
 
   ngOnInit() {
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({

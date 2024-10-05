@@ -42,10 +42,12 @@ let AuthService = class AuthService {
         if (!isPasswordValid) {
             return new common_1.HttpException('Contraseña Incorrecta', common_1.HttpStatus.NOT_ACCEPTABLE);
         }
-        const payload = { username: user.username };
+        const payload = { username: user.username, role: user.rol };
         const token = await this.jwtService.signAsync(payload);
         return {
-            token, username
+            token,
+            username: user.username,
+            role: user.rol
         };
     }
 };

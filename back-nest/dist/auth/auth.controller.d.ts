@@ -4,10 +4,11 @@ import { loginDto } from './dto/login.dto';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    register(registerDto: RegisterDto): Promise<import("../users/user.entity").User | import("@nestjs/common").HttpException>;
+    register(registerDto: RegisterDto): Promise<import("@nestjs/common").HttpException | import("../users/user.entity").User>;
     loging(loginDto: loginDto): Promise<import("@nestjs/common").HttpException | {
         token: string;
         username: string;
+        role: string;
     }>;
     profile(req: any): any;
 }

@@ -14,15 +14,20 @@ import { ServiciosNewComponent } from './servicios/servicios-new/servicios-new.c
 import path from 'path';
 import { ServiciosListComponent } from './servicios/servicios-list/servicios-list.component';
 import { ServiciosEditComponent } from './servicios/servicios-edit/servicios-edit.component';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
     {
         path:'home-admin',
-        component: HomeAdminComponent
+        component: HomeAdminComponent,
+        canActivate: [AuthGuard],
+        data: { expectedRole: 'admin' }
     },
     {
         path:'home',
-        component: HomeComponent
+        component: HomeComponent,
+        canActivate: [AuthGuard],
+        data: { expectedRole: 'admin' }
     },
     {
         path:'',
@@ -34,15 +39,20 @@ export const routes: Routes = [
     },
     {
         path:'user',
-        component: UsuarioListComponent
+        component: UsuarioListComponent,
+        canActivate: [AuthGuard],
+        data: { expectedRole: 'admin' }
     },
     {
         path:'user/create',
-        component: UsuarioNewComponent
+        component: UsuarioNewComponent,
+        canActivate: [AuthGuard],
+        data: { expectedRole: 'admin' }
     },
     {
         path:'user/edit/:id',
-        component: UsuarioEditComponent
+        component: UsuarioEditComponent,canActivate: [AuthGuard],
+        data: { expectedRole: 'admin' }
     },
     {
         path:'employee',

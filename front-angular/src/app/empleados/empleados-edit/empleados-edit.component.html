@@ -6,7 +6,7 @@
 
   <div class="content-form">
     <!-- Formulario para editar un empleado -->
-    <form (ngSubmit)="actualizarEmpleado()" class="form-container">
+    <form #empleadoForm="ngForm" (ngSubmit)="actualizarEmpleado()" class="form-container">
 
       <!-- Fila 1 -->
       <div class="form-row">
@@ -17,7 +17,8 @@
 
         <div class="form-group">
           <label for="categoriaEmpleado">Categoría de Empleado:</label>
-          <select id="categoria" [(ngModel)]="empleado.categoria" name="categoria" class="form-control" required>
+          <div *ngIf="categoriaEmpleado.invalid && categoriaEmpleado.touched" class="error"><i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>La categoría de empleado es requerida.</div>
+          <select id="categoria" [(ngModel)]="empleado.categoria" name="categoria" class="form-control" required #categoriaEmpleado="ngModel">
             <option value="" disabled>Seleccione una categoría</option>
             <option *ngFor="let categoria of categorias" [value]="categoria.categoriaCategoriaEmpleadoId">
               {{ categoria.categoriaEmpleadoNombre }}
@@ -26,8 +27,8 @@
         </div>
 
         <div class="form-group">
-          <label for="legajo">Legajo:</label>
-          <input type="number" id="legajo" [(ngModel)]="empleado.legajo" name="legajo" class="form-control" placeholder="Ingrese el legajo" required readonly />
+          <div *ngIf="legajoEmpleado.invalid && legajoEmpleado.touched" class="error"><i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>El legajo es requerido.</div>
+          <input type="number" id="legajo" [(ngModel)]="empleado.legajo" name="legajo" class="form-control" placeholder="Ingrese el legajo" required #legajoEmpleado="ngModel" min="0"/>
         </div>
       </div>
 
@@ -35,12 +36,14 @@
       <div class="form-row">
         <div class="form-group">
           <label for="nombre">Nombre:</label>
-          <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre" required />
+          <div *ngIf="nombreEmpleado.invalid && nombreEmpleado.touched" class="error"><i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>El nombre es requerido.</div>
+          <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre" required  #nombreEmpleado="ngModel" (input)="validarSoloLetras($event)"  />
         </div>
 
         <div class="form-group">
           <label for="apellido">Apellido:</label>
-          <input type="text" id="apellido" [(ngModel)]="empleado.apellido" name="apellido" class="form-control" placeholder="Ingrese el apellido" required />
+          <div *ngIf="apellidoEmpleado.invalid && apellidoEmpleado.touched" class="error"><i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>El apellido es requerido.</div>
+          <input type="text" id="apellido" [(ngModel)]="empleado.apellido" name="apellido" class="form-control" placeholder="Ingrese el apellido" required #apellidoEmpleado="ngModel" (input)="validarSoloLetras($event)" />
         </div>
 
         <div class="form-group">
@@ -58,28 +61,28 @@
       <div class="form-row">
         <div class="form-group">
           <label for="nroDocumento">Número de Documento:</label>
-          <input type="text" id="nroDocumento" [(ngModel)]="empleado.nroDocumento" name="nroDocumento" class="form-control" placeholder="Ingrese el número de documento" required />
+          <div *ngIf="nroDocumentoEmpleado.invalid && nroDocumentoEmpleado.touched" class="error">
+            <i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>
+            <div *ngIf="nroDocumentoEmpleado.errors?.['required']">El número de documento es requerido.</div>
+            <div *ngIf="nroDocumentoEmpleado.errors?.['pattern']">Debe ingresar exactamente 8 dígitos numéricos.</div>
+          </div>
+          <input type="text" id="nroDocumento" [(ngModel)]="empleado.nroDocumento" name="nroDocumento" class="form-control" placeholder="Ingrese el número de documento" required #nroDocumentoEmpleado="ngModel" pattern="^[0-9]{8}$" maxlength="8"/>
         </div>
 
         <div class="form-group">
           <label for="telefono">Teléfono:</label>
-          <input type="tel" id="telefono" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" placeholder="Ingrese el teléfono" required />
+          <div *ngIf="telefonoEmpleado.touched && telefonoEmpleado.invalid" class="error">
+            <i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>
+            <div *ngIf="telefonoEmpleado.errors?.['required']">El teléfono es requerido.</div>
+            <div *ngIf="telefonoEmpleado.errors?.['pattern']">El número de teléfono debe contar con 10 dígitos.</div>
+          </div>
+        <input type="tel" id="telefono" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" placeholder="Ingrese el teléfono" required #telefonoEmpleado="ngModel" maxlength="10" pattern="^[0-9]{10}$" title="Debe ingresar 10 dígitos numéricos" (input)="validarTelefono($event)" />
         </div>
 
         <div class="form-group autocomplete-group">
-          <label for="ciudad">Ciudad:</label>
-          <input
-            type="text"
-            id="ciudad"
-            [(ngModel)]="ciudadNombre"
-            name="ciudadNombre"
-            class="form-control"
-            placeholder="Ingrese la ciudad"
-            (input)="buscarCiudad($event)"
-            (change)="seleccionarCiudad($event)"  
-            list="ciudadesList"
-            required
-          />
+          <div *ngIf="ciudadNombreEmpleado.invalid && ciudadNombreEmpleado.touched" class="error"><i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>La ciudad es requerida.</div>
+          <input type="text" id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" class="form-control" placeholder="Ingrese la ciudad" (input)="buscarCiudad($event)" (change)="seleccionarCiudad($event)" list="ciudadesList"
+            required #ciudadNombreEmpleado="ngModel"/>
           <datalist id="ciudadesList">
             <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
           </datalist>
@@ -90,7 +93,8 @@
       <div class="form-row">
         <div class="form-group full-width">
           <label for="email">Email:</label>
-          <input type="text" id="email" [(ngModel)]="empleado.email" name="email" class="form-control" placeholder="Ingrese el email" required />
+          <div *ngIf="emailEmpleado.invalid && emailEmpleado.touched" class="error"><i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>El email es requerido.</div>
+          <input type="text" id="email" [(ngModel)]="empleado.email" name="email" class="form-control" placeholder="Ingrese el email" required #emailEmpleado="ngModel"/>
         </div>
       </div>
 
@@ -98,13 +102,15 @@
       <div class="form-row">
         <div class="form-group full-width">
           <label for="observaciones">Observaciones:</label>
-          <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" placeholder="Ingrese observaciones"></textarea>
+          <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" placeholder="Ingrese observaciones" maxlength="250"
+          (input)="actualizarContador($event)"></textarea>
+          <div>{{ 250 - contadorCaracteres }} caracteres restantes</div>
         </div>
       </div>
 
       <!-- Botones -->
       <div class="modal-footer">
-        <button type="submit" class="btn btn-save" (click)="actualizarEmpleado()">Actualizar Empleado</button>
+        <button type="submit" class="btn btn-save" [disabled]="empleadoForm.invalid" (click)="actualizarEmpleado()">Actualizar Empleado</button>
         <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
       </div>
     </form>

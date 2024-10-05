@@ -54,3 +54,14 @@ JWT (JSON Web Token):
 
 Un estándar para la creación de tokens de acceso que se utilizan para autenticar usuarios. 
 Un token JWT contiene información del usuario y una firma digital, permitiendo verificar su autenticidad.
+
+
+
+USUARIOS
+usernmae: SPRADO
+password: Ozj03650
+Rol: User
+
+username: Admin
+password: Admin1234
+Rol: Admin
