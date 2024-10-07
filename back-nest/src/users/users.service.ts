@@ -24,8 +24,6 @@ export class UsersService {
         if (userFound){
             return new HttpException('El usuario ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
         }
-
-
         const newUser = this.userRepository.create(user)
         return this.userRepository.save(newUser)
     }
