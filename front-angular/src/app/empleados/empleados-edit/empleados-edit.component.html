@@ -27,8 +27,9 @@
         </div>
 
         <div class="form-group">
+          <label for="legajo">Legajo:</label>
           <div *ngIf="legajoEmpleado.invalid && legajoEmpleado.touched" class="error"><i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>El legajo es requerido.</div>
-          <input type="number" id="legajo" [(ngModel)]="empleado.legajo" name="legajo" class="form-control" placeholder="Ingrese el legajo" required #legajoEmpleado="ngModel" min="0"/>
+          <input type="number" id="legajo" [(ngModel)]="empleado.legajo" name="legajo" class="form-control" placeholder="Ingrese el legajo" required #legajoEmpleado="ngModel" min="0" readonly/>
         </div>
       </div>
 
@@ -80,6 +81,7 @@
         </div>
 
         <div class="form-group autocomplete-group">
+          <label for="ciudad">Ciudad:</label>
           <div *ngIf="ciudadNombreEmpleado.invalid && ciudadNombreEmpleado.touched" class="error"><i class="fas fa-times-circle" style="color: red; margin-right: 5px;"></i>La ciudad es requerida.</div>
           <input type="text" id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" class="form-control" placeholder="Ingrese la ciudad" (input)="buscarCiudad($event)" (change)="seleccionarCiudad($event)" list="ciudadesList"
             required #ciudadNombreEmpleado="ngModel"/>
