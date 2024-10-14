@@ -5,14 +5,14 @@
         </div>
 
         <div class="form">
-            <form class="form" [formGroup]="loginForm" (ngSubmit)="inicioSesion()">
+            <form class="form" (ngSubmit)="inicioSesion()">
                <span class="input-span">
                     <label for="usuario" class="label">Usuario</label>
-                    <input type="text" name="usuario" id="usuario" formControlName='username'/>
+                    <input type="text" [(ngModel)]="username" name="usuario" id="usuario"/>
                 </span>
                 <span class="input-span">
                     <label for="password" class="label">Contraseña</label>
-                    <input type="password" formControlName='password' name="password" id="password"/>
+                    <input type="password" [(ngModel)]="password" name="password" id="password"/>
                 </span>
                 <br>
                 <button class="submit" type="submit">Iniciar Sesión</button> 

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-nabvar',
@@ -10,5 +11,17 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   
 })
 export class NabvarComponent {
+  username: string | null = '';
 
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.username = this.authService.getUsername(); // Obtiene el nombre de usuario
+  }
+
+  onLogout(): void {
+    if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+      this.authService.logout();
+    }
+  }
 }

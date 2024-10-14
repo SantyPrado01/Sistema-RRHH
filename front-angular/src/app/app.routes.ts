@@ -13,15 +13,23 @@ import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { ServiciosNewComponent } from './servicios/servicios-new/servicios-new.component';
 import { ServiciosListComponent } from './servicios/servicios-list/servicios-list.component';
 import { ServiciosEditComponent } from './servicios/servicios-edit/servicios-edit.component';
+import { DisponibilidadHorariaComponent } from './disponibilidad-horaria/disponibilidad-horaria.component';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
     {
         path:'home-admin',
         component: HomeAdminComponent,
+        canActivate:[AuthGuard],
+        data: { expectedRole: 'admin' }
+        
     },
     {
         path:'home',
         component: HomeComponent,
+        canActivate:[AuthGuard],
+        data: { expectedRole: 'user' }
+
     },
     {
         path:'',
@@ -34,6 +42,8 @@ export const routes: Routes = [
     {
         path:'user',
         component: UsuarioListComponent,
+        canActivate:[AuthGuard],
+        data: { expectedRole: 'admin' }
     },
     {
         path:'user/create',
@@ -45,11 +55,19 @@ export const routes: Routes = [
     },
     {
         path:'employee',
-        component: EmpleadosListComponent
+        component: EmpleadosListComponent,
+    },
+    {
+        path: 'employee/schedule', 
+        component: DisponibilidadHorariaComponent
+        
     },
     {
         path:'employee/create',
-        component: EmpleadosNewComponent
+        component: EmpleadosNewComponent,
+        canActivate:[AuthGuard],
+        data: { expectedRole: 'admin' }
+
     },
     {
         path:'employee/profile',
@@ -70,7 +88,7 @@ export const routes: Routes = [
     {
         path:'service/edit/:id',
         component: ServiciosEditComponent    
-    }
+    },
 
 
 ];

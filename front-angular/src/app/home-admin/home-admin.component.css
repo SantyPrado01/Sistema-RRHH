@@ -1,0 +1,77 @@
+.home-container {
+    margin: 2%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .hours-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .hours-item {
+    flex: 1;
+    margin: 2em;
+  }
+  
+  .hours-item label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .hours-item input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #D4D4D4;
+    border-radius: 0.5rem;
+    outline: none;
+  }
+  
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #CC5600;
+    color: #ffffff;
+    border: 2px solid #CC5600;
+    border-radius: 8px;
+    width: 180px;
+    height: 180px;
+    text-align: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    padding: 10px;
+    margin-top: 2em;
+  }
+  
+  .action-btn:hover {
+    background-color: #a54e00;
+    border-color: #a54e00;
+  }
+  
+  .action-btn img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+  }
+  
+  .action-btn span {
+    font-size: 0.875rem;
+  }
+  

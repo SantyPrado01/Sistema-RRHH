@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NabvarComponent } from '../nabvar/nabvar.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,12 @@ import { RouterModule } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  username: string | null = '';
 
-  
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.username = this.authService.getUsername(); // Obtiene el nombre de usuario
+  }
 
 }

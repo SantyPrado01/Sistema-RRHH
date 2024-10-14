@@ -12,26 +12,20 @@
               <div class="dropdown-menu" aria-labelledby="empleadosDropdown">
                   <a class="dropdown-item" routerLink='/employee/create' routerLinkActive="active">Nuevo Empleado</a>
                   <a class="dropdown-item" routerLink='/employee' >Visualizar Empleados</a>
+                  <a class="dropdown-item" routerLink='/employee/schedule' >Cargar Horarios</a>
+                  <a class="dropdown-item" routerLink='/employee' >Visualizar Horarios</a>
               </div>
           </li>
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" routerLink='/service' id="serviciosDropdown" role="button">
-                   Servicios
+                   Empresas
                   <i class="fas dropdown-arrow"></i>
               </a>
               <div class="dropdown-menu" aria-labelledby="serviciosDropdown">
-                  <a class="dropdown-item" routerLink='/service/create'>Nuevo Servicio</a>
-                  <a class="dropdown-item" routerLink='/service'>Visualizar Servicios</a>
-              </div>
-          </li>
-          <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="ordenesDropdown" role="button">
-                   Ordenes de Trabajo
-                  <i class="fas dropdown-arrow"></i>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="ordenesDropdown">
-                  <a class="dropdown-item" href="#">Subopción 1</a>
-                  <a class="dropdown-item" href="#">Subopción 2</a>
+                  <a class="dropdown-item" routerLink='/service/create'>Nueva Empresa</a>
+                  <a class="dropdown-item" routerLink='/service'>Visualizar Empresas</a>
+                  <a class="dropdown-item" routerLink='/service'>Crear Orden de Trabajo</a>
+                  <a class="dropdown-item" routerLink='/service'>Visualizar Ordenes de Trabajo</a>
               </div>
           </li>
           <li class="nav-item dropdown">
@@ -66,12 +60,12 @@
           </li>
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="usuarioDropdown" role="button">
-                  <i class="fas fa-user"></i> Usuario
+                  <i class="fas fa-user"></i>
                   <i class="fas dropdown-arrow"></i>
               </a>
               <div class="dropdown-menu" aria-labelledby="usuarioDropdown">
-                  <a class="dropdown-item" href="#">Nombre Usuario</a>
-                  <a class="dropdown-item" href="#">Cerrar Sesion</a>
+                  <a class="dropdown-item" href="#">{{ username }}</a>
+                  <a class="dropdown-item" (click)="onLogout()">Cerrar Sesion</a>
               </div>
           </li>
       </ul>

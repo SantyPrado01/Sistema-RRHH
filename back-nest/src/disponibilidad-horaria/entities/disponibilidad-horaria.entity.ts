@@ -29,5 +29,4 @@ export class DisponibilidadHoraria {
     @Column({type:'date'})
     fechaFin:string
 
-
 }
