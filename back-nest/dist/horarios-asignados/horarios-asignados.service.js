@@ -25,41 +25,50 @@ let HorarioAsignadoService = class HorarioAsignadoService {
         this.ordenTrabajoRepository = ordenTrabajoRepository;
         this.empleadoRepository = empleadoRepository;
     }
-    async create(ordenTrabajoId) {
-        const ordenTrabajoExistente = await this.ordenTrabajoRepository.findOne({
+    async create(createHorariosDto) {
+        const { ordenTrabajoId } = createHorariosDto;
+        const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
             where: { ordenTrabajoId },
+            relations: ['empleadoAsignado'],
         });
-        if (!ordenTrabajoExistente) {
-            throw new common_1.NotFoundException('Orden de trabajo no encontrada');
+        if (!ordenTrabajo) {
+            throw new Error('Orden de trabajo no encontrada');
         }
-        const { anio, mes, dias, horaInicio, horaFin } = ordenTrabajoExistente;
+        const { anio, mes, dias, horaInicio, horaFin, empleadoAsignado } = ordenTrabajo;
         const horariosAsignados = [];
-        const primerDia = new Date(anio, mes - 1, 1);
-        const ultimoDia = new Date(anio, mes, 0);
-        const diasDeLaSemana = {
-            'Domingo': 0,
-            'Lunes': 1,
-            'Martes': 2,
-            'Miércoles': 3,
-            'Jueves': 4,
-            'Viernes': 5,
-            'Sábado': 6,
-        };
-        for (let dia = primerDia.getDate(); dia <= ultimoDia.getDate(); dia++) {
-            const fechaActual = new Date(anio, mes - 1, dia);
-            const diaDeLaSemana = fechaActual.toLocaleString('es-ES', { weekday: 'long' });
-            if (diasDeLaSemana[diaDeLaSemana] !== undefined && dias.includes(diaDeLaSemana)) {
+        for (const dia of dias) {
+            const fechas = this.obtenerFechasDelMes(anio, mes, dia);
+            for (const fecha of fechas) {
                 const horarioAsignado = this.horarioAsignadoRepository.create({
-                    fecha: fechaActual,
+                    ordenTrabajo,
+                    empleado: empleadoAsignado,
+                    fecha: fecha,
                     horaInicioProyectado: horaInicio,
                     horaFinProyectado: horaFin,
                     estado: 'pendiente',
                     suplente: false,
+                    empleadoSuplente: null
                 });
                 horariosAsignados.push(horarioAsignado);
             }
         }
-        return await this.horarioAsignadoRepository.save(horariosAsignados);
+        await this.horarioAsignadoRepository.save(horariosAsignados);
+        return horariosAsignados;
+    }
+    obtenerFechasDelMes(anio, mes, diaSemana) {
+        const fechas = [];
+        const primerDiaMes = new Date(anio, mes - 1, 1);
+        const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        const diaIndice = diasSemana.indexOf(diaSemana.toLowerCase());
+        if (diaIndice === -1)
+            return fechas;
+        for (let dia = primerDiaMes.getDate(); dia <= new Date(anio, mes, 0).getDate(); dia++) {
+            const fecha = new Date(anio, mes - 1, dia);
+            if (fecha.getDay() === diaIndice) {
+                fechas.push(fecha);
+            }
+        }
+        return fechas;
     }
     async findAll() {
         return await this.horarioAsignadoRepository.find({

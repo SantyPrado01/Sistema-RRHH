@@ -4,7 +4,7 @@ export declare class CreateHorariosAsignadoDto {
     ordenTrabajoId: number;
     empleadoAsignadoId: number;
     empleadoSuplente?: Empleado;
-    fecha: Date;
+    fecha: String;
     horaInicioProyectado: string;
     horaFinProyectado: string;
     horaInicioReal?: string;

@@ -5,7 +5,7 @@ import { HorarioAsignado } from './entities/horarios-asignado.entity';
 export declare class HorariosAsignadosController {
     private readonly horariosAsignadosService;
     constructor(horariosAsignadosService: HorarioAsignadoService);
-    create(createHorariosDto: CreateHorariosAsignadoDto): Promise<HorarioAsignado[]>;
+    create(createHorariosDto: CreateHorariosAsignadoDto): Promise<any[]>;
     findAll(): Promise<HorarioAsignado[]>;
     findOne(id: string): Promise<HorarioAsignado>;
     update(id: string, updateHorariosAsignadoDto: UpdateHorariosAsignadoDto): Promise<HorarioAsignado>;

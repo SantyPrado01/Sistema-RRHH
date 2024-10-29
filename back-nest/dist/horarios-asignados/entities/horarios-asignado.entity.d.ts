@@ -4,7 +4,7 @@ export declare class HorarioAsignado {
     horarioAsignadoId: number;
     ordenTrabajo: OrdenTrabajo;
     empleado: Empleado;
-    empleadoSuplente: Empleado;
+    empleadoSuplente?: Empleado;
     fecha: Date;
     horaInicioProyectado: string;
     horaFinProyectado: string;

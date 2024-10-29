@@ -1,0 +1,88 @@
+<div class="orden-trabajo-container">
+    <h2>Crear Orden de Trabajo</h2>
+    
+    <!-- Campo de búsqueda para empleados -->
+    <div class="search-container">
+        <label for="empleadoSearch">Buscar Empleado:</label>
+        <input type="text" id="empleadoSearch" [(ngModel)]="empleadoSearch" (input)="filterEmpleados()" placeholder="Buscar empleado por nombre">
+    </div>
+
+    <!-- Listado de empleados filtrados -->
+    <div class="empleados-list">
+        <h3>Empleados</h3>
+        <ul>
+            <li *ngFor="let empleado of filteredEmpleados">{{ empleado.nombre }} {{ empleado.apellido }}</li>
+        </ul>
+    </div>
+
+    <!-- Campo de búsqueda para servicios -->
+    <div class="search-container">
+        <label for="servicioSearch">Buscar Servicio:</label>
+        <input type="text" id="servicioSearch" [(ngModel)]="servicioSearch" (input)="filterServicios()" placeholder="Buscar servicio por nombre">
+    </div>
+
+    <!-- Listado de servicios filtrados -->
+    <div class="servicios-list">
+        <h3>Servicios</h3>
+        <ul>
+            <li *ngFor="let servicio of filteredServicios">{{ servicio.nombre }}</li>
+        </ul>
+    </div>
+
+    <!-- Formulario para crear la orden de trabajo -->
+    <form (ngSubmit)="createOrdenTrabajo()" #ordenTrabajoForm="ngForm">
+        <div class="form-group">
+            <label for="servicio">Servicio:</label>
+            <select id="servicio" [(ngModel)]="selectedServicio" name="servicio" required>
+                <option *ngFor="let servicio of filteredServicios" [value]="servicio">{{ servicio.nombre }}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="empleado">Empleado Asignado:</label>
+            <select id="empleado" [(ngModel)]="selectedEmpleado" name="empleado" required>
+                <option *ngFor="let empleado of filteredEmpleados" [value]="empleado">{{ empleado.nombre }} {{ empleado.apellido }}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="mes">Mes:</label>
+            <select id="mes" [(ngModel)]="mes" name="mes" required>
+                <option *ngFor="let mes of meses" [value]="mes.valor">{{ mes.nombre }}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="anio">Año:</label>
+            <select id="anio" [(ngModel)]="anio" name="anio" required>
+                <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Días:</label>
+            <div class="checkbox-container">
+                <label *ngFor="let dia of dias">
+                    <input type="checkbox" [(ngModel)]="dia.checked" (change)="updateDias()"/> {{ dia.nombre }}
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="horaInicio">Hora Inicio:</label>
+            <input type="time" id="horaInicio" [(ngModel)]="horaInicio" name="horaInicio" required>
+        </div>
+
+        <div class="form-group">
+            <label for="horaFin">Hora Fin:</label>
+            <input type="time" id="horaFin" [(ngModel)]="horaFin" name="horaFin" required>
+        </div>
+
+        <div class="form-group">
+            <label for="horariosAsignados">Horarios Asignados:</label>
+            <input type="text" id="horariosAsignados" [(ngModel)]="horariosAsignados" name="horariosAsignados" placeholder="Ej: [{ dia: 'Lunes', hora: '09:00' }, { dia: 'Martes', hora: '10:00' }]">
+        </div>
+
+        <button type="submit" [disabled]="ordenTrabajoForm.invalid">Crear Orden de Trabajo</button>
+    </form>
+</div>

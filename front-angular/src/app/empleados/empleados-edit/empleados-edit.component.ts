@@ -102,9 +102,6 @@ export class EditEmpleadoComponent implements OnInit {
           this.obtenerNombreCiudad(this.empleado.ciudad.toString()).subscribe({
             next: (response) => {
               console.log('Respuesta de la API:', response);
-
-              
-              // Verifica que la propiedad localidades_censales esté presente
               if (response.localidades_censales && response.localidades_censales.length > 0) {
                 this.ciudadNombre = response.localidades_censales[0].nombre;
                 console.log('Nombre de la ciudad encontrado:', this.ciudadNombre);

@@ -13,8 +13,8 @@ export class HorarioAsignado {
     @ManyToOne(() => Empleado, { nullable: false })
     empleado: Empleado;
 
-    @ManyToOne(() => Empleado, { nullable: false })
-    empleadoSuplente: Empleado;
+    @ManyToOne(() => Empleado, { nullable: true })
+    empleadoSuplente?: Empleado;
 
     @Column()
     fecha: Date; 

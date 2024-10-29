@@ -7,13 +7,11 @@ import { HorarioAsignado } from './entities/horarios-asignado.entity';
 @Controller('horarios-asignados')
 export class HorariosAsignadosController {
   constructor(private readonly horariosAsignadosService: HorarioAsignadoService) {}
-
-  // horarios-asignados.controller.ts
+  
   @Post()
-  async create(@Body() createHorariosDto: CreateHorariosAsignadoDto): Promise<HorarioAsignado[]> {
-      return this.horariosAsignadosService.create(createHorariosDto.ordenTrabajoId);
+  create(@Body() createHorariosDto: CreateHorariosAsignadoDto) {
+    return this.horariosAsignadosService.create(createHorariosDto);
   }
-
   @Get()
   findAll() {
     return this.horariosAsignadosService.findAll();

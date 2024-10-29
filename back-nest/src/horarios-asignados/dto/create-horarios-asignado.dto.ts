@@ -4,40 +4,26 @@ import { OrdenTrabajo } from "src/orden-trabajo/entities/orden-trabajo.entity";
 import { PrimaryGeneratedColumn } from "typeorm";
 
 export class CreateHorariosAsignadoDto {
-    @PrimaryGeneratedColumn()
     horarioAsignadoId: number; 
  
-    ordenTrabajoId: number;// ID de la orden de trabajo
+    ordenTrabajoId: number;
 
-    empleadoAsignadoId: number;// ID del empleado asignado
+    empleadoAsignadoId: number;
 
-    @IsOptional()
-    empleadoSuplente?: Empleado; // ID del empleado suplente (opcional)
+    empleadoSuplente?: Empleado; 
 
-    @IsDateString()
-    fecha: Date; // Fecha del horario asignado
+    fecha: String; 
 
-    @IsString()
-    @IsNotEmpty()
-    horaInicioProyectado: string; // Hora de inicio proyectado
+    horaInicioProyectado: string;
 
-    @IsString()
-    @IsNotEmpty()
     horaFinProyectado: string; // Hora de fin proyectado
 
-    @IsOptional()
-    @IsString()
     horaInicioReal?: string; // Hora de inicio real (opcional)
 
-    @IsOptional()
-    @IsString()
     horaFinReal?: string; // Hora de fin real (opcional)
 
-    @IsOptional()
-    @IsString()
     estado?: string; // Estado del horario asignado (opcional)
 
-    @IsOptional()
     suplente?: boolean;
 
 }

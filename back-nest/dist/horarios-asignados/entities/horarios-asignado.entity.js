@@ -29,7 +29,7 @@ __decorate([
     __metadata("design:type", empleado_entity_1.Empleado)
 ], HorarioAsignado.prototype, "empleado", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => empleado_entity_1.Empleado, { nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => empleado_entity_1.Empleado, { nullable: true }),
     __metadata("design:type", empleado_entity_1.Empleado)
 ], HorarioAsignado.prototype, "empleadoSuplente", void 0);
 __decorate([
