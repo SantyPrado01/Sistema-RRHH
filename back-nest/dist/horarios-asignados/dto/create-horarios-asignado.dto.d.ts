@@ -1,8 +1,9 @@
+import { Empleado } from "src/empleados/entities/empleado.entity";
 export declare class CreateHorariosAsignadoDto {
     horarioAsignadoId: number;
     ordenTrabajoId: number;
     empleadoAsignadoId: number;
-    empleadoSuplenteId?: number;
+    empleadoSuplente?: Empleado;
     fecha: Date;
     horaInicioProyectado: string;
     horaFinProyectado: string;

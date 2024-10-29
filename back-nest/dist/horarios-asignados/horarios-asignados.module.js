@@ -12,14 +12,16 @@ const horarios_asignados_service_1 = require("./horarios-asignados.service");
 const horarios_asignados_controller_1 = require("./horarios-asignados.controller");
 const horarios_asignado_entity_1 = require("./entities/horarios-asignado.entity");
 const typeorm_1 = require("@nestjs/typeorm");
+const orden_trabajo_entity_1 = require("../orden-trabajo/entities/orden-trabajo.entity");
+const empleado_entity_1 = require("../empleados/entities/empleado.entity");
 let HorariosAsignadosModule = class HorariosAsignadosModule {
 };
 exports.HorariosAsignadosModule = HorariosAsignadosModule;
 exports.HorariosAsignadosModule = HorariosAsignadosModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([horarios_asignado_entity_1.HorarioAsignado])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([horarios_asignado_entity_1.HorarioAsignado, orden_trabajo_entity_1.OrdenTrabajo, empleado_entity_1.Empleado])],
         controllers: [horarios_asignados_controller_1.HorariosAsignadosController],
-        providers: [horarios_asignados_service_1.HorariosAsignadosService],
+        providers: [horarios_asignados_service_1.HorarioAsignadoService],
     })
 ], HorariosAsignadosModule);
 //# sourceMappingURL=horarios-asignados.module.js.map

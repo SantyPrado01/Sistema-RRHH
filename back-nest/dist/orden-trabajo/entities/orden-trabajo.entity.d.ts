@@ -5,7 +5,7 @@ export declare class OrdenTrabajo {
     ordenTrabajoId: number;
     servicio: Servicio;
     empleadoAsignado: Empleado;
-    horariosAsignados: HorarioAsignado[];
+    horariosAsignados?: HorarioAsignado[];
     mes: number;
     anio: number;
     dias: string[];

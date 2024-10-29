@@ -17,7 +17,7 @@ export class OrdenTrabajo {
     empleadoAsignado: Empleado;  
 
     @OneToMany(() => HorarioAsignado, (horario) => horario.ordenTrabajo)
-    horariosAsignados: HorarioAsignado[];
+    horariosAsignados?: HorarioAsignado[];
 
     @Column()
     mes: number; 

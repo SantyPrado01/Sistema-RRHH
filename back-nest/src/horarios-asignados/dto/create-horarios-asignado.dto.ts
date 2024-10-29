@@ -1,17 +1,18 @@
 import { IsDateString, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { Empleado } from "src/empleados/entities/empleado.entity";
+import { OrdenTrabajo } from "src/orden-trabajo/entities/orden-trabajo.entity";
+import { PrimaryGeneratedColumn } from "typeorm";
 
 export class CreateHorariosAsignadoDto {
-    @IsNotEmpty()
+    @PrimaryGeneratedColumn()
     horarioAsignadoId: number; 
  
-    @IsNotEmpty()
-    ordenTrabajoId: number; // ID de la orden de trabajo asociada
+    ordenTrabajoId: number;// ID de la orden de trabajo
 
-    @IsNotEmpty()
-    empleadoAsignadoId: number; // ID del empleado asignado
+    empleadoAsignadoId: number;// ID del empleado asignado
 
     @IsOptional()
-    empleadoSuplenteId?: number; // ID del empleado suplente (opcional)
+    empleadoSuplente?: Empleado; // ID del empleado suplente (opcional)
 
     @IsDateString()
     fecha: Date; // Fecha del horario asignado

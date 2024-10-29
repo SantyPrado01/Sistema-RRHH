@@ -1,15 +1,17 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { HorariosAsignadosService } from './horarios-asignados.service';
+import { HorarioAsignadoService } from './horarios-asignados.service';
 import { CreateHorariosAsignadoDto } from './dto/create-horarios-asignado.dto';
 import { UpdateHorariosAsignadoDto } from './dto/update-horarios-asignado.dto';
+import { HorarioAsignado } from './entities/horarios-asignado.entity';
 
 @Controller('horarios-asignados')
 export class HorariosAsignadosController {
-  constructor(private readonly horariosAsignadosService: HorariosAsignadosService) {}
+  constructor(private readonly horariosAsignadosService: HorarioAsignadoService) {}
 
+  // horarios-asignados.controller.ts
   @Post()
-  create(@Body() createHorariosAsignadoDto: CreateHorariosAsignadoDto) {
-    return this.horariosAsignadosService.create(createHorariosAsignadoDto);
+  async create(@Body() createHorariosDto: CreateHorariosAsignadoDto): Promise<HorarioAsignado[]> {
+      return this.horariosAsignadosService.create(createHorariosDto.ordenTrabajoId);
   }
 
   @Get()

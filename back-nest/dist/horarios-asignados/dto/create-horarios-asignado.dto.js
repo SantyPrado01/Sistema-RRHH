@@ -11,25 +11,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateHorariosAsignadoDto = void 0;
 const class_validator_1 = require("class-validator");
+const empleado_entity_1 = require("../../empleados/entities/empleado.entity");
+const typeorm_1 = require("typeorm");
 class CreateHorariosAsignadoDto {
 }
 exports.CreateHorariosAsignadoDto = CreateHorariosAsignadoDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], CreateHorariosAsignadoDto.prototype, "horarioAsignadoId", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Number)
-], CreateHorariosAsignadoDto.prototype, "ordenTrabajoId", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Number)
-], CreateHorariosAsignadoDto.prototype, "empleadoAsignadoId", void 0);
-__decorate([
     (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Number)
-], CreateHorariosAsignadoDto.prototype, "empleadoSuplenteId", void 0);
+    __metadata("design:type", empleado_entity_1.Empleado)
+], CreateHorariosAsignadoDto.prototype, "empleadoSuplente", void 0);
 __decorate([
     (0, class_validator_1.IsDateString)(),
     __metadata("design:type", Date)

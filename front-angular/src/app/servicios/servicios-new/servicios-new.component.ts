@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class ServiciosNewComponent implements OnInit {
 
+  seccionActual: string = 'datosEmpresa';
   servicio: any = {};
   categorias: any[] = [];
   ciudades: any[] = [];
@@ -33,6 +34,10 @@ export class ServiciosNewComponent implements OnInit {
         console.error('Error al obtener las categorías', err);
       }
     });
+  }
+  
+  mostrarSeccion(seccion: string): void {
+    this.seccionActual = seccion;
   }
 
   buscarCiudad(event: Event) {

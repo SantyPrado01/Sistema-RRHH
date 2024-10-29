@@ -1,9 +1,16 @@
+import { Repository } from 'typeorm';
+import { HorarioAsignado } from './entities/horarios-asignado.entity';
 import { CreateHorariosAsignadoDto } from './dto/create-horarios-asignado.dto';
-import { UpdateHorariosAsignadoDto } from './dto/update-horarios-asignado.dto';
-export declare class HorariosAsignadosService {
-    create(createHorariosAsignadoDto: CreateHorariosAsignadoDto): string;
-    findAll(): string;
-    findOne(id: number): string;
-    update(id: number, updateHorariosAsignadoDto: UpdateHorariosAsignadoDto): string;
-    remove(id: number): string;
+import { OrdenTrabajo } from 'src/orden-trabajo/entities/orden-trabajo.entity';
+import { Empleado } from 'src/empleados/entities/empleado.entity';
+export declare class HorarioAsignadoService {
+    private readonly horarioAsignadoRepository;
+    private readonly ordenTrabajoRepository;
+    private readonly empleadoRepository;
+    constructor(horarioAsignadoRepository: Repository<HorarioAsignado>, ordenTrabajoRepository: Repository<OrdenTrabajo>, empleadoRepository: Repository<Empleado>);
+    create(ordenTrabajoId: number): Promise<HorarioAsignado[]>;
+    findAll(): Promise<HorarioAsignado[]>;
+    findOne(id: number): Promise<HorarioAsignado>;
+    update(id: number, updateData: Partial<CreateHorariosAsignadoDto>): Promise<HorarioAsignado>;
+    remove(id: number): Promise<void>;
 }

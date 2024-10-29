@@ -13,19 +13,19 @@ exports.CreateOrdenTrabajoDto = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const create_horarios_asignado_dto_1 = require("../../horarios-asignados/dto/create-horarios-asignado.dto");
+const servicio_entity_1 = require("../../servicios/entities/servicio.entity");
+const empleado_entity_1 = require("../../empleados/entities/empleado.entity");
 class CreateOrdenTrabajoDto {
 }
 exports.CreateOrdenTrabajoDto = CreateOrdenTrabajoDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateOrdenTrabajoDto.prototype, "servicioId", void 0);
+    __metadata("design:type", servicio_entity_1.Servicio)
+], CreateOrdenTrabajoDto.prototype, "servicio", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateOrdenTrabajoDto.prototype, "empleadoAsignadoId", void 0);
+    __metadata("design:type", empleado_entity_1.Empleado)
+], CreateOrdenTrabajoDto.prototype, "empleadoAsignado", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
@@ -51,10 +51,10 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateOrdenTrabajoDto.prototype, "horarioInicio", void 0);
+], CreateOrdenTrabajoDto.prototype, "horaInicio", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateOrdenTrabajoDto.prototype, "horarioFin", void 0);
+], CreateOrdenTrabajoDto.prototype, "horaFin", void 0);
 //# sourceMappingURL=create-orden-trabajo.dto.js.map
