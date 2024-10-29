@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
 import { Router } from '@angular/router';
+import { Disponibilidad } from '../models/disponibilidad.models';
 
 
 @Component({
@@ -17,12 +18,25 @@ import { Router } from '@angular/router';
 })
 export class EmpleadosNewComponent implements OnInit{
 
+  seccionActual: string = 'datosPersonales';
   empleado: any = {};
   categorias: any[] = [];
   ciudades: any[] = [];
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
   contadorCaracteres: number = 0;
+
+  disponibilidad = [
+    { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
+    { diaSemana: 2, nombre: 'Martes', horaInicio: '', horaFin: '' },
+    { diaSemana: 3, nombre: 'Miércoles', horaInicio: '', horaFin: '' },
+    { diaSemana: 4, nombre: 'Jueves', horaInicio: '', horaFin: '' },
+    { diaSemana: 5, nombre: 'Viernes', horaInicio: '', horaFin: '' },
+    { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: '' },
+    { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: '' }
+  ];
+
+  fullTime: boolean = false;
 
   constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService, private router: Router) {}
 
@@ -44,6 +58,9 @@ export class EmpleadosNewComponent implements OnInit{
     input.value = input.value.replace(/[^a-zA-Z ]/g, '');
   }
 
+  mostrarSeccion(seccion: string): void {
+    this.seccionActual = seccion;
+  }
 
   ngOnInit() {
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
@@ -55,6 +72,18 @@ export class EmpleadosNewComponent implements OnInit{
         console.error('Error al obtener las categorías', err);
       }
     });
+  }
+
+  toggleFullTime() {
+    if (this.fullTime) {
+      this.disponibilidad.forEach(dia => {
+        dia.horaInicio = '';
+        dia.horaFin = '';
+      });
+    }
+  }
+  guardarDisponibilidad() {
+    console.log(this.disponibilidad);
   }
 
   buscarCiudad(event: Event) {

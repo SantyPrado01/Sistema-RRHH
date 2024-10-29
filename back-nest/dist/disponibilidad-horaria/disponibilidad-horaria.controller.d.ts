@@ -4,9 +4,9 @@ import { UpdateDisponibilidadHorariaDto } from './dto/update-disponibilidad-hora
 export declare class DisponibilidadHorariaController {
     private readonly disponibilidadHorariaService;
     constructor(disponibilidadHorariaService: DisponibilidadHorariaService);
-    create(createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto): string;
-    findAll(): string;
-    findOne(id: string): string;
-    update(id: string, updateDisponibilidadHorariaDto: UpdateDisponibilidadHorariaDto): string;
-    remove(id: string): string;
+    create(createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto): Promise<import("./entities/disponibilidad-horaria.entity").DisponibilidadHoraria>;
+    findAll(): Promise<import("./entities/disponibilidad-horaria.entity").DisponibilidadHoraria[]>;
+    findOne(id: string): Promise<import("./entities/disponibilidad-horaria.entity").DisponibilidadHoraria>;
+    update(id: string, updateDisponibilidadHorariaDto: UpdateDisponibilidadHorariaDto): Promise<import("./entities/disponibilidad-horaria.entity").DisponibilidadHoraria>;
+    remove(id: string): Promise<void>;
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NabvarComponent } from '../nabvar/nabvar.component';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../login/auth/auth.service';
 
 @Component({
   selector: 'app-home-admin',

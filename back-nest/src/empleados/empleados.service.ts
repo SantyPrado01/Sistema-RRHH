@@ -25,10 +25,10 @@ export class EmpleadosService {
     })
   }
 
-  async getEmpleado(empleadoId: number){
+  async getEmpleado(id: number){
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{
-        empleadoId
+        empleadoId: id
       }
     })
     if (!empleadoFound){

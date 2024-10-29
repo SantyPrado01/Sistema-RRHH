@@ -8,4 +8,5 @@ export declare class CreateServicioDto {
     descripcion: string;
     eliminado: boolean;
     necesidadHorariaID: number;
+    ordenesTrabajoID: number;
 }

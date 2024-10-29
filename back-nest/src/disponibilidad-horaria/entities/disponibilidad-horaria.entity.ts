@@ -10,8 +10,7 @@ export class DisponibilidadHoraria {
     @PrimaryGeneratedColumn({type:'int', name:'id'})
     disponibilidadHorariaId:number;
 
-    @ManyToOne(()=> Empleado, empleado => empleado.disponibilidad)
-    @JoinColumn({name: 'empleado_id'})
+    @ManyToOne(() => Empleado, (empleado) => empleado.disponibilidades)
     empleado: Empleado;
 
     @Column({type: 'tinyint'})
@@ -23,10 +22,6 @@ export class DisponibilidadHoraria {
     @Column({type: 'time'})
     horaFin:string
 
-    @Column({type:'date'})
-    fechaInicio: string
-
-    @Column({type:'date'})
-    fechaFin:string
-
+    @Column({default: false})
+    fullTime: boolean
 }

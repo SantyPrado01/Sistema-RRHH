@@ -1,1 +1,1 @@
-{"version":3,"file":"update-empleado.dto.js","sourceRoot":"","sources":["../../../src/empleados/dto/update-empleado.dto.ts"],"names":[],"mappings":";;;AAAA,uDAAmD;AACnD,+DAA0D;AAE1D,MAAa,iBAAkB,SAAQ,IAAA,0BAAW,EAAC,uCAAiB,CAAC;CAcpE;AAdD,8CAcC"}
+{"version":3,"file":"update-empleado.dto.js","sourceRoot":"","sources":["../../../src/empleados/dto/update-empleado.dto.ts"],"names":[],"mappings":";;;AAAA,uDAAmD;AACnD,+DAA0D;AAI1D,MAAa,iBAAkB,SAAQ,IAAA,0BAAW,EAAC,uCAAiB,CAAC;CAcpE;AAdD,8CAcC"}

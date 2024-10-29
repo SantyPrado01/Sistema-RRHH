@@ -14,6 +14,8 @@ import { CategoriaEmpleadoModule } from './categoria-empleado/categoria-empleado
 import { CategoriaServicioModule } from './categoria-servicio/categoria-servicio.module';
 import { FacturasModule } from './facturas/facturas.module';
 import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
+import { OrdenTrabajoModule } from './orden-trabajo/orden-trabajo.module';
+import { HorariosAsignadosModule } from './horarios-asignados/horarios-asignados.module';
 
 @Module({
   imports: [
@@ -36,7 +38,9 @@ import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
     CategoriaEmpleadoModule,
     CategoriaServicioModule,
     FacturasModule,
-    ItemsFacturasModule],
+    ItemsFacturasModule,
+    OrdenTrabajoModule,
+    HorariosAsignadosModule],
 
   controllers: [AppController],
   providers: [AppService],

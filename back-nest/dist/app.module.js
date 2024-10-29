@@ -21,6 +21,8 @@ const categoria_empleado_module_1 = require("./categoria-empleado/categoria-empl
 const categoria_servicio_module_1 = require("./categoria-servicio/categoria-servicio.module");
 const facturas_module_1 = require("./facturas/facturas.module");
 const items_facturas_module_1 = require("./items-facturas/items-facturas.module");
+const orden_trabajo_module_1 = require("./orden-trabajo/orden-trabajo.module");
+const horarios_asignados_module_1 = require("./horarios-asignados/horarios-asignados.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -46,7 +48,9 @@ exports.AppModule = AppModule = __decorate([
             categoria_empleado_module_1.CategoriaEmpleadoModule,
             categoria_servicio_module_1.CategoriaServicioModule,
             facturas_module_1.FacturasModule,
-            items_facturas_module_1.ItemsFacturasModule
+            items_facturas_module_1.ItemsFacturasModule,
+            orden_trabajo_module_1.OrdenTrabajoModule,
+            horarios_asignados_module_1.HorariosAsignadosModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

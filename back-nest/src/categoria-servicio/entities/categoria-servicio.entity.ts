@@ -1,9 +1,7 @@
 import { Servicio } from "../../servicios/entities/servicio.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({
-    name:'categoriaServicio'
-})
+@Entity({name:'categoriaServicio'})
 
 export class CategoriaServicio {
 

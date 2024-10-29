@@ -32,8 +32,6 @@ __decorate([
     __metadata("design:type", Array)
 ], CategoriaServicio.prototype, "servicios", void 0);
 exports.CategoriaServicio = CategoriaServicio = __decorate([
-    (0, typeorm_1.Entity)({
-        name: 'categoriaServicio'
-    })
+    (0, typeorm_1.Entity)({ name: 'categoriaServicio' })
 ], CategoriaServicio);
 //# sourceMappingURL=categoria-servicio.entity.js.map

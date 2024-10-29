@@ -1,8 +1,9 @@
 export declare class CreateDisponibilidadHorariaDto {
-    empleadoID: number;
+    empleadoId: number;
     diaSemana: number;
     horaInicio: string;
     horaFin: string;
-    fehcaInicio: string;
-    fechaFin: string;
+    fechaInicio?: string;
+    fechaFin?: string;
+    fullTime: boolean;
 }

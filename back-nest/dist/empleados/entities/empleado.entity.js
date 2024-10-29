@@ -60,7 +60,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Empleado.prototype, "ciudad", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ default: '' }),
     __metadata("design:type", String)
 ], Empleado.prototype, "observaciones", void 0);
 __decorate([
@@ -69,10 +69,9 @@ __decorate([
     __metadata("design:type", categoria_empleado_entity_1.CategoriaEmpleado)
 ], Empleado.prototype, "categoria", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => disponibilidad_horaria_entity_1.DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true }),
-    (0, typeorm_1.JoinTable)({ name: 'disponibilidad' }),
-    __metadata("design:type", disponibilidad_horaria_entity_1.DisponibilidadHoraria)
-], Empleado.prototype, "disponibilidad", void 0);
+    (0, typeorm_1.OneToMany)(() => disponibilidad_horaria_entity_1.DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true }),
+    __metadata("design:type", Array)
+], Empleado.prototype, "disponibilidades", void 0);
 exports.Empleado = Empleado = __decorate([
     (0, typeorm_1.Entity)({
         name: 'Empleados'

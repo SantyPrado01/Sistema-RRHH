@@ -13,5 +13,5 @@ export declare class Empleado {
     ciudad: number;
     observaciones: string;
     categoria: CategoriaEmpleado;
-    disponibilidad: DisponibilidadHoraria;
+    disponibilidades: DisponibilidadHoraria[];
 }

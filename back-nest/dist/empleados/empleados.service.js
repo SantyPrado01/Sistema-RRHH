@@ -33,10 +33,10 @@ let EmpleadosService = class EmpleadosService {
             }
         });
     }
-    async getEmpleado(empleadoId) {
+    async getEmpleado(id) {
         const empleadoFound = await this.empleadoRepository.findOne({
             where: {
-                empleadoId
+                empleadoId: id
             }
         });
         if (!empleadoFound) {

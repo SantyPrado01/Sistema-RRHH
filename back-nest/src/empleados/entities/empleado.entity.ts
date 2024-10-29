@@ -41,15 +41,14 @@ export class Empleado {
     @Column()
     ciudad: number;
 
-    @Column()
+    @Column({default:''})
     observaciones: string;
 
     @ManyToOne(() => CategoriaEmpleado, categoria => categoria.empleados, { eager: true })
     @JoinTable({name: "categoria"})
     categoria: CategoriaEmpleado;
-
-    @ManyToOne(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true })
-    @JoinTable({name:'disponibilidad'})
-    disponibilidad: DisponibilidadHoraria;
+    
+    @OneToMany(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true })
+    disponibilidades: DisponibilidadHoraria[];
 
 }
