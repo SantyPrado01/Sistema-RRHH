@@ -6,7 +6,7 @@ export declare class ServiciosController {
     constructor(serviciosService: ServiciosService);
     create(createServicioDto: CreateServicioDto): Promise<import("@nestjs/common").HttpException>;
     findAll(): Promise<import("./entities/servicio.entity").Servicio[]>;
-    findOne(id: string): Promise<import("@nestjs/common").HttpException | import("./entities/servicio.entity").Servicio>;
+    findOne(id: string): Promise<import("./entities/servicio.entity").Servicio | import("@nestjs/common").HttpException>;
     update(id: string, updateServicioDto: UpdateServicioDto): Promise<import("./entities/servicio.entity").Servicio & UpdateServicioDto>;
     remove(id: string): Promise<import("@nestjs/common").HttpException>;
 }

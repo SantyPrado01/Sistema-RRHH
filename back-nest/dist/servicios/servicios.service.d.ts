@@ -9,7 +9,7 @@ export declare class ServiciosService {
     createServicio(servicio: CreateServicioDto): Promise<HttpException>;
     getServicios(): Promise<Servicio[]>;
     getServicio(nombre: string): Promise<Servicio>;
-    getServicioId(servicioId: number): Promise<HttpException | Servicio>;
+    getServicioId(servicioId: number): Promise<Servicio | HttpException>;
     deleteServicio(servicioId: number): Promise<HttpException>;
     updateServicio(servicioId: number, servicio: UpdateServicioDto): Promise<Servicio & UpdateServicioDto>;
 }

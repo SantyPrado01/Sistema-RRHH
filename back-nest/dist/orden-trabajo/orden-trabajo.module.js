@@ -15,14 +15,16 @@ const orden_trabajo_entity_1 = require("./entities/orden-trabajo.entity");
 const empleado_entity_1 = require("../empleados/entities/empleado.entity");
 const servicio_entity_1 = require("../servicios/entities/servicio.entity");
 const horarios_asignado_entity_1 = require("../horarios-asignados/entities/horarios-asignado.entity");
+const necesidad_horaria_entity_1 = require("../necesidad-horaria/entities/necesidad-horaria.entity");
 let OrdenTrabajoModule = class OrdenTrabajoModule {
 };
 exports.OrdenTrabajoModule = OrdenTrabajoModule;
 exports.OrdenTrabajoModule = OrdenTrabajoModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([orden_trabajo_entity_1.OrdenTrabajo, empleado_entity_1.Empleado, servicio_entity_1.Servicio, horarios_asignado_entity_1.HorarioAsignado])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([orden_trabajo_entity_1.OrdenTrabajo, empleado_entity_1.Empleado, servicio_entity_1.Servicio, horarios_asignado_entity_1.HorarioAsignado, necesidad_horaria_entity_1.NecesidadHoraria])],
         controllers: [orden_trabajo_controller_1.OrdenTrabajoController],
         providers: [orden_trabajo_service_1.OrdenTrabajoService],
+        exports: [orden_trabajo_service_1.OrdenTrabajoService]
     })
 ], OrdenTrabajoModule);
 //# sourceMappingURL=orden-trabajo.module.js.map

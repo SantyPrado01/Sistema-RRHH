@@ -15,6 +15,7 @@ const class_transformer_1 = require("class-transformer");
 const create_horarios_asignado_dto_1 = require("../../horarios-asignados/dto/create-horarios-asignado.dto");
 const servicio_entity_1 = require("../../servicios/entities/servicio.entity");
 const empleado_entity_1 = require("../../empleados/entities/empleado.entity");
+const create_necesidad_horaria_dto_1 = require("../../necesidad-horaria/dto/create-necesidad-horaria.dto");
 class CreateOrdenTrabajoDto {
 }
 exports.CreateOrdenTrabajoDto = CreateOrdenTrabajoDto;
@@ -33,6 +34,12 @@ __decorate([
     __metadata("design:type", Array)
 ], CreateOrdenTrabajoDto.prototype, "horariosAsignados", void 0);
 __decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => create_necesidad_horaria_dto_1.CreateNecesidadHorariaDto),
+    __metadata("design:type", Array)
+], CreateOrdenTrabajoDto.prototype, "necesidadHoraria", void 0);
+__decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
@@ -42,19 +49,4 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateOrdenTrabajoDto.prototype, "anio", void 0);
-__decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Array)
-], CreateOrdenTrabajoDto.prototype, "dias", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreateOrdenTrabajoDto.prototype, "horaInicio", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreateOrdenTrabajoDto.prototype, "horaFin", void 0);
 //# sourceMappingURL=create-orden-trabajo.dto.js.map

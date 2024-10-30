@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NecesidadHoraria = void 0;
-const servicio_entity_1 = require("../../servicios/entities/servicio.entity");
+const orden_trabajo_entity_1 = require("../../orden-trabajo/entities/orden-trabajo.entity");
 const typeorm_1 = require("typeorm");
 let NecesidadHoraria = class NecesidadHoraria {
 };
@@ -20,10 +20,9 @@ __decorate([
     __metadata("design:type", Number)
 ], NecesidadHoraria.prototype, "necesidadHorariaId", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => servicio_entity_1.Servicio, servicio => servicio.necesidades),
-    (0, typeorm_1.JoinColumn)({ name: 'servicio_id' }),
-    __metadata("design:type", servicio_entity_1.Servicio)
-], NecesidadHoraria.prototype, "servicio", void 0);
+    (0, typeorm_1.ManyToOne)(() => orden_trabajo_entity_1.OrdenTrabajo, ordenTrabajo => ordenTrabajo.necesidadHoraria),
+    __metadata("design:type", orden_trabajo_entity_1.OrdenTrabajo)
+], NecesidadHoraria.prototype, "ordenTrabajo", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'tinyint' }),
     __metadata("design:type", Number)

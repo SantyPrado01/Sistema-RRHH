@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdenTrabajo = void 0;
 const empleado_entity_1 = require("../../empleados/entities/empleado.entity");
 const horarios_asignado_entity_1 = require("../../horarios-asignados/entities/horarios-asignado.entity");
+const necesidad_horaria_entity_1 = require("../../necesidad-horaria/entities/necesidad-horaria.entity");
 const servicio_entity_1 = require("../../servicios/entities/servicio.entity");
 const typeorm_1 = require("typeorm");
 let OrdenTrabajo = class OrdenTrabajo {
@@ -42,17 +43,9 @@ __decorate([
     __metadata("design:type", Number)
 ], OrdenTrabajo.prototype, "anio", void 0);
 __decorate([
-    (0, typeorm_1.Column)('simple-array'),
+    (0, typeorm_1.OneToMany)(() => necesidad_horaria_entity_1.NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo),
     __metadata("design:type", Array)
-], OrdenTrabajo.prototype, "dias", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], OrdenTrabajo.prototype, "horaInicio", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], OrdenTrabajo.prototype, "horaFin", void 0);
+], OrdenTrabajo.prototype, "necesidadHoraria", void 0);
 exports.OrdenTrabajo = OrdenTrabajo = __decorate([
     (0, typeorm_1.Entity)('ordenes-trabajo')
 ], OrdenTrabajo);

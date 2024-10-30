@@ -5,7 +5,6 @@ import { OrdenTrabajo } from './entities/orden-trabajo.entity';
 import { CreateOrdenTrabajoDto } from './dto/create-orden-trabajo.dto';  
 import { Empleado } from 'src/empleados/entities/empleado.entity'; 
 import { Servicio } from 'src/servicios/entities/servicio.entity'; 
-import { HorarioAsignado } from 'src/horarios-asignados/entities/horarios-asignado.entity';
 import { UpdateOrdenTrabajoDto } from './dto/update-orden-trabajo.dto';
 
 @Injectable()
@@ -17,15 +16,11 @@ export class OrdenTrabajoService {
     private readonly empleadoRepository: Repository<Empleado>,
     @InjectRepository(Servicio)
     private readonly servicioRepository: Repository<Servicio>,
-    @InjectRepository(HorarioAsignado)
-    private readonly horariosAsignadosRepository: Repository<HorarioAsignado>
 
   ) {}
 
-  
-// orden-trabajo.service.ts
 async create(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
-  const { servicio, empleadoAsignado, mes, anio, dias, horaInicio, horaFin } = createOrdenTrabajoDto;
+  const { servicio, empleadoAsignado, mes, anio } = createOrdenTrabajoDto;
 
   const empleadoExistente = await this.empleadoRepository.findOne({ where: { empleadoId: empleadoAsignado.empleadoId } });
   if (!empleadoExistente) {
@@ -41,22 +36,14 @@ async create(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo
       servicio: servicioExistente,
       empleadoAsignado: empleadoExistente,
       mes,
-      anio,
-      dias,
-      horaInicio,
-      horaFin,
+      anio
   });
 
   const ordenTrabajoGuardada = await this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
 
-  // Llamar a la función de creación de horarios asignados
-  //await this.horariosAsignadosRepository.create(ordenTrabajoGuardada.ordenTrabajoId);
-
   return ordenTrabajoGuardada;
 }
 
-  
-  
 
   async findAll(): Promise<OrdenTrabajo[]> {
     return this.ordenTrabajoRepository.find({ relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'] });

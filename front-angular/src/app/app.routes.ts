@@ -13,8 +13,9 @@ import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { ServiciosNewComponent } from './servicios/servicios-new/servicios-new.component';
 import { ServiciosListComponent } from './servicios/servicios-list/servicios-list.component';
 import { ServiciosEditComponent } from './servicios/servicios-edit/servicios-edit.component';
-import { DisponibilidadHorariaComponent } from './disponibilidad-horaria/disponibilidad-horaria.component';
+
 import { AuthGuard } from './login/auth/auth.guard';
+import { CrearOrdenTrabajoComponent } from './ordenTrabajo/crear-orden-trabajo/crear-orden-trabajo.component';
 
 export const routes: Routes = [
     {
@@ -39,9 +40,7 @@ export const routes: Routes = [
     },
     {
         path:'user',
-        component: UsuarioListComponent,
-        canActivate:[AuthGuard],
-        data: { expectedRole: 'admin' }
+        component: UsuarioListComponent
     },
     {
         path:'user/create',
@@ -55,11 +54,7 @@ export const routes: Routes = [
         path:'employee',
         component: EmpleadosListComponent,
     },
-    {
-        path: 'employee/schedule', 
-        component: DisponibilidadHorariaComponent
-        
-    },
+
     {
         path:'employee/create',
         component: EmpleadosNewComponent
@@ -81,6 +76,9 @@ export const routes: Routes = [
         path:'service/edit/:id',
         component: ServiciosEditComponent    
     },
-
+    {
+        path:'ordentrabajo/create',
+        component: CrearOrdenTrabajoComponent
+    }
 
 ];

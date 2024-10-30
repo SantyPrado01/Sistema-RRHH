@@ -1,10 +1,15 @@
+import { IsNotEmpty, IsNumber } from "class-validator"
+
 export class CreateNecesidadHorariaDto {
+
+    @IsNotEmpty()
+    @IsNumber()
+    ordenTrabajoId:number
     
-    servicioID:number
     diaSemana: number
+
     horaInicio: string
-    horaFin: String
-    fechaInicio: string
-    fechaFin: string
+
+    horaFin: string
 
 }

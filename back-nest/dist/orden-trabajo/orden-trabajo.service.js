@@ -19,16 +19,14 @@ const typeorm_2 = require("typeorm");
 const orden_trabajo_entity_1 = require("./entities/orden-trabajo.entity");
 const empleado_entity_1 = require("../empleados/entities/empleado.entity");
 const servicio_entity_1 = require("../servicios/entities/servicio.entity");
-const horarios_asignado_entity_1 = require("../horarios-asignados/entities/horarios-asignado.entity");
 let OrdenTrabajoService = class OrdenTrabajoService {
-    constructor(ordenTrabajoRepository, empleadoRepository, servicioRepository, horariosAsignadosRepository) {
+    constructor(ordenTrabajoRepository, empleadoRepository, servicioRepository) {
         this.ordenTrabajoRepository = ordenTrabajoRepository;
         this.empleadoRepository = empleadoRepository;
         this.servicioRepository = servicioRepository;
-        this.horariosAsignadosRepository = horariosAsignadosRepository;
     }
     async create(createOrdenTrabajoDto) {
-        const { servicio, empleadoAsignado, mes, anio, dias, horaInicio, horaFin } = createOrdenTrabajoDto;
+        const { servicio, empleadoAsignado, mes, anio } = createOrdenTrabajoDto;
         const empleadoExistente = await this.empleadoRepository.findOne({ where: { empleadoId: empleadoAsignado.empleadoId } });
         if (!empleadoExistente) {
             throw new common_1.NotFoundException('Empleado no encontrado');
@@ -41,10 +39,7 @@ let OrdenTrabajoService = class OrdenTrabajoService {
             servicio: servicioExistente,
             empleadoAsignado: empleadoExistente,
             mes,
-            anio,
-            dias,
-            horaInicio,
-            horaFin,
+            anio
         });
         const ordenTrabajoGuardada = await this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
         return ordenTrabajoGuardada;
@@ -94,9 +89,7 @@ exports.OrdenTrabajoService = OrdenTrabajoService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(orden_trabajo_entity_1.OrdenTrabajo)),
     __param(1, (0, typeorm_1.InjectRepository)(empleado_entity_1.Empleado)),
     __param(2, (0, typeorm_1.InjectRepository)(servicio_entity_1.Servicio)),
-    __param(3, (0, typeorm_1.InjectRepository)(horarios_asignado_entity_1.HorarioAsignado)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository])
 ], OrdenTrabajoService);

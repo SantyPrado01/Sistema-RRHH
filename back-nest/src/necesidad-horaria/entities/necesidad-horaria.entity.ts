@@ -1,3 +1,4 @@
+import { OrdenTrabajo } from 'src/orden-trabajo/entities/orden-trabajo.entity';
 import { Servicio } from '../../servicios/entities/servicio.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
@@ -10,9 +11,8 @@ export class NecesidadHoraria {
     @PrimaryGeneratedColumn({type:'int', name:'id'})
     necesidadHorariaId:number
 
-    @ManyToOne(()=> Servicio, servicio => servicio.necesidades)
-    @JoinColumn({name:'servicio_id'})
-    servicio: Servicio;
+    @ManyToOne(()=> OrdenTrabajo, ordenTrabajo => ordenTrabajo.necesidadHoraria)
+    ordenTrabajo: OrdenTrabajo;
 
     @Column({type: 'tinyint'})
     diaSemana:number

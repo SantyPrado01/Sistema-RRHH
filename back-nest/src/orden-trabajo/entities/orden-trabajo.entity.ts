@@ -1,6 +1,7 @@
 
 import { Empleado } from "src/empleados/entities/empleado.entity";
 import { HorarioAsignado } from "src/horarios-asignados/entities/horarios-asignado.entity";
+import { NecesidadHoraria } from "src/necesidad-horaria/entities/necesidad-horaria.entity";
 import { Servicio } from "src/servicios/entities/servicio.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -23,15 +24,8 @@ export class OrdenTrabajo {
     mes: number; 
 
     @Column()
-    anio: number;
+    anio: number;  
 
-    @Column('simple-array')
-    dias: string[];  // Ejemplo: ["Lunes", "Miércoles", "Viernes"]
-
-    @Column()
-    horaInicio: string; 
-
-    @Column()
-    horaFin: string;     
-
+    @OneToMany(() => NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo)
+    necesidadHoraria: NecesidadHoraria[];
 }

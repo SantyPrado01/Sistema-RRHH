@@ -29,25 +29,25 @@ let HorarioAsignadoService = class HorarioAsignadoService {
         const { ordenTrabajoId } = createHorariosDto;
         const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
             where: { ordenTrabajoId },
-            relations: ['empleadoAsignado'],
+            relations: ['empleadoAsignado', 'necesidadHoraria'],
         });
         if (!ordenTrabajo) {
             throw new Error('Orden de trabajo no encontrada');
         }
-        const { anio, mes, dias, horaInicio, horaFin, empleadoAsignado } = ordenTrabajo;
+        const { anio, mes, necesidadHoraria, empleadoAsignado } = ordenTrabajo;
         const horariosAsignados = [];
-        for (const dia of dias) {
-            const fechas = this.obtenerFechasDelMes(anio, mes, dia);
+        for (const necesidad of necesidadHoraria) {
+            const fechas = this.obtenerFechasDelMes(anio, mes, necesidad.diaSemana);
             for (const fecha of fechas) {
                 const horarioAsignado = this.horarioAsignadoRepository.create({
                     ordenTrabajo,
                     empleado: empleadoAsignado,
                     fecha: fecha,
-                    horaInicioProyectado: horaInicio,
-                    horaFinProyectado: horaFin,
+                    horaInicioProyectado: necesidad.horaInicio,
+                    horaFinProyectado: necesidad.horaFin,
                     estado: 'pendiente',
                     suplente: false,
-                    empleadoSuplente: null
+                    empleadoSuplente: null,
                 });
                 horariosAsignados.push(horarioAsignado);
             }
@@ -58,13 +58,9 @@ let HorarioAsignadoService = class HorarioAsignadoService {
     obtenerFechasDelMes(anio, mes, diaSemana) {
         const fechas = [];
         const primerDiaMes = new Date(anio, mes - 1, 1);
-        const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-        const diaIndice = diasSemana.indexOf(diaSemana.toLowerCase());
-        if (diaIndice === -1)
-            return fechas;
         for (let dia = primerDiaMes.getDate(); dia <= new Date(anio, mes, 0).getDate(); dia++) {
             const fecha = new Date(anio, mes - 1, dia);
-            if (fecha.getDay() === diaIndice) {
+            if (fecha.getDay() === diaSemana) {
                 fechas.push(fecha);
             }
         }

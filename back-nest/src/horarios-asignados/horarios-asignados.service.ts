@@ -22,58 +22,55 @@ export class HorarioAsignadoService {
     async create(createHorariosDto: CreateHorariosAsignadoDto) {
         const { ordenTrabajoId } = createHorariosDto;
         const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
-            where: { ordenTrabajoId }, 
-            relations: ['empleadoAsignado'], 
+            where: { ordenTrabajoId },
+            relations: ['empleadoAsignado', 'necesidadHoraria'], 
         });
     
         if (!ordenTrabajo) {
             throw new Error('Orden de trabajo no encontrada');
         }
     
-        const { anio, mes, dias, horaInicio, horaFin, empleadoAsignado } = ordenTrabajo;
+        const { anio, mes, necesidadHoraria, empleadoAsignado } = ordenTrabajo;
         const horariosAsignados = [];
     
-        // Crear horarios para cada día especificado
-        for (const dia of dias) {
-            const fechas = this.obtenerFechasDelMes(anio, mes, dia);
+        // Crear horarios según la necesidad horaria de cada día de la semana
+        for (const necesidad of necesidadHoraria) {
+            const fechas = this.obtenerFechasDelMes(anio, mes, necesidad.diaSemana);
+    
             for (const fecha of fechas) {
                 const horarioAsignado = this.horarioAsignadoRepository.create({
-                    ordenTrabajo, // Relación de la orden de trabajo
-                    empleado: empleadoAsignado, // Asignar el empleado
+                    ordenTrabajo,
+                    empleado: empleadoAsignado,
                     fecha: fecha,
-                    horaInicioProyectado: horaInicio,
-                    horaFinProyectado: horaFin,
+                    horaInicioProyectado: necesidad.horaInicio,
+                    horaFinProyectado: necesidad.horaFin,
                     estado: 'pendiente',
                     suplente: false,
-                    empleadoSuplente: null
+                    empleadoSuplente: null,
                 });
                 horariosAsignados.push(horarioAsignado);
             }
         }
-    
-        // Guardar todos los horarios asignados
+
         await this.horarioAsignadoRepository.save(horariosAsignados);
         return horariosAsignados;
     }
-
-    private obtenerFechasDelMes(anio: number, mes: number, diaSemana: string): Date[] {
+    
+    // Modificar `obtenerFechasDelMes` para recibir el día de la semana de `necesidadHoraria` y devolver las fechas correspondientes en el mes
+    private obtenerFechasDelMes(anio: number, mes: number, diaSemana: number): Date[] {
         const fechas: Date[] = [];
         const primerDiaMes = new Date(anio, mes - 1, 1);
-        const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-        const diaIndice = diasSemana.indexOf(diaSemana.toLowerCase());
     
-        if (diaIndice === -1) return fechas;
-    
-        // Buscar todos los días del mes que coincidan
+        // Iterar para encontrar todos los días del mes que coincidan con el índice del día de la semana
         for (let dia = primerDiaMes.getDate(); dia <= new Date(anio, mes, 0).getDate(); dia++) {
-          const fecha = new Date(anio, mes - 1, dia);
-          if (fecha.getDay() === diaIndice) {
-            fechas.push(fecha);
-          }
+            const fecha = new Date(anio, mes - 1, dia);
+            if (fecha.getDay() === diaSemana) {
+                fechas.push(fecha);
+            }
         }
     
         return fechas;
-      }
+    }
 
 
     async findAll(): Promise<HorarioAsignado[]> {

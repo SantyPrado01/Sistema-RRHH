@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { CreateHorariosAsignadoDto } from "src/horarios-asignados/dto/create-horarios-asignado.dto";
 import { Servicio } from 'src/servicios/entities/servicio.entity';
 import { Empleado } from 'src/empleados/entities/empleado.entity';
+import { CreateNecesidadHorariaDto } from 'src/necesidad-horaria/dto/create-necesidad-horaria.dto';
 
 export class CreateOrdenTrabajoDto {
 
@@ -17,6 +18,11 @@ export class CreateOrdenTrabajoDto {
     @Type(() => CreateHorariosAsignadoDto)
     horariosAsignados?: CreateHorariosAsignadoDto[]; // Cambiado a un array
 
+    @IsArray()
+    @ValidateNested({each: true})
+    @Type(() => CreateNecesidadHorariaDto)
+    necesidadHoraria?: CreateNecesidadHorariaDto[]
+
     @IsNotEmpty()
     @IsNumber()
     mes: number;
@@ -25,15 +31,4 @@ export class CreateOrdenTrabajoDto {
     @IsNumber()
     anio: number;
 
-    @IsArray()
-    @IsNotEmpty()
-    dias: string[];
-
-    @IsNotEmpty()
-    @IsString()
-    horaInicio: string;
-
-    @IsNotEmpty()
-    @IsString()
-    horaFin: string;
 }

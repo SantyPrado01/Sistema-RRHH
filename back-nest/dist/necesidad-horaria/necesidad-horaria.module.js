@@ -12,12 +12,14 @@ const necesidad_horaria_service_1 = require("./necesidad-horaria.service");
 const necesidad_horaria_controller_1 = require("./necesidad-horaria.controller");
 const necesidad_horaria_entity_1 = require("./entities/necesidad-horaria.entity");
 const typeorm_1 = require("@nestjs/typeorm");
+const orden_trabajo_entity_1 = require("../orden-trabajo/entities/orden-trabajo.entity");
+const orden_trabajo_module_1 = require("../orden-trabajo/orden-trabajo.module");
 let NecesidadHorariaModule = class NecesidadHorariaModule {
 };
 exports.NecesidadHorariaModule = NecesidadHorariaModule;
 exports.NecesidadHorariaModule = NecesidadHorariaModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([necesidad_horaria_entity_1.NecesidadHoraria])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([necesidad_horaria_entity_1.NecesidadHoraria, orden_trabajo_entity_1.OrdenTrabajo]), orden_trabajo_module_1.OrdenTrabajoModule],
         controllers: [necesidad_horaria_controller_1.NecesidadHorariaController],
         providers: [necesidad_horaria_service_1.NecesidadHorariaService],
     })

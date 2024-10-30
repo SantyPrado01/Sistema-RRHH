@@ -1,88 +1,77 @@
-<div class="orden-trabajo-container">
-    <h2>Crear Orden de Trabajo</h2>
-    
-    <!-- Campo de búsqueda para empleados -->
-    <div class="search-container">
-        <label for="empleadoSearch">Buscar Empleado:</label>
-        <input type="text" id="empleadoSearch" [(ngModel)]="empleadoSearch" (input)="filterEmpleados()" placeholder="Buscar empleado por nombre">
+<app-nabvar></app-nabvar>
+  <h2>Registrar Nuevo Empleado</h2>
+  <div class="line"></div>
+<div class="container">
+    <div class="sidebar">
+      <ul class="sidebar-menu">
+        <li (click)="mostrarSeccion('ordenTrabajo')" [class.active]="seccionActual === 'ordenTrabajo'">Crear Orden de Trabajo</li>
+      </ul>
     </div>
 
-    <!-- Listado de empleados filtrados -->
-    <div class="empleados-list">
-        <h3>Empleados</h3>
-        <ul>
-            <li *ngFor="let empleado of filteredEmpleados">{{ empleado.nombre }} {{ empleado.apellido }}</li>
-        </ul>
-    </div>
+    <div class="form-container">
+      <form #empleadoForm="ngForm" (ngSubmit)="guardarEmpleado()">
 
-    <!-- Campo de búsqueda para servicios -->
-    <div class="search-container">
-        <label for="servicioSearch">Buscar Servicio:</label>
-        <input type="text" id="servicioSearch" [(ngModel)]="servicioSearch" (input)="filterServicios()" placeholder="Buscar servicio por nombre">
-    </div>
-
-    <!-- Listado de servicios filtrados -->
-    <div class="servicios-list">
-        <h3>Servicios</h3>
-        <ul>
-            <li *ngFor="let servicio of filteredServicios">{{ servicio.nombre }}</li>
-        </ul>
-    </div>
-
-    <!-- Formulario para crear la orden de trabajo -->
-    <form (ngSubmit)="createOrdenTrabajo()" #ordenTrabajoForm="ngForm">
-        <div class="form-group">
-            <label for="servicio">Servicio:</label>
-            <select id="servicio" [(ngModel)]="selectedServicio" name="servicio" required>
-                <option *ngFor="let servicio of filteredServicios" [value]="servicio">{{ servicio.nombre }}</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="empleado">Empleado Asignado:</label>
-            <select id="empleado" [(ngModel)]="selectedEmpleado" name="empleado" required>
-                <option *ngFor="let empleado of filteredEmpleados" [value]="empleado">{{ empleado.nombre }} {{ empleado.apellido }}</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="mes">Mes:</label>
-            <select id="mes" [(ngModel)]="mes" name="mes" required>
-                <option *ngFor="let mes of meses" [value]="mes.valor">{{ mes.nombre }}</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="anio">Año:</label>
-            <select id="anio" [(ngModel)]="anio" name="anio" required>
-                <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Días:</label>
-            <div class="checkbox-container">
-                <label *ngFor="let dia of dias">
-                    <input type="checkbox" [(ngModel)]="dia.checked" (change)="updateDias()"/> {{ dia.nombre }}
-                </label>
+        <div *ngIf="seccionActual === 'ordenTrabajo'">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombre">Empresa</label>
+              <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese " required #nombreEmpleado="ngModel" disabled/>
+              <div *ngIf="nombreEmpleado.invalid && nombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La Empresa es requerida.</div>
             </div>
+
+            <div class="form-group">
+              <label for="apellido">Empleado</label>
+              <input type="text" id="apellido" [(ngModel)]="empleado.apellido" name="apellido" class="form-control" placeholder="Ingrese el Empleado" required #apellidoEmpleado="ngModel" disabled />
+              <div *ngIf="apellidoEmpleado.invalid && apellidoEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El Empleado es requerido.</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="telefono">Mes</label>
+              <input type="tel" id="telefono" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" placeholder="Ingrese el teléfono" required #telefonoEmpleado="ngModel" maxlength="10" pattern="^[0-9]{10}$" (input)="validarTelefono($event)" />
+              <div *ngIf="telefonoEmpleado.touched && telefonoEmpleado.invalid" class="error"><i class="fas fa-times-circle"></i> El Mes es requerido.</div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-group full-width">
+                <label for="email">Año</label>
+                <input type="text" id="email" [(ngModel)]="empleado.email" name="email" class="form-control" placeholder="Ingrese el email" required #emailEmpleado="ngModel"/>
+                <div *ngIf="emailEmpleado.invalid && emailEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El Año es requerido.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+                <label for="ciudad">Dias</label>
+                <input type="text" id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" class="form-control" placeholder="Ingrese la ciudad" (input)="buscarCiudad($event)" (change)="seleccionarCiudad($event)" list="ciudadesList" required #ciudadNombreEmpleado="ngModel"/>
+                <div *ngIf="ciudadNombreEmpleado.invalid && ciudadNombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La </div>
+                <datalist id="ciudadesList">
+                  <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
+                </datalist>
+              </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="observaciones">Hora Inicio</label>
+              <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" maxlength="250"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="observaciones">Hora Fin</label>
+                <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" maxlength="250"></textarea>
+              </div>
+          </div>
+
         </div>
 
-        <div class="form-group">
-            <label for="horaInicio">Hora Inicio:</label>
-            <input type="time" id="horaInicio" [(ngModel)]="horaInicio" name="horaInicio" required>
+        <!-- Botones -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-save" [disabled]="empleadoForm.invalid">Guardar Orden de Trabajo</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
         </div>
-
-        <div class="form-group">
-            <label for="horaFin">Hora Fin:</label>
-            <input type="time" id="horaFin" [(ngModel)]="horaFin" name="horaFin" required>
-        </div>
-
-        <div class="form-group">
-            <label for="horariosAsignados">Horarios Asignados:</label>
-            <input type="text" id="horariosAsignados" [(ngModel)]="horariosAsignados" name="horariosAsignados" placeholder="Ej: [{ dia: 'Lunes', hora: '09:00' }, { dia: 'Martes', hora: '10:00' }]">
-        </div>
-
-        <button type="submit" [disabled]="ordenTrabajoForm.invalid">Crear Orden de Trabajo</button>
-    </form>
+      </form>
+    </div>
 </div>

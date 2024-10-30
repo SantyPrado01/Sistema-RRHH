@@ -37,9 +37,6 @@ export class Servicio {
     @Column({default:false})
     eliminado: boolean
 
-    @OneToMany(() => NecesidadHoraria, necesidad => necesidad.servicio)
-    necesidades: NecesidadHoraria[];
-
     @OneToMany(() => Factura, factura => factura.servicio)
     facturas: Factura[];
 
