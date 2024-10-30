@@ -1,0 +1,37 @@
+/* Estilos generales para el modal */
+.mat-dialog-content {
+    padding: 20px; /* Espaciado interno */
+  }
+  
+  /* Estilo para el campo de búsqueda */
+  .mat-form-field {
+    width: 100%; /* Ocupa el ancho completo */
+    margin-bottom: 20px; /* Espaciado inferior */
+  }
+  
+  /* Estilo para la lista de empresas */
+  .list-group {
+    max-height: 300px; /* Altura máxima para la lista */
+    overflow-y: auto; /* Permitir desplazamiento vertical */
+  }
+  
+  /* Estilo para los elementos de la lista */
+  .list-group-item {
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    transition: background-color 0.3s; /* Transición suave para el fondo */
+  }
+  
+  /* Efecto al pasar el mouse sobre los elementos de la lista */
+  .list-group-item:hover {
+    background-color: #f1f1f1; /* Cambia el color de fondo al pasar el mouse */
+  }
+  
+  /* Estilo para los botones en el pie del modal */
+  .mat-dialog-actions {
+    justify-content: flex-end; /* Alinear botones a la derecha */
+  }
+  
+  .mat-button {
+    margin-left: 10px; /* Espaciado entre los botones */
+  }
+  

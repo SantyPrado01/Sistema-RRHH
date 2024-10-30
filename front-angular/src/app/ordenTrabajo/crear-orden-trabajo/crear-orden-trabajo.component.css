@@ -196,9 +196,7 @@
     padding: 5px; 
     box-sizing: border-box; 
   }
-  
-  
-  
+
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .container {

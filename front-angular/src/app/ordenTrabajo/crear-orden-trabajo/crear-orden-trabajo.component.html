@@ -1,5 +1,5 @@
 <app-nabvar></app-nabvar>
-  <h2>Registrar Nuevo Empleado</h2>
+  <h2>Crear Orden de Trabajo</h2>
   <div class="line"></div>
 <div class="container">
     <div class="sidebar">
@@ -9,68 +9,67 @@
     </div>
 
     <div class="form-container">
-      <form #empleadoForm="ngForm" (ngSubmit)="guardarEmpleado()">
+      <form >
 
         <div *ngIf="seccionActual === 'ordenTrabajo'">
           <div class="form-row">
             <div class="form-group">
-              <label for="nombre">Empresa</label>
-              <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese " required #nombreEmpleado="ngModel" disabled/>
-              <div *ngIf="nombreEmpleado.invalid && nombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La Empresa es requerida.</div>
+              <label for="empresa">Empresa</label>
+              <input type="text" id="nombre" name="empleado" class="form-control" placeholder="Ingrese la Empresa " required disabled/>
+              <div class="input-group-append">
+                <button type="button" class="btn btn-secondary" (click)="abrirModal()">Buscar</button>
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="apellido">Empleado</label>
-              <input type="text" id="apellido" [(ngModel)]="empleado.apellido" name="apellido" class="form-control" placeholder="Ingrese el Empleado" required #apellidoEmpleado="ngModel" disabled />
-              <div *ngIf="apellidoEmpleado.invalid && apellidoEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El Empleado es requerido.</div>
+              <label for="empleado">Empleado</label>
+              <input type="text" id="empleado" name="empleado" class="form-control" placeholder="Ingrese el Empleado" required disabled />
             </div>
           </div>
 
+
           <div class="form-row">
             <div class="form-group">
-              <label for="telefono">Mes</label>
-              <input type="tel" id="telefono" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" placeholder="Ingrese el teléfono" required #telefonoEmpleado="ngModel" maxlength="10" pattern="^[0-9]{10}$" (input)="validarTelefono($event)" />
-              <div *ngIf="telefonoEmpleado.touched && telefonoEmpleado.invalid" class="error"><i class="fas fa-times-circle"></i> El Mes es requerido.</div>
+              <label for="mes">Mes</label>
+              <select id="mes" name="mes" class="form-control" required>
+                <option value="" disabled selected>Seleccione un mes</option>
+                <option *ngFor="let m of meses" [value]="m">{{ m }}</option>
+              </select>
             </div>
-
+  
             <div class="form-group">
-              <div class="form-group full-width">
-                <label for="email">Año</label>
-                <input type="text" id="email" [(ngModel)]="empleado.email" name="email" class="form-control" placeholder="Ingrese el email" required #emailEmpleado="ngModel"/>
-                <div *ngIf="emailEmpleado.invalid && emailEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El Año es requerido.</div>
-              </div>
+              <label for="anio">Año</label>
+              <select id="anio" name="anio" class="form-control" required>
+                <option value="" disabled selected>Seleccione un año</option>
+                <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
+              </select>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-                <label for="ciudad">Dias</label>
-                <input type="text" id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" class="form-control" placeholder="Ingrese la ciudad" (input)="buscarCiudad($event)" (change)="seleccionarCiudad($event)" list="ciudadesList" required #ciudadNombreEmpleado="ngModel"/>
-                <div *ngIf="ciudadNombreEmpleado.invalid && ciudadNombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La </div>
-                <datalist id="ciudadesList">
-                  <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
-                </datalist>
-              </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="observaciones">Hora Inicio</label>
-              <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" maxlength="250"></textarea>
+          <div class="disponibilidad-grid">
+            <div class="grid-header">
+              <div>Día</div>
+              <div>Hora Inicio</div>
+              <div>Hora Fin</div>
             </div>
-
-            <div class="form-group">
-                <label for="observaciones">Hora Fin</label>
-                <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" maxlength="250"></textarea>
+      
+            <div *ngFor="let dia of necesidad" class="grid-row">
+              <div>{{ dia.nombre }}</div>
+              <div>
+                <input type="time" name="{{ dia.nombre }}HoraInicio" />
               </div>
+              <div>
+                <input type="time" name="{{ dia.nombre }}HoraFin"/>
+              </div>
+            </div>
           </div>
 
         </div>
 
         <!-- Botones -->
         <div class="modal-footer">
-          <button type="submit" class="btn btn-save" [disabled]="empleadoForm.invalid">Guardar Orden de Trabajo</button>
-          <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
+          <button type="submit" class="btn btn-save" >Guardar Orden de Trabajo</button>
+          <button type="button" class="btn btn-cancel" >Cancelar</button>
         </div>
       </form>
     </div>
