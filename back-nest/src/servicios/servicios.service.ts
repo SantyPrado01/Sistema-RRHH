@@ -18,11 +18,11 @@ export class ServiciosService {
       }
     });
     if(servicioFound){
-      return new HttpException('El servicio ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
+      throw new HttpException('El servicio ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
     }
 
     const newServicio = this.servicioRepository.create(servicio)
-    return this.servicioRepository.save(newServicio), new HttpException('El Servicio se guardo con exito.', HttpStatus.ACCEPTED)
+    return this.servicioRepository.save(newServicio)
 
   }
 
@@ -34,28 +34,21 @@ export class ServiciosService {
     })
   }
 
-  async getServicio(nombre: string){
-    const servicioFound = await this.servicioRepository.findOne({
-      where:{
-        nombre
-      }
-    });
-    if(!nombre){
-      return null;
-    }
-    return servicioFound
+  async getServicio(nombre: string): Promise<Servicio | null> {
+    if (!nombre) return null; // Retorna null sin llamar al repositorio si el nombre es undefined
+    return await this.servicioRepository.findOne({ where: { nombre, eliminado: false } });
   }
 
-  async getServicioId(servicioId:number){
-    const servicioFound = await this.servicioRepository.findOne({
+  async getServicioId(id: number): Promise<Servicio> {
+    const servicio = await this.servicioRepository.findOne({
       where:{
-        servicioId
+        servicioId: id
       }
     });
-    if(!servicioFound){
-      return new HttpException('Servicio no encontrado.', HttpStatus.NOT_FOUND)
+    if (!servicio) {
+      throw new HttpException('Servicio no encontrado.', HttpStatus.NOT_FOUND);
     }
-    return servicioFound
+    return servicio;
   }
 
   async deleteServicio(servicioId: number){
@@ -65,7 +58,7 @@ export class ServiciosService {
       }
     });
     if(!servicioFound){
-      return new HttpException('Servicio no encontrado.', HttpStatus.NOT_FOUND)
+      throw new HttpException('Servicio no encontrado.', HttpStatus.NOT_FOUND)
     }
 
     servicioFound.eliminado = true;

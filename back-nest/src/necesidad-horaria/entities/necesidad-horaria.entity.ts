@@ -1,4 +1,4 @@
-import { OrdenTrabajo } from 'src/orden-trabajo/entities/orden-trabajo.entity';
+import { OrdenTrabajo } from '../../orden-trabajo/entities/orden-trabajo.entity';
 import { Servicio } from '../../servicios/entities/servicio.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 

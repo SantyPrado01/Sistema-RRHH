@@ -1,8 +1,8 @@
 
-import { Empleado } from "src/empleados/entities/empleado.entity";
-import { HorarioAsignado } from "src/horarios-asignados/entities/horarios-asignado.entity";
-import { NecesidadHoraria } from "src/necesidad-horaria/entities/necesidad-horaria.entity";
-import { Servicio } from "src/servicios/entities/servicio.entity";
+import { Empleado } from "../../empleados/entities/empleado.entity";
+import { HorarioAsignado } from "../../horarios-asignados/entities/horarios-asignado.entity";
+import { NecesidadHoraria } from "../../necesidad-horaria/entities/necesidad-horaria.entity";
+import { Servicio } from "../../servicios/entities/servicio.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('ordenes-trabajo')
