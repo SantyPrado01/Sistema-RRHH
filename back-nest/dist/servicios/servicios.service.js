@@ -28,10 +28,10 @@ let ServiciosService = class ServiciosService {
             }
         });
         if (servicioFound) {
-            return new common_1.HttpException('El servicio ya existe. Prueba nuevamente.', common_1.HttpStatus.CONFLICT);
+            throw new common_1.HttpException('El servicio ya existe. Prueba nuevamente.', common_1.HttpStatus.CONFLICT);
         }
         const newServicio = this.servicioRepository.create(servicio);
-        return this.servicioRepository.save(newServicio), new common_1.HttpException('El Servicio se guardo con exito.', common_1.HttpStatus.ACCEPTED);
+        return this.servicioRepository.save(newServicio);
     }
     getServicios() {
         return this.servicioRepository.find({
@@ -41,26 +41,20 @@ let ServiciosService = class ServiciosService {
         });
     }
     async getServicio(nombre) {
-        const servicioFound = await this.servicioRepository.findOne({
-            where: {
-                nombre
-            }
-        });
-        if (!nombre) {
+        if (!nombre)
             return null;
-        }
-        return servicioFound;
+        return await this.servicioRepository.findOne({ where: { nombre, eliminado: false } });
     }
-    async getServicioId(servicioId) {
-        const servicioFound = await this.servicioRepository.findOne({
+    async getServicioId(id) {
+        const servicio = await this.servicioRepository.findOne({
             where: {
-                servicioId
+                servicioId: id
             }
         });
-        if (!servicioFound) {
-            return new common_1.HttpException('Servicio no encontrado.', common_1.HttpStatus.NOT_FOUND);
+        if (!servicio) {
+            throw new common_1.HttpException('Servicio no encontrado.', common_1.HttpStatus.NOT_FOUND);
         }
-        return servicioFound;
+        return servicio;
     }
     async deleteServicio(servicioId) {
         const servicioFound = await this.servicioRepository.findOne({
@@ -69,7 +63,7 @@ let ServiciosService = class ServiciosService {
             }
         });
         if (!servicioFound) {
-            return new common_1.HttpException('Servicio no encontrado.', common_1.HttpStatus.NOT_FOUND);
+            throw new common_1.HttpException('Servicio no encontrado.', common_1.HttpStatus.NOT_FOUND);
         }
         servicioFound.eliminado = true;
         await this.servicioRepository.save(servicioFound);

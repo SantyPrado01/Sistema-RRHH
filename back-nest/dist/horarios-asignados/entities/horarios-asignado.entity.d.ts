@@ -1,5 +1,5 @@
-import { Empleado } from "src/empleados/entities/empleado.entity";
-import { OrdenTrabajo } from "src/orden-trabajo/entities/orden-trabajo.entity";
+import { Empleado } from "../../empleados/entities/empleado.entity";
+import { OrdenTrabajo } from "../../orden-trabajo/entities/orden-trabajo.entity";
 export declare class HorarioAsignado {
     horarioAsignadoId: number;
     ordenTrabajo: OrdenTrabajo;

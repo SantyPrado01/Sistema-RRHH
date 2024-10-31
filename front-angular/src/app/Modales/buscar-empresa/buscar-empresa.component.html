@@ -1,1 +1,18 @@
-<p>buscar-empresa works!</p>
+<h2 mat-dialog-title>Buscar Empresa</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Buscar empresa</mat-label>
+    <input matInput [(ngModel)]="filtroBusqueda" />
+  </mat-form-field>
+
+  <ul class="list-group">
+    <li
+
+    >
+
+    </li>
+  </ul>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+</mat-dialog-actions>
