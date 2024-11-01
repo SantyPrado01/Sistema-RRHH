@@ -40,12 +40,14 @@ h2 {
   color: #333;
   font-weight: 600;
   transition: background-color 0.3s, color 0.3s;
+  margin-bottom: 0.5rem;
 }
 
 .sidebar-menu li:hover,
 .sidebar-menu li.active {
   background-color: #CC5600;
   color: white;
+  border-radius: 10px;
 }
 
 /* Form container styling */

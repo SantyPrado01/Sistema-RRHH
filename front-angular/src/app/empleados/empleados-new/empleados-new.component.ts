@@ -82,6 +82,7 @@ export class EmpleadosNewComponent implements OnInit{
       });
     }
   }
+  
   guardarDisponibilidad() {
     console.log(this.disponibilidad);
   }

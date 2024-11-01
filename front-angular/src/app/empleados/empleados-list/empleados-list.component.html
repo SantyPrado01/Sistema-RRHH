@@ -55,11 +55,8 @@
         <td>{{ empleado.telefono }}</td>
         <td>{{ empleado.email }}</td>
         <td>
-          <a [routerLink]="">
-            <button class="btn-view">👁️</button>
-          </a>
-            <button class="btn-edit" [routerLink]="['/employee/edit', empleado.empleadoId]">✏️</button>
-            <button class="btn-delete" (click)="eliminarEmpleado(empleado)">🗑️</button>
+            <button class="btn-edit" [routerLink]="['/employee/edit', empleado.empleadoId]"><mat-icon>edit</mat-icon></button>
+            <button class="btn-delete" (click)="eliminarEmpleado(empleado)"><mat-icon>delete</mat-icon></button>
         </td>
       </tr>
     </tbody>

@@ -1,75 +1,81 @@
 <app-nabvar></app-nabvar>
-  <h2>Crear Orden de Trabajo</h2>
-  <div class="line"></div>
-<div class="container">
-    <div class="sidebar">
-      <ul class="sidebar-menu">
-        <li (click)="mostrarSeccion('ordenTrabajo')" [class.active]="seccionActual === 'ordenTrabajo'">Crear Orden de Trabajo</li>
-      </ul>
-    </div>
+<h2>Crear Orden de Trabajo</h2>
+<div class="line"></div>
 
-    <div class="form-container">
-      <form >
-        <div *ngIf="seccionActual === 'ordenTrabajo'">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="empresa">Empresa</label>
-              <input type="text" id="nombre" name="empleado" class="form-control" placeholder="Ingrese la Empresa " required disabled/>
+<div class="container">
+  <div class="sidebar">
+    <ul class="sidebar-menu">
+      <li (click)="mostrarSeccion('ordenTrabajo')" [class.active]="seccionActual === 'ordenTrabajo'">Crear Orden de Trabajo</li>
+    </ul>
+  </div>
+
+  <div class="form-container">
+    <form>
+      <div *ngIf="seccionActual === 'ordenTrabajo'">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="empresa">Empresa</label>
+            <div class="form-group-inline">
+              <input type="text" id="empresa" name="empresa" class="form-control" placeholder="Ingrese la Empresa" required disabled />
               <div class="input-group-append">
                 <button type="button" class="btn btn-secondary" (click)="abrirModal()">Buscar</button>
               </div>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label for="empleado">Empleado</label>
+          <div class="form-group">
+            <label for="empleado">Empleado</label>
+            <div class="form-group-inline">
               <input type="text" id="empleado" name="empleado" class="form-control" placeholder="Ingrese el Empleado" required disabled />
-            </div>
-          </div>
-
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="mes">Mes</label>
-              <select id="mes" name="mes" class="form-control" required>
-                <option value="" disabled selected>Seleccione un mes</option>
-                <option *ngFor="let m of meses" [value]="m">{{ m }}</option>
-              </select>
-            </div>
-  
-            <div class="form-group">
-              <label for="anio">Año</label>
-              <select id="anio" name="anio" class="form-control" required>
-                <option value="" disabled selected>Seleccione un año</option>
-                <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="disponibilidad-grid">
-            <div class="grid-header">
-              <div>Día</div>
-              <div>Hora Inicio</div>
-              <div>Hora Fin</div>
-            </div>
-      
-            <div *ngFor="let dia of necesidad" class="grid-row">
-              <div>{{ dia.nombre }}</div>
-              <div>
-                <input type="time" name="{{ dia.nombre }}HoraInicio" />
-              </div>
-              <div>
-                <input type="time" name="{{ dia.nombre }}HoraFin"/>
+              <div class="input-group-append">
+                <button type="button" class="btn btn-secondary" (click)="abrirModal()">Buscar</button>
               </div>
             </div>
           </div>
-
         </div>
 
-        <!-- Botones -->
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-save" >Guardar Orden de Trabajo</button>
-          <button type="button" class="btn btn-cancel" >Cancelar</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="mes">Mes</label>
+            <select id="mes" name="mes" class="form-control" required>
+              <option value="" disabled selected>Seleccione un mes</option>
+              <option *ngFor="let m of meses" [value]="m">{{ m }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="anio">Año</label>
+            <select id="anio" name="anio" class="form-control" required>
+              <option value="" disabled selected>Seleccione un año</option>
+              <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
+            </select>
+          </div>
         </div>
-      </form>
-    </div>
+
+        <div class="disponibilidad-grid">
+          <div class="grid-header">
+            <div>Día</div>
+            <div>Hora Inicio</div>
+            <div>Hora Fin</div>
+          </div>
+
+          <div *ngFor="let dia of necesidad" class="grid-row">
+            <div>{{ dia.nombre }}</div>
+            <div>
+              <input type="time" name="{{ dia.nombre }}HoraInicio" />
+            </div>
+            <div>
+              <input type="time" name="{{ dia.nombre }}HoraFin"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-save">Guardar Orden de Trabajo</button>
+        <button type="button" class="btn btn-cancel">Cancelar</button>
+      </div>
+    </form>
+  </div>
 </div>

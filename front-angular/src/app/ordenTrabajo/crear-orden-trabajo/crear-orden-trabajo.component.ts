@@ -8,14 +8,12 @@ import { Empresa } from '../../servicios/models/servicio.models';
 import { NabvarComponent } from '../../nabvar/nabvar.component';
 import { BuscarEmpresaComponent } from '../../Modales/buscar-empresa/buscar-empresa.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-crear-orden-trabajo',
   standalone: true,
-  imports: [CommonModule, FormsModule, NabvarComponent, MatDialogModule, MatFormFieldModule, MatButtonModule, MatInputModule],
+  imports: [CommonModule, FormsModule, NabvarComponent],
   templateUrl: './crear-orden-trabajo.component.html',
   styleUrl: './crear-orden-trabajo.component.css'
 })

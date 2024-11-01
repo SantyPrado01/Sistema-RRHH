@@ -54,11 +54,8 @@
         <td>{{ empresa.ciudad }}</td>
         <td>{{ getCategoriaNombre(empresa.categoria) }}</td>
         <td>
-          <a [routerLink]="['/service/view', empresa.servicioId]">
-            <button class="btn-view">👁️</button>
-          </a>
-          <button class="btn-edit" [routerLink]="['/service/edit', empresa.servicioId]">✏️</button>
-          <button class="btn-delete" (click)="eliminarServicio(empresa)">🗑️</button>
+          <button class="btn-edit" [routerLink]="['/service/edit', empresa.servicioId]"><mat-icon>edit</mat-icon></button>
+          <button class="btn-delete" (click)="eliminarServicio(empresa)"><mat-icon>delete</mat-icon></button>
         </td>
       </tr>
     </tbody>

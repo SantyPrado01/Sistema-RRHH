@@ -16,6 +16,7 @@ import { response } from 'express';
 })
 export class ServiciosEditComponent implements OnInit {
 
+  seccionActual: string = 'datosEmpresa';
   servicio: any = {};
   categorias: any[] = [];
   ciudades: any[] = [];
@@ -49,6 +50,10 @@ export class ServiciosEditComponent implements OnInit {
         console.error('Error al obtener las categorías', err);
       }
     });
+  }
+  
+  mostrarSeccion(seccion: string): void {
+    this.seccionActual = seccion;
   }
 
   // Función para cargar el servicio a editar

@@ -9,11 +9,12 @@ import { ServicioService } from '../services/servicio.service';
 import { CategoriaEmpleadoService } from '../../empleados/services/categoria-empleado.service';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { CategoriaServicioService } from '../services/categoria-servicios.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-servicios-list',
   standalone: true,
-  imports: [NabvarComponent, CommonModule, RouterModule],
+  imports: [NabvarComponent, CommonModule, RouterModule, MatIconModule],
   templateUrl: './servicios-list.component.html',
   styleUrls: ['./servicios-list.component.css'] 
 })

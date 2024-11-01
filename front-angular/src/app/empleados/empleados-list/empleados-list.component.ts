@@ -7,11 +7,12 @@ import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-empleados-list',
   standalone: true,
-  imports: [NabvarComponent, CommonModule, RouterModule],
+  imports: [NabvarComponent, CommonModule, RouterModule, MatIconModule],
   templateUrl: './empleados-list.component.html',
   styleUrl: './empleados-list.component.css'
 })
