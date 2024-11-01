@@ -21,8 +21,19 @@ let OrdenTrabajoController = class OrdenTrabajoController {
     constructor(ordenTrabajoService) {
         this.ordenTrabajoService = ordenTrabajoService;
     }
-    create(createOrdenTrabajoDto) {
-        return this.ordenTrabajoService.create(createOrdenTrabajoDto);
+    async create(createOrdenTrabajoDto) {
+        const ordenTrabajo = await this.ordenTrabajoService.create(createOrdenTrabajoDto);
+        if (!ordenTrabajo)
+            throw new common_1.NotFoundException('No se pudo crear la orden de trabajo');
+        const ordenTrabajoId = ordenTrabajo.ordenTrabajoId;
+        await this.ordenTrabajoService.addNecesidadHoraria(ordenTrabajoId, createOrdenTrabajoDto.necesidadHoraria.map(necesidad => ({
+            ordenTrabajoId,
+            diaSemana: necesidad.diaSemana,
+            horaInicio: necesidad.horaInicio,
+            horaFin: necesidad.horaFin,
+        })));
+        await this.ordenTrabajoService.asignarHorarios(ordenTrabajoId);
+        return this.ordenTrabajoService.findOne(ordenTrabajoId);
     }
     findAll() {
         return this.ordenTrabajoService.findAll();
@@ -43,7 +54,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_orden_trabajo_dto_1.CreateOrdenTrabajoDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], OrdenTrabajoController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
@@ -74,7 +85,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], OrdenTrabajoController.prototype, "remove", null);
 exports.OrdenTrabajoController = OrdenTrabajoController = __decorate([
-    (0, common_1.Controller)('orden-trabajo'),
+    (0, common_1.Controller)('ordenTrabajo'),
     __metadata("design:paramtypes", [orden_trabajo_service_1.OrdenTrabajoService])
 ], OrdenTrabajoController);
 //# sourceMappingURL=orden-trabajo.controller.js.map

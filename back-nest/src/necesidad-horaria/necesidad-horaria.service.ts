@@ -16,18 +16,6 @@ export class NecesidadHorariaService {
     private readonly ordenTrabajoService: OrdenTrabajoService
   ){}
 
-  async create(createNecesidadHorariaDto: CreateNecesidadHorariaDto): Promise<NecesidadHoraria> {
-    const ordenesTrabajo = await this.ordenTrabajoService.findOne(createNecesidadHorariaDto.ordenTrabajoId);
-    if (!ordenesTrabajo) {
-        throw new NotFoundException(`Orden de Trabajo con ID ${createNecesidadHorariaDto.ordenTrabajoId} no encontrado`);
-    }
-    const nuevaNecesidad = this.necesidadHorariaRepository.create({
-        ...createNecesidadHorariaDto,
-        ordenTrabajo: ordenesTrabajo as OrdenTrabajo, 
-    });
-    console.log(nuevaNecesidad)
-    return this.necesidadHorariaRepository.save(nuevaNecesidad);
-  }
 
   async findAll(): Promise<NecesidadHoraria[]> {
     return this.necesidadHorariaRepository.find({relations: ['ordenTrabajo']});

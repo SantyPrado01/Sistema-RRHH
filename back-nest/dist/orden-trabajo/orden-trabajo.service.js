@@ -19,30 +19,82 @@ const typeorm_2 = require("typeorm");
 const orden_trabajo_entity_1 = require("./entities/orden-trabajo.entity");
 const empleado_entity_1 = require("../empleados/entities/empleado.entity");
 const servicio_entity_1 = require("../servicios/entities/servicio.entity");
+const necesidad_horaria_entity_1 = require("../necesidad-horaria/entities/necesidad-horaria.entity");
+const horarios_asignado_entity_1 = require("../horarios-asignados/entities/horarios-asignado.entity");
 let OrdenTrabajoService = class OrdenTrabajoService {
-    constructor(ordenTrabajoRepository, empleadoRepository, servicioRepository) {
+    constructor(ordenTrabajoRepository, empleadoRepository, servicioRepository, necesidadHorariaRepository, horarioAsignadoRepository) {
         this.ordenTrabajoRepository = ordenTrabajoRepository;
         this.empleadoRepository = empleadoRepository;
         this.servicioRepository = servicioRepository;
+        this.necesidadHorariaRepository = necesidadHorariaRepository;
+        this.horarioAsignadoRepository = horarioAsignadoRepository;
     }
     async create(createOrdenTrabajoDto) {
         const { servicio, empleadoAsignado, mes, anio } = createOrdenTrabajoDto;
         const empleadoExistente = await this.empleadoRepository.findOne({ where: { empleadoId: empleadoAsignado.empleadoId } });
-        if (!empleadoExistente) {
+        if (!empleadoExistente)
             throw new common_1.NotFoundException('Empleado no encontrado');
-        }
         const servicioExistente = await this.servicioRepository.findOne({ where: { servicioId: servicio.servicioId } });
-        if (!servicioExistente) {
+        if (!servicioExistente)
             throw new common_1.NotFoundException('Servicio no encontrado');
-        }
         const nuevaOrdenTrabajo = this.ordenTrabajoRepository.create({
             servicio: servicioExistente,
             empleadoAsignado: empleadoExistente,
             mes,
             anio
         });
-        const ordenTrabajoGuardada = await this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
-        return ordenTrabajoGuardada;
+        return this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
+    }
+    async addNecesidadHoraria(ordenTrabajoId, necesidadesHorarias) {
+        const ordenTrabajo = await this.ordenTrabajoRepository.findOne({ where: { ordenTrabajoId } });
+        if (!ordenTrabajo)
+            throw new common_1.NotFoundException('Orden de trabajo no encontrada');
+        const nuevasNecesidades = necesidadesHorarias.map((necesidad) => this.necesidadHorariaRepository.create({
+            ...necesidad,
+            ordenTrabajo,
+        }));
+        return this.necesidadHorariaRepository.save(nuevasNecesidades);
+    }
+    async asignarHorarios(ordenTrabajoId) {
+        const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
+            where: { ordenTrabajoId },
+            relations: ['necesidadHoraria', 'empleadoAsignado'],
+        });
+        if (!ordenTrabajo)
+            throw new common_1.NotFoundException('Orden de trabajo no encontrada');
+        const horariosAsignados = [];
+        for (const necesidad of ordenTrabajo.necesidadHoraria) {
+            const fechas = this.obtenerFechasDelMes(ordenTrabajo.anio, ordenTrabajo.mes, necesidad.diaSemana);
+            for (const fecha of fechas) {
+                const horarioAsignado = this.horarioAsignadoRepository.create({
+                    ordenTrabajo,
+                    empleado: ordenTrabajo.empleadoAsignado,
+                    fecha,
+                    horaInicioProyectado: necesidad.horaInicio,
+                    horaFinProyectado: necesidad.horaFin,
+                    estado: 'pendiente',
+                    suplente: false,
+                    empleadoSuplente: null,
+                });
+                horariosAsignados.push(horarioAsignado);
+            }
+        }
+        return this.horarioAsignadoRepository.save(horariosAsignados);
+    }
+    obtenerFechasDelMes(anio, mes, diaSemana) {
+        const fechas = [];
+        const primerDiaMes = new Date(anio, mes - 1, 1);
+        const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        const diaIndice = diasSemana.indexOf(diaSemana.toLowerCase());
+        if (diaIndice === -1)
+            return fechas;
+        for (let dia = primerDiaMes.getDate(); dia <= new Date(anio, mes, 0).getDate(); dia++) {
+            const fecha = new Date(anio, mes - 1, dia);
+            if (fecha.getDay() === diaIndice) {
+                fechas.push(fecha);
+            }
+        }
+        return fechas;
     }
     async findAll() {
         return this.ordenTrabajoRepository.find({ relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'] });
@@ -89,7 +141,11 @@ exports.OrdenTrabajoService = OrdenTrabajoService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(orden_trabajo_entity_1.OrdenTrabajo)),
     __param(1, (0, typeorm_1.InjectRepository)(empleado_entity_1.Empleado)),
     __param(2, (0, typeorm_1.InjectRepository)(servicio_entity_1.Servicio)),
+    __param(3, (0, typeorm_1.InjectRepository)(necesidad_horaria_entity_1.NecesidadHoraria)),
+    __param(4, (0, typeorm_1.InjectRepository)(horarios_asignado_entity_1.HorarioAsignado)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository])
 ], OrdenTrabajoService);

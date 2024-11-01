@@ -14,19 +14,13 @@ export class NecesidadHoraria {
     @ManyToOne(()=> OrdenTrabajo, ordenTrabajo => ordenTrabajo.necesidadHoraria)
     ordenTrabajo: OrdenTrabajo;
 
-    @Column({type: 'tinyint'})
-    diaSemana:number
+    @Column()
+    diaSemana:string
 
     @Column({type: 'time'})
     horaInicio:string
 
     @Column({type: 'time'})
     horaFin:string
-
-    @Column({type:'date'})
-    fechaInicio: string
-
-    @Column({type:'date'})
-    fechaFin:string
 
 }

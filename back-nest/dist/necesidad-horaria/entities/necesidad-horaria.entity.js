@@ -24,8 +24,8 @@ __decorate([
     __metadata("design:type", orden_trabajo_entity_1.OrdenTrabajo)
 ], NecesidadHoraria.prototype, "ordenTrabajo", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'tinyint' }),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], NecesidadHoraria.prototype, "diaSemana", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'time' }),
@@ -35,14 +35,6 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'time' }),
     __metadata("design:type", String)
 ], NecesidadHoraria.prototype, "horaFin", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'date' }),
-    __metadata("design:type", String)
-], NecesidadHoraria.prototype, "fechaInicio", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'date' }),
-    __metadata("design:type", String)
-], NecesidadHoraria.prototype, "fechaFin", void 0);
 exports.NecesidadHoraria = NecesidadHoraria = __decorate([
     (0, typeorm_1.Entity)({
         name: 'necesidadHoraria'

@@ -9,5 +9,5 @@ export declare class OrdenTrabajo {
     horariosAsignados?: HorarioAsignado[];
     mes: number;
     anio: number;
-    necesidadHoraria: NecesidadHoraria[];
+    necesidadHoraria?: NecesidadHoraria[];
 }

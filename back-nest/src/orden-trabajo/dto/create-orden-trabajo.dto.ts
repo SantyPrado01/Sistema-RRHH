@@ -21,7 +21,7 @@ export class CreateOrdenTrabajoDto {
     @IsArray()
     @ValidateNested({each: true})
     @Type(() => CreateNecesidadHorariaDto)
-    necesidadHoraria?: CreateNecesidadHorariaDto[]
+    necesidadHoraria?: CreateNecesidadHorariaDto[];
 
     @IsNotEmpty()
     @IsNumber()

@@ -15,14 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NecesidadHorariaController = void 0;
 const common_1 = require("@nestjs/common");
 const necesidad_horaria_service_1 = require("./necesidad-horaria.service");
-const create_necesidad_horaria_dto_1 = require("./dto/create-necesidad-horaria.dto");
 const update_necesidad_horaria_dto_1 = require("./dto/update-necesidad-horaria.dto");
 let NecesidadHorariaController = class NecesidadHorariaController {
     constructor(necesidadHorariaService) {
         this.necesidadHorariaService = necesidadHorariaService;
-    }
-    create(createNecesidadHorariaDto) {
-        return this.necesidadHorariaService.create(createNecesidadHorariaDto);
     }
     findAll() {
         return this.necesidadHorariaService.findAll();
@@ -38,13 +34,6 @@ let NecesidadHorariaController = class NecesidadHorariaController {
     }
 };
 exports.NecesidadHorariaController = NecesidadHorariaController;
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_necesidad_horaria_dto_1.CreateNecesidadHorariaDto]),
-    __metadata("design:returntype", void 0)
-], NecesidadHorariaController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

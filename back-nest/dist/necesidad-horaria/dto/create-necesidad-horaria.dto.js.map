@@ -1,1 +1,1 @@
-{"version":3,"file":"create-necesidad-horaria.dto.js","sourceRoot":"","sources":["../../../src/necesidad-horaria/dto/create-necesidad-horaria.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAAsD;AAEtD,MAAa,yBAAyB;CAYrC;AAZD,8DAYC;AARG;IAFC,IAAA,4BAAU,GAAE;IACZ,IAAA,0BAAQ,GAAE;;iEACU"}
+{"version":3,"file":"create-necesidad-horaria.dto.js","sourceRoot":"","sources":["../../../src/necesidad-horaria/dto/create-necesidad-horaria.dto.ts"],"names":[],"mappings":";;;AAEA,MAAa,yBAAyB;CAQrC;AARD,8DAQC"}

@@ -74,7 +74,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], HorariosAsignadosController.prototype, "remove", null);
 exports.HorariosAsignadosController = HorariosAsignadosController = __decorate([
-    (0, common_1.Controller)('horarios-asignados'),
+    (0, common_1.Controller)('horariosAsignados'),
     __metadata("design:paramtypes", [horarios_asignados_service_1.HorarioAsignadoService])
 ], HorariosAsignadosController);
 //# sourceMappingURL=horarios-asignados.controller.js.map

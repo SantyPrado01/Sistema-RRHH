@@ -27,5 +27,5 @@ export class OrdenTrabajo {
     anio: number;  
 
     @OneToMany(() => NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo)
-    necesidadHoraria: NecesidadHoraria[];
+    necesidadHoraria?: NecesidadHoraria[];
 }

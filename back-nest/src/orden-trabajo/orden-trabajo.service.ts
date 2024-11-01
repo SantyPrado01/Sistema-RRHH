@@ -2,10 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrdenTrabajo } from './entities/orden-trabajo.entity';
-import { CreateOrdenTrabajoDto } from './dto/create-orden-trabajo.dto';  
-import { Empleado } from 'src/empleados/entities/empleado.entity'; 
-import { Servicio } from 'src/servicios/entities/servicio.entity'; 
+import { CreateOrdenTrabajoDto } from './dto/create-orden-trabajo.dto';
+import { Empleado } from 'src/empleados/entities/empleado.entity';
+import { Servicio } from 'src/servicios/entities/servicio.entity';
 import { UpdateOrdenTrabajoDto } from './dto/update-orden-trabajo.dto';
+import { CreateNecesidadHorariaDto } from 'src/necesidad-horaria/dto/create-necesidad-horaria.dto'; 
+import { NecesidadHoraria } from 'src/necesidad-horaria/entities/necesidad-horaria.entity'; 
+import { HorarioAsignado } from 'src/horarios-asignados/entities/horarios-asignado.entity'; 
 
 @Injectable()
 export class OrdenTrabajoService {
@@ -16,31 +19,98 @@ export class OrdenTrabajoService {
     private readonly empleadoRepository: Repository<Empleado>,
     @InjectRepository(Servicio)
     private readonly servicioRepository: Repository<Servicio>,
-
+    @InjectRepository(NecesidadHoraria)
+    private readonly necesidadHorariaRepository: Repository<NecesidadHoraria>,
+    @InjectRepository(HorarioAsignado)
+    private readonly horarioAsignadoRepository: Repository<HorarioAsignado>,
   ) {}
 
-    async create(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
+  // Método para crear una nueva orden de trabajo
+  async create(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
     const { servicio, empleadoAsignado, mes, anio } = createOrdenTrabajoDto;
 
     const empleadoExistente = await this.empleadoRepository.findOne({ where: { empleadoId: empleadoAsignado.empleadoId } });
-    if (!empleadoExistente) {
-        throw new NotFoundException('Empleado no encontrado');
-    }
+    if (!empleadoExistente) throw new NotFoundException('Empleado no encontrado');
 
     const servicioExistente = await this.servicioRepository.findOne({ where: { servicioId: servicio.servicioId } });
-    if (!servicioExistente) {
-        throw new NotFoundException('Servicio no encontrado');
-    }
+    if (!servicioExistente) throw new NotFoundException('Servicio no encontrado');
 
     const nuevaOrdenTrabajo = this.ordenTrabajoRepository.create({
-        servicio: servicioExistente,
-        empleadoAsignado: empleadoExistente,
-        mes,
-        anio
+      servicio: servicioExistente,
+      empleadoAsignado: empleadoExistente,
+      mes,
+      anio
     });
-    const ordenTrabajoGuardada = await this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
-    return ordenTrabajoGuardada;
+    return this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
+  }
+
+  // Método para agregar necesidades horarias
+  async addNecesidadHoraria(
+    ordenTrabajoId: number,
+    necesidadesHorarias: CreateNecesidadHorariaDto[],
+  ): Promise<NecesidadHoraria[]> {
+    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({ where: { ordenTrabajoId } });
+    if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
+
+    const nuevasNecesidades = necesidadesHorarias.map((necesidad) => 
+      this.necesidadHorariaRepository.create({
+        ...necesidad,
+        ordenTrabajo,
+      })
+    );
+
+    return this.necesidadHorariaRepository.save(nuevasNecesidades);
+  }
+
+  // Método para asignar horarios en función de las necesidades horarias
+  async asignarHorarios(ordenTrabajoId: number) {
+    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
+      where: { ordenTrabajoId },
+      relations: ['necesidadHoraria', 'empleadoAsignado'],
+    });
+
+    if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
+
+    const horariosAsignados = [];
+    for (const necesidad of ordenTrabajo.necesidadHoraria) {
+      const fechas = this.obtenerFechasDelMes(ordenTrabajo.anio, ordenTrabajo.mes, necesidad.diaSemana);
+      for (const fecha of fechas) {
+        const horarioAsignado = this.horarioAsignadoRepository.create({
+          ordenTrabajo,
+          empleado: ordenTrabajo.empleadoAsignado,
+          fecha,
+          horaInicioProyectado: necesidad.horaInicio,
+          horaFinProyectado: necesidad.horaFin,
+          estado: 'pendiente',
+          suplente: false,
+          empleadoSuplente: null,
+        });
+        horariosAsignados.push(horarioAsignado);
+      }
     }
+
+    return this.horarioAsignadoRepository.save(horariosAsignados);
+  }
+
+  // Método helper para obtener las fechas en el mes de un día específico
+  private obtenerFechasDelMes(anio: number, mes: number, diaSemana: string): Date[] {
+    const fechas: Date[] = [];
+    const primerDiaMes = new Date(anio, mes - 1, 1);
+    const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+    const diaIndice = diasSemana.indexOf(diaSemana.toLowerCase());
+
+    if (diaIndice === -1) return fechas;
+
+    for (let dia = primerDiaMes.getDate(); dia <= new Date(anio, mes, 0).getDate(); dia++) {
+      const fecha = new Date(anio, mes - 1, dia);
+      if (fecha.getDay() === diaIndice) {
+        fechas.push(fecha);
+      }
+    }
+    return fechas;
+  }
+
+  // Otros métodos de búsqueda, actualización y eliminación...
 
   async findAll(): Promise<OrdenTrabajo[]> {
     return this.ordenTrabajoRepository.find({ relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'] });
@@ -48,7 +118,7 @@ export class OrdenTrabajoService {
 
   async findOne(id: number): Promise<OrdenTrabajo> {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
-      where: { ordenTrabajoId: id }, 
+      where: { ordenTrabajoId: id },
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
     });
     if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
@@ -73,9 +143,7 @@ export class OrdenTrabajoService {
       if (!empleado) throw new NotFoundException('Empleado no encontrado');
       ordenTrabajo.empleadoAsignado = empleado;
     }
-
     Object.assign(ordenTrabajo, updateOrdenTrabajoDto);
-
     return this.ordenTrabajoRepository.save(ordenTrabajo);
   }
 

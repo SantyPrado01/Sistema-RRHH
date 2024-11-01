@@ -4,7 +4,7 @@ import { CreateHorariosAsignadoDto } from './dto/create-horarios-asignado.dto';
 import { UpdateHorariosAsignadoDto } from './dto/update-horarios-asignado.dto';
 import { HorarioAsignado } from './entities/horarios-asignado.entity';
 
-@Controller('horarios-asignados')
+@Controller('horariosAsignados')
 export class HorariosAsignadosController {
   constructor(private readonly horariosAsignadosService: HorarioAsignadoService) {}
   

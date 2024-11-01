@@ -57,20 +57,22 @@ export class HorarioAsignadoService {
     }
     
     // Modificar `obtenerFechasDelMes` para recibir el día de la semana de `necesidadHoraria` y devolver las fechas correspondientes en el mes
-    private obtenerFechasDelMes(anio: number, mes: number, diaSemana: number): Date[] {
+    private obtenerFechasDelMes(anio: number, mes: number, diaSemana: string): Date[] {
         const fechas: Date[] = [];
         const primerDiaMes = new Date(anio, mes - 1, 1);
+        const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        const diaIndice = diasSemana.indexOf(diaSemana.toLowerCase());
     
-        // Iterar para encontrar todos los días del mes que coincidan con el índice del día de la semana
+        if (diaIndice === -1) return fechas;
+    
         for (let dia = primerDiaMes.getDate(); dia <= new Date(anio, mes, 0).getDate(); dia++) {
-            const fecha = new Date(anio, mes - 1, dia);
-            if (fecha.getDay() === diaSemana) {
-                fechas.push(fecha);
-            }
+          const fecha = new Date(anio, mes - 1, dia);
+          if (fecha.getDay() === diaIndice) {
+            fechas.push(fecha);
+          }
         }
-    
         return fechas;
-    }
+      }
 
 
     async findAll(): Promise<HorarioAsignado[]> {

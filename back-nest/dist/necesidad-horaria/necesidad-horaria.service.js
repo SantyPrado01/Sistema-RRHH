@@ -23,18 +23,6 @@ let NecesidadHorariaService = class NecesidadHorariaService {
         this.necesidadHorariaRepository = necesidadHorariaRepository;
         this.ordenTrabajoService = ordenTrabajoService;
     }
-    async create(createNecesidadHorariaDto) {
-        const ordenesTrabajo = await this.ordenTrabajoService.findOne(createNecesidadHorariaDto.ordenTrabajoId);
-        if (!ordenesTrabajo) {
-            throw new common_1.NotFoundException(`Orden de Trabajo con ID ${createNecesidadHorariaDto.ordenTrabajoId} no encontrado`);
-        }
-        const nuevaNecesidad = this.necesidadHorariaRepository.create({
-            ...createNecesidadHorariaDto,
-            ordenTrabajo: ordenesTrabajo,
-        });
-        console.log(nuevaNecesidad);
-        return this.necesidadHorariaRepository.save(nuevaNecesidad);
-    }
     async findAll() {
         return this.necesidadHorariaRepository.find({ relations: ['ordenTrabajo'] });
     }

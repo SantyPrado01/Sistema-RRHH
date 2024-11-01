@@ -58,9 +58,13 @@ let HorarioAsignadoService = class HorarioAsignadoService {
     obtenerFechasDelMes(anio, mes, diaSemana) {
         const fechas = [];
         const primerDiaMes = new Date(anio, mes - 1, 1);
+        const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        const diaIndice = diasSemana.indexOf(diaSemana.toLowerCase());
+        if (diaIndice === -1)
+            return fechas;
         for (let dia = primerDiaMes.getDate(); dia <= new Date(anio, mes, 0).getDate(); dia++) {
             const fecha = new Date(anio, mes - 1, dia);
-            if (fecha.getDay() === diaSemana) {
+            if (fecha.getDay() === diaIndice) {
                 fechas.push(fecha);
             }
         }
