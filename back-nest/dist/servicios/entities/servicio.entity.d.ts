@@ -1,4 +1,4 @@
-import { OrdenTrabajo } from "../../orden-trabajo/entities/orden-trabajo.entity";
+import { OrdenTrabajo } from "src/ordenTrabajo/entities/ordenTrabajo.entity";
 import { CategoriaServicio } from "../../categoria-servicio/entities/categoria-servicio.entity";
 import { Factura } from "../../facturas/entities/factura.entity";
 export declare class Servicio {

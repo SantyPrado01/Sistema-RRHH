@@ -9,13 +9,13 @@ import { AuthModule } from './auth/auth.module';
 import { EmpleadosModule } from './empleados/empleados.module';
 import { ServiciosModule } from './servicios/servicios.module';
 import { DisponibilidadHorariaModule } from './disponibilidad-horaria/disponibilidad-horaria.module';
-import { NecesidadHorariaModule } from './necesidad-horaria/necesidad-horaria.module';
+import { NecesidadHorariaModule } from './necesidadHoraria/necesidadHoraria.module'; 
 import { CategoriaEmpleadoModule } from './categoria-empleado/categoria-empleado.module';
 import { CategoriaServicioModule } from './categoria-servicio/categoria-servicio.module';
 import { FacturasModule } from './facturas/facturas.module';
 import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
-import { OrdenTrabajoModule } from './orden-trabajo/orden-trabajo.module';
-import { HorariosAsignadosModule } from './horarios-asignados/horarios-asignados.module';
+import { OrdenTrabajoModule } from './ordenTrabajo/ordenTrabajo.module'; 
+import { HorariosAsignadosModule } from './horariosAsignados/horariosAsignados.module'; 
 
 @Module({
   imports: [

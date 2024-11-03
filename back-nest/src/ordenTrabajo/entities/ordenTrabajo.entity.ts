@@ -25,6 +25,6 @@ export class OrdenTrabajo {
     @Column()
     anio: number;  
 
-    @OneToMany(() => NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo)
+    @OneToMany(() => NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo, { eager: true })
     necesidadHoraria?: NecesidadHoraria[];
 }

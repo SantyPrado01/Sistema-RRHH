@@ -16,13 +16,13 @@ const auth_module_1 = require("./auth/auth.module");
 const empleados_module_1 = require("./empleados/empleados.module");
 const servicios_module_1 = require("./servicios/servicios.module");
 const disponibilidad_horaria_module_1 = require("./disponibilidad-horaria/disponibilidad-horaria.module");
-const necesidad_horaria_module_1 = require("./necesidad-horaria/necesidad-horaria.module");
+const necesidadHoraria_module_1 = require("./necesidadHoraria/necesidadHoraria.module");
 const categoria_empleado_module_1 = require("./categoria-empleado/categoria-empleado.module");
 const categoria_servicio_module_1 = require("./categoria-servicio/categoria-servicio.module");
 const facturas_module_1 = require("./facturas/facturas.module");
 const items_facturas_module_1 = require("./items-facturas/items-facturas.module");
-const orden_trabajo_module_1 = require("./orden-trabajo/orden-trabajo.module");
-const horarios_asignados_module_1 = require("./horarios-asignados/horarios-asignados.module");
+const ordenTrabajo_module_1 = require("./ordenTrabajo/ordenTrabajo.module");
+const horariosAsignados_module_1 = require("./horariosAsignados/horariosAsignados.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -44,13 +44,13 @@ exports.AppModule = AppModule = __decorate([
             empleados_module_1.EmpleadosModule,
             servicios_module_1.ServiciosModule,
             disponibilidad_horaria_module_1.DisponibilidadHorariaModule,
-            necesidad_horaria_module_1.NecesidadHorariaModule,
+            necesidadHoraria_module_1.NecesidadHorariaModule,
             categoria_empleado_module_1.CategoriaEmpleadoModule,
             categoria_servicio_module_1.CategoriaServicioModule,
             facturas_module_1.FacturasModule,
             items_facturas_module_1.ItemsFacturasModule,
-            orden_trabajo_module_1.OrdenTrabajoModule,
-            horarios_asignados_module_1.HorariosAsignadosModule
+            ordenTrabajo_module_1.OrdenTrabajoModule,
+            horariosAsignados_module_1.HorariosAsignadosModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

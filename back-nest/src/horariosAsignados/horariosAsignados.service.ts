@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { HorarioAsignado } from './entities/horarios-asignado.entity'; 
-import { CreateHorariosAsignadoDto } from './dto/create-horarios-asignado.dto';
-import { OrdenTrabajo } from 'src/orden-trabajo/entities/orden-trabajo.entity';
+import { HorarioAsignado } from './entities/horariosAsignados.entity'; 
+import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto'; 
+import { OrdenTrabajo } from 'src/ordenTrabajo/entities/ordenTrabajo.entity'; 
 import { Empleado } from 'src/empleados/entities/empleado.entity';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class HorarioAsignadoService {
     async create(createHorariosDto: CreateHorariosAsignadoDto) {
         const { ordenTrabajoId } = createHorariosDto;
         const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
-            where: { ordenTrabajoId },
+            where: { Id: ordenTrabajoId },
             relations: ['empleadoAsignado', 'necesidadHoraria'], 
         });
     

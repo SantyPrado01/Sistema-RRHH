@@ -24,7 +24,7 @@ let DisponibilidadHorariaService = class DisponibilidadHorariaService {
         this.empleadoService = empleadoService;
     }
     async create(createDisponibilidadHorariaDto) {
-        const empleado = await this.empleadoService.getEmpleado(createDisponibilidadHorariaDto.empleadoId);
+        const empleado = await this.empleadoService.getId(createDisponibilidadHorariaDto.empleadoId);
         if (!empleado) {
             throw new common_1.NotFoundException(`Empleado con ID ${createDisponibilidadHorariaDto.empleadoId} no encontrado`);
         }

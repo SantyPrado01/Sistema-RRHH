@@ -31,7 +31,7 @@
             <select id="categoriaEmpresa" [(ngModel)]="servicio.categoria" name="categoriaEmpresa" class="form-control" required>
               <option value="" disabled selected>Seleccione una categoría</option>
               <option *ngFor="let categoria of categorias" [value]="categoria.categoriaServicioId">
-                {{ categoria.nombreCategoriaServico }}
+                {{ categoria.nombre }}
               </option>
             </select>
           </div>

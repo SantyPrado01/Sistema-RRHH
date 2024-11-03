@@ -17,7 +17,7 @@ export class DisponibilidadHorariaService {
 
     async create(createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto): Promise<DisponibilidadHoraria> {
 
-      const empleado = await this.empleadoService.getEmpleado(createDisponibilidadHorariaDto.empleadoId);
+      const empleado = await this.empleadoService.getId(createDisponibilidadHorariaDto.empleadoId);
       if (!empleado) {
           throw new NotFoundException(`Empleado con ID ${createDisponibilidadHorariaDto.empleadoId} no encontrado`);
       }
