@@ -6,10 +6,10 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 export class CategoriaEmpleado {
 
     @PrimaryGeneratedColumn({type:'int', name:'id'})
-    categoriaEmpleadoId:number
+    id:number
 
     @Column()
-    categoriaEmpleadoNombre: string
+    nombre: string
 
     @Column({default: false})
     eliminado: boolean;

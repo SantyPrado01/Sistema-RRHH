@@ -10,15 +10,15 @@
   </div>
 
   <div class="form-container">
-    <form>
+    <form (ngSubmit)="onSubmit()">
       <div *ngIf="seccionActual === 'ordenTrabajo'">
         <div class="form-row">
           <div class="form-group">
             <label for="empresa">Empresa</label>
             <div class="form-group-inline">
-              <input type="text" id="empresa" name="empresa" class="form-control" placeholder="Ingrese la Empresa" required disabled />
+              <input type="text" id="empresa" [(ngModel)]="empresa" name="empresa" class="form-control" placeholder="Ingrese la Empresa" required [disabled]="true" />
               <div class="input-group-append">
-                <button type="button" class="btn btn-secondary" (click)="abrirModal()">Buscar</button>
+                <button type="button" class="btn btn-secondary" (click)="abrirModalEmpresa()">Buscar</button>
               </div>
             </div>
           </div>
@@ -26,9 +26,9 @@
           <div class="form-group">
             <label for="empleado">Empleado</label>
             <div class="form-group-inline">
-              <input type="text" id="empleado" name="empleado" class="form-control" placeholder="Ingrese el Empleado" required disabled />
+              <input type="text" id="empleado" [(ngModel)]="empleado" name="empleado" class="form-control" placeholder="Ingrese el Empleado" required [disabled]="true" />
               <div class="input-group-append">
-                <button type="button" class="btn btn-secondary" (click)="abrirModal()">Buscar</button>
+                <button type="button" class="btn btn-secondary" (click)="abrirModalEmpleado()">Buscar</button>
               </div>
             </div>
           </div>
@@ -37,7 +37,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="mes">Mes</label>
-            <select id="mes" name="mes" class="form-control" required>
+            <select id="mes" [(ngModel)]="mes" name="mes" class="form-control" required>
               <option value="" disabled selected>Seleccione un mes</option>
               <option *ngFor="let m of meses" [value]="m">{{ m }}</option>
             </select>
@@ -45,7 +45,7 @@
 
           <div class="form-group">
             <label for="anio">Año</label>
-            <select id="anio" name="anio" class="form-control" required>
+            <select id="anio" [(ngModel)]="anio" name="anio" class="form-control" required>
               <option value="" disabled selected>Seleccione un año</option>
               <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
             </select>
@@ -59,13 +59,13 @@
             <div>Hora Fin</div>
           </div>
 
-          <div *ngFor="let dia of necesidad" class="grid-row">
+          <div *ngFor="let dia of necesidad; let i = index" class="grid-row">
             <div>{{ dia.nombre }}</div>
             <div>
-              <input type="time" name="{{ dia.nombre }}HoraInicio" />
+              <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio{{i}}" required />
             </div>
             <div>
-              <input type="time" name="{{ dia.nombre }}HoraFin"/>
+              <input type="time" [(ngModel)]="dia.horaFin" name="horaFin{{i}}" required />
             </div>
           </div>
         </div>

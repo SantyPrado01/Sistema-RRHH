@@ -21,31 +21,31 @@ let CategoriaServicioService = class CategoriaServicioService {
     constructor(categoriaServicioRepository) {
         this.categoriaServicioRepository = categoriaServicioRepository;
     }
-    async createCategoriaServicio(categoriaServicio) {
+    async create(categoriaServicio) {
         const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
             where: {
-                nombreCategoriaServico: categoriaServicio.nombre
+                nombre: categoriaServicio.nombre
             }
         });
         if (categoriaServicioFound) {
             return new common_1.HttpException('La Categoria ya existe. Prueba nuevamanete.', common_1.HttpStatus.CONFLICT);
         }
-        const newCategoriaServicio = this.categoriaServicioRepository.create({ nombreCategoriaServico: categoriaServicio.nombre });
+        const newCategoriaServicio = this.categoriaServicioRepository.create({ nombre: categoriaServicio.nombre });
         await this.categoriaServicioRepository.save(newCategoriaServicio);
         return {
             message: 'Categoria creada exitosamente',
             categoriaServicio: newCategoriaServicio,
         };
     }
-    getCategoriasServicios() {
+    get() {
         return this.categoriaServicioRepository.find({
             where: { eliminado: false }
         });
     }
-    async getCategoriaServicio(nombreCategoriaServico) {
+    async getNombre(nombreCategoriaServico) {
         const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
             where: {
-                nombreCategoriaServico
+                nombre: nombreCategoriaServico
             }
         });
         if (!nombreCategoriaServico) {
@@ -53,10 +53,10 @@ let CategoriaServicioService = class CategoriaServicioService {
         }
         return categoriaServicioFound;
     }
-    async getCategoriaServicioId(categoriaServicioId) {
+    async getId(categoriaServicioId) {
         const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
             where: {
-                categoriaServicioId
+                id: categoriaServicioId
             }
         });
         if (!categoriaServicioFound) {
@@ -64,10 +64,10 @@ let CategoriaServicioService = class CategoriaServicioService {
         }
         return categoriaServicioFound;
     }
-    async deleteCategoriaServicio(categoriaServicioId) {
+    async delete(categoriaServicioId) {
         const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
             where: {
-                categoriaServicioId
+                id: categoriaServicioId
             }
         });
         if (!categoriaServicioFound) {
@@ -77,10 +77,10 @@ let CategoriaServicioService = class CategoriaServicioService {
         await this.categoriaServicioRepository.save(categoriaServicioFound);
         throw new common_1.HttpException('Categoria eliminada.', common_1.HttpStatus.ACCEPTED);
     }
-    async updateCategoriaServicio(categoriaServicioId, categoriaServicio) {
+    async update(categoriaServicioId, categoriaServicio) {
         const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
             where: {
-                categoriaServicioId
+                id: categoriaServicioId
             }
         });
         if (!categoriaServicioFound) {

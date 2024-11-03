@@ -1,7 +1,6 @@
-
 import { Empleado } from "../../empleados/entities/empleado.entity";
-import { HorarioAsignado } from "../../horarios-asignados/entities/horarios-asignado.entity";
-import { NecesidadHoraria } from "../../necesidad-horaria/entities/necesidad-horaria.entity";
+import { HorarioAsignado } from "src/horariosAsignados/entities/horariosAsignados.entity"; 
+import { NecesidadHoraria } from "src/necesidadHoraria/entities/necesidadHoraria.entity"; 
 import { Servicio } from "../../servicios/entities/servicio.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -9,7 +8,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "ty
 export class OrdenTrabajo {
 
     @PrimaryGeneratedColumn()
-    ordenTrabajoId: number;
+    Id: number;
 
     @ManyToOne(() => Servicio, (servicio) => servicio.ordenesTrabajo)
     servicio: Servicio;

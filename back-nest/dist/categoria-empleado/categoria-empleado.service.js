@@ -21,31 +21,31 @@ let CategoriaEmpleadoService = class CategoriaEmpleadoService {
     constructor(categoriaEmpleadoRepository) {
         this.categoriaEmpleadoRepository = categoriaEmpleadoRepository;
     }
-    async createCategoriaEmpleado(categoriaEmpleado) {
+    async create(categoriaEmpleado) {
         const categoriaEmpleadoFound = await this.categoriaEmpleadoRepository.findOne({
             where: {
-                categoriaEmpleadoNombre: categoriaEmpleado.nombre
+                nombre: categoriaEmpleado.nombre
             }
         });
         if (categoriaEmpleadoFound) {
             return new common_1.HttpException('La Categoria ya existe. Prueba nuevamente.', common_1.HttpStatus.CONFLICT);
         }
-        const newCategoriaEmpleado = this.categoriaEmpleadoRepository.create({ categoriaEmpleadoNombre: categoriaEmpleado.nombre });
+        const newCategoriaEmpleado = this.categoriaEmpleadoRepository.create({ nombre: categoriaEmpleado.nombre });
         await this.categoriaEmpleadoRepository.save(newCategoriaEmpleado);
         return {
             message: 'Categoria creada exitosamente.',
             categoriaEmpleado: newCategoriaEmpleado,
         };
     }
-    getCategoriasEmpleados() {
+    get() {
         return this.categoriaEmpleadoRepository.find({
             where: { eliminado: false }
         });
     }
-    async getCategoriaEmpleado(categoriaEmpleadoNombre) {
+    async getNombre(categoriaEmpleadoNombre) {
         const categoriaEmpleadoFound = await this.categoriaEmpleadoRepository.findOne({
             where: {
-                categoriaEmpleadoNombre
+                nombre: categoriaEmpleadoNombre
             }
         });
         if (!categoriaEmpleadoNombre) {
@@ -53,10 +53,10 @@ let CategoriaEmpleadoService = class CategoriaEmpleadoService {
         }
         return categoriaEmpleadoFound;
     }
-    async getCategoriaEmpleadoId(categoriaEmpleadoId) {
+    async getId(categoriaEmpleadoId) {
         const categoriaEmpleadoFound = await this.categoriaEmpleadoRepository.findOne({
             where: {
-                categoriaEmpleadoId
+                id: categoriaEmpleadoId
             }
         });
         if (!categoriaEmpleadoFound) {
@@ -64,10 +64,10 @@ let CategoriaEmpleadoService = class CategoriaEmpleadoService {
         }
         return categoriaEmpleadoFound;
     }
-    async deleteCategoriaServicio(categoriaEmpleadoId) {
+    async delete(categoriaEmpleadoId) {
         const categoriaEmpleadoFound = await this.categoriaEmpleadoRepository.findOne({
             where: {
-                categoriaEmpleadoId
+                id: categoriaEmpleadoId
             }
         });
         if (!categoriaEmpleadoFound) {
@@ -77,10 +77,10 @@ let CategoriaEmpleadoService = class CategoriaEmpleadoService {
         await this.categoriaEmpleadoRepository.save(categoriaEmpleadoFound);
         throw new common_1.HttpException('Categoria Eliminada.', common_1.HttpStatus.ACCEPTED);
     }
-    async updateCategoriaEmpleado(categoriaEmpleadoId, categoriaEmpleado) {
+    async update(categoriaEmpleadoId, categoriaEmpleado) {
         const categoriaEmpleadoFound = await this.categoriaEmpleadoRepository.findOne({
             where: {
-                categoriaEmpleadoId
+                id: categoriaEmpleadoId
             }
         });
         if (!categoriaEmpleadoFound) {

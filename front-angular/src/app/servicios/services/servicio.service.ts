@@ -17,6 +17,10 @@ export class ServicioService {
     return this.http.get<Empresa[]>(`${this.apiUrl}`);
   }
 
+  getServicio(nombre:string): Observable<Empresa[]>{
+    return this.http.get<Empresa[]>(`${this.apiUrl}/${nombre}}`);
+  }
+
   // Obtener un servicio por su ID
   getServicioById(id: number): Observable<Empresa> {
     return this.http.get<Empresa>(`${this.apiUrl}/${id}`);

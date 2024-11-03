@@ -1,29 +1,32 @@
 import { Component } from '@angular/core';
-import { ServicioService } from '../../servicios/services/servicio.service';
-import { EmpleadoService } from '../../empleados/services/empleado.service';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { OrdenTrabajoService } from '../services/orden-trabajo.service';
+import { BuscarEmpresaComponent } from '../../Modales/buscar-empresa/buscar-empresa.component';
+import { BuscarEmpleadoComponent } from '../../Modales/buscar-empleado/buscar-empleado.component';
+import { Empresa } from '../../servicios/models/servicio.models';
+import { Empleado } from '../../empleados/models/empleado.models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Empleado } from '../../empleados/models/empleado.models';
-import { Empresa } from '../../servicios/models/servicio.models';
 import { NabvarComponent } from '../../nabvar/nabvar.component';
-import { BuscarEmpresaComponent } from '../../Modales/buscar-empresa/buscar-empresa.component';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-
 
 @Component({
   selector: 'app-crear-orden-trabajo',
-  standalone: true,
-  imports: [CommonModule, FormsModule, NabvarComponent],
   templateUrl: './crear-orden-trabajo.component.html',
-  styleUrl: './crear-orden-trabajo.component.css'
+  styleUrls: ['./crear-orden-trabajo.component.css'],
+  imports:[CommonModule, FormsModule, NabvarComponent],
+  standalone: true,
 })
 export class CrearOrdenTrabajoComponent {
-
+  empresa: Empresa[] = [];
+  empleado: Empleado[] = [];
+  mes: string = '';
+  anio: number = 0;
   seccionActual: string = 'ordenTrabajo';
+  
   meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-  anios: number[] = Array.from({ length: 11 }, (_, i) => 2024 + i); 
-  empresas: any[] = [];
-
+  anios: number[] = Array.from({ length: 11 }, (_, i) => 2024 + i);
+  
   necesidad = [
     { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
     { diaSemana: 2, nombre: 'Martes', horaInicio: '', horaFin: '' },
@@ -34,22 +37,56 @@ export class CrearOrdenTrabajoComponent {
     { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: '' }
   ];
 
-  constructor(private dialog: MatDialog) {
-    
-  }
+  constructor(private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService, private router: Router) {}
 
   mostrarSeccion(seccion: string): void {
     this.seccionActual = seccion;
   }
-  abrirModal() {
-    const dialogRef = this.dialog.open(BuscarEmpresaComponent, {
-      data: { empresas: this.empresas },
-    });
 
+  abrirModalEmpresa() {
+    const dialogRef = this.dialog.open(BuscarEmpresaComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const inputEmpresa = <HTMLInputElement>document.getElementById('empresa');
-        inputEmpresa.value = result.nombre; // Asigna el nombre al input
+        this.empresa = result.nombre;
+      }
+    });
+  }
+
+  abrirModalEmpleado() {
+    const dialogRef = this.dialog.open(BuscarEmpleadoComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.empleado = result.nombre;
+      }
+    });
+  }
+
+  onSubmit(): void {
+    const ordenTrabajoData = {
+      servicio: this.empresa, // Asegúrate de agregar esto
+      empleadoAsignado: this.empleado, // Ajusta el nombre según lo que espera la API
+      mes: this.meses.indexOf(this.mes) + 1, // Convierte el mes a número
+      anio: Number(this.anio), // Asegúrate de que sea un número
+      horariosAsignados: [],
+      necesidadHoraria: this.necesidad.map(dia => ({
+        diaSemana: dia.diaSemana,
+        horaInicio: dia.horaInicio,
+        horaFin: dia.horaFin
+      }))
+    };
+  
+    console.log('Datos a enviar:', ordenTrabajoData);
+  
+    this.ordenTrabajoService.crearOrdenTrabajo(ordenTrabajoData).subscribe({
+      next: response => {
+        console.log('Orden de trabajo creada con éxito:', response);
+        this.router.navigate(['/ruta-donde-redirigir']);
+      },
+      error: error => {
+        if (error.error) {
+          console.error('Detalles del error:', error.error);
+        }
+        console.error('Error al crear la orden de trabajo:', error);
       }
     });
   }

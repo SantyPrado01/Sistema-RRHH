@@ -1,12 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { NecesidadHorariaService } from './necesidad-horaria.service';
-import { CreateNecesidadHorariaDto } from './dto/create-necesidad-horaria.dto';
-import { UpdateNecesidadHorariaDto } from './dto/update-necesidad-horaria.dto';
+import { NecesidadHorariaService } from './necesidadHoraria.service'; 
+import { UpdateNecesidadHorariaDto } from './dto/updateNecesidadHoraria.dto'; 
 
 @Controller('necesidad-horaria')
 export class NecesidadHorariaController {
   constructor(private readonly necesidadHorariaService: NecesidadHorariaService) {}
-
 
   @Get()
   findAll() {

@@ -22,19 +22,19 @@ let CategoriaEmpleadoController = class CategoriaEmpleadoController {
         this.categoriaEmpleadoService = categoriaEmpleadoService;
     }
     create(createCategoriaEmpleadoDto) {
-        return this.categoriaEmpleadoService.createCategoriaEmpleado(createCategoriaEmpleadoDto);
+        return this.categoriaEmpleadoService.create(createCategoriaEmpleadoDto);
     }
     findAll() {
-        return this.categoriaEmpleadoService.getCategoriasEmpleados();
+        return this.categoriaEmpleadoService.get();
     }
     findOne(id) {
-        return this.categoriaEmpleadoService.getCategoriaEmpleadoId(+id);
+        return this.categoriaEmpleadoService.getId(+id);
     }
     update(id, updateCategoriaEmpleadoDto) {
-        return this.categoriaEmpleadoService.updateCategoriaEmpleado(+id, updateCategoriaEmpleadoDto);
+        return this.categoriaEmpleadoService.update(+id, updateCategoriaEmpleadoDto);
     }
     remove(id) {
-        return this.categoriaEmpleadoService.deleteCategoriaServicio(+id);
+        return this.categoriaEmpleadoService.delete(+id);
     }
 };
 exports.CategoriaEmpleadoController = CategoriaEmpleadoController;

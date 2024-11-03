@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { HorarioAsignadoService } from './horarios-asignados.service';
-import { CreateHorariosAsignadoDto } from './dto/create-horarios-asignado.dto';
-import { UpdateHorariosAsignadoDto } from './dto/update-horarios-asignado.dto';
-import { HorarioAsignado } from './entities/horarios-asignado.entity';
+import { HorarioAsignadoService } from './horariosAsignados.service'; 
+import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto'; 
+import { UpdateHorariosAsignadoDto } from './dto/updateHorariosAsignados.entity'; 
 
 @Controller('horariosAsignados')
 export class HorariosAsignadosController {

@@ -1,5 +1,5 @@
 import { Empleado } from "../../empleados/entities/empleado.entity";
-import { OrdenTrabajo } from "../../orden-trabajo/entities/orden-trabajo.entity";
+import { OrdenTrabajo } from "src/ordenTrabajo/entities/ordenTrabajo.entity"; 
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('horarios_asignados')

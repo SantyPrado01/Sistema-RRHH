@@ -9,26 +9,26 @@ export class CategoriaEmpleadoController {
 
   @Post()
   create(@Body() createCategoriaEmpleadoDto: CreateCategoriaEmpleadoDto) {
-    return this.categoriaEmpleadoService.createCategoriaEmpleado(createCategoriaEmpleadoDto);
+    return this.categoriaEmpleadoService.create(createCategoriaEmpleadoDto);
   }
 
   @Get()
   findAll() {
-    return this.categoriaEmpleadoService.getCategoriasEmpleados();
+    return this.categoriaEmpleadoService.get();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.categoriaEmpleadoService.getCategoriaEmpleadoId(+id);
+    return this.categoriaEmpleadoService.getId(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoriaEmpleadoDto: UpdateCategoriaEmpleadoDto) {
-    return this.categoriaEmpleadoService.updateCategoriaEmpleado(+id, updateCategoriaEmpleadoDto);
+    return this.categoriaEmpleadoService.update(+id, updateCategoriaEmpleadoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.categoriaEmpleadoService.deleteCategoriaServicio(+id);
+    return this.categoriaEmpleadoService.delete(+id);
   }
 }

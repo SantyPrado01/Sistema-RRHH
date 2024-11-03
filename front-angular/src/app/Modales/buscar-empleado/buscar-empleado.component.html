@@ -1,17 +1,11 @@
-<h2 mat-dialog-title>Buscar Empresa</h2>
+<h2 mat-dialog-title>Buscar Empleado</h2>
 <mat-dialog-content>
-  <mat-form-field>
-    <mat-label>Buscar empresa</mat-label>
-    <input matInput [(ngModel)]="filtroBusqueda" />
-  </mat-form-field>
+    <mat-label>Buscar Empleado</mat-label>
+    <input type="text" [(ngModel)]="searchQuery" (input)="buscarEmpleados()" />
 
   <ul class="list-group">
-    <li
-      *ngFor="let empresa of empresas | filter:filtroBusqueda"
-      class="list-group-item"
-      (click)="seleccionarEmpresa(empresa)"
-    >
-      {{ empresa.nombre }}
+    <li *ngFor="let empleado of empleados" class="list-group-item" (click)="seleccionarEmpleado(empleado)">
+      {{ empleado.apellido }} {{ empleado.nombre }}
     </li>
   </ul>
 </mat-dialog-content>

@@ -67,7 +67,6 @@ export class ServiciosListComponent implements OnInit {
             }
         });
 
-        // Usa forkJoin para esperar todas las llamadas
         forkJoin(ciudadRequests).subscribe((empresasActualizadas) => {
             this.empresas = empresasActualizadas; 
             this.filtrarServicios(); 

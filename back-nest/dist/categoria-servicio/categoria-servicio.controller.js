@@ -22,19 +22,19 @@ let CategoriaServicioController = class CategoriaServicioController {
         this.categoriaServicioService = categoriaServicioService;
     }
     create(createCategoriaServicioDto) {
-        return this.categoriaServicioService.createCategoriaServicio(createCategoriaServicioDto);
+        return this.categoriaServicioService.create(createCategoriaServicioDto);
     }
     findAll() {
-        return this.categoriaServicioService.getCategoriasServicios();
+        return this.categoriaServicioService.get();
     }
     findOne(id) {
-        return this.categoriaServicioService.getCategoriaServicioId(+id);
+        return this.categoriaServicioService.getId(+id);
     }
     update(id, updateCategoriaServicioDto) {
-        return this.categoriaServicioService.updateCategoriaServicio(+id, updateCategoriaServicioDto);
+        return this.categoriaServicioService.update(+id, updateCategoriaServicioDto);
     }
     remove(id) {
-        return this.categoriaServicioService.deleteCategoriaServicio(+id);
+        return this.categoriaServicioService.delete(+id);
     }
 };
 exports.CategoriaServicioController = CategoriaServicioController;

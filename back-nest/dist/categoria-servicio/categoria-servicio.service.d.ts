@@ -6,13 +6,13 @@ import { Repository } from 'typeorm';
 export declare class CategoriaServicioService {
     private categoriaServicioRepository;
     constructor(categoriaServicioRepository: Repository<CategoriaServicio>);
-    createCategoriaServicio(categoriaServicio: CreateCategoriaServicioDto): Promise<HttpException | {
+    create(categoriaServicio: CreateCategoriaServicioDto): Promise<HttpException | {
         message: string;
         categoriaServicio: CategoriaServicio;
     }>;
-    getCategoriasServicios(): Promise<CategoriaServicio[]>;
-    getCategoriaServicio(nombreCategoriaServico: string): Promise<CategoriaServicio>;
-    getCategoriaServicioId(categoriaServicioId: number): Promise<HttpException | CategoriaServicio>;
-    deleteCategoriaServicio(categoriaServicioId: number): Promise<HttpException>;
-    updateCategoriaServicio(categoriaServicioId: number, categoriaServicio: UpdateCategoriaServicioDto): Promise<HttpException | (CategoriaServicio & UpdateCategoriaServicioDto)>;
+    get(): Promise<CategoriaServicio[]>;
+    getNombre(nombreCategoriaServico: string): Promise<CategoriaServicio>;
+    getId(categoriaServicioId: number): Promise<HttpException | CategoriaServicio>;
+    delete(categoriaServicioId: number): Promise<HttpException>;
+    update(categoriaServicioId: number, categoriaServicio: UpdateCategoriaServicioDto): Promise<HttpException | (CategoriaServicio & UpdateCategoriaServicioDto)>;
 }

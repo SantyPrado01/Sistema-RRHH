@@ -10,17 +10,17 @@ export class CategoriaServicioService {
 
   constructor(@InjectRepository(CategoriaServicio) private categoriaServicioRepository: Repository<CategoriaServicio>){}
 
-  async createCategoriaServicio(categoriaServicio: CreateCategoriaServicioDto){
+  async create(categoriaServicio: CreateCategoriaServicioDto){
     const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
       where:{
-        nombreCategoriaServico: categoriaServicio.nombre
+        nombre: categoriaServicio.nombre
       }
     });
     if(categoriaServicioFound){
       return new HttpException('La Categoria ya existe. Prueba nuevamanete.', HttpStatus.CONFLICT)
     }
 
-    const newCategoriaServicio = this.categoriaServicioRepository.create({nombreCategoriaServico: categoriaServicio.nombre})
+    const newCategoriaServicio = this.categoriaServicioRepository.create({nombre: categoriaServicio.nombre})
     await this.categoriaServicioRepository.save(newCategoriaServicio);
     return{
       message: 'Categoria creada exitosamente',
@@ -28,17 +28,17 @@ export class CategoriaServicioService {
     };
   }
 
-  getCategoriasServicios(){
+  get(){
     return this.categoriaServicioRepository.find({
       where:{eliminado:false}
     })
   }
 
 
-  async getCategoriaServicio (nombreCategoriaServico: string) {
+  async getNombre (nombreCategoriaServico: string) {
     const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
       where:{
-        nombreCategoriaServico
+        nombre: nombreCategoriaServico
       }
     })
     if (!nombreCategoriaServico){
@@ -47,10 +47,10 @@ export class CategoriaServicioService {
     return categoriaServicioFound;
   }
 
-  async getCategoriaServicioId(categoriaServicioId:number){
+  async getId(categoriaServicioId:number){
     const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
       where:{
-        categoriaServicioId
+        id: categoriaServicioId
       }
     })
     if(!categoriaServicioFound){
@@ -59,10 +59,10 @@ export class CategoriaServicioService {
     return categoriaServicioFound;
   }
 
-  async deleteCategoriaServicio(categoriaServicioId:number){
+  async delete(categoriaServicioId:number){
     const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
       where:{
-        categoriaServicioId
+        id: categoriaServicioId
       }
     })
     if (!categoriaServicioFound){
@@ -73,10 +73,10 @@ export class CategoriaServicioService {
     throw new HttpException('Categoria eliminada.', HttpStatus.ACCEPTED);
   }
 
-  async updateCategoriaServicio(categoriaServicioId:number, categoriaServicio: UpdateCategoriaServicioDto){
+  async update(categoriaServicioId:number, categoriaServicio: UpdateCategoriaServicioDto){
     const categoriaServicioFound = await this.categoriaServicioRepository.findOne({
       where:{
-        categoriaServicioId
+        id: categoriaServicioId
       }
     });
     if(!categoriaServicioFound){

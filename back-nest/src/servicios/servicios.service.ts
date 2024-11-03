@@ -34,11 +34,6 @@ export class ServiciosService {
     })
   }
 
-  async getServicio(nombre: string): Promise<Servicio | null> {
-    if (!nombre) return null; // Retorna null sin llamar al repositorio si el nombre es undefined
-    return await this.servicioRepository.findOne({ where: { nombre, eliminado: false } });
-  }
-
   async getServicioId(id: number): Promise<Servicio> {
     const servicio = await this.servicioRepository.findOne({
       where:{

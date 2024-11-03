@@ -22,13 +22,13 @@ __decorate([
         name: 'id'
     }),
     __metadata("design:type", Number)
-], Empleado.prototype, "empleadoId", void 0);
+], Empleado.prototype, "Id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Empleado.prototype, "legajo", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'empleadoNombre' }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Empleado.prototype, "nombre", void 0);
 __decorate([

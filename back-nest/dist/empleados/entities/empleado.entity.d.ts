@@ -1,7 +1,7 @@
 import { DisponibilidadHoraria } from "../../disponibilidad-horaria/entities/disponibilidad-horaria.entity";
 import { CategoriaEmpleado } from "../../categoria-empleado/entities/categoria-empleado.entity";
 export declare class Empleado {
-    empleadoId: number;
+    Id: number;
     legajo: number;
     nombre: string;
     apellido: string;

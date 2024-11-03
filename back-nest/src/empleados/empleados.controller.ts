@@ -2,37 +2,35 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from 
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
-import { HttpService } from '@nestjs/axios'; // Cambia HttpClient por HttpService
 
 @Controller('empleados')
 export class EmpleadosController {
   constructor(
     private readonly empleadosService: EmpleadosService,
-    private readonly httpService: HttpService // Cambia HttpClient por HttpService
   ) {}
 
   @Post()
   createEmpleado(@Body() createEmpleadoDto: CreateEmpleadoDto) {
-    return this.empleadosService.createEmpleado(createEmpleadoDto);
+    return this.empleadosService.create(createEmpleadoDto);
   }
 
   @Get()
   getEmpleados() {
-    return this.empleadosService.getEmpleados();
+    return this.empleadosService.get();
   }
 
   @Get(':id')
   getEmpleado(@Param('id', ParseIntPipe) id: string) {
-    return this.empleadosService.getEmpleado(+id);
+    return this.empleadosService.getId(+id);
   }
 
   @Patch(':id')
   updateEmpleado(@Param('id') id: string, @Body() updateEmpleadoDto: UpdateEmpleadoDto) {
-    return this.empleadosService.updateEmpleado(+id, updateEmpleadoDto);
+    return this.empleadosService.update(+id, updateEmpleadoDto);
   }
 
   @Delete(':id')
   deleteEmpleado(@Param('id') id: string) {
-    return this.empleadosService.deleteEmpleado(+id);
+    return this.empleadosService.delete(+id);
   }
 }

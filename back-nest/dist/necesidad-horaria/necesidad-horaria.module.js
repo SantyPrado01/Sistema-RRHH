@@ -21,7 +21,7 @@ exports.NecesidadHorariaModule = NecesidadHorariaModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([necesidad_horaria_entity_1.NecesidadHoraria, orden_trabajo_entity_1.OrdenTrabajo]), orden_trabajo_module_1.OrdenTrabajoModule],
         controllers: [necesidad_horaria_controller_1.NecesidadHorariaController],
-        providers: [necesidad_horaria_service_1.NecesidadHorariaService],
+        providers: [necesidad_horaria_service_1.NecesidadHorariaService]
     })
 ], NecesidadHorariaModule);
 //# sourceMappingURL=necesidad-horaria.module.js.map

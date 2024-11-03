@@ -53,15 +53,18 @@ let OrdenTrabajoService = class OrdenTrabajoService {
             ...necesidad,
             ordenTrabajo,
         }));
+        console.log('Necesidad Horaria', nuevasNecesidades);
         return this.necesidadHorariaRepository.save(nuevasNecesidades);
     }
     async asignarHorarios(ordenTrabajoId) {
+        console.log('Asignando horarios para la orden de trabajo:', ordenTrabajoId);
         const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
             where: { ordenTrabajoId },
             relations: ['necesidadHoraria', 'empleadoAsignado'],
         });
         if (!ordenTrabajo)
             throw new common_1.NotFoundException('Orden de trabajo no encontrada');
+        console.log(ordenTrabajo.necesidadHoraria);
         const horariosAsignados = [];
         for (const necesidad of ordenTrabajo.necesidadHoraria) {
             const fechas = this.obtenerFechasDelMes(ordenTrabajo.anio, ordenTrabajo.mes, necesidad.diaSemana);
@@ -79,6 +82,7 @@ let OrdenTrabajoService = class OrdenTrabajoService {
                 horariosAsignados.push(horarioAsignado);
             }
         }
+        console.log(horariosAsignados);
         return this.horarioAsignadoRepository.save(horariosAsignados);
     }
     obtenerFechasDelMes(anio, mes, diaSemana) {

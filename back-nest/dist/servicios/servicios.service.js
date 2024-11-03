@@ -40,11 +40,6 @@ let ServiciosService = class ServiciosService {
             }
         });
     }
-    async getServicio(nombre) {
-        if (!nombre)
-            return null;
-        return await this.servicioRepository.findOne({ where: { nombre, eliminado: false } });
-    }
     async getServicioId(id) {
         const servicio = await this.servicioRepository.findOne({
             where: {

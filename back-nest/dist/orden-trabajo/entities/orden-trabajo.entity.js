@@ -47,6 +47,6 @@ __decorate([
     __metadata("design:type", Array)
 ], OrdenTrabajo.prototype, "necesidadHoraria", void 0);
 exports.OrdenTrabajo = OrdenTrabajo = __decorate([
-    (0, typeorm_1.Entity)('ordenes-trabajo')
+    (0, typeorm_1.Entity)('ordenesTrabajo')
 ], OrdenTrabajo);
 //# sourceMappingURL=orden-trabajo.entity.js.map

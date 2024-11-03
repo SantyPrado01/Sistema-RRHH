@@ -6,9 +6,9 @@ import { Repository } from 'typeorm';
 export declare class EmpleadosService {
     private empleadoRepository;
     constructor(empleadoRepository: Repository<Empleado>);
-    createEmpleado(Empleado: CreateEmpleadoDto): HttpException;
-    getEmpleados(): Promise<Empleado[]>;
-    getEmpleado(id: number): Promise<HttpException | Empleado>;
-    deleteEmpleado(empleadoId: number): Promise<HttpException>;
-    updateEmpleado(empleadoId: number, empleado: UpdateEmpleadoDto): Promise<HttpException | (Empleado & UpdateEmpleadoDto)>;
+    create(Empleado: CreateEmpleadoDto): HttpException;
+    get(): Promise<Empleado[]>;
+    getId(id: number): Promise<Empleado | HttpException>;
+    delete(empleadoId: number): Promise<HttpException>;
+    update(empleadoId: number, empleado: UpdateEmpleadoDto): Promise<HttpException | (Empleado & UpdateEmpleadoDto)>;
 }

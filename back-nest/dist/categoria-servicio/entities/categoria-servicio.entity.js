@@ -18,11 +18,11 @@ exports.CategoriaServicio = CategoriaServicio;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], CategoriaServicio.prototype, "categoriaServicioId", void 0);
+], CategoriaServicio.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CategoriaServicio.prototype, "nombreCategoriaServico", void 0);
+], CategoriaServicio.prototype, "nombre", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)

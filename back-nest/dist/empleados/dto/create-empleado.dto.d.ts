@@ -10,7 +10,7 @@ export declare class CreateEmpleadoDto {
     fechaIngreso?: Date;
     eliminado: boolean;
     ciudad: number;
-    observaciones: string;
+    observaciones?: string;
     categoriaEmpleado: CategoriaEmpleado;
     disponibilidades?: DisponibilidadHoraria[];
 }

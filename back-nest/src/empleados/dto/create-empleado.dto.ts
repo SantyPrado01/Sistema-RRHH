@@ -11,7 +11,7 @@ export class CreateEmpleadoDto {
     fechaIngreso?: Date;
     eliminado: boolean;
     ciudad: number;
-    observaciones: string;
-    categoriaEmpleado: CategoriaEmpleado; // Cambiado a singular
-    disponibilidades?: DisponibilidadHoraria[]; // Cambiado a array
+    observaciones?: string;
+    categoriaEmpleado: CategoriaEmpleado; 
+    disponibilidades?: DisponibilidadHoraria[];
 }

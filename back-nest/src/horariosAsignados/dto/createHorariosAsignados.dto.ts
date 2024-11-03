@@ -1,7 +1,4 @@
-import { IsDateString, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Empleado } from "src/empleados/entities/empleado.entity";
-import { OrdenTrabajo } from "src/orden-trabajo/entities/orden-trabajo.entity";
-import { PrimaryGeneratedColumn } from "typeorm";
 
 export class CreateHorariosAsignadoDto {
     horarioAsignadoId: number; 

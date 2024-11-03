@@ -10,14 +10,14 @@ export class EmpleadosService {
 
   constructor(@InjectRepository(Empleado) private empleadoRepository:Repository<Empleado>){}
 
-  createEmpleado(Empleado: CreateEmpleadoDto){
+  create(Empleado: CreateEmpleadoDto){
     console.log(Empleado)
     const newEmpleado = this.empleadoRepository.create(Empleado)
     return this.empleadoRepository.save(newEmpleado), new HttpException('El Empleado se guardo con exito', HttpStatus.ACCEPTED)
     
   }
 
-  getEmpleados(){
+  get(){
     return this.empleadoRepository.find({
       where:{
         eliminado:false
@@ -25,10 +25,10 @@ export class EmpleadosService {
     })
   }
 
-  async getEmpleado(id: number){
+  async getId(id: number){
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{
-        empleadoId: id
+        Id: id
       }
     })
     if (!empleadoFound){
@@ -37,10 +37,10 @@ export class EmpleadosService {
     return empleadoFound
   }
 
-  async deleteEmpleado(empleadoId:number){
+  async delete(empleadoId:number){
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{
-        empleadoId
+        Id: empleadoId
       }
     })
     if (!empleadoFound){
@@ -52,11 +52,11 @@ export class EmpleadosService {
 
   }
 
-  async updateEmpleado(empleadoId:number, empleado: UpdateEmpleadoDto){
+  async update(empleadoId:number, empleado: UpdateEmpleadoDto){
     
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{
-        empleadoId
+        Id:empleadoId
       }
     });
     if(!empleadoFound){

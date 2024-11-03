@@ -1,9 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
-import { OrdenTrabajoService } from './orden-trabajo.service';
-import { CreateOrdenTrabajoDto } from './dto/create-orden-trabajo.dto';
-import { UpdateOrdenTrabajoDto } from './dto/update-orden-trabajo.dto';
-import { OrdenTrabajo } from './entities/orden-trabajo.entity';
-import { CreateNecesidadHorariaDto } from 'src/necesidad-horaria/dto/create-necesidad-horaria.dto';
+import { OrdenTrabajoService } from './ordenTrabajo.service'; 
+import { CreateOrdenTrabajoDto } from './dto/createOrdenTrabajo.dto'; 
+import { UpdateOrdenTrabajoDto } from './dto/updateOrdenTrabajo.dto'; 
+import { OrdenTrabajo } from './entities/ordenTrabajo.entity'; 
 
 @Controller('ordenTrabajo')
 export class OrdenTrabajoController {
@@ -16,7 +15,7 @@ export class OrdenTrabajoController {
     if (!ordenTrabajo) throw new NotFoundException('No se pudo crear la orden de trabajo');
 
     // Obtener el ID de la orden de trabajo recién creada
-    const ordenTrabajoId = ordenTrabajo.ordenTrabajoId;
+    const ordenTrabajoId = ordenTrabajo.Id;
 
     // Asignar las necesidades horarias al servicio como un array
     await this.ordenTrabajoService.addNecesidadHoraria(

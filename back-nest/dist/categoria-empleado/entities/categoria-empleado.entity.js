@@ -18,11 +18,11 @@ exports.CategoriaEmpleado = CategoriaEmpleado;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], CategoriaEmpleado.prototype, "categoriaEmpleadoId", void 0);
+], CategoriaEmpleado.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CategoriaEmpleado.prototype, "categoriaEmpleadoNombre", void 0);
+], CategoriaEmpleado.prototype, "nombre", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)

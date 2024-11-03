@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { OrdenTrabajo } from './entities/orden-trabajo.entity';
-import { CreateOrdenTrabajoDto } from './dto/create-orden-trabajo.dto';
+import { OrdenTrabajo } from './entities/ordenTrabajo.entity'; 
+import { CreateOrdenTrabajoDto } from './dto/createOrdenTrabajo.dto'; 
 import { Empleado } from 'src/empleados/entities/empleado.entity';
 import { Servicio } from 'src/servicios/entities/servicio.entity';
-import { UpdateOrdenTrabajoDto } from './dto/update-orden-trabajo.dto';
-import { CreateNecesidadHorariaDto } from 'src/necesidad-horaria/dto/create-necesidad-horaria.dto'; 
-import { NecesidadHoraria } from 'src/necesidad-horaria/entities/necesidad-horaria.entity'; 
-import { HorarioAsignado } from 'src/horarios-asignados/entities/horarios-asignado.entity'; 
+import { UpdateOrdenTrabajoDto } from './dto/updateOrdenTrabajo.dto'; 
+import { CreateNecesidadHorariaDto } from 'src/necesidadHoraria/dto/createNecesidadHoraria.dto'; 
+import { NecesidadHoraria } from 'src/necesidadHoraria/entities/necesidadHoraria.entity'; 
+import { HorarioAsignado } from 'src/horariosAsignados/entities/horariosAsignados.entity'; 
 
 @Injectable()
 export class OrdenTrabajoService {
@@ -29,7 +29,7 @@ export class OrdenTrabajoService {
   async create(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
     const { servicio, empleadoAsignado, mes, anio } = createOrdenTrabajoDto;
 
-    const empleadoExistente = await this.empleadoRepository.findOne({ where: { empleadoId: empleadoAsignado.empleadoId } });
+    const empleadoExistente = await this.empleadoRepository.findOne({ where: { Id: empleadoAsignado.Id } });
     if (!empleadoExistente) throw new NotFoundException('Empleado no encontrado');
 
     const servicioExistente = await this.servicioRepository.findOne({ where: { servicioId: servicio.servicioId } });
@@ -49,7 +49,7 @@ export class OrdenTrabajoService {
     ordenTrabajoId: number,
     necesidadesHorarias: CreateNecesidadHorariaDto[],
   ): Promise<NecesidadHoraria[]> {
-    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({ where: { ordenTrabajoId } });
+    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({ where: { Id :ordenTrabajoId } });
     if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
 
     const nuevasNecesidades = necesidadesHorarias.map((necesidad) => 
@@ -65,7 +65,7 @@ export class OrdenTrabajoService {
   // Método para asignar horarios en función de las necesidades horarias
   async asignarHorarios(ordenTrabajoId: number) {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
-      where: { ordenTrabajoId },
+      where: { Id: ordenTrabajoId },
       relations: ['necesidadHoraria', 'empleadoAsignado'],
     });
 
@@ -118,7 +118,7 @@ export class OrdenTrabajoService {
 
   async findOne(id: number): Promise<OrdenTrabajo> {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
-      where: { ordenTrabajoId: id },
+      where: { Id: id },
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
     });
     if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
@@ -136,9 +136,9 @@ export class OrdenTrabajoService {
       ordenTrabajo.servicio = servicio;
     }
 
-    if (updateOrdenTrabajoDto.empleadoAsignado.empleadoId) {
+    if (updateOrdenTrabajoDto.empleadoAsignado.Id) {
       const empleado = await this.empleadoRepository.findOne({
-        where:{empleadoId:updateOrdenTrabajoDto.empleadoAsignado.empleadoId}
+        where:{Id:updateOrdenTrabajoDto.empleadoAsignado.Id}
       });
       if (!empleado) throw new NotFoundException('Empleado no encontrado');
       ordenTrabajo.empleadoAsignado = empleado;

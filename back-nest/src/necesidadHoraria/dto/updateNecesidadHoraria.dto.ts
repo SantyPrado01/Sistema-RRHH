@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateNecesidadHorariaDto } from './create-necesidad-horaria.dto';
+import { CreateNecesidadHorariaDto } from './createNecesidadHoraria.dto'; 
 
 export class UpdateNecesidadHorariaDto extends PartialType(CreateNecesidadHorariaDto) {
     ordenTrabajoId?: number;
