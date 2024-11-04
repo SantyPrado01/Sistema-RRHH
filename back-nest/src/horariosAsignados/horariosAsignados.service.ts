@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { HorarioAsignado } from './entities/horariosAsignados.entity'; 
 import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto'; 
 import { OrdenTrabajo } from 'src/ordenTrabajo/entities/ordenTrabajo.entity'; 
@@ -33,7 +33,6 @@ export class HorarioAsignadoService {
         const { anio, mes, necesidadHoraria, empleadoAsignado } = ordenTrabajo;
         const horariosAsignados = [];
     
-        // Crear horarios según la necesidad horaria de cada día de la semana
         for (const necesidad of necesidadHoraria) {
             const fechas = this.obtenerFechasDelMes(anio, mes, necesidad.diaSemana);
     
@@ -55,8 +54,7 @@ export class HorarioAsignadoService {
         await this.horarioAsignadoRepository.save(horariosAsignados);
         return horariosAsignados;
     }
-    
-    // Modificar `obtenerFechasDelMes` para recibir el día de la semana de `necesidadHoraria` y devolver las fechas correspondientes en el mes
+
     private obtenerFechasDelMes(anio: number, mes: number, diaSemana: string): Date[] {
         const fechas: Date[] = [];
         const primerDiaMes = new Date(anio, mes - 1, 1);
@@ -74,6 +72,16 @@ export class HorarioAsignadoService {
         return fechas;
       }
 
+      async getHorariosAsignados(): Promise<HorarioAsignado[]> {
+        const today = new Date();
+        return this.horarioAsignadoRepository.find({
+            where: {
+                comprobado: false,
+                fecha: LessThan(today), 
+            },
+            relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'], 
+        });
+    }
 
     async findAll(): Promise<HorarioAsignado[]> {
         return await this.horarioAsignadoRepository.find({

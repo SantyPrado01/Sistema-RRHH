@@ -1,0 +1,65 @@
+<app-nabvar></app-nabvar>
+
+  <!-- Título -->
+  <h2>Cargar Horarios</h2>
+  <div class="line"></div>
+
+<div class="content-container">
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Empresa</th>
+          <th>Empleado</th>
+          <th>Fecha</th>
+          <th>Horario Inicio</th>
+          <th>Horario Fin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let horario of horariosAsignados" (click)="selectHorario(horario)">
+          <td>{{ horario.ordenTrabajo.servicio.nombre }}</td>
+          <td>{{ horario.empleado.apellido }}, {{ horario.empleado.nombre }}</td>
+          <td>{{ horario.fecha | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ horario.horaInicioProyectado }}</td>
+          <td>{{ horario.horaFinProyectado }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="form-container">
+    <h3>Detalles del Horario</h3>
+    <form #form="ngForm">
+      <label>Empresa:</label>
+      <input type="text" [value]="selectedHorario?.ordenTrabajo?.servicio?.nombre ?? 'N/A'" readonly />
+      
+      <label>Empleado:</label>
+      <input type="text" [value]="(selectedHorario?.empleado?.apellido ?? '') + ', ' + (selectedHorario?.empleado?.nombre ?? '')" readonly />
+      
+      <label>Fecha:</label>
+      <input type="text" [value]="selectedHorario && selectedHorario.fecha ? (selectedHorario.fecha | date: 'dd/MM/yyyy') : 'N/A'" readonly />
+      
+      <label>Horario Inicio:</label>
+      <input type="text" [value]="selectedHorario?.horaInicioProyectado ?? 'N/A'" readonly />
+      
+      <label>Horario Fin:</label>
+      <input type="text" [value]="selectedHorario?.horaFinProyectado ?? 'N/A'" readonly />
+
+      <label>Hora Inicio Real:</label>
+      <input type="time" [(ngModel)]="horaInicioReal" />
+      
+      <label>Hora Fin Real:</label>
+      <input type="time" [(ngModel)]="horaFinReal" />
+      
+      <label>Estado:</label>
+      <select [(ngModel)]="estado">
+        <option value="Asistió">Asistió</option>
+        <option value="Llegada Tarde">Llegada Tarde</option>
+        <option value="Faltó Con Aviso">Faltó Con Aviso</option>
+        <option value="Faltó Sin Aviso">Faltó Sin Aviso</option>
+        <option value="Enfermedad">Enfermedad</option>
+      </select>
+    </form>
+  </div>
+</div>

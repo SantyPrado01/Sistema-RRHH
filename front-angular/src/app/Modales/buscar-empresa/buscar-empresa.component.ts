@@ -5,7 +5,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { ServicioService } from '../../servicios/services/servicio.service';
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import { Empresa } from '../../servicios/models/servicio.models';
 
 @Component({
@@ -16,12 +15,11 @@ import { Empresa } from '../../servicios/models/servicio.models';
   styleUrl: './buscar-empresa.component.css'
 })
 export class BuscarEmpresaComponent implements OnInit {
-  isLoading = true
+  isLoading = true;
   searchQuery: string = '';
   empresas: Empresa[] = [];
   empresasFiltradas: Empresa[] = [];
-  private searchSubject = new Subject<string>();
-
+  
   constructor(
     public dialogRef: MatDialogRef<BuscarEmpresaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -36,7 +34,7 @@ export class BuscarEmpresaComponent implements OnInit {
     this.empresaService.getServicios().subscribe({
       next: (data: Empresa[]) => {
         this.empresas = data;
-        this.empresasFiltradas = data; // Inicialmente mostramos todos los libros
+        this.empresasFiltradas = []; // Inicialmente vacía
         this.isLoading = false;
       },
       error: (err) => {
@@ -47,13 +45,16 @@ export class BuscarEmpresaComponent implements OnInit {
   }
 
   buscarEmpresas(): void {
-    this.empresasFiltradas = this.empresas.filter(empresas => 
-      empresas.nombre.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+    if (this.searchQuery.trim() === '') {
+      this.empresasFiltradas = [];
+    } else {
+      this.empresasFiltradas = this.empresas.filter(empresa =>
+        empresa.nombre.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
   }
 
-  seleccionarEmpresa(empresa: any): void {
+  seleccionarEmpresa(empresa: Empresa): void {
     this.dialogRef.close(empresa);
   }
-
 }

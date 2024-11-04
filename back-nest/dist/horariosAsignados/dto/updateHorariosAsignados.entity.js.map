@@ -1,1 +1,1 @@
-{"version":3,"file":"updateHorariosAsignados.entity.js","sourceRoot":"","sources":["../../../src/horariosAsignados/dto/updateHorariosAsignados.entity.ts"],"names":[],"mappings":";;;AAAA,uDAAmD;AACnD,+EAA0E;AAE1E,MAAa,yBAA0B,SAAQ,IAAA,0BAAW,EAAC,uDAAyB,CAAC;CAAG;AAAxF,8DAAwF"}
+{"version":3,"file":"updateHorariosAsignados.entity.js","sourceRoot":"","sources":["../../../src/horariosAsignados/dto/updateHorariosAsignados.entity.ts"],"names":[],"mappings":";;;AAAA,uDAAmD;AACnD,+EAA0E;AAG1E,MAAa,yBAA0B,SAAQ,IAAA,0BAAW,EAAC,uDAAyB,CAAC;CAyBpF;AAzBD,8DAyBC"}

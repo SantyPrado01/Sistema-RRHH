@@ -1,24 +1,22 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BuscarEmpresaComponent } from '../buscar-empresa/buscar-empresa.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Empleado } from '../../empleados/models/empleado.models';
+import { EmpleadoService } from '../../empleados/services/empleado.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { Empleado } from '../../empleados/models/empleado.models';
-import { EmpleadoService } from '../../empleados/services/empleado.service';
 
 @Component({
   selector: 'app-buscar-empleado',
   standalone: true,
-  imports: [MatDialogModule, FormsModule, CommonModule,MatLabel,MatFormField],
   templateUrl: './buscar-empleado.component.html',
-  styleUrl: './buscar-empleado.component.css'
+  styleUrl: './buscar-empleado.component.css',
+  imports: [MatDialogModule, FormsModule, CommonModule, MatLabel, MatFormField]
 })
 export class BuscarEmpleadoComponent implements OnInit {
   searchQuery: string = '';
   empleados: Empleado[] = [];
-  empleadosFiltrados: Empleado[] = [];
+  empleadosFiltrados: Empleado[] = []; // Inicializa como lista vacía
   isLoading = true;
 
   constructor(
@@ -27,35 +25,35 @@ export class BuscarEmpleadoComponent implements OnInit {
     private empleadosService: EmpleadoService
   ) {}
 
-  ngOnInit():void{
+  ngOnInit(): void {
     this.cargarEmpleados();
   }
 
-  cargarEmpleados(): void{
+  cargarEmpleados(): void {
     this.empleadosService.getEmpleados().subscribe({
       next: (data: Empleado[]) => {
         this.empleados = data;
-        this.empleadosFiltrados = data;
         this.isLoading = false;
       },
-      error: (err) =>{
+      error: (err) => {
         console.error('Error al cargar los empleados', err);
         this.isLoading = false;
       }
-    })
+    });
   }
 
-  buscarEmpleados(): void{
-    this.empleadosFiltrados = this.empleados.filter(empleados =>
-      empleados.nombre.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-      empleados.apellido.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+  buscarEmpleados(): void {
+    if (this.searchQuery.trim() === '') {
+      this.empleadosFiltrados = []; // No muestra resultados si no hay búsqueda
+    } else {
+      this.empleadosFiltrados = this.empleados.filter(empleado =>
+        empleado.nombre.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+        empleado.apellido.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
   }
 
-
-
-  seleccionarEmpleado(empleado: any) {
-    this.dialogRef.close(empleado); // Devuelve la empresa seleccionada
+  seleccionarEmpleado(empleado: Empleado): void {
+    this.dialogRef.close(empleado); // Devuelve el empleado seleccionado
   }
-
 }

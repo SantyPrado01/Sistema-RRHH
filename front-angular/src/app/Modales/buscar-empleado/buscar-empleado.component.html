@@ -3,12 +3,15 @@
     <mat-label>Buscar Empleado</mat-label>
     <input type="text" [(ngModel)]="searchQuery" (input)="buscarEmpleados()" />
 
-  <ul class="list-group">
-    <li *ngFor="let empleado of empleados" class="list-group-item" (click)="seleccionarEmpleado(empleado)">
-      {{ empleado.apellido }} {{ empleado.nombre }}
-    </li>
+    <ul class="list-group">
+      <li *ngFor="let empleado of empleadosFiltrados" class="list-group-item" (click)="seleccionarEmpleado(empleado)">
+          {{ empleado.apellido }} {{ empleado.nombre }}
+      </li>
+      <li *ngIf="empleadosFiltrados.length === 0 && searchQuery.trim() !== ''" class="list-group-item">
+          No se encontraron empleados.
+      </li>
   </ul>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+    <button mat-button class="cancel-button" (click)="dialogRef.close()">Cancelar</button>
 </mat-dialog-actions>

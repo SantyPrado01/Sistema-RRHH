@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { HorarioAsignadoService } from './horariosAsignados.service'; 
 import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto'; 
 import { UpdateHorariosAsignadoDto } from './dto/updateHorariosAsignados.entity'; 
+import { HorarioAsignado } from './entities/horariosAsignados.entity';
 
 @Controller('horariosAsignados')
 export class HorariosAsignadosController {
@@ -11,6 +12,13 @@ export class HorariosAsignadosController {
   create(@Body() createHorariosDto: CreateHorariosAsignadoDto) {
     return this.horariosAsignadosService.create(createHorariosDto);
   }
+
+
+  @Get()
+  async getHorariosAsignados():Promise<HorarioAsignado[]> {
+    return this.horariosAsignadosService.getHorariosAsignados(); 
+  }
+
   @Get()
   findAll() {
     return this.horariosAsignadosService.findAll();

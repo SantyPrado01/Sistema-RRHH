@@ -7,7 +7,8 @@ export declare class OrdenTrabajo {
     servicio: Servicio;
     empleadoAsignado: Empleado;
     horariosAsignados?: HorarioAsignado[];
+    necesidadHoraria?: NecesidadHoraria[];
     mes: number;
     anio: number;
-    necesidadHoraria?: NecesidadHoraria[];
+    completado: boolean;
 }

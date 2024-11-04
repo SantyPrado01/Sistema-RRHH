@@ -10,7 +10,7 @@ export class OrdenTrabajo {
     @PrimaryGeneratedColumn()
     Id: number;
 
-    @ManyToOne(() => Servicio, (servicio) => servicio.ordenesTrabajo)
+    @ManyToOne(() => Servicio, (servicio) => servicio.ordenesTrabajo, { eager: true })
     servicio: Servicio;
 
     @ManyToOne(() => Empleado, { nullable: false })
@@ -19,12 +19,15 @@ export class OrdenTrabajo {
     @OneToMany(() => HorarioAsignado, (horario) => horario.ordenTrabajo)
     horariosAsignados?: HorarioAsignado[];
 
+    @OneToMany(() => NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo, { eager: true })
+    necesidadHoraria?: NecesidadHoraria[];
+
     @Column()
     mes: number; 
 
     @Column()
     anio: number;  
 
-    @OneToMany(() => NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo, { eager: true })
-    necesidadHoraria?: NecesidadHoraria[];
+    @Column({default:false})
+    completado: boolean;
 }

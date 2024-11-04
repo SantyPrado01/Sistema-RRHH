@@ -1,11 +1,14 @@
 <h2 mat-dialog-title>Buscar Empresa</h2>
 <mat-dialog-content>
-    <mat-label>Buscar empresa</mat-label>
-    <input type="text" [(ngModel)]="searchQuery" (input)="buscarEmpresas()" />
+  <mat-label>Buscar empresa</mat-label>
+  <input type="text" [(ngModel)]="searchQuery" (input)="buscarEmpresas()" />
 
   <ul class="list-group">
-    <li *ngFor="let empresa of empresas" class="list-group-item" (click)="seleccionarEmpresa(empresa)">
+    <li *ngFor="let empresa of empresasFiltradas" class="list-group-item" (click)="seleccionarEmpresa(empresa)">
       {{ empresa.nombre }}
+    </li>
+    <li *ngIf="empresasFiltradas.length === 0 && searchQuery.trim() !== ''" class="list-group-item">
+      No se encontraron empresas.
     </li>
   </ul>
 </mat-dialog-content>

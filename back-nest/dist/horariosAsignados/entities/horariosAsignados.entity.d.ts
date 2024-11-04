@@ -12,4 +12,5 @@ export declare class HorarioAsignado {
     horaFinReal: string;
     estado: string;
     suplente: boolean;
+    comprobado: boolean;
 }

@@ -10,6 +10,7 @@ export declare class HorarioAsignadoService {
     constructor(horarioAsignadoRepository: Repository<HorarioAsignado>, ordenTrabajoRepository: Repository<OrdenTrabajo>, empleadoRepository: Repository<Empleado>);
     create(createHorariosDto: CreateHorariosAsignadoDto): Promise<any[]>;
     private obtenerFechasDelMes;
+    getHorariosAsignados(): Promise<HorarioAsignado[]>;
     findAll(): Promise<HorarioAsignado[]>;
     findOne(id: number): Promise<HorarioAsignado>;
     update(id: number, updateData: Partial<CreateHorariosAsignadoDto>): Promise<HorarioAsignado>;

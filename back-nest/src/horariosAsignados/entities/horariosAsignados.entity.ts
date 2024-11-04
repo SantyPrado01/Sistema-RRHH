@@ -7,7 +7,7 @@ export class HorarioAsignado {
     @PrimaryGeneratedColumn()
     horarioAsignadoId: number;
 
-    @ManyToOne(() => OrdenTrabajo, (orden) => orden.horariosAsignados, { nullable: false })
+    @ManyToOne(() => OrdenTrabajo, (orden) => orden.horariosAsignados)
     ordenTrabajo: OrdenTrabajo;
 
     @ManyToOne(() => Empleado, { nullable: false })
@@ -36,4 +36,7 @@ export class HorarioAsignado {
 
     @Column({default: false})
     suplente: boolean
+
+    @Column({default:false})
+    comprobado: boolean
 }

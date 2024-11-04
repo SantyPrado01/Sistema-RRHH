@@ -21,7 +21,7 @@ __decorate([
     __metadata("design:type", Number)
 ], HorarioAsignado.prototype, "horarioAsignadoId", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => ordenTrabajo_entity_1.OrdenTrabajo, (orden) => orden.horariosAsignados, { nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => ordenTrabajo_entity_1.OrdenTrabajo, (orden) => orden.horariosAsignados),
     __metadata("design:type", ordenTrabajo_entity_1.OrdenTrabajo)
 ], HorarioAsignado.prototype, "ordenTrabajo", void 0);
 __decorate([
@@ -60,6 +60,10 @@ __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], HorarioAsignado.prototype, "suplente", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], HorarioAsignado.prototype, "comprobado", void 0);
 exports.HorarioAsignado = HorarioAsignado = __decorate([
     (0, typeorm_1.Entity)('horarios_asignados')
 ], HorarioAsignado);

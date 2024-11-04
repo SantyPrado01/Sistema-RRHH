@@ -24,6 +24,9 @@ let HorariosAsignadosController = class HorariosAsignadosController {
     create(createHorariosDto) {
         return this.horariosAsignadosService.create(createHorariosDto);
     }
+    async getHorariosAsignados() {
+        return this.horariosAsignadosService.getHorariosAsignados();
+    }
     findAll() {
         return this.horariosAsignadosService.findAll();
     }
@@ -45,6 +48,12 @@ __decorate([
     __metadata("design:paramtypes", [createHorariosAsignados_dto_1.CreateHorariosAsignadoDto]),
     __metadata("design:returntype", void 0)
 ], HorariosAsignadosController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], HorariosAsignadosController.prototype, "getHorariosAsignados", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

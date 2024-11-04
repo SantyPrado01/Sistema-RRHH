@@ -23,7 +23,7 @@ __decorate([
     __metadata("design:type", Number)
 ], OrdenTrabajo.prototype, "Id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => servicio_entity_1.Servicio, (servicio) => servicio.ordenesTrabajo),
+    (0, typeorm_1.ManyToOne)(() => servicio_entity_1.Servicio, (servicio) => servicio.ordenesTrabajo, { eager: true }),
     __metadata("design:type", servicio_entity_1.Servicio)
 ], OrdenTrabajo.prototype, "servicio", void 0);
 __decorate([
@@ -35,6 +35,10 @@ __decorate([
     __metadata("design:type", Array)
 ], OrdenTrabajo.prototype, "horariosAsignados", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => necesidadHoraria_entity_1.NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo, { eager: true }),
+    __metadata("design:type", Array)
+], OrdenTrabajo.prototype, "necesidadHoraria", void 0);
+__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], OrdenTrabajo.prototype, "mes", void 0);
@@ -43,9 +47,9 @@ __decorate([
     __metadata("design:type", Number)
 ], OrdenTrabajo.prototype, "anio", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => necesidadHoraria_entity_1.NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo, { eager: true }),
-    __metadata("design:type", Array)
-], OrdenTrabajo.prototype, "necesidadHoraria", void 0);
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], OrdenTrabajo.prototype, "completado", void 0);
 exports.OrdenTrabajo = OrdenTrabajo = __decorate([
     (0, typeorm_1.Entity)('ordenes-trabajo')
 ], OrdenTrabajo);

@@ -70,6 +70,16 @@ let HorarioAsignadoService = class HorarioAsignadoService {
         }
         return fechas;
     }
+    async getHorariosAsignados() {
+        const today = new Date();
+        return this.horarioAsignadoRepository.find({
+            where: {
+                comprobado: false,
+                fecha: (0, typeorm_2.LessThan)(today),
+            },
+            relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'],
+        });
+    }
     async findAll() {
         return await this.horarioAsignadoRepository.find({
             relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'],

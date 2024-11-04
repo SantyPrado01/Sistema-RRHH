@@ -23,4 +23,6 @@ export class CreateHorariosAsignadoDto {
 
     suplente?: boolean;
 
+    comprobado: boolean
+
 }

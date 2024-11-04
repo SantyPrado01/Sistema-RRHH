@@ -11,4 +11,5 @@ export declare class CreateHorariosAsignadoDto {
     horaFinReal?: string;
     estado?: string;
     suplente?: boolean;
+    comprobado: boolean;
 }
