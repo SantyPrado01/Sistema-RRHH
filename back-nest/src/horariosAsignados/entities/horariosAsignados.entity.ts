@@ -39,4 +39,8 @@ export class HorarioAsignado {
 
     @Column({default:false})
     comprobado: boolean
+
+    @Column({default:''})
+    observaciones: string
+
 }

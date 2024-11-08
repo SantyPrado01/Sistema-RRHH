@@ -64,6 +64,10 @@ __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], HorarioAsignado.prototype, "comprobado", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: '' }),
+    __metadata("design:type", String)
+], HorarioAsignado.prototype, "observaciones", void 0);
 exports.HorarioAsignado = HorarioAsignado = __decorate([
     (0, typeorm_1.Entity)('horarios_asignados')
 ], HorarioAsignado);

@@ -13,7 +13,6 @@ export class HorariosAsignadosController {
     return this.horariosAsignadosService.create(createHorariosDto);
   }
 
-
   @Get()
   async getHorariosAsignados():Promise<HorarioAsignado[]> {
     return this.horariosAsignadosService.getHorariosAsignados(); 

@@ -1,0 +1,48 @@
+mat-dialog-content {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start;
+    padding: 16px;
+  }
+  
+  .header-row {
+    display: flex;
+    align-items: center;
+  }
+  
+  .success-icon {
+    color: green;
+    font-size: 36px;
+    margin-right: 10px;
+    height: auto;
+    width: auto;
+  }
+  
+  .error-icon {
+    color: red;
+    font-size: 36px;
+    margin-right: 10px;
+    height: auto;
+    width: auto;
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .message-row {
+    margin-top: 10px;
+  }
+  
+  p {
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .button-row {
+    margin-top: 20px;
+    text-align: right; 
+  }
+  

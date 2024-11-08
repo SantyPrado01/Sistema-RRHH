@@ -19,4 +19,9 @@ export class HorariosAsignadosService {
         };
         return this.http.get<HorarioAsignado[]>(`${this.apiUrl}`, { params });
     }
+
+    updateHorario(horario: HorarioAsignado): Observable<HorarioAsignado> {
+        return this.http.patch<HorarioAsignado>(`${this.apiUrl}/${horario.horarioAsignadoId}`, horario);
+      }
+
 }

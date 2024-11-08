@@ -1,0 +1,19 @@
+<mat-dialog-content [ngClass]="data.type">
+    <!-- Primer fila: Icono y Título -->
+    <div class="header-row">
+      <mat-icon *ngIf="data.type === 'success'" class="success-icon">check_circle</mat-icon>
+      <mat-icon *ngIf="data.type === 'error'" class="error-icon">error</mat-icon>
+      <h2 mat-dialog-title>{{ data.title }}</h2>
+    </div>
+  
+    <!-- Segunda fila: Mensaje -->
+    <div class="message-row">
+      <p>{{ data.message }}</p>
+    </div>
+  
+    <!-- Tercer fila: Botón Ok -->
+    <div class="button-row">
+      <button mat-button mat-dialog-close>OK</button>
+    </div>
+  </mat-dialog-content>
+  

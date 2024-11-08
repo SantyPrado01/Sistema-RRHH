@@ -12,4 +12,5 @@ export declare class CreateHorariosAsignadoDto {
     estado?: string;
     suplente?: boolean;
     comprobado: boolean;
+    observaciones?: string;
 }

@@ -14,5 +14,6 @@ export declare class UpdateHorariosAsignadoDto extends UpdateHorariosAsignadoDto
     estado?: string;
     suplente?: boolean;
     comprobado: boolean;
+    observaciones?: string;
 }
 export {};

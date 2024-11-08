@@ -22,25 +22,21 @@ export class ServiciosEditComponent implements OnInit {
   ciudades: any[] = [];
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
-  servicioId: string | null = null; // ID del servicio a editar
+  servicioId: string | null = null;
 
   constructor(
     private http: HttpClient,
     private categoriaEmpresaService: CategoriaServicioService,
     private router: Router,
-    private route: ActivatedRoute // ActivatedRoute para obtener el ID
+    private route: ActivatedRoute 
   ) {}
 
   ngOnInit() {
-    // Obtener el ID del servicio de la URL
     this.servicioId = this.route.snapshot.paramMap.get('id');
 
     if (this.servicioId) {
-      // Cargar los datos del servicio a editar
       this.cargarServicio(this.servicioId);
     }
-
-    // Cargar categorías
     this.categoriaEmpresaService.getCategoriasServicio().subscribe({
       next: (data) => {
         console.log('Categorías obtenidas:', data);
@@ -56,7 +52,6 @@ export class ServiciosEditComponent implements OnInit {
     this.seccionActual = seccion;
   }
 
-  // Función para cargar el servicio a editar
   cargarServicio(id: string) {
     this.http.get<any>(`http://localhost:3000/servicios/${id}`).subscribe({
       next:(data)=>{
@@ -151,8 +146,7 @@ export class ServiciosEditComponent implements OnInit {
       });
     }
   }
-
-
+  
   cancelar() {
     alert('Servicio NO actualizado, operación cancelada.');
     this.router.navigate(['/service']);

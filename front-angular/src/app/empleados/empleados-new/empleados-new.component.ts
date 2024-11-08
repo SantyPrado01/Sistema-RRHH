@@ -7,12 +7,14 @@ import { HttpClient } from '@angular/common/http';
 import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
 import { Router } from '@angular/router';
 import { Disponibilidad } from '../models/disponibilidad.models';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 
 
 @Component({
   selector: 'app-empleados-new',
   standalone: true,
-  imports: [NabvarComponent, FormsModule, CommonModule],
+  imports: [NabvarComponent, FormsModule, CommonModule, MatDialogModule],
   templateUrl: './empleados-new.component.html',
   styleUrls: ['./empleados-new.component.css']
 })
@@ -38,9 +40,13 @@ export class EmpleadosNewComponent implements OnInit{
 
   fullTime: boolean = false;
 
-  constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService, private router: Router) {}
+  constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService, private router: Router, private dialog: MatDialog) {}
 
-  // Validaciones 
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
+  }
 
   actualizarContador(event: Event) {
     const inputElement = event.target as HTMLTextAreaElement;
@@ -126,12 +132,13 @@ export class EmpleadosNewComponent implements OnInit{
     this.http.post(url, this.empleado).subscribe({
       next: (response) => {
         console.log('Empleado guardado con éxito:', response);
-        alert('Empleado guardado con éxito');
+        this.mostrarAlerta('Operacion Exitosa', 'Empleado guardado con éxito.', 'success');
         this.limpiarFormulario();
         this.router.navigate(['/empleados']);
       },
       error: (err) => {
         console.error('Error al guardar el empleado:', err);
+        this.mostrarAlerta('Error Operacion', 'Error al guardar el empleado.', 'error');
       }
     });
   }
@@ -153,7 +160,6 @@ export class EmpleadosNewComponent implements OnInit{
       observaciones:''
     };
   }
-  
   
   cancelar() {
     this.router.navigate(['/employee']);

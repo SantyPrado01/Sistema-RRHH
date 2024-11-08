@@ -13,4 +13,5 @@ export declare class HorarioAsignado {
     estado: string;
     suplente: boolean;
     comprobado: boolean;
+    observaciones: string;
 }

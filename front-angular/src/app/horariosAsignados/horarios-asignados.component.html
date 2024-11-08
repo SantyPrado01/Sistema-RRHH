@@ -1,10 +1,73 @@
 <app-nabvar></app-nabvar>
-
-  <!-- Título -->
-  <h2>Cargar Horarios</h2>
-  <div class="line"></div>
+<h2>Cargar Horarios</h2>
+<div class="line"></div>
 
 <div class="content-container">
+  <div class="form-container">
+    <h3>Detalles del Horario</h3>
+    <form #form="ngForm">
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Empresa:</label>
+          <input type="text" [value]="selectedHorario?.ordenTrabajo?.servicio?.nombre ?? 'N/A'" readonly />
+        </div>
+        <div class="form-group">
+          <label>Empleado:</label>
+          <input type="text" [value]="(selectedHorario?.empleado?.apellido ?? '') + ', ' + (selectedHorario?.empleado?.nombre ?? '')" readonly />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Fecha:</label>
+          <input type="text" [value]="selectedHorario && selectedHorario.fecha ? (selectedHorario.fecha | date: 'dd/MM/yyyy') : 'N/A'" readonly />
+        </div>
+        <div class="form-group">
+          <label>Horario Inicio:</label>
+          <input type="text" [value]="selectedHorario?.horaInicioProyectado ?? 'N/A'" readonly />
+        </div>
+        <div class="form-group">
+          <label>Horario Fin:</label>
+          <input type="text" [value]="selectedHorario?.horaFinProyectado ?? 'N/A'" readonly />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Hora Inicio Real:</label>
+          <input type="time" [(ngModel)]="horaInicioReal" name="inicioReal"/>
+        </div>
+        <div class="form-group">
+          <label>Hora Fin Real:</label>
+          <input type="time" [(ngModel)]="horaFinReal" name="finReal" />
+        </div>
+        <div class="form-group">
+          <label>Estado:</label>
+          <select [(ngModel)]="estado" name="estado">
+            <option value="Asistió">Asistió</option>
+            <option value="Llegada Tarde">Llegada Tarde</option>
+            <option value="Faltó Con Aviso">Faltó Con Aviso</option>
+            <option value="Faltó Sin Aviso">Faltó Sin Aviso</option>
+            <option value="Enfermedad">Enfermedad</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Observaciones:</label>
+          <textarea [(ngModel)]="observaciones" placeholder="Ingrese cualquier observación relevante" name="observaciones"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-save" (click)="actualizarHorarios()">Guardar Horario</button>
+        <button type="button" class="btn btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla de Horarios Asignados -->
   <div class="table-container">
     <table>
       <thead>
@@ -28,38 +91,4 @@
     </table>
   </div>
 
-  <div class="form-container">
-    <h3>Detalles del Horario</h3>
-    <form #form="ngForm">
-      <label>Empresa:</label>
-      <input type="text" [value]="selectedHorario?.ordenTrabajo?.servicio?.nombre ?? 'N/A'" readonly />
-      
-      <label>Empleado:</label>
-      <input type="text" [value]="(selectedHorario?.empleado?.apellido ?? '') + ', ' + (selectedHorario?.empleado?.nombre ?? '')" readonly />
-      
-      <label>Fecha:</label>
-      <input type="text" [value]="selectedHorario && selectedHorario.fecha ? (selectedHorario.fecha | date: 'dd/MM/yyyy') : 'N/A'" readonly />
-      
-      <label>Horario Inicio:</label>
-      <input type="text" [value]="selectedHorario?.horaInicioProyectado ?? 'N/A'" readonly />
-      
-      <label>Horario Fin:</label>
-      <input type="text" [value]="selectedHorario?.horaFinProyectado ?? 'N/A'" readonly />
-
-      <label>Hora Inicio Real:</label>
-      <input type="time" [(ngModel)]="horaInicioReal" />
-      
-      <label>Hora Fin Real:</label>
-      <input type="time" [(ngModel)]="horaFinReal" />
-      
-      <label>Estado:</label>
-      <select [(ngModel)]="estado">
-        <option value="Asistió">Asistió</option>
-        <option value="Llegada Tarde">Llegada Tarde</option>
-        <option value="Faltó Con Aviso">Faltó Con Aviso</option>
-        <option value="Faltó Sin Aviso">Faltó Sin Aviso</option>
-        <option value="Enfermedad">Enfermedad</option>
-      </select>
-    </form>
-  </div>
 </div>

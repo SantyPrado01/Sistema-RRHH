@@ -27,4 +27,6 @@ export class UpdateHorariosAsignadoDto extends PartialType(CreateHorariosAsignad
     suplente?: boolean;
 
     comprobado: boolean
+
+    observaciones?: string;
 }

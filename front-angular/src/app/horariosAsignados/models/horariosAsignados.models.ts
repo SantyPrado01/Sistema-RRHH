@@ -14,4 +14,5 @@ export interface HorarioAsignado {
     estado: string; 
     suplente: boolean;
     comprobado: boolean;
+    observaciones?: string;
 }

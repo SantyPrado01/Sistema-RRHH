@@ -25,4 +25,6 @@ export class CreateHorariosAsignadoDto {
 
     comprobado: boolean
 
+    observaciones?: string
+
 }

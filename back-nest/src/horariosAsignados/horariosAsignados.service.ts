@@ -85,7 +85,7 @@ export class HorarioAsignadoService {
 
     async findAll(): Promise<HorarioAsignado[]> {
         return await this.horarioAsignadoRepository.find({
-            relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'], // Incluir relaciones si es necesario
+            relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'], 
         });
     }
 
@@ -102,13 +102,11 @@ export class HorarioAsignadoService {
         return horarioAsignado;
     }
 
-    // Actualizar un horario asignado
     async update(id: number, updateData: Partial<CreateHorariosAsignadoDto>): Promise<HorarioAsignado> {
         await this.horarioAsignadoRepository.update(id, updateData);
-        return this.findOne(id); // Devolver el horario actualizado
+        return this.findOne(id);
     }
 
-    // Eliminar un horario asignado
     async remove(id: number): Promise<void> {
         const result = await this.horarioAsignadoRepository.delete(id);
         if (result.affected === 0) {
