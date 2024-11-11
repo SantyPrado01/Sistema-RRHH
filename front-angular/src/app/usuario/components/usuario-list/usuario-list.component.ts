@@ -5,11 +5,12 @@ import { UsuarioNewComponent } from '../usuario-new/usuario-new.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NabvarComponent } from '../../../nabvar/nabvar.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-usuario-list',
   standalone: true,
-  imports: [NabvarComponent,UsuarioNewComponent, FormsModule, CommonModule],
+  imports: [NabvarComponent, UsuarioNewComponent, FormsModule, CommonModule, RouterModule],
   templateUrl: './usuario-list.component.html',
   styleUrls: ['./usuario-list.component.css']
 })
@@ -17,7 +18,7 @@ export class UsuarioListComponent implements OnInit {
 
   usuarios: Usuario[] = [];
   isLoading = true;
-  isModalOpen = false; // Añadido para gestionar el estado del modal
+  isModalOpen = false; 
 
   constructor(private usuarioService: UsuarioService) {}
 
@@ -37,12 +38,5 @@ export class UsuarioListComponent implements OnInit {
       }
     });
   }
-
-  openModal() {
-    this.isModalOpen = true;
-  }
-
-  closeModal() {
-    this.isModalOpen = false;
-  }
+  
 }

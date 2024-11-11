@@ -13,7 +13,7 @@
       🔍
     </button>
     <!-- Botón para abrir el modal -->
-    <button (click)="openModal()" class="btn btn-primary">+</button>
+    <button routerLink='/user/create' class="btn btn-primary">+</button>
   </div>
 
   <!-- Filtros -->
@@ -60,7 +60,4 @@
     </tr>
   </tbody>
 </table>
-
-<!-- Condicional para mostrar el componente modal -->
-<app-usuario-new *ngIf="isModalOpen" (close)="closeModal()"></app-usuario-new>
 </div>

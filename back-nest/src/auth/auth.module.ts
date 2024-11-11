@@ -7,6 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtCosntants } from './constants/jwt.constant';
 import { UsersService } from '../users/users.service';
+import { EmpleadosModule } from 'src/empleados/empleados.module';
 
 @Module({
   controllers: [AuthController],

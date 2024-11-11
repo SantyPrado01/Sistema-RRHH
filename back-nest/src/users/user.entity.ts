@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from "typeorm"
+import { Empleado } from "src/empleados/entities/empleado.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinColumn, OneToOne } from "typeorm"
 
 @Entity({
     name: 'Usuarios'
@@ -6,10 +7,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from "t
 
 export class User {
 
-    @PrimaryGeneratedColumn({
-        type:'int',
-        name: 'id',
-    })
+    @PrimaryGeneratedColumn({type:'int',name: 'id',})
     id: number
 
     @Column({unique:true})

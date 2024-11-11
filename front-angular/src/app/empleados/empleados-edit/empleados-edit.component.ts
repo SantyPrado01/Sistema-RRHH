@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { Disponibilidad } from '../models/disponibilidad.models';
 import { DisponibilidadHorariaService } from '../services/disponibilidad.service';
 import { forkJoin } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 
 @Component({
   selector: 'app-edit-empleado',
@@ -43,10 +45,15 @@ export class EditEmpleadoComponent implements OnInit {
     private categoriaEmpleadoService: CategoriaEmpleadoService,
     private route: ActivatedRoute,
     private router: Router,
-    private disponibilidadHorariaService: DisponibilidadHorariaService  
+    private disponibilidadHorariaService: DisponibilidadHorariaService,
+    private dialog: MatDialog  
   ) {}
 
-  // Validaciones 
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
+  }
 
   actualizarContador(event: Event) {
     const inputElement = event.target as HTMLTextAreaElement;
@@ -171,11 +178,12 @@ export class EditEmpleadoComponent implements OnInit {
       this.http.patch<any>(`http://localhost:3000/empleados/${empleadoId}`, this.empleado).subscribe({
         next: (response) => {
           console.log('Empleado actualizado con éxito:', response);
-          alert('Empleado actualizado con éxito');
+          this.mostrarAlerta('Operacion Exitosa', 'Empleado Actualizado con éxito.', 'success');
           this.router.navigate(['/employee']);
         },
         error: (err) => {
           console.error('Error al actualizar el empleado:', err);
+          this.mostrarAlerta('Error Operacion', 'Error al guardar el empleado.', 'error');
         }
       });
     }
@@ -206,11 +214,11 @@ export class EditEmpleadoComponent implements OnInit {
             
                 ? { empleadoId: empleadoId, fullTime: true }  
                 : {
-                  disponibilidadHorariaId: 0,  // o undefined si no lo estás usando
+                  disponibilidadHorariaId: 0,  
                   empleadoId: empleadoId,
                   diaSemana: d.diaSemana,
-                  horaInicio: d.horaInicio || '',  // Guarda como string vacío si está vacío
-                  horaFin: d.horaFin || '',        // Guarda como string vacío si está vacío
+                  horaInicio: d.horaInicio || '',  
+                  horaFin: d.horaFin || '',        
                   fullTime: this.fullTime 
                 };
                 console.log('Datos a guardar:', payload);
@@ -220,9 +228,10 @@ export class EditEmpleadoComponent implements OnInit {
         forkJoin(observables).subscribe({
             next: (respuestas) => {
                 console.log('Disponibilidades creadas con éxito:', respuestas);
-                alert('Disponibilidades creadas con éxito');
+                this.mostrarAlerta('Operacion Exitosa', 'Disponibilidad Guardada con exito.', 'success');
             },
             error: (error) => {
+                this.mostrarAlerta('Error Operacion', 'Error al guardar la disponibilidad.', 'error');
                 console.error('Error al crear disponibilidades:', error);
             }
         });
@@ -263,6 +272,7 @@ actualizarDisponibilidad(): void {
 
   cancelar() {
     alert('Empleado NO actualizado, operación cancelada.');
+    this.mostrarAlerta('Operacion Cancelada', 'Empleado NO actualizado.', 'success');
     this.router.navigate(['/employee']);
   }
 }

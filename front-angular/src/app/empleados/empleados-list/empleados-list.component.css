@@ -1,3 +1,9 @@
+.table-container {
+    max-height: 400px; 
+    overflow-y: auto; 
+    margin-top: 20px;
+}
+
 h2 {
     text-align: left;
     margin-top: 20px;
@@ -9,7 +15,6 @@ h2 {
     margin-right: 2%;
 }
 
-/* Línea separadora */
 .line {
     display: flex;
     justify-content: center;
@@ -21,7 +26,6 @@ h2 {
     border: none;
 }
 
-/* Contenedor de la barra de búsqueda y los filtros */
 .search-filter-container {
     display: flex;
     justify-content: space-between;
@@ -50,7 +54,6 @@ h2 {
     background-color: white;
 }
 
-/* Filtros de visualización */
 .filters {
     display: flex;
 }
@@ -70,10 +73,8 @@ h2 {
     border-radius: 4px;
 }
 
-/* Tabla de empleados */
 table {
     width: 100%;
-    margin-top: 20px;
     border-collapse: collapse;
 }
 
@@ -88,7 +89,6 @@ table th {
     color: white;
 }
 
-/* Botones de acción: editar y eliminar */
 .btn-edit, .btn-delete {
     background-color: transparent;
     border: none;
@@ -103,12 +103,13 @@ table th {
 .btn-delete {
     color: #dc3545;
 }
-.btn-view{
+
+.btn-view {
     color: white;
     border: none;
     background: white;
 }
-/* Estilo del botón para abrir el modal */
+
 .btn-primary {
     background-color: #CC5600;
     color: #ffffff;

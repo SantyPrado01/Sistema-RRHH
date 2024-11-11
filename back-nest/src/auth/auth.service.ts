@@ -5,16 +5,19 @@ import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Empleado } from 'src/empleados/entities/empleado.entity';
 
 @Injectable()
 export class AuthService {
 
     constructor(
         private readonly userService: UsersService,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
     ){}
 
-    async register({ username, password, rol, eliminado }: RegisterDto) {
+    async register({ username, password, rol, eliminado}: RegisterDto) {
         const user = await this.userService.getUsername(username);
     
         if (user) {
@@ -27,7 +30,6 @@ export class AuthService {
           password: hashedPassword,
           rol,
           eliminado
-    
         };
     
         return await this.userService.createUser(createUserDto);

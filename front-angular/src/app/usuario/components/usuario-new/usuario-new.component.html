@@ -1,30 +1,43 @@
-<div class="modal-overlay" (click)="closeModal()"></div>
-<div class="modal-content">
-  <div class="modal-header">
-    <h2>Agregar Nuevo Usuario</h2>
-    <button class="close-btn" (click)="closeModal()">&times;</button>
+<app-nabvar></app-nabvar>
+  <h2>Registrar Nuevo Usuario</h2>
+  <div class="line"></div>
+<div class="container">
+  <div class="sidebar"> 
+    <ul class="sidebar-menu">
+      <li (click)="mostrarSeccion('datosUsuario')" [class.active]="seccionActual === 'datosUsuario'">Datos Usuario</li>
+      <li (click)="mostrarSeccion('datosPermisos')" [class.active]="seccionActual === 'Permisos'">Permisos</li>
+    </ul>
   </div>
-  <form (submit)="createUser()">
-    <div class="form-group">
-      <input type="text" name="name" [(ngModel)]="usuario.username" class="form-control" placeholder="Nombre de Usuario" autofocus>
-    </div>
 
-    <div class="form-group">
-      <div class="input-wrapper">
-        <input type="text" name="employee" [(ngModel)]="usuario.password" class="form-control" placeholder="Ingresar Empleado">
-        <button type="button" class="btn-search">
-          🔍
-        </button>
+  <div class="form-container">
+    <form >
+      <div *ngIf="seccionActual==='datosUsuario'">  
+        <div class="form-group">
+          <label for="username">Nombre de Usuario:</label>
+          <input type="text" id="username" name="name" [(ngModel)]="usuario.username" class="form-control" placeholder="Nombre de Usuario" autofocus required>
+        </div>
+
+        <div class="form-group">
+          <label for="employeeName">Nombre del Empleado:</label>
+          <div class="input-wrapper">
+            <input type="text" id="employeeName" name="employeeName" [(ngModel)]="usuario.empleadoNombre" class="form-control" placeholder="Nombre del Empleado" required>
+            <button type="button" class="btn-search" (click)="abrirModalEmpleado()">
+              <mat-icon>search</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Rol:</label>
+          <input type="text" id="role" name="role" [(ngModel)]="usuario.rolID" class="form-control" placeholder="Ingresar Rol">
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-save">Guardar Usuario</button>
+          <button type="button" class="btn btn-cancel">Cancelar</button>
+        </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <input type="text" name="description" [(ngModel)]="usuario.rolID" class="form-control" placeholder="Ingresar Rol">
-    </div>
-
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-save">Guardar Usuario</button>
-      <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancelar</button>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

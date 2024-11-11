@@ -2,7 +2,7 @@
   <h2>Registrar Nuevo Empleado</h2>
   <div class="line"></div>
 <div class="container">
-    <div class="sidebar">
+    <div class="sidebar"> 
       <ul class="sidebar-menu">
         <li (click)="mostrarSeccion('datosPersonales')" [class.active]="seccionActual === 'datosPersonales'">Datos Personales</li>
         <li (click)="mostrarSeccion('datosLaborales')" [class.active]="seccionActual === 'datosLaborales'">Datos Laborales</li>
@@ -13,7 +13,6 @@
     <div class="form-container">
       <form #empleadoForm="ngForm" (ngSubmit)="guardarEmpleado()">
 
-        <!-- Datos Personales -->
         <div *ngIf="seccionActual === 'datosPersonales'">
           <div class="form-row">
             <div class="form-group">
@@ -67,7 +66,6 @@
           </div>
         </div>
 
-        <!-- Datos Laborales -->
         <div *ngIf="seccionActual === 'datosLaborales'">
           <div class="form-row">
             <div class="form-group">
@@ -126,7 +124,6 @@
           </div>          
         </div>
 
-        <!-- Observaciones -->
         <div *ngIf="seccionActual === 'observaciones'">
           <div class="form-row">
             <div class="form-group full-width">
@@ -136,7 +133,6 @@
           </div>
         </div>
 
-        <!-- Botones -->
         <div class="modal-footer">
           <button type="submit" class="btn btn-save" [disabled]="empleadoForm.invalid">Guardar Empleado</button>
           <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>

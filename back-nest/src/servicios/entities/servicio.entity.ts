@@ -30,7 +30,7 @@ export class Servicio {
     @ManyToOne(()=> CategoriaServicio, categoria => categoria.servicios)
     categoria: CategoriaServicio[];
 
-    @Column()
+    @Column({default:''})
     descripcion: string
 
     @Column({default:false})

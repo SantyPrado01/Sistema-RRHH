@@ -26,7 +26,7 @@ export class ServiciosListComponent implements OnInit {
   filtroVisualizar: string = 'activo';  
   filtroOrdenar: string = 'nombre';     
   isModalOpen: boolean = false;
-  provincias: any[] = []; // Cambié a plural si necesitas más provincias
+  provincias: any[] = []; 
   provinciaCórdobaId: number = 14;
 
   constructor(
@@ -46,16 +46,13 @@ export class ServiciosListComponent implements OnInit {
     this.servicioService.getServicios().subscribe((data: Empresa[]) => {
         this.empresas = data;
         console.log(data)
-
-        // Crea un array de observables para las llamadas a obtenerNombreCiudad
         const ciudadRequests = this.empresas.map(empresa => {
             if (empresa.ciudad) {
                 return this.obtenerNombreCiudad(empresa.ciudad.toString()).pipe(
-                    // Agrega un manejo para mapear la respuesta
                     map(response => {
                         const nombreCiudad = response.localidades_censales[0]?.nombre || 'Desconocido';
-                        empresa.ciudad = nombreCiudad; // Actualiza el nombre de la ciudad
-                        return empresa; // Devuelve la empresa actualizada
+                        empresa.ciudad = nombreCiudad; 
+                        return empresa; 
                     }),
                     catchError(() => {
                         console.error('Error al obtener el nombre de la ciudad');
@@ -87,8 +84,7 @@ export class ServiciosListComponent implements OnInit {
 
   getCategoriaNombre(id: number): string {
     const categoria = this.categorias.find(c => c.categoria === id);
-    console.log(categoria)
-    return categoria ? categoria.nombreCategoriaServico : 'Desconocido';
+    return categoria ? categoria.nombre : 'Desconocido';
   }
 
   buscarServicios(): void {
@@ -111,7 +107,7 @@ export class ServiciosListComponent implements OnInit {
         next: (response) => {
           console.log('Servicio eliminada con éxito:', response);
           alert('Servicio eliminada con éxito');
-          this.router.navigate(['/service']); // Asegúrate de que la ruta sea correcta
+          this.router.navigate(['/service']); 
         },
         error: (err) => {
           console.log('ID de la empresa:', empresaId);

@@ -1,5 +1,6 @@
 import { Transform } from "class-transformer";
-import { IsString, MinLength } from "class-validator";
+import { IsNotEmpty, IsString, MinLength } from "class-validator";
+import { Empleado } from "src/empleados/entities/empleado.entity";
 import { Column, ManyToOne } from "typeorm";
 
 

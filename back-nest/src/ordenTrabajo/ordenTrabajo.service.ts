@@ -25,7 +25,6 @@ export class OrdenTrabajoService {
     private readonly horarioAsignadoRepository: Repository<HorarioAsignado>,
   ) {}
 
-  // Método para crear una nueva orden de trabajo
   async createOrdenTrabajo(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
     const { servicio, empleadoAsignado, mes, anio } = createOrdenTrabajoDto;
 
@@ -44,7 +43,6 @@ export class OrdenTrabajoService {
     return this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
   }
 
-  // Método para agregar necesidades horarias
   async createNecesidadHoraria(
     ordenTrabajoId: number,
     necesidadesHorarias: CreateNecesidadHorariaDto[],
