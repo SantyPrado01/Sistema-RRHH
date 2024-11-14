@@ -5,17 +5,15 @@
   <div class="line"></div>
 
   <div class="search-filter-container">
-    <!-- Input de búsqueda con icono de lupa -->
     <div class="search-bar">
-      <input type="text" placeholder="Buscar servicio..."/>
-      <button class="search-btn">🔍</button>
+      <input type="text" placeholder="Buscar servicio..." [(ngModel)]="searchTerm" (input)="filtrarServicios()"/>
       <button routerLink='/service/create' class="btn btn-primary">+</button>
     </div>
 
     <div class="filters">
       <div class="filter">
         <label for="visualizarPor">Visualizar por:</label>
-        <select id="visualizarPor">
+        <select id="visualizarPor" [(ngModel)]="filtroVisualizar" (change)="filtrarServicios()">
           <option value="activo">Activo</option>
           <option value="inactivo">Eliminado</option>
         </select>
@@ -23,7 +21,7 @@
 
       <div class="filter">
         <label for="ordenarPor">Ordenar por:</label>
-        <select id="ordenarPor">
+        <select id="ordenarPor" [(ngModel)]="filtroOrdenar" (change)="filtrarServicios()">
           <option value="nombre">Nombre</option>
           <option value="categoria">Categoria</option>
         </select>

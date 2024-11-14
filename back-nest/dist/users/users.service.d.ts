@@ -6,10 +6,10 @@ import { HttpException } from '@nestjs/common';
 export declare class UsersService {
     private userRepository;
     constructor(userRepository: Repository<User>);
-    createUser(user: CreateUserDto): Promise<User | HttpException>;
+    createUser(user: CreateUserDto): Promise<HttpException | User>;
     getUsers(): Promise<User[]>;
     getUsername(username: string): Promise<User>;
-    getUserId(id: number): Promise<User | HttpException>;
+    getUserId(id: number): Promise<HttpException | User>;
     deleteUser(id: number): Promise<HttpException>;
     updateUser(id: number, user: UpdateUserDto): Promise<HttpException | (User & UpdateUserDto)>;
 }

@@ -10,11 +10,12 @@ import { CategoriaEmpleadoService } from '../../empleados/services/categoria-emp
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { CategoriaServicioService } from '../services/categoria-servicios.service';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-servicios-list',
   standalone: true,
-  imports: [NabvarComponent, CommonModule, RouterModule, MatIconModule],
+  imports: [NabvarComponent, CommonModule, RouterModule, MatIconModule, FormsModule],
   templateUrl: './servicios-list.component.html',
   styleUrls: ['./servicios-list.component.css'] 
 })
@@ -92,13 +93,19 @@ export class ServiciosListComponent implements OnInit {
   }
 
   filtrarServicios(): void {
-    this.empresasFiltradas = this.empresas
-      .filter(empresa => 
-        !empresa.eliminado && 
-        (empresa.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()))
-      );
+    this.empresasFiltradas = this.empresas.filter(empresa => {
+      const coincideEstado = this.filtroVisualizar === 'activo' ? !empresa.eliminado : empresa.eliminado;
+      if (!coincideEstado) return false;
+      const coincideNombre = empresa.nombre.toLowerCase().includes(this.searchTerm.toLowerCase());
+      return coincideNombre;
+    });
+    if (this.filtroOrdenar === 'nombre') {
+      this.empresasFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    } else if (this.filtroOrdenar === 'categoria') {
+      this.empresasFiltradas.sort((a, b) => this.getCategoriaNombre(a.categoria).localeCompare(this.getCategoriaNombre(b.categoria)));
+    }
   }
-
+  
   eliminarServicio(empresa: Empresa): void {
     if (confirm('¿Estás seguro de que deseas eliminar esta empresa?')) {
       const empresaId = empresa.servicioId;

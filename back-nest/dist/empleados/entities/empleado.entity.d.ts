@@ -12,6 +12,7 @@ export declare class Empleado {
     eliminado: boolean;
     ciudad: number;
     observaciones: string;
-    categoria: CategoriaEmpleado;
+    categoria: CategoriaEmpleado[];
     disponibilidades: DisponibilidadHoraria[];
+    fulltime: boolean;
 }

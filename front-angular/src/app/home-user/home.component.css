@@ -1,24 +1,40 @@
 .home-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   margin: 2%;
 }
 
-.left-container {
-  width: 48%;
+.title-container {
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.right-container {
-  width: 48%;
+.title-item h1 {
+  color: #333;
+  font-size: 2em;
+}
+
+.main-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.orden-trabajo-container {
+  width: 65%;
+}
+
+.info-container {
+  width: 30%;
   background-color: #f4f4f9;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
+h3 {
   text-align: center;
   color: #333;
+  font-size: 1.5em;
 }
 
 .hours-item,
@@ -44,15 +60,10 @@ h2 {
 
 .orden-card-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.scrollable {
   max-height: 400px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .orden-card {
@@ -67,7 +78,7 @@ h2 {
   transform: translateY(-5px);
 }
 
-.orden-card-header h3 {
+.orden-card-header h4 {
   font-size: 1.5em;
   color: #333;
 }
@@ -77,6 +88,7 @@ h2 {
   border-radius: 3px;
   font-size: 0.9em;
   text-transform: uppercase;
+  margin-bottom: 5px;
 }
 
 .status.completed {
@@ -85,7 +97,7 @@ h2 {
 }
 
 .status.pending {
-  background-color: #FF9800;
+  background-color: grey;
   color: white;
 }
 

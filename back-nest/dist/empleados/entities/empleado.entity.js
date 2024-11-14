@@ -17,10 +17,7 @@ let Empleado = class Empleado {
 };
 exports.Empleado = Empleado;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)({
-        type: 'int',
-        name: 'id'
-    }),
+    (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
 ], Empleado.prototype, "Id", void 0);
 __decorate([
@@ -65,13 +62,16 @@ __decorate([
 ], Empleado.prototype, "observaciones", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => categoria_empleado_entity_1.CategoriaEmpleado, categoria => categoria.empleados, { eager: true }),
-    (0, typeorm_1.JoinTable)({ name: "categoria" }),
-    __metadata("design:type", categoria_empleado_entity_1.CategoriaEmpleado)
+    __metadata("design:type", Array)
 ], Empleado.prototype, "categoria", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => disponibilidad_horaria_entity_1.DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true }),
     __metadata("design:type", Array)
 ], Empleado.prototype, "disponibilidades", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: true }),
+    __metadata("design:type", Boolean)
+], Empleado.prototype, "fulltime", void 0);
 exports.Empleado = Empleado = __decorate([
     (0, typeorm_1.Entity)({
         name: 'Empleados'

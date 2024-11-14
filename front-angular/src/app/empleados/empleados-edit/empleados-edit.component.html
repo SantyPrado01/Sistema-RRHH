@@ -12,8 +12,6 @@
 
     <div class="form-container">
       <form #empleadoForm="ngForm" (ngSubmit)="actualizarEmpleado()">
-
-        <!-- Datos Personales -->
         <div *ngIf="seccionActual === 'datosPersonales'">
           <div class="form-row">
             <div class="form-group">
@@ -66,8 +64,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Datos Laborales -->
         <div *ngIf="seccionActual === 'datosLaborales'">
           <div class="form-row">
             <div class="form-group">
@@ -83,10 +79,10 @@
 
             <div class="form-group">
               <label for="categoriaEmpleado">Categoría de Empleado:</label>
-              <select id="categoria" [(ngModel)]="empleado.categoria" name="categoria" class="form-control" required #categoriaEmpleado="ngModel">
+              <select id="categoriaEmpleado" [(ngModel)]="empleado.categoria" name="categoriaEmpleado" class="form-control" required #categoriaEmpleado="ngModel">
                 <option value="" disabled selected>Seleccione una categoría</option>
-                <option *ngFor="let categoria of categorias" [value]="categoria.categoriaEmpleadoId">
-                  {{ categoria.categoriaEmpleadoNombre }}
+                <option *ngFor="let categoria of categorias" [value]="categoria.id">
+                  {{ categoria.nombre }}
                 </option>
                 <div *ngIf="categoriaEmpleado.invalid && categoriaEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La categoría de empleado es requerida.</div>
               </select>
@@ -95,21 +91,20 @@
           <div class="form-row">
             <div class="disponibilidad-container">
               <h5>Disponibilidad Horaria</h5>
-              
               <div class="full-time-container">
                 <label>
                   <input type="checkbox" [(ngModel)]="fullTime" name="fullTime" (change)="toggleFullTime()" />
                   Full Time
                 </label>
               </div>
-          
+            
               <div class="disponibilidad-grid">
                 <div class="grid-header">
                   <div>Día</div>
                   <div>Hora Inicio</div>
                   <div>Hora Fin</div>
                 </div>
-          
+            
                 <div *ngFor="let dia of disponibilidad" class="grid-row">
                   <div>{{ dia.nombre }}</div>
                   <div>
@@ -120,16 +115,15 @@
                   </div>
                 </div>
               </div>
-          
+            
               <button class="btn btn-save-two" type="button" (click)="empleado.disponibilidades && empleado.disponibilidades.length > 0 ? actualizarDisponibilidad() : crearDisponibilidad()">
                 Guardar Disponibilidad
               </button>
-
-            </div>
+            
+            </div>            
           </div>          
         </div>
 
-        <!-- Observaciones -->
         <div *ngIf="seccionActual === 'observaciones'">
           <div class="form-row">
             <div class="form-group full-width">
@@ -139,7 +133,6 @@
           </div>
         </div>
 
-        <!-- Botones -->
         <div class="modal-footer">
           <button type="submit" class="btn btn-save" [disabled]="empleadoForm.invalid">Actualizar Empleado</button>
           <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>

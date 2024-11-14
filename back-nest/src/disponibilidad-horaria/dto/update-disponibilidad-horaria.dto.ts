@@ -7,7 +7,5 @@ export class UpdateDisponibilidadHorariaDto extends PartialType(CreateDisponibil
     diaSemana?: number;
     horaInicio?: string;
     horaFin?: string;
-    fehcaInicio?: string;
-    fechaFin?: string;
 
 }

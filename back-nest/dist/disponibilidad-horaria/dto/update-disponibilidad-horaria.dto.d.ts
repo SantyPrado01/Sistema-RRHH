@@ -5,7 +5,5 @@ export declare class UpdateDisponibilidadHorariaDto extends UpdateDisponibilidad
     diaSemana?: number;
     horaInicio?: string;
     horaFin?: string;
-    fehcaInicio?: string;
-    fechaFin?: string;
 }
 export {};

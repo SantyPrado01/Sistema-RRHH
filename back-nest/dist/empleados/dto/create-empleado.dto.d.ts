@@ -1,4 +1,3 @@
-import { CategoriaEmpleado } from "src/categoria-empleado/entities/categoria-empleado.entity";
 import { DisponibilidadHoraria } from "src/disponibilidad-horaria/entities/disponibilidad-horaria.entity";
 export declare class CreateEmpleadoDto {
     legajo: number;
@@ -11,6 +10,7 @@ export declare class CreateEmpleadoDto {
     eliminado: boolean;
     ciudad: number;
     observaciones?: string;
-    categoriaEmpleado: CategoriaEmpleado;
+    categoriaId: number;
     disponibilidades?: DisponibilidadHoraria[];
+    fulltime?: boolean;
 }

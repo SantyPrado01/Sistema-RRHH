@@ -14,13 +14,13 @@ export class DisponibilidadHoraria {
     empleado: Empleado;
 
     @Column({type: 'tinyint'})
-    diaSemana:number
+    diaSemana?:number
 
     @Column({type: 'time'})
-    horaInicio:string
+    horaInicio?:string
 
     @Column({type: 'time'})
-    horaFin:string
+    horaFin?:string
 
     @Column({default: false})
     fullTime: boolean

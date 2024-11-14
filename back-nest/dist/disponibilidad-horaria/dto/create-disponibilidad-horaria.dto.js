@@ -31,16 +31,4 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateDisponibilidadHorariaDto.prototype, "horaFin", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], CreateDisponibilidadHorariaDto.prototype, "fechaInicio", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], CreateDisponibilidadHorariaDto.prototype, "fechaFin", void 0);
-__decorate([
-    (0, class_validator_1.IsBoolean)(),
-    __metadata("design:type", Boolean)
-], CreateDisponibilidadHorariaDto.prototype, "fullTime", void 0);
 //# sourceMappingURL=create-disponibilidad-horaria.dto.js.map

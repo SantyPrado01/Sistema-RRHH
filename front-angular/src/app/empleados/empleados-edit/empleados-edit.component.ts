@@ -27,6 +27,7 @@ export class EditEmpleadoComponent implements OnInit {
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
   contadorCaracteres: number = 0;
+  empleadoId: string | null = null;
 
   disponibilidad = [
     { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
@@ -78,17 +79,17 @@ export class EditEmpleadoComponent implements OnInit {
   ngOnInit() {
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
       next: (data) => {
+        console.log('Categorías obtenidas:', data);
         this.categorias = data;
       },
       error: (err) => {
         console.error('Error al obtener las categorías', err);
       }
     });
-    // Obtener el ID del empleado de la URL y luego cargar el empleado
-    const empleadoId = this.route.snapshot.paramMap.get('id');
-    if (empleadoId) {
-      this.cargarEmpleado(empleadoId);
-      this.cargarDisponibilidad(empleadoId)
+    this.empleadoId = this.route.snapshot.paramMap.get('id');
+    if (this.empleadoId){
+      this.cargarEmpleado(this.empleadoId)
+      this.cargarDisponibilidad(this.empleadoId)
     }
   }
 
@@ -105,13 +106,17 @@ export class EditEmpleadoComponent implements OnInit {
     this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
       next: (data) => {
         this.empleado = data;
+        const categoriaSeleccionada = this.categorias.find(c => c.id === this.empleado.categoria.id);
+        if (categoriaSeleccionada) {
+          this.empleado.categoria = categoriaSeleccionada.nombre;
+        }
+        
+        console.log('esto es ACA',this.empleado.categoria)
         if (this.empleado.ciudad) {
           this.obtenerNombreCiudad(this.empleado.ciudad.toString()).subscribe({
             next: (response) => {
-              console.log('Respuesta de la API:', response);
               if (response.localidades_censales && response.localidades_censales.length > 0) {
                 this.ciudadNombre = response.localidades_censales[0].nombre;
-                console.log('Nombre de la ciudad encontrado:', this.ciudadNombre);
               } else {
                 console.log('localidades_censales está vacío o no existe', response.localidades_censales);
                 this.ciudadNombre = 'Desconocido'; 
@@ -138,11 +143,9 @@ export class EditEmpleadoComponent implements OnInit {
     return this.http.get<any>(url);
   }
   
-
   buscarCiudad(event: Event) {
     const input = event.target as HTMLInputElement;
     const query = input.value;
-
     if (query.length > 2) {
       const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
 
@@ -167,10 +170,9 @@ export class EditEmpleadoComponent implements OnInit {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
     if (selectedCity) {
       this.empleado.ciudad = selectedCity.id;
-      this.ciudadNombre = selectedCity.nombre; // Actualiza el nombre de la ciudad cuando se selecciona
+      this.ciudadNombre = selectedCity.nombre;
     }
   }
-
 
   actualizarEmpleado() {
     const empleadoId = this.route.snapshot.paramMap.get('id');
@@ -189,21 +191,30 @@ export class EditEmpleadoComponent implements OnInit {
     }
   }
 
-  cargarDisponibilidad(empleadoId:string){
+  cargarDisponibilidad(empleadoId: string) {
     this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
       next: (data) => {
         this.empleado = data;
         if (this.empleado.disponibilidades) {
-          console.log(this.empleado.disponibilidades)
           this.disponibilidad.forEach(dia => {
             const disp = this.empleado.disponibilidades.find((d: any) => d.diaSemana === dia.diaSemana);
+            
             if (disp) {
-              dia.horaInicio = disp.horaInicio;
-              dia.horaFin = disp.horaFin;
+              dia.horaInicio = this.formatearHora(disp.horaInicio);
+              dia.horaFin = this.formatearHora(disp.horaFin);
+            } else {
+              dia.horaInicio = '';
+              dia.horaFin = '';
             }
           });
         }
-      }})
+      }
+    });
+  }
+  formatearHora(hora: string): string {
+    if (!hora) return '';
+    const [horaParte, minutosParte] = hora.split(':');
+    return `${horaParte}:${minutosParte}`;
   }
 
   crearDisponibilidad(): void {
@@ -211,9 +222,8 @@ export class EditEmpleadoComponent implements OnInit {
     if (empleadoId) {
         const observables = this.disponibilidad.map(d => {
             const payload = this.fullTime
-            
                 ? { empleadoId: empleadoId, fullTime: true }  
-                : {
+                :{
                   disponibilidadHorariaId: 0,  
                   empleadoId: empleadoId,
                   diaSemana: d.diaSemana,

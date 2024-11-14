@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaServicioService } from '../services/categoria-servicios.service'; 
 import { Router, ActivatedRoute } from '@angular/router';
-import { response } from 'express';
 
 @Component({
   selector: 'app-empresas-edit',
@@ -33,7 +32,6 @@ export class ServiciosEditComponent implements OnInit {
 
   ngOnInit() {
     this.servicioId = this.route.snapshot.paramMap.get('id');
-
     if (this.servicioId) {
       this.cargarServicio(this.servicioId);
     }
@@ -56,11 +54,10 @@ export class ServiciosEditComponent implements OnInit {
     this.http.get<any>(`http://localhost:3000/servicios/${id}`).subscribe({
       next:(data)=>{
         this.servicio = data;
+        console.log('Informacion de Servicio:', this.servicio)
         if (this.servicio.ciudad){
           this.obtenerNombreCiudad(this.servicio.ciudad.toString()).subscribe({
             next: (response) => {
-              console.log('Respuesta de la API: ', response);
-
               if (response.localidades_censales && response.localidades_censales.length > 0) {
                 this.ciudadNombre = response.localidades_censales[0].nombre;
                 console.log('Nombre de la ciudad encontrado:', this.ciudadNombre);
@@ -93,10 +90,8 @@ export class ServiciosEditComponent implements OnInit {
   buscarCiudad(event: Event) {
     const input = event.target as HTMLInputElement;
     const query = input.value;
-
     if (query.length > 2) {
       const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
-
       this.http.get<any>(url).subscribe({
         next: (response) => {
           console.log('Respuesta de la API:', response);
@@ -127,7 +122,7 @@ export class ServiciosEditComponent implements OnInit {
 
   getCategoriaNombre(id: number): string {
     const categoria = this.categorias.find(c => c.categoria === id);
-    console.log(categoria)
+    console.log('Esto es en el GET:',categoria)
     return categoria ? categoria.nombreCategoriaServico : 'Desconocido';
   }
 

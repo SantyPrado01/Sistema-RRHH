@@ -14,12 +14,4 @@ export class CreateDisponibilidadHorariaDto {
     @IsOptional()
     horaFin: string;
 
-    @IsOptional()
-    fechaInicio?: string;
-
-    @IsOptional()
-    fechaFin?: string;
-
-    @IsBoolean()
-    fullTime: boolean;
 }

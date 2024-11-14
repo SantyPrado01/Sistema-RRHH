@@ -13,16 +13,11 @@ export class EmpleadosService {
   create(Empleado: CreateEmpleadoDto){
     console.log(Empleado)
     const newEmpleado = this.empleadoRepository.create(Empleado)
-    return this.empleadoRepository.save(newEmpleado), new HttpException('El Empleado se guardo con exito', HttpStatus.ACCEPTED)
-    
+    return this.empleadoRepository.save(newEmpleado), new HttpException('El Empleado se guardo con exito', HttpStatus.ACCEPTED) 
   }
-
+  
   get(){
-    return this.empleadoRepository.find({
-      where:{
-        eliminado:false
-      }
-    })
+    return this.empleadoRepository.find({})
   }
 
   async getId(id: number){
@@ -51,9 +46,7 @@ export class EmpleadosService {
     throw new HttpException('Empleado eliminado.', HttpStatus.ACCEPTED);
 
   }
-
   async update(empleadoId:number, empleado: UpdateEmpleadoDto){
-    
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{
         Id:empleadoId

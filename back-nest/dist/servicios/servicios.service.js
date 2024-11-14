@@ -34,11 +34,7 @@ let ServiciosService = class ServiciosService {
         return this.servicioRepository.save(newServicio);
     }
     getServicios() {
-        return this.servicioRepository.find({
-            where: {
-                eliminado: false
-            }
-        });
+        return this.servicioRepository.find({});
     }
     async getServicioId(id) {
         const servicio = await this.servicioRepository.findOne({

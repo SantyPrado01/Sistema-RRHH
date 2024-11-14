@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Servicio } from './entities/servicio.entity';
 
-
 @Injectable()
 export class ServiciosService {
 
@@ -20,18 +19,12 @@ export class ServiciosService {
     if(servicioFound){
       throw new HttpException('El servicio ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
     }
-
     const newServicio = this.servicioRepository.create(servicio)
     return this.servicioRepository.save(newServicio)
-
   }
 
   getServicios(){
-    return this.servicioRepository.find({
-      where:{
-        eliminado:false
-      }
-    })
+    return this.servicioRepository.find({})
   }
 
   async getServicioId(id: number): Promise<Servicio> {

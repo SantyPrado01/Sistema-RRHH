@@ -9,7 +9,7 @@ export declare class CategoriaEmpleadoController {
         categoriaEmpleado: import("./entities/categoria-empleado.entity").CategoriaEmpleado;
     }>;
     findAll(): Promise<import("./entities/categoria-empleado.entity").CategoriaEmpleado[]>;
-    findOne(id: string): Promise<import("./entities/categoria-empleado.entity").CategoriaEmpleado | import("@nestjs/common").HttpException>;
+    findOne(id: string): Promise<import("@nestjs/common").HttpException | import("./entities/categoria-empleado.entity").CategoriaEmpleado>;
     update(id: string, updateCategoriaEmpleadoDto: UpdateCategoriaEmpleadoDto): Promise<import("@nestjs/common").HttpException | (import("./entities/categoria-empleado.entity").CategoriaEmpleado & UpdateCategoriaEmpleadoDto)>;
     remove(id: string): Promise<import("@nestjs/common").HttpException>;
 }

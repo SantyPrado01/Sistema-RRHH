@@ -26,14 +26,17 @@ export class HomeComponent {
   }
 
   ordenes: any[] = [];
-  mesActual: number = new Date().getMonth() + 1;
   anioActual: number = new Date().getFullYear();
   completado: boolean = false
   horasProyectadas: number = 0
   horasReales: number = 0
 
+  meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  mesActual: string = this.meses[new Date().getMonth()];
+
   obtenerOrdenes() {
-    this.ordenTrabajoService.getOrdenesPorMesAnio(this.mesActual, this.anioActual, this.completado).subscribe(
+    const mesNumero = new Date().getMonth() + 1;
+    this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioActual, this.completado).subscribe(
       (data) => {
         this.ordenes = data; // Guardamos las órdenes en la variable `ordenes`
         console.log(this.ordenes)
@@ -45,7 +48,8 @@ export class HomeComponent {
   }
 
   obtenerHoras() {
-    this.ordenTrabajoService.getHorasPorMes(this.mesActual, this.anioActual, this.completado).subscribe((data) => {
+    const mesNumero = new Date().getMonth() + 1;
+    this.ordenTrabajoService.getHorasPorMes(mesNumero, this.anioActual, this.completado).subscribe((data) => {
       console.log('Horarios', data)
       if (data) {
         this.horasProyectadas = data.horasProyectadas;

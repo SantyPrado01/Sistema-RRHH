@@ -1,5 +1,5 @@
 <app-nabvar></app-nabvar>
-  <h2>Registrar Nueva Empresa</h2>
+  <h2>Editar Empresa</h2>
   <div class="line"></div>
 <div class="container">
   <div class="sidebar">
@@ -8,13 +8,9 @@
       <li (click)="mostrarSeccion('ordenesTrabajo')" [class.active]="seccionActual === 'ordenesTrabajo'">Ordenes de Trabajo</li>
     </ul>
   </div>
-
   <div class="form-container">
-
     <div *ngIf="seccionActual === 'datosEmpresa'">
-
       <form (ngSubmit)="actualizarEmpresa()" class="form-container">
-        <!-- Fila 1 -->
         <div class="form-row">
           <div class="form-group">
             <label for="nombreEmpresa">Nombre de la Empresa:</label>
@@ -37,7 +33,6 @@
           </div>
         </div>
 
-        <!-- Fila 2 -->
         <div class="form-row">
           <div class="form-group">
             <label for="direccionEmpresa">Dirección:</label>
@@ -69,7 +64,6 @@
           </div>
         </div>
 
-        <!-- Fila 3: Descripción -->
         <div class="form-row-full-width">
           <div class="form-group-full-width">
             <label for="descripcionEmpresa">Descripción:</label>
@@ -77,7 +71,6 @@
           </div>
         </div>
 
-        <!-- Botones -->
         <div class="modal-footer">
           <button type="submit" class="btn btn-save">Guardar Empresa</button>
           <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>

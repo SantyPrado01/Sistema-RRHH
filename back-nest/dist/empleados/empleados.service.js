@@ -27,11 +27,7 @@ let EmpleadosService = class EmpleadosService {
         return this.empleadoRepository.save(newEmpleado), new common_1.HttpException('El Empleado se guardo con exito', common_1.HttpStatus.ACCEPTED);
     }
     get() {
-        return this.empleadoRepository.find({
-            where: {
-                eliminado: false
-            }
-        });
+        return this.empleadoRepository.find({});
     }
     async getId(id) {
         const empleadoFound = await this.empleadoRepository.findOne({

@@ -9,10 +9,7 @@ import { User } from "src/users/user.entity";
 
 export class Empleado {
 
-    @PrimaryGeneratedColumn({
-        type: 'int',
-        name:'id'
-    })
+    @PrimaryGeneratedColumn({type: 'int', name:'id'})
     Id: number
        
     @Column()
@@ -46,10 +43,12 @@ export class Empleado {
     observaciones: string;
 
     @ManyToOne(() => CategoriaEmpleado, categoria => categoria.empleados, { eager: true })
-    @JoinTable({name: "categoria"})
-    categoria: CategoriaEmpleado;
+    categoria: CategoriaEmpleado[];
     
     @OneToMany(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true })
     disponibilidades: DisponibilidadHoraria[];
+
+    @Column({default:true})
+    fulltime: boolean
 
 }
