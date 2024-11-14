@@ -8,6 +8,8 @@ export declare class OrdenTrabajoController {
     create(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     findAll(): Promise<OrdenTrabajo[]>;
     findOne(id: string): Promise<OrdenTrabajo>;
+    obtenerOrdenesPorMesYAnio(mes: string, anio: string, completado: boolean): Promise<OrdenTrabajo[]>;
+    obtenerHorasPorMes(mes: number, anio: number, completado: boolean): Promise<any>;
     update(id: string, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     remove(id: string): Promise<void>;
 }

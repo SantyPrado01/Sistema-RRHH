@@ -41,6 +41,17 @@ let OrdenTrabajoController = class OrdenTrabajoController {
     findOne(id) {
         return this.ordenTrabajoService.findOne(+id);
     }
+    async obtenerOrdenesPorMesYAnio(mes, anio, completado) {
+        const mesNumero = parseInt(mes, 10);
+        const anioNumero = parseInt(anio, 10);
+        if (isNaN(mesNumero) || isNaN(anioNumero)) {
+            throw new Error('Mes o Año no válidos');
+        }
+        return this.ordenTrabajoService.findMesAnio(mesNumero, anioNumero, completado);
+    }
+    async obtenerHorasPorMes(mes, anio, completado) {
+        return await this.ordenTrabajoService.obtenerHorasPorMes(mes, anio, completado);
+    }
     update(id, updateOrdenTrabajoDto) {
         return this.ordenTrabajoService.update(+id, updateOrdenTrabajoDto);
     }
@@ -69,6 +80,24 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], OrdenTrabajoController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Get)('findByMesAnio/:mes/:anio/:completado'),
+    __param(0, (0, common_1.Param)('mes')),
+    __param(1, (0, common_1.Param)('anio')),
+    __param(2, (0, common_1.Param)('completado')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Boolean]),
+    __metadata("design:returntype", Promise)
+], OrdenTrabajoController.prototype, "obtenerOrdenesPorMesYAnio", null);
+__decorate([
+    (0, common_1.Get)('horas-mes/:mes/:anio/:completado'),
+    __param(0, (0, common_1.Param)('mes')),
+    __param(1, (0, common_1.Param)('anio')),
+    __param(2, (0, common_1.Param)('completado')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Boolean]),
+    __metadata("design:returntype", Promise)
+], OrdenTrabajoController.prototype, "obtenerHorasPorMes", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),

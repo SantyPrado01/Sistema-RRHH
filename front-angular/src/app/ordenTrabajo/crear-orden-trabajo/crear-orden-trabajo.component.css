@@ -148,6 +148,10 @@ textarea {
   display: contents;
 }
 
+.horasProyectadas{
+  margin-top: 2em;
+}
+
 @media (max-width: 768px) {
   .container {
     flex-direction: column;

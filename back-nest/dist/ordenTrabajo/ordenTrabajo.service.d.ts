@@ -20,6 +20,8 @@ export declare class OrdenTrabajoService {
     private obtenerFechasDelMes;
     findAll(): Promise<OrdenTrabajo[]>;
     findOne(id: number): Promise<OrdenTrabajo>;
+    findMesAnio(mes: number, anio: number, completado: boolean): Promise<any>;
+    obtenerHorasPorMes(mes: number, anio: number, completado: boolean): Promise<any>;
     update(id: number, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     remove(id: number): Promise<void>;
 }

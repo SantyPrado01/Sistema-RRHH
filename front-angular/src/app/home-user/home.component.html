@@ -1,49 +1,51 @@
 <app-nabvar></app-nabvar>
 <div class="home-container">
-
   <div class="title-container">
     <div class="title-item">
-      <h1> Bienvenido {{ username }}</h1>
+      <h1>Bienvenido {{ username }}</h1>
     </div>    
   </div>
 
-  <!-- Fila de Horas Proyectadas y Horas Reales -->
-  <div class="hours-container">
-    <div class="hours-item">
-      <label for="horasProyectadas">Horas Proyectadas:</label>
-      <input type="number" id="horasProyectadas"/>
+  <div class="main-content">
+    <!-- Lado izquierdo: Listado de Órdenes de Trabajo -->
+    <div class="orden-trabajo-container">
+      <h2>Listado de Órdenes de Trabajo</h2>
+      <div class="orden-card-container">
+        <div *ngFor="let orden of ordenes" class="orden-card">
+          <div class="orden-card-header">
+            <h3>Orden N° {{ orden.Id }}</h3>
+            <span *ngIf="orden.completado" class="status completed">Completada</span>
+            <span *ngIf="!orden.completado" class="status pending">En Curso</span>
+          </div>
+          <div class="orden-card-body">
+            <p><strong>Servicio:</strong> {{ orden.servicio.nombre }}</p>
+            <p><strong>Empleado:</strong> {{ orden.empleadoAsignado.nombre }} {{ orden.empleadoAsignado.apellido }}</p>
+            <p><strong>Días:</strong> {{ obtenerDias(orden.necesidadHoraria) }}</p>
+            <p><strong>Horas Proyectadas:</strong> {{ orden.horasProyectadas }} horas</p>
+            <p><strong>Horas Reales:</strong> {{ orden.horasReales }} horas</p>
+          </div>
+          <div class="orden-card-footer">
+            <button>Ver detalles</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="hours-item">
-      <label for="horasReales">Horas Reales:</label>
-      <input type="number" id="horasReales"/>
-    </div>
-  </div>
 
-  <!-- Botones de acción rápida -->
-  <div class="action-buttons">
-    <button class="action-btn" routerLink="/employee">
-      <img src="./assets/empleados.png" alt="Empleados"/>
-      <span>Empleados</span>
-    </button>
-    <button class="action-btn" routerLink="/control-horario">
-      <img src="./assets/reloj.png" alt="Control Horario" />
-      <span>Control Horario</span>
-    </button>
-    <button class="action-btn" routerLink="/ordenes-trabajo">
-      <img src="./assets/odt.png" alt="Órdenes de Trabajo" />
-      <span>Órdenes de Trabajo</span>
-    </button>
-    <button class="action-btn" routerLink="/informes">
-      <img src="./assets/Informes.png" alt="Informes" />
-      <span>Informes</span>
-    </button>
-    <button class="action-btn" routerLink="/empresas">
-      <img src="./assets/servicios.png" alt="Servicios" />
-      <span>Servicios</span>
-    </button>
-    <button class="action-btn" routerLink="/facturacion">
-      <img src="./assets/factura.png" alt="Facturación" />
-      <span>Facturación</span>
-    </button>
+    <!-- Lado derecho: Información de Horas y Mes -->
+    <div class="info-container">
+      <h2>Información Mensual</h2>
+      <div class="hours-item">
+        <label for="horasProyectadas">Horas Proyectadas:</label>
+        <input type="number" id="horasProyectadas" [(ngModel)]="horasProyectadas" readonly />
+      </div>
+      <div class="hours-item">
+        <label for="horasReales">Horas Reales:</label>
+        <input type="number" id="horasReales" [(ngModel)]="horasReales" readonly />
+      </div>
+      <div class="month-item">
+        <label for="mesActual">Mes en curso:</label>
+        <input type="text" id="mesActual" [(ngModel)]="mesActual" readonly />
+      </div>
+    </div>
   </div>
 </div>

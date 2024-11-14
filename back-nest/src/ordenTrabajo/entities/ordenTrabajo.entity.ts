@@ -4,7 +4,7 @@ import { NecesidadHoraria } from "src/necesidadHoraria/entities/necesidadHoraria
 import { Servicio } from "../../servicios/entities/servicio.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('ordenes-trabajo')
+@Entity('ordenesTrabajo')
 export class OrdenTrabajo {
 
     @PrimaryGeneratedColumn()
@@ -16,7 +16,7 @@ export class OrdenTrabajo {
     @ManyToOne(() => Empleado, { nullable: false })
     empleadoAsignado: Empleado;  
 
-    @OneToMany(() => HorarioAsignado, (horario) => horario.ordenTrabajo)
+    @OneToMany(() => HorarioAsignado, (horario) => horario.ordenTrabajo, {eager:true})
     horariosAsignados?: HorarioAsignado[];
 
     @OneToMany(() => NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo, { eager: true })

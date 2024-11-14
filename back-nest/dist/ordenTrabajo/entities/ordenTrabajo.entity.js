@@ -31,7 +31,7 @@ __decorate([
     __metadata("design:type", empleado_entity_1.Empleado)
 ], OrdenTrabajo.prototype, "empleadoAsignado", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => horariosAsignados_entity_1.HorarioAsignado, (horario) => horario.ordenTrabajo),
+    (0, typeorm_1.OneToMany)(() => horariosAsignados_entity_1.HorarioAsignado, (horario) => horario.ordenTrabajo, { eager: true }),
     __metadata("design:type", Array)
 ], OrdenTrabajo.prototype, "horariosAsignados", void 0);
 __decorate([
@@ -51,6 +51,6 @@ __decorate([
     __metadata("design:type", Boolean)
 ], OrdenTrabajo.prototype, "completado", void 0);
 exports.OrdenTrabajo = OrdenTrabajo = __decorate([
-    (0, typeorm_1.Entity)('ordenes-trabajo')
+    (0, typeorm_1.Entity)('ordenesTrabajo')
 ], OrdenTrabajo);
 //# sourceMappingURL=ordenTrabajo.entity.js.map

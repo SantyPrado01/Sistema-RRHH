@@ -30,7 +30,7 @@
             <label for="categoriaEmpresa">Categoría de Empresa:</label>
             <select id="categoriaEmpresa" [(ngModel)]="servicio.categoria" name="categoriaEmpresa" class="form-control" required>
               <option value="" disabled selected>Seleccione una categoría</option>
-              <option *ngFor="let categoria of categorias" [value]="categoria.categoriaServicioId">
+              <option *ngFor="let categoria of categorias" [value]="categoria.id">
                 {{ categoria.nombre }}
               </option>
             </select>

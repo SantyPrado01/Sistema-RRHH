@@ -18,6 +18,7 @@ import { NabvarComponent } from '../../nabvar/nabvar.component';
   standalone: true,
 })
 export class CrearOrdenTrabajoComponent {
+  horasProyectadas: number = 0;
   empresa: Empresa[] = [];
   empleado: Empleado[] = [];
   mes: string = '';
@@ -39,6 +40,45 @@ export class CrearOrdenTrabajoComponent {
 
   constructor(private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService, private router: Router) {}
 
+  private contarDiasEnMes(mes: number, anio: number, diaSemana: number): number {
+    let contador = 0;
+    const fecha = new Date(anio, mes - 1, 1);
+    console.log(fecha)
+  
+    while (fecha.getMonth() === mes - 1) {
+      if (fecha.getDay() === diaSemana) {
+        contador++;
+      }
+      fecha.setDate(fecha.getDate() + 1);
+    }
+  
+    return contador;
+  }
+  
+  calcularHorasProyectadas(): void {
+    let totalHoras = 0;
+    this.necesidad.forEach(dia => {
+      if (dia.horaInicio && dia.horaFin) {
+        const [inicioHora, inicioMinuto] = dia.horaInicio.split(':').map(Number);
+        const [finHora, finMinuto] = dia.horaFin.split(':').map(Number);
+  
+        const inicio = new Date();
+        inicio.setHours(inicioHora, inicioMinuto, 0);
+  
+        const fin = new Date();
+        fin.setHours(finHora, finMinuto, 0);
+  
+        const diferenciaHoras = (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60);
+        const horasDia = diferenciaHoras > 0 ? diferenciaHoras : 0;
+
+        const ocurrenciasDia = this.contarDiasEnMes(this.meses.indexOf(this.mes) + 1, this.anio, dia.diaSemana);
+        totalHoras += horasDia * ocurrenciasDia;
+      }
+    });
+  
+    this.horasProyectadas = totalHoras;
+  }
+  
   mostrarSeccion(seccion: string): void {
     this.seccionActual = seccion;
   }
@@ -47,7 +87,7 @@ export class CrearOrdenTrabajoComponent {
     const dialogRef = this.dialog.open(BuscarEmpresaComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.empresa = result.nombre;
+        this.empresa = result;
       }
     });
   }
@@ -56,17 +96,18 @@ export class CrearOrdenTrabajoComponent {
     const dialogRef = this.dialog.open(BuscarEmpleadoComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.empleado = result.nombre;
+        this.empleado = result;
+        console.log('Resultado Empleado', this.empleado)
       }
     });
   }
 
   onSubmit(): void {
     const ordenTrabajoData = {
-      servicio: this.empresa, // Asegúrate de agregar esto
-      empleadoAsignado: this.empleado, // Ajusta el nombre según lo que espera la API
-      mes: this.meses.indexOf(this.mes) + 1, // Convierte el mes a número
-      anio: Number(this.anio), // Asegúrate de que sea un número
+      servicio: this.empresa, 
+      empleadoAsignado: this.empleado, 
+      mes: this.meses.indexOf(this.mes) + 1, 
+      anio: Number(this.anio), 
       horariosAsignados: [],
       necesidadHoraria: this.necesidad.map(dia => ({
         diaSemana: dia.diaSemana,
@@ -79,7 +120,6 @@ export class CrearOrdenTrabajoComponent {
   
     this.ordenTrabajoService.crearOrdenTrabajo(ordenTrabajoData).subscribe({
       next: response => {
-        console.log('Orden de trabajo creada con éxito:', response);
         this.router.navigate(['/ruta-donde-redirigir']);
       },
       error: error => {

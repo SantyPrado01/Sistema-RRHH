@@ -69,6 +69,6 @@ __decorate([
     __metadata("design:type", String)
 ], HorarioAsignado.prototype, "observaciones", void 0);
 exports.HorarioAsignado = HorarioAsignado = __decorate([
-    (0, typeorm_1.Entity)('horarios_asignados')
+    (0, typeorm_1.Entity)('horariosAsignados')
 ], HorarioAsignado);
 //# sourceMappingURL=horariosAsignados.entity.js.map

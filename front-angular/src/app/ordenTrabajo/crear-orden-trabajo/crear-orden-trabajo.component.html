@@ -37,7 +37,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="mes">Mes</label>
-            <select id="mes" [(ngModel)]="mes" name="mes" class="form-control" required>
+            <select id="mes" [(ngModel)]="mes" name="mes" class="form-control" (ngModelChange)="calcularHorasProyectadas()" required>
               <option value="" disabled selected>Seleccione un mes</option>
               <option *ngFor="let m of meses" [value]="m">{{ m }}</option>
             </select>
@@ -45,7 +45,7 @@
 
           <div class="form-group">
             <label for="anio">Año</label>
-            <select id="anio" [(ngModel)]="anio" name="anio" class="form-control" required>
+            <select id="anio" [(ngModel)]="anio" name="anio" class="form-control" (ngModelChange)="calcularHorasProyectadas()" required>
               <option value="" disabled selected>Seleccione un año</option>
               <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
             </select>
@@ -62,15 +62,19 @@
           <div *ngFor="let dia of necesidad; let i = index" class="grid-row">
             <div>{{ dia.nombre }}</div>
             <div>
-              <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio{{i}}" required />
+              <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio{{i}}" (ngModelChange)="calcularHorasProyectadas()" required />
             </div>
             <div>
-              <input type="time" [(ngModel)]="dia.horaFin" name="horaFin{{i}}" required />
+              <input type="time" [(ngModel)]="dia.horaFin" name="horaFin{{i}}" (ngModelChange)="calcularHorasProyectadas()" required />
             </div>
           </div>
         </div>
       </div>
 
+      <div class="horasProyectadas" *ngIf="horasProyectadas > 0" class="proyectado">
+        Total horas proyectadas: {{ horasProyectadas | number: '1.0-1' }} horas
+      </div>      
+ß
       <!-- Botones -->
       <div class="modal-footer">
         <button type="submit" class="btn btn-save">Guardar Orden de Trabajo</button>
