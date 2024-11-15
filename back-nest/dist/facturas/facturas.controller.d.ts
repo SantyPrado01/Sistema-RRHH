@@ -6,7 +6,7 @@ export declare class FacturasController {
     constructor(facturasService: FacturasService);
     create(createFacturaDto: CreateFacturaDto): import("@nestjs/common").HttpException;
     findAll(): Promise<import("./entities/factura.entity").Factura[]>;
-    findOne(id: string): Promise<import("./entities/factura.entity").Factura | import("@nestjs/common").HttpException>;
+    findOne(id: string): Promise<import("@nestjs/common").HttpException | import("./entities/factura.entity").Factura>;
     update(id: string, updateFacturaDto: UpdateFacturaDto): string;
     remove(id: string): string;
 }

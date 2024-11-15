@@ -13,12 +13,13 @@ const empleados_controller_1 = require("./empleados.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const empleado_entity_1 = require("./entities/empleado.entity");
 const axios_1 = require("@nestjs/axios");
+const disponibilidad_horaria_entity_1 = require("../disponibilidad-horaria/entities/disponibilidad-horaria.entity");
 let EmpleadosModule = class EmpleadosModule {
 };
 exports.EmpleadosModule = EmpleadosModule;
 exports.EmpleadosModule = EmpleadosModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([empleado_entity_1.Empleado]), axios_1.HttpModule],
+        imports: [typeorm_1.TypeOrmModule.forFeature([empleado_entity_1.Empleado, disponibilidad_horaria_entity_1.DisponibilidadHoraria]), axios_1.HttpModule],
         controllers: [empleados_controller_1.EmpleadosController],
         providers: [empleados_service_1.EmpleadosService],
         exports: [empleados_service_1.EmpleadosService]

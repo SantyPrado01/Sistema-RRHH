@@ -3,7 +3,7 @@ import { CreateDisponibilidadHorariaDto } from './create-disponibilidad-horaria.
 
 export class UpdateDisponibilidadHorariaDto extends PartialType(CreateDisponibilidadHorariaDto) {
 
-    empleadoID?: number;
+    empleadoId?: number;
     diaSemana?: number;
     horaInicio?: string;
     horaFin?: string;

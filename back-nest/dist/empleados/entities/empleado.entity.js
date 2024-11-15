@@ -65,7 +65,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Empleado.prototype, "categoria", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => disponibilidad_horaria_entity_1.DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true }),
+    (0, typeorm_1.OneToMany)(() => disponibilidad_horaria_entity_1.DisponibilidadHoraria, disponibilidad => disponibilidad.empleadoId, { eager: true }),
     __metadata("design:type", Array)
 ], Empleado.prototype, "disponibilidades", void 0);
 __decorate([

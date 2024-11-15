@@ -17,14 +17,40 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const empleado_entity_1 = require("./entities/empleado.entity");
 const typeorm_2 = require("typeorm");
+const disponibilidad_horaria_entity_1 = require("../disponibilidad-horaria/entities/disponibilidad-horaria.entity");
 let EmpleadosService = class EmpleadosService {
-    constructor(empleadoRepository) {
+    constructor(empleadoRepository, disponibilidadRepository) {
         this.empleadoRepository = empleadoRepository;
+        this.disponibilidadRepository = disponibilidadRepository;
     }
-    create(Empleado) {
-        console.log(Empleado);
-        const newEmpleado = this.empleadoRepository.create(Empleado);
-        return this.empleadoRepository.save(newEmpleado), new common_1.HttpException('El Empleado se guardo con exito', common_1.HttpStatus.ACCEPTED);
+    async createEmpleado(createEmpleadoDto) {
+        const newEmpleado = this.empleadoRepository.create(createEmpleadoDto);
+        const savedEmpleado = await this.empleadoRepository.save(newEmpleado);
+        console.log('Empleado creado:', savedEmpleado);
+        return savedEmpleado;
+    }
+    async createDisponibilidad(empleadoId, createDisponibilidadHorariaDto) {
+        const diasSemana = [1, 2, 3, 4, 5, 6, 7];
+        const diasDefinidos = new Set(createDisponibilidadHorariaDto.map(d => d.diaSemana));
+        for (const dia of diasSemana) {
+            if (!diasDefinidos.has(dia)) {
+                createDisponibilidadHorariaDto.push({
+                    empleadoId: empleadoId,
+                    diaSemana: dia,
+                    horaInicio: '',
+                    horaFin: '',
+                });
+            }
+        }
+        const disponibilidades = createDisponibilidadHorariaDto.map(diaSemanaDto => {
+            const disponibilidad = new disponibilidad_horaria_entity_1.DisponibilidadHoraria();
+            disponibilidad.empleadoId = empleadoId;
+            disponibilidad.diaSemana = diaSemanaDto.diaSemana;
+            disponibilidad.horaInicio = diaSemanaDto.horaInicio;
+            disponibilidad.horaFin = diaSemanaDto.horaFin;
+            return disponibilidad;
+        });
+        return await this.disponibilidadRepository.save(disponibilidades);
     }
     get() {
         return this.empleadoRepository.find({});
@@ -70,6 +96,8 @@ exports.EmpleadosService = EmpleadosService;
 exports.EmpleadosService = EmpleadosService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(empleado_entity_1.Empleado)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(disponibilidad_horaria_entity_1.DisponibilidadHoraria)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], EmpleadosService);
 //# sourceMappingURL=empleados.service.js.map

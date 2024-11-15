@@ -45,7 +45,7 @@ export class Empleado {
     @ManyToOne(() => CategoriaEmpleado, categoria => categoria.empleados, { eager: true })
     categoria: CategoriaEmpleado[];
     
-    @OneToMany(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleado, { eager: true })
+    @OneToMany(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleadoId, { eager: true })
     disponibilidades: DisponibilidadHoraria[];
 
     @Column({default:true})

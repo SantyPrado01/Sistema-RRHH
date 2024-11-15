@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpException, HttpStatus } from '@nestjs/common';
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
+import { CreateDisponibilidadHorariaDto } from 'src/disponibilidad-horaria/dto/create-disponibilidad-horaria.dto';
 
 @Controller('empleados')
 export class EmpleadosController {
@@ -10,8 +11,22 @@ export class EmpleadosController {
   ) {}
 
   @Post()
-  createEmpleado(@Body() createEmpleadoDto: CreateEmpleadoDto) {
-    return this.empleadosService.create(createEmpleadoDto);
+  async create(@Body() createEmpleadoDto: CreateEmpleadoDto): Promise<any> {
+    // Crear el empleado
+    const empleado = await this.empleadosService.createEmpleado(createEmpleadoDto);
+    if (!empleado) throw new HttpException('No se pudo crear el empleado', HttpStatus.BAD_REQUEST);
+
+    // Crear las disponibilidades horarias asociadas al empleado
+    const disponibilidadesHorarias = await this.empleadosService.createDisponibilidad(
+      empleado.Id,
+      createEmpleadoDto.disponibilidades,  // Se espera que el DTO del empleado tenga las disponibilidades
+    );
+
+    return {
+      message: 'Empleado y disponibilidades creados con éxito',
+      empleado,
+      disponibilidadesHorarias,
+    };
   }
 
   @Get()

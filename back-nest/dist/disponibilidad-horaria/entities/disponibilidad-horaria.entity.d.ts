@@ -1,9 +1,7 @@
-import { Empleado } from "../../empleados/entities/empleado.entity";
 export declare class DisponibilidadHoraria {
     disponibilidadHorariaId: number;
-    empleado: Empleado;
+    empleadoId: number;
     diaSemana?: number;
     horaInicio?: string;
     horaFin?: string;
-    fullTime: boolean;
 }

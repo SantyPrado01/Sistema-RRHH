@@ -11,7 +11,8 @@ export class DisponibilidadHoraria {
     disponibilidadHorariaId:number;
 
     @ManyToOne(() => Empleado, (empleado) => empleado.disponibilidades)
-    empleado: Empleado;
+    @JoinColumn({ name: 'empleadoId' })
+    empleadoId: number;
 
     @Column({type: 'tinyint'})
     diaSemana?:number
@@ -22,6 +23,4 @@ export class DisponibilidadHoraria {
     @Column({type: 'time'})
     horaFin?:string
 
-    @Column({default: false})
-    fullTime: boolean
 }

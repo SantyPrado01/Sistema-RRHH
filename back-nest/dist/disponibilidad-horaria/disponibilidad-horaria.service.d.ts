@@ -1,13 +1,11 @@
 import { Repository } from 'typeorm';
 import { DisponibilidadHoraria } from './entities/disponibilidad-horaria.entity';
-import { CreateDisponibilidadHorariaDto } from './dto/create-disponibilidad-horaria.dto';
 import { UpdateDisponibilidadHorariaDto } from './dto/update-disponibilidad-horaria.dto';
-import { EmpleadosService } from 'src/empleados/empleados.service';
+import { Empleado } from 'src/empleados/entities/empleado.entity';
 export declare class DisponibilidadHorariaService {
     private readonly disponibilidadHorariaRepository;
     private readonly empleadoService;
-    constructor(disponibilidadHorariaRepository: Repository<DisponibilidadHoraria>, empleadoService: EmpleadosService);
-    create(createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto): Promise<DisponibilidadHoraria>;
+    constructor(disponibilidadHorariaRepository: Repository<DisponibilidadHoraria>, empleadoService: Repository<Empleado>);
     findAll(): Promise<DisponibilidadHoraria[]>;
     findOne(id: number): Promise<DisponibilidadHoraria>;
     update(id: number, updateDisponibilidadHorariaDto: UpdateDisponibilidadHorariaDto): Promise<DisponibilidadHoraria>;

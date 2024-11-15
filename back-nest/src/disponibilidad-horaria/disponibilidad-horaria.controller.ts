@@ -7,11 +7,6 @@ import { UpdateDisponibilidadHorariaDto } from './dto/update-disponibilidad-hora
 export class DisponibilidadHorariaController {
   constructor(private readonly disponibilidadHorariaService: DisponibilidadHorariaService) {}
 
-  @Post()
-  create(@Body() createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto) {
-    return this.disponibilidadHorariaService.create(createDisponibilidadHorariaDto);
-  }
-
   @Get()
   findAll() {
     return this.disponibilidadHorariaService.findAll();

@@ -21,8 +21,16 @@ let EmpleadosController = class EmpleadosController {
     constructor(empleadosService) {
         this.empleadosService = empleadosService;
     }
-    createEmpleado(createEmpleadoDto) {
-        return this.empleadosService.create(createEmpleadoDto);
+    async create(createEmpleadoDto) {
+        const empleado = await this.empleadosService.createEmpleado(createEmpleadoDto);
+        if (!empleado)
+            throw new common_1.HttpException('No se pudo crear el empleado', common_1.HttpStatus.BAD_REQUEST);
+        const disponibilidadesHorarias = await this.empleadosService.createDisponibilidad(empleado.Id, createEmpleadoDto.disponibilidades);
+        return {
+            message: 'Empleado y disponibilidades creados con éxito',
+            empleado,
+            disponibilidadesHorarias,
+        };
     }
     getEmpleados() {
         return this.empleadosService.get();
@@ -43,8 +51,8 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_empleado_dto_1.CreateEmpleadoDto]),
-    __metadata("design:returntype", void 0)
-], EmpleadosController.prototype, "createEmpleado", null);
+    __metadata("design:returntype", Promise)
+], EmpleadosController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

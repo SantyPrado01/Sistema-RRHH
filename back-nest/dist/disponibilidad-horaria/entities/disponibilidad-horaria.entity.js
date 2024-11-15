@@ -21,8 +21,9 @@ __decorate([
 ], DisponibilidadHoraria.prototype, "disponibilidadHorariaId", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => empleado_entity_1.Empleado, (empleado) => empleado.disponibilidades),
-    __metadata("design:type", empleado_entity_1.Empleado)
-], DisponibilidadHoraria.prototype, "empleado", void 0);
+    (0, typeorm_1.JoinColumn)({ name: 'empleadoId' }),
+    __metadata("design:type", Number)
+], DisponibilidadHoraria.prototype, "empleadoId", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'tinyint' }),
     __metadata("design:type", Number)
@@ -35,10 +36,6 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'time' }),
     __metadata("design:type", String)
 ], DisponibilidadHoraria.prototype, "horaFin", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ default: false }),
-    __metadata("design:type", Boolean)
-], DisponibilidadHoraria.prototype, "fullTime", void 0);
 exports.DisponibilidadHoraria = DisponibilidadHoraria = __decorate([
     (0, typeorm_1.Entity)({
         name: 'disponibilidadHoraria'

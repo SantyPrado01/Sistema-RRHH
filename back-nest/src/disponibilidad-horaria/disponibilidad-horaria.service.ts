@@ -12,21 +12,9 @@ export class DisponibilidadHorariaService {
     constructor(
         @InjectRepository(DisponibilidadHoraria)
         private readonly disponibilidadHorariaRepository: Repository<DisponibilidadHoraria>,
-        private readonly empleadoService: EmpleadosService,
+        @InjectRepository(Empleado)
+        private readonly empleadoService: Repository<Empleado>,
     ) {}
-
-    async create(createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto): Promise<DisponibilidadHoraria> {
-      const empleado = await this.empleadoService.getId(createDisponibilidadHorariaDto.empleadoId);
-      if (!empleado) {
-          throw new NotFoundException(`Empleado con ID ${createDisponibilidadHorariaDto.empleadoId} no encontrado`);
-      }
-      const nuevaDisponibilidad = this.disponibilidadHorariaRepository.create({
-          ...createDisponibilidadHorariaDto,
-          empleado: empleado as Empleado, 
-      });
-      console.log(nuevaDisponibilidad)
-      return this.disponibilidadHorariaRepository.save(nuevaDisponibilidad);
-  }
 
     async findAll(): Promise<DisponibilidadHoraria[]> {
         return this.disponibilidadHorariaRepository.find({ relations: ['empleado'] });

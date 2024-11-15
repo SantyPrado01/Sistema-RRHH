@@ -4,7 +4,5 @@ export interface Disponibilidad {
   diaSemana?: number; 
   horaInicio?: string; 
   horaFin?: string; 
-  fechaInicio?: string; 
-  fechaFin?: string; 
-  fullTime: boolean; 
+
 }

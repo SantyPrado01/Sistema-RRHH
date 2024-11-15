@@ -17,23 +17,11 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const disponibilidad_horaria_entity_1 = require("./entities/disponibilidad-horaria.entity");
-const empleados_service_1 = require("../empleados/empleados.service");
+const empleado_entity_1 = require("../empleados/entities/empleado.entity");
 let DisponibilidadHorariaService = class DisponibilidadHorariaService {
     constructor(disponibilidadHorariaRepository, empleadoService) {
         this.disponibilidadHorariaRepository = disponibilidadHorariaRepository;
         this.empleadoService = empleadoService;
-    }
-    async create(createDisponibilidadHorariaDto) {
-        const empleado = await this.empleadoService.getId(createDisponibilidadHorariaDto.empleadoId);
-        if (!empleado) {
-            throw new common_1.NotFoundException(`Empleado con ID ${createDisponibilidadHorariaDto.empleadoId} no encontrado`);
-        }
-        const nuevaDisponibilidad = this.disponibilidadHorariaRepository.create({
-            ...createDisponibilidadHorariaDto,
-            empleado: empleado,
-        });
-        console.log(nuevaDisponibilidad);
-        return this.disponibilidadHorariaRepository.save(nuevaDisponibilidad);
     }
     async findAll() {
         return this.disponibilidadHorariaRepository.find({ relations: ['empleado'] });
@@ -69,7 +57,8 @@ exports.DisponibilidadHorariaService = DisponibilidadHorariaService;
 exports.DisponibilidadHorariaService = DisponibilidadHorariaService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(disponibilidad_horaria_entity_1.DisponibilidadHoraria)),
+    __param(1, (0, typeorm_1.InjectRepository)(empleado_entity_1.Empleado)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        empleados_service_1.EmpleadosService])
+        typeorm_2.Repository])
 ], DisponibilidadHorariaService);
 //# sourceMappingURL=disponibilidad-horaria.service.js.map

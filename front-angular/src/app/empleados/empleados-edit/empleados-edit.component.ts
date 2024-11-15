@@ -260,7 +260,6 @@ actualizarDisponibilidad(): void {
           diaSemana: d.diaSemana,
           horaInicio: d.horaInicio,
           horaFin: d.horaFin,
-          fullTime: d.fullTime 
         };
 
         this.disponibilidadHorariaService.update(d.disponibilidadHorariaId, payload).subscribe({

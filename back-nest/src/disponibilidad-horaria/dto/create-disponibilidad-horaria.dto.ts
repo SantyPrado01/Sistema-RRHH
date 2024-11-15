@@ -6,12 +6,12 @@ export class CreateDisponibilidadHorariaDto {
     empleadoId: number;
 
     @IsOptional()
-    diaSemana: number;
+    diaSemana?: number;
 
     @IsOptional()
-    horaInicio: string;
+    horaInicio?: string;
 
     @IsOptional()
-    horaFin: string;
+    horaFin?: string;
 
 }
