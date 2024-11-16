@@ -2,10 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DisponibilidadHoraria } from './entities/disponibilidad-horaria.entity';
-import { CreateDisponibilidadHorariaDto } from './dto/create-disponibilidad-horaria.dto';
 import { UpdateDisponibilidadHorariaDto } from './dto/update-disponibilidad-horaria.dto';
-import { Empleado } from 'src/empleados/entities/empleado.entity';  // Asegúrate de importar el modelo de Empleado
-import { EmpleadosService } from 'src/empleados/empleados.service';
+import { Empleado } from 'src/empleados/entities/empleado.entity';  
 
 @Injectable()
 export class DisponibilidadHorariaService {

@@ -30,6 +30,9 @@ let EmpleadosService = class EmpleadosService {
         return savedEmpleado;
     }
     async createDisponibilidad(empleadoId, createDisponibilidadHorariaDto) {
+        if (!createDisponibilidadHorariaDto) {
+            createDisponibilidadHorariaDto = [];
+        }
         const diasSemana = [1, 2, 3, 4, 5, 6, 7];
         const diasDefinidos = new Set(createDisponibilidadHorariaDto.map(d => d.diaSemana));
         for (const dia of diasSemana) {
@@ -90,6 +93,31 @@ let EmpleadosService = class EmpleadosService {
         }
         const updateEmpleado = Object.assign(empleadoFound, empleado);
         return this.empleadoRepository.save(updateEmpleado);
+    }
+    async updateDisponibilidad(empleadoId, updateDisponibilidadDto) {
+        const empleado = await this.empleadoRepository.findOne({
+            where: { Id: empleadoId },
+            relations: ['disponibilidades'],
+        });
+        console.log('Este es el empleado antes del update', empleado);
+        if (!empleado) {
+            throw new Error('Empleado no encontrado.');
+        }
+        for (const disponibilidad of empleado.disponibilidades) {
+            const disponibilidadDto = updateDisponibilidadDto.find((item) => item.disponibilidadHorariaId === disponibilidad.disponibilidadHorariaId);
+            if (disponibilidadDto) {
+                if (disponibilidadDto.horaInicio)
+                    disponibilidad.horaInicio = disponibilidadDto.horaInicio;
+                if (disponibilidadDto.horaFin)
+                    disponibilidad.horaFin = disponibilidadDto.horaFin;
+                if (disponibilidadDto.diaSemana)
+                    disponibilidad.diaSemana = disponibilidadDto.diaSemana;
+            }
+            disponibilidad.empleadoId = empleadoId;
+        }
+        await this.disponibilidadRepository.save(empleado.disponibilidades);
+        console.log('Estas son las disponibilidades al guardar', empleado.disponibilidades);
+        return { message: 'Disponibilidades actualizadas con éxito' };
     }
 };
 exports.EmpleadosService = EmpleadosService;

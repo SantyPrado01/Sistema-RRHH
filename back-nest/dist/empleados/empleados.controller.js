@@ -38,8 +38,15 @@ let EmpleadosController = class EmpleadosController {
     getEmpleado(id) {
         return this.empleadosService.getId(+id);
     }
-    updateEmpleado(id, updateEmpleadoDto) {
-        return this.empleadosService.update(+id, updateEmpleadoDto);
+    async updateEmpleado(id, updateEmpleadoDto) {
+        const empleadoActualizado = await this.empleadosService.update(id, updateEmpleadoDto);
+        if (updateEmpleadoDto.disponibilidades) {
+            await this.empleadosService.updateDisponibilidad(id, updateEmpleadoDto.disponibilidades);
+        }
+        return {
+            message: 'Empleado y disponibilidades actualizados con éxito',
+            empleado: empleadoActualizado,
+        };
     }
     deleteEmpleado(id) {
         return this.empleadosService.delete(+id);
@@ -68,11 +75,11 @@ __decorate([
 ], EmpleadosController.prototype, "getEmpleado", null);
 __decorate([
     (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_empleado_dto_1.UpdateEmpleadoDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Number, update_empleado_dto_1.UpdateEmpleadoDto]),
+    __metadata("design:returntype", Promise)
 ], EmpleadosController.prototype, "updateEmpleado", null);
 __decorate([
     (0, common_1.Delete)(':id'),

@@ -8,6 +8,6 @@ export declare class EmpleadosController {
     create(createEmpleadoDto: CreateEmpleadoDto): Promise<any>;
     getEmpleados(): Promise<import("./entities/empleado.entity").Empleado[]>;
     getEmpleado(id: string): Promise<import("./entities/empleado.entity").Empleado | HttpException>;
-    updateEmpleado(id: string, updateEmpleadoDto: UpdateEmpleadoDto): Promise<HttpException | (import("./entities/empleado.entity").Empleado & UpdateEmpleadoDto)>;
+    updateEmpleado(id: number, updateEmpleadoDto: UpdateEmpleadoDto): Promise<any>;
     deleteEmpleado(id: string): Promise<HttpException>;
 }

@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsBoolean, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateDisponibilidadHorariaDto {
+
     @IsNotEmpty()
     @IsNumber()
     empleadoId: number;

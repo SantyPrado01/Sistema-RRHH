@@ -79,7 +79,7 @@
 
             <div class="form-group">
               <label for="categoriaEmpleado">Categoría de Empleado:</label>
-              <select id="categoriaEmpleado" [(ngModel)]="empleado.categoria" name="categoriaEmpleado" class="form-control" required #categoriaEmpleado="ngModel">
+              <select id="categoria" [(ngModel)]="empleado.categoria" name="categoria" class="form-control" required #categoriaEmpleado="ngModel">
                 <option value="" disabled selected>Seleccione una categoría</option>
                 <option *ngFor="let categoria of categorias" [value]="categoria.id">
                   {{ categoria.nombre }}
@@ -108,19 +108,15 @@
                 <div *ngFor="let dia of disponibilidad" class="grid-row">
                   <div>{{ dia.nombre }}</div>
                   <div>
-                    <input type="time" [(ngModel)]="dia.horaInicio" name="{{ dia.nombre }}HoraInicio" [disabled]="fullTime" />
+                    <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio_{{ dia.diaSemana }}" [disabled]="fullTime" [ngModelOptions]="{standalone: true}"/>
                   </div>
                   <div>
-                    <input type="time" [(ngModel)]="dia.horaFin" name="{{ dia.nombre }}HoraFin" [disabled]="fullTime" />
+                    <input type="time" [(ngModel)]="dia.horaFin" name="horaFin_{{ dia.diaSemana }}" [disabled]="fullTime" [ngModelOptions]="{standalone: true}"/>
                   </div>
                 </div>
               </div>
-            
-              <button class="btn btn-save-two" type="button" (click)="empleado.disponibilidades && empleado.disponibilidades.length > 0 ? actualizarDisponibilidad() : crearDisponibilidad()">
-                Guardar Disponibilidad
-              </button>
-            
-            </div>            
+    
+            </div>           
           </div>          
         </div>
 

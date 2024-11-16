@@ -13,7 +13,7 @@ export declare class UpdateEmpleadoDto extends UpdateEmpleadoDto_base {
     ciudad?: number;
     observaciones?: string;
     categoriaId: number;
-    disponibilidadHoraria?: DisponibilidadHoraria;
+    disponibilidades?: DisponibilidadHoraria[];
     fulltime?: boolean;
 }
 export {};

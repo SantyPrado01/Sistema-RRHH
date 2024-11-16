@@ -40,9 +40,28 @@ export class EmpleadosController {
   }
 
   @Patch(':id')
-  updateEmpleado(@Param('id') id: string, @Body() updateEmpleadoDto: UpdateEmpleadoDto) {
-    return this.empleadosService.update(+id, updateEmpleadoDto);
+  async updateEmpleado(
+  @Param('id', ParseIntPipe) id: number,
+  @Body() updateEmpleadoDto: UpdateEmpleadoDto,
+  ): Promise<any> {
+  // Actualizar los datos del empleado
+  const empleadoActualizado = await this.empleadosService.update(id, updateEmpleadoDto);
+
+  // Si hay disponibilidades, actualizarlas
+  if (updateEmpleadoDto.disponibilidades) {
+    await this.empleadosService.updateDisponibilidad(
+      id,
+      updateEmpleadoDto.disponibilidades,
+    );
   }
+
+  return {
+    message: 'Empleado y disponibilidades actualizados con éxito',
+    empleado: empleadoActualizado,
+  };
+}
+
+
 
   @Delete(':id')
   deleteEmpleado(@Param('id') id: string) {

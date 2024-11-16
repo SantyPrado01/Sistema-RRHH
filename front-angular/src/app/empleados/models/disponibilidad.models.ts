@@ -1,5 +1,5 @@
 export interface Disponibilidad {
-  disponibilidadHorariaId?: number; 
+  disponibilidadHorariaId: number; 
   empleadoId: number; 
   diaSemana?: number; 
   horaInicio?: string; 

@@ -5,6 +5,7 @@ import { Empleado } from './entities/empleado.entity';
 import { Repository } from 'typeorm';
 import { CreateDisponibilidadHorariaDto } from 'src/disponibilidad-horaria/dto/create-disponibilidad-horaria.dto';
 import { DisponibilidadHoraria } from 'src/disponibilidad-horaria/entities/disponibilidad-horaria.entity';
+import { UpdateDisponibilidadHorariaDto } from 'src/disponibilidad-horaria/dto/update-disponibilidad-horaria.dto';
 export declare class EmpleadosService {
     private empleadoRepository;
     private readonly disponibilidadRepository;
@@ -15,4 +16,5 @@ export declare class EmpleadosService {
     getId(id: number): Promise<Empleado | HttpException>;
     delete(empleadoId: number): Promise<HttpException>;
     update(empleadoId: number, empleado: UpdateEmpleadoDto): Promise<HttpException | (Empleado & UpdateEmpleadoDto)>;
+    updateDisponibilidad(empleadoId: number, updateDisponibilidadDto: UpdateDisponibilidadHorariaDto[]): Promise<any>;
 }

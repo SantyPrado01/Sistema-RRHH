@@ -5,9 +5,6 @@ import { CategoriaEmpleadoService } from '../services/categoria-empleado.service
 import { NabvarComponent } from '../../nabvar/nabvar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Disponibilidad } from '../models/disponibilidad.models';
-import { DisponibilidadHorariaService } from '../services/disponibilidad.service';
-import { forkJoin } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 
@@ -30,13 +27,13 @@ export class EditEmpleadoComponent implements OnInit {
   empleadoId: string | null = null;
 
   disponibilidad = [
-    { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
-    { diaSemana: 2, nombre: 'Martes', horaInicio: '', horaFin: '' },
-    { diaSemana: 3, nombre: 'Miércoles', horaInicio: '', horaFin: '' },
-    { diaSemana: 4, nombre: 'Jueves', horaInicio: '', horaFin: '' },
-    { diaSemana: 5, nombre: 'Viernes', horaInicio: '', horaFin: '' },
-    { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: '' },
-    { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: '' }
+    { disponibilidadHorariaId:null, diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
+    { disponibilidadHorariaId:null, diaSemana: 2, nombre: 'Martes', horaInicio: '', horaFin: '' },
+    { disponibilidadHorariaId:null, diaSemana: 3, nombre: 'Miércoles', horaInicio: '', horaFin: '' },
+    { disponibilidadHorariaId:null, diaSemana: 4, nombre: 'Jueves', horaInicio: '', horaFin: '' },
+    { disponibilidadHorariaId:null, diaSemana: 5, nombre: 'Viernes', horaInicio: '', horaFin: '' },
+    { disponibilidadHorariaId:null, diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: '' },
+    { disponibilidadHorariaId:null, diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: '' }
   ];
 
   fullTime: boolean = false;
@@ -46,7 +43,6 @@ export class EditEmpleadoComponent implements OnInit {
     private categoriaEmpleadoService: CategoriaEmpleadoService,
     private route: ActivatedRoute,
     private router: Router,
-    private disponibilidadHorariaService: DisponibilidadHorariaService,
     private dialog: MatDialog  
   ) {}
 
@@ -89,7 +85,6 @@ export class EditEmpleadoComponent implements OnInit {
     this.empleadoId = this.route.snapshot.paramMap.get('id');
     if (this.empleadoId){
       this.cargarEmpleado(this.empleadoId)
-      this.cargarDisponibilidad(this.empleadoId)
     }
   }
 
@@ -110,17 +105,22 @@ export class EditEmpleadoComponent implements OnInit {
         if (categoriaSeleccionada) {
           this.empleado.categoria = categoriaSeleccionada.nombre;
         }
-        
-        console.log('esto es ACA',this.empleado.categoria)
+        this.disponibilidad.forEach(dia => {
+          const disp = this.empleado.disponibilidades?.find((d: any) => d.diaSemana === dia.diaSemana);
+          if (disp) {
+            dia.disponibilidadHorariaId = disp.disponibilidadHorariaId;
+            dia.horaInicio = this.formatearHora(disp.horaInicio);
+            dia.horaFin = this.formatearHora(disp.horaFin);
+            console.log('Esta es la disponibilidad:',disp)
+          } else {
+            dia.horaInicio = '';
+            dia.horaFin = '';
+          }
+        });
         if (this.empleado.ciudad) {
           this.obtenerNombreCiudad(this.empleado.ciudad.toString()).subscribe({
             next: (response) => {
-              if (response.localidades_censales && response.localidades_censales.length > 0) {
-                this.ciudadNombre = response.localidades_censales[0].nombre;
-              } else {
-                console.log('localidades_censales está vacío o no existe', response.localidades_censales);
-                this.ciudadNombre = 'Desconocido'; 
-              }
+              this.ciudadNombre = response.localidades_censales?.[0]?.nombre ?? 'Desconocido';
             },
             error: (err) => {
               console.error('Error al obtener el nombre de la ciudad', err);
@@ -128,8 +128,7 @@ export class EditEmpleadoComponent implements OnInit {
             }
           });
         } else {
-          console.log('ID de ciudad no encontrado:', this.empleado.ciudad);
-          this.ciudadNombre = 'Desconocido'; 
+          this.ciudadNombre = 'Desconocido';
         }
       },
       error: (err) => {
@@ -142,7 +141,39 @@ export class EditEmpleadoComponent implements OnInit {
     const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}&aplanar=true&campos=nombre&exacto=true`;
     return this.http.get<any>(url);
   }
-  
+
+  seleccionarCiudad(event: any) {
+    const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
+    if (selectedCity) {
+      this.empleado.ciudad = selectedCity.id;
+      this.ciudadNombre = selectedCity.nombre;
+    }
+  }
+
+  actualizarEmpleado() {
+    const empleadoId = this.route.snapshot.paramMap.get('id');
+    if (empleadoId) {
+      // Aquí estructuramos el objeto que vamos a enviar al backend
+      const empleadoActualizado = {
+        ...this.empleado, // Mantén los campos del empleado
+        disponibilidades: this.disponibilidad, 
+      };
+      
+      console.log('Empleado actualizado', empleadoActualizado);
+      this.http.patch<any>(`http://localhost:3000/empleados/${empleadoId}`, empleadoActualizado).subscribe({
+        next: (response) => {
+          console.log('Empleado y Disponibilidad actualizados con éxito:', response);
+          this.mostrarAlerta('Operación Exitosa', 'Empleado y Disponibilidad actualizados con éxito.', 'success');
+          this.router.navigate(['/employee']);
+        },
+        error: (err) => {
+          console.error('Error al actualizar el empleado y disponibilidad:', err);
+          this.mostrarAlerta('Error Operación', 'Error al guardar el empleado o disponibilidad.', 'error');
+        }
+      });
+    }
+  }
+
   buscarCiudad(event: Event) {
     const input = event.target as HTMLInputElement;
     const query = input.value;
@@ -166,118 +197,11 @@ export class EditEmpleadoComponent implements OnInit {
     }
   }
 
-  seleccionarCiudad(event: any) {
-    const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
-    if (selectedCity) {
-      this.empleado.ciudad = selectedCity.id;
-      this.ciudadNombre = selectedCity.nombre;
-    }
-  }
-
-  actualizarEmpleado() {
-    const empleadoId = this.route.snapshot.paramMap.get('id');
-    if (empleadoId) {
-      this.http.patch<any>(`http://localhost:3000/empleados/${empleadoId}`, this.empleado).subscribe({
-        next: (response) => {
-          console.log('Empleado actualizado con éxito:', response);
-          this.mostrarAlerta('Operacion Exitosa', 'Empleado Actualizado con éxito.', 'success');
-          this.router.navigate(['/employee']);
-        },
-        error: (err) => {
-          console.error('Error al actualizar el empleado:', err);
-          this.mostrarAlerta('Error Operacion', 'Error al guardar el empleado.', 'error');
-        }
-      });
-    }
-  }
-
-  cargarDisponibilidad(empleadoId: string) {
-    this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
-      next: (data) => {
-        this.empleado = data;
-        if (this.empleado.disponibilidades) {
-          this.disponibilidad.forEach(dia => {
-            const disp = this.empleado.disponibilidades.find((d: any) => d.diaSemana === dia.diaSemana);
-            
-            if (disp) {
-              dia.horaInicio = this.formatearHora(disp.horaInicio);
-              dia.horaFin = this.formatearHora(disp.horaFin);
-            } else {
-              dia.horaInicio = '';
-              dia.horaFin = '';
-            }
-          });
-        }
-      }
-    });
-  }
   formatearHora(hora: string): string {
     if (!hora) return '';
     const [horaParte, minutosParte] = hora.split(':');
     return `${horaParte}:${minutosParte}`;
   }
-
-  crearDisponibilidad(): void {
-    const empleadoId = Number(this.route.snapshot.paramMap.get('id'));
-    if (empleadoId) {
-        const observables = this.disponibilidad.map(d => {
-            const payload = this.fullTime
-                ? { empleadoId: empleadoId, fullTime: true }  
-                :{
-                  disponibilidadHorariaId: 0,  
-                  empleadoId: empleadoId,
-                  diaSemana: d.diaSemana,
-                  horaInicio: d.horaInicio || '',  
-                  horaFin: d.horaFin || '',        
-                  fullTime: this.fullTime 
-                };
-                console.log('Datos a guardar:', payload);
-            return this.disponibilidadHorariaService.create(payload);
-        });
-
-        forkJoin(observables).subscribe({
-            next: (respuestas) => {
-                console.log('Disponibilidades creadas con éxito:', respuestas);
-                this.mostrarAlerta('Operacion Exitosa', 'Disponibilidad Guardada con exito.', 'success');
-            },
-            error: (error) => {
-                this.mostrarAlerta('Error Operacion', 'Error al guardar la disponibilidad.', 'error');
-                console.error('Error al crear disponibilidades:', error);
-            }
-        });
-    } else {
-        console.error('ID de empleado no proporcionado en la URL.');
-    }
-}
-
-actualizarDisponibilidad(): void {
-  const empleadoId = Number(this.route.snapshot.paramMap.get('id'));
-  if (empleadoId) {
-    this.empleado.disponibilidades.forEach((d: Disponibilidad) => { 
-      if (d.disponibilidadHorariaId) { 
-        const payload = {
-          empleadoId: empleadoId,
-          diaSemana: d.diaSemana,
-          horaInicio: d.horaInicio,
-          horaFin: d.horaFin,
-        };
-
-        this.disponibilidadHorariaService.update(d.disponibilidadHorariaId, payload).subscribe({
-          next: (respuesta) => {
-            console.log(`Disponibilidad actualizada para ${d.horaInicio} - ${d.horaFin}:`, respuesta);
-          },
-          error: (error) => {
-            console.error(`Error al actualizar disponibilidad:`, error);
-          }
-        });
-      } else {
-        console.error(`ID de disponibilidad no encontrado para disponibilidad con horarios: ${d.horaInicio} - ${d.horaFin}.`);
-      }
-    });
-  } else {
-    console.error('ID de empleado no proporcionado.');
-  }
-}
 
   cancelar() {
     alert('Empleado NO actualizado, operación cancelada.');

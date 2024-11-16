@@ -88,10 +88,6 @@ export class EmpleadosNewComponent implements OnInit{
       });
     }
   }
-  
-  guardarDisponibilidad() {
-    console.log(this.disponibilidad);
-  }
 
   buscarCiudad(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -128,17 +124,25 @@ export class EmpleadosNewComponent implements OnInit{
   }
   
   guardarEmpleado() {
+    this.empleado.disponibilidades = this.disponibilidad
+      .filter(dia => dia.horaInicio !== '' || dia.horaFin !== '')  
+      .map(dia => ({
+        diaSemana: dia.diaSemana,
+        horaInicio: dia.horaInicio,
+        horaFin: dia.horaFin,
+      }));
+
     const url = 'http://localhost:3000/empleados'; 
     this.http.post(url, this.empleado).subscribe({
       next: (response) => {
         console.log('Empleado guardado con éxito:', response);
-        this.mostrarAlerta('Operacion Exitosa', 'Empleado guardado con éxito.', 'success');
+        this.mostrarAlerta('Operación Exitosa', 'Empleado guardado con éxito.', 'success');
         this.limpiarFormulario();
         this.router.navigate(['/empleados']);
       },
       error: (err) => {
         console.error('Error al guardar el empleado:', err);
-        this.mostrarAlerta('Error Operacion', 'Error al guardar el empleado.', 'error');
+        this.mostrarAlerta('Error Operación', 'Error al guardar el empleado.', 'error');
       }
     });
   }

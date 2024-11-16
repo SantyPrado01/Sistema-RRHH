@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { DisponibilidadHorariaService } from 'src/disponibilidad-horaria/disponibilidad-horaria.service';
 import { CreateDisponibilidadHorariaDto } from 'src/disponibilidad-horaria/dto/create-disponibilidad-horaria.dto';
 import { DisponibilidadHoraria } from 'src/disponibilidad-horaria/entities/disponibilidad-horaria.entity';
+import { UpdateDisponibilidadHorariaDto } from 'src/disponibilidad-horaria/dto/update-disponibilidad-horaria.dto';
 
 
 @Injectable()
@@ -26,13 +27,16 @@ export class EmpleadosService {
     return savedEmpleado;
   }
 
-  async createDisponibilidad(empleadoId: number, createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto[]): Promise<DisponibilidadHoraria[]> {
-    const diasSemana = [1, 2, 3, 4, 5, 6, 7]; // 1: Lunes, 2: Martes, ..., 7: Domingo
-
-    // Convertimos los días ya definidos en un Set para verificar cuáles faltan
+  async createDisponibilidad(
+    empleadoId: number,
+    createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto[],
+  ): Promise<DisponibilidadHoraria[]> {
+    if (!createDisponibilidadHorariaDto) {
+      createDisponibilidadHorariaDto = [];
+    }
+    const diasSemana = [1, 2, 3, 4, 5, 6, 7];
     const diasDefinidos = new Set(createDisponibilidadHorariaDto.map(d => d.diaSemana));
 
-    // Añadimos los días no definidos con horarios vacíos
     for (const dia of diasSemana) {
       if (!diasDefinidos.has(dia)) {
         createDisponibilidadHorariaDto.push({
@@ -43,20 +47,17 @@ export class EmpleadosService {
         });
       }
     }
-
-    // Creamos las entidades de disponibilidad horaria a partir del DTO
     const disponibilidades = createDisponibilidadHorariaDto.map(diaSemanaDto => {
       const disponibilidad = new DisponibilidadHoraria();
-      disponibilidad.empleadoId = empleadoId;
+      disponibilidad.empleadoId = empleadoId; 
       disponibilidad.diaSemana = diaSemanaDto.diaSemana;
       disponibilidad.horaInicio = diaSemanaDto.horaInicio;
       disponibilidad.horaFin = diaSemanaDto.horaFin;
       return disponibilidad;
     });
-
-    // Guardamos todas las disponibilidades en la base de datos
     return await this.disponibilidadRepository.save(disponibilidades);
   }
+  
     
   get(){
     return this.empleadoRepository.find({})
@@ -88,6 +89,7 @@ export class EmpleadosService {
     throw new HttpException('Empleado eliminado.', HttpStatus.ACCEPTED);
 
   }
+
   async update(empleadoId:number, empleado: UpdateEmpleadoDto){
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{
@@ -101,5 +103,33 @@ export class EmpleadosService {
     return this.empleadoRepository.save(updateEmpleado);
   }
 
+  async updateDisponibilidad(empleadoId: number, updateDisponibilidadDto: UpdateDisponibilidadHorariaDto[]): Promise<any> {
+    const empleado = await this.empleadoRepository.findOne({
+      where: { Id: empleadoId },
+      relations: ['disponibilidades'], 
+    });
+    console.log('Este es el empleado antes del update',empleado)
+    if (!empleado) {
+      throw new Error('Empleado no encontrado.');
+    }
 
+    for (const disponibilidad of empleado.disponibilidades) {
+      const disponibilidadDto = updateDisponibilidadDto.find(
+        (item) => item.disponibilidadHorariaId === disponibilidad.disponibilidadHorariaId
+      );
+  
+      if (disponibilidadDto) {
+        if (disponibilidadDto.horaInicio) disponibilidad.horaInicio = disponibilidadDto.horaInicio;
+        if (disponibilidadDto.horaFin) disponibilidad.horaFin = disponibilidadDto.horaFin;
+        if (disponibilidadDto.diaSemana) disponibilidad.diaSemana = disponibilidadDto.diaSemana;
+      }
+
+      disponibilidad.empleadoId = empleadoId;  
+    }
+    await this.disponibilidadRepository.save(empleado.disponibilidades);
+    console.log('Estas son las disponibilidades al guardar', empleado.disponibilidades)
+    return { message: 'Disponibilidades actualizadas con éxito' };
+  }
+  
+  
 }
