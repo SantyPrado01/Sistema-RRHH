@@ -16,7 +16,7 @@
           <div class="form-group">
             <label for="empresa">Empresa</label>
             <div class="form-group-inline">
-              <input type="text" id="empresa" [(ngModel)]="empresa" name="empresa" class="form-control" placeholder="Ingrese la Empresa" required [disabled]="true" />
+              <input type="text" id="empresa" [(ngModel)]="empresaNombre" name="empresa" class="form-control" placeholder="Ingrese la Empresa" required [disabled]="true" />
               <div class="input-group-append">
                 <button type="button" class="btn btn-secondary" (click)="abrirModalEmpresa()">Buscar</button>
               </div>
@@ -26,7 +26,7 @@
           <div class="form-group">
             <label for="empleado">Empleado</label>
             <div class="form-group-inline">
-              <input type="text" id="empleado" [(ngModel)]="empleado" name="empleado" class="form-control" placeholder="Ingrese el Empleado" required [disabled]="true" />
+              <input type="text" id="empleado" [(ngModel)]="empleadoNombre" name="empleado" class="form-control" placeholder="Ingrese el Empleado" required [disabled]="true" />
               <div class="input-group-append">
                 <button type="button" class="btn btn-secondary" (click)="abrirModalEmpleado()">Buscar</button>
               </div>

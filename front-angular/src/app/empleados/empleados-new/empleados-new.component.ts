@@ -31,11 +31,11 @@ export class EmpleadosNewComponent implements OnInit{
   disponibilidad = [
     { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
     { diaSemana: 2, nombre: 'Martes', horaInicio: '', horaFin: '' },
-    { diaSemana: 3, nombre: 'Miércoles', horaInicio: '', horaFin: '' },
-    { diaSemana: 4, nombre: 'Jueves', horaInicio: '', horaFin: '' },
-    { diaSemana: 5, nombre: 'Viernes', horaInicio: '', horaFin: '' },
-    { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: '' },
-    { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: '' }
+    { diaSemana: 3, nombre: 'Miércoles', horaInicio: '', horaFin: ''},
+    { diaSemana: 4, nombre: 'Jueves', horaInicio: '', horaFin: ''},
+    { diaSemana: 5, nombre: 'Viernes', horaInicio: '', horaFin: ''},
+    { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: ''},
+    { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: ''}
   ];
 
   fullTime: boolean = false;

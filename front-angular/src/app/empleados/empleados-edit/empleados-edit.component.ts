@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
+import { EmpleadoService } from '../services/empleado.service';
+import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
 
 @Component({
   selector: 'app-edit-empleado',
@@ -17,14 +19,24 @@ import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-ale
 })
 export class EditEmpleadoComponent implements OnInit {
 
+  ordenes: any[] = [];
+  ordenesFiltradas: any[] = [];
   seccionActual: string = 'datosPersonales';
   empleado: any = {};
   categorias: any[] = [];
   ciudades: any[] = [];
+  categoriaEmpleado: string = '';
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
   contadorCaracteres: number = 0;
   empleadoId: string | null = null;
+  meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  anios: number[] = Array.from({ length: 11 }, (_, i) => 2024 + i);
+  anioSeleccionado: number = new Date().getFullYear(); 
+  mesSeleccionado: number = new Date().getMonth() + 1; 
+  estadoSeleccionado: boolean = false;
+
+  filtroEmpresa: string = '';
 
   disponibilidad = [
     { disponibilidadHorariaId:null, diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
@@ -43,7 +55,8 @@ export class EditEmpleadoComponent implements OnInit {
     private categoriaEmpleadoService: CategoriaEmpleadoService,
     private route: ActivatedRoute,
     private router: Router,
-    private dialog: MatDialog  
+    private dialog: MatDialog,
+    private ordenTrabajoService: OrdenTrabajoService  
   ) {}
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
@@ -73,6 +86,11 @@ export class EditEmpleadoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.empleadoId = this.route.snapshot.paramMap.get('id');
+    if (this.empleadoId){
+      this.cargarEmpleado(this.empleadoId)
+      this.obtenerOrdenes(this.empleadoId)
+    };
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
       next: (data) => {
         console.log('Categorías obtenidas:', data);
@@ -82,10 +100,12 @@ export class EditEmpleadoComponent implements OnInit {
         console.error('Error al obtener las categorías', err);
       }
     });
-    this.empleadoId = this.route.snapshot.paramMap.get('id');
-    if (this.empleadoId){
-      this.cargarEmpleado(this.empleadoId)
-    }
+  }
+
+  getCategoriaNombre(id: number): string {
+    const categoria = this.categorias.find(c => c.categoria === id);
+    console.log('Esto es en el GET:',categoria)
+    return categoria ? categoria.nombreCategoriaEmpleado : 'Desconocido';
   }
 
   toggleFullTime() {
@@ -101,17 +121,12 @@ export class EditEmpleadoComponent implements OnInit {
     this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
       next: (data) => {
         this.empleado = data;
-        const categoriaSeleccionada = this.categorias.find(c => c.id === this.empleado.categoria.id);
-        if (categoriaSeleccionada) {
-          this.empleado.categoria = categoriaSeleccionada.nombre;
-        }
         this.disponibilidad.forEach(dia => {
           const disp = this.empleado.disponibilidades?.find((d: any) => d.diaSemana === dia.diaSemana);
           if (disp) {
             dia.disponibilidadHorariaId = disp.disponibilidadHorariaId;
             dia.horaInicio = this.formatearHora(disp.horaInicio);
             dia.horaFin = this.formatearHora(disp.horaFin);
-            console.log('Esta es la disponibilidad:',disp)
           } else {
             dia.horaInicio = '';
             dia.horaFin = '';
@@ -153,16 +168,12 @@ export class EditEmpleadoComponent implements OnInit {
   actualizarEmpleado() {
     const empleadoId = this.route.snapshot.paramMap.get('id');
     if (empleadoId) {
-      // Aquí estructuramos el objeto que vamos a enviar al backend
       const empleadoActualizado = {
-        ...this.empleado, // Mantén los campos del empleado
+        ...this.empleado,
         disponibilidades: this.disponibilidad, 
       };
-      
-      console.log('Empleado actualizado', empleadoActualizado);
       this.http.patch<any>(`http://localhost:3000/empleados/${empleadoId}`, empleadoActualizado).subscribe({
         next: (response) => {
-          console.log('Empleado y Disponibilidad actualizados con éxito:', response);
           this.mostrarAlerta('Operación Exitosa', 'Empleado y Disponibilidad actualizados con éxito.', 'success');
           this.router.navigate(['/employee']);
         },
@@ -179,7 +190,6 @@ export class EditEmpleadoComponent implements OnInit {
     const query = input.value;
     if (query.length > 2) {
       const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
-
       this.http.get<any>(url).subscribe({
         next: (response) => {
           this.ciudades = response.localidades.map((localidad: any) => ({
@@ -201,6 +211,71 @@ export class EditEmpleadoComponent implements OnInit {
     if (!hora) return '';
     const [horaParte, minutosParte] = hora.split(':');
     return `${horaParte}:${minutosParte}`;
+  }
+
+  obtenerOrdenes(empleadoId: string) {
+    this.ordenTrabajoService.getOrdenesForEmpleado(this.mesSeleccionado, this.anioSeleccionado, this.estadoSeleccionado, empleadoId).subscribe({
+      next: (data) => {
+        this.ordenes = data;
+        this.ordenesFiltradas = data
+        console.log('Órdenes obtenidas:', this.ordenesFiltradas);
+      },
+      error: (err) => {
+        console.error('Hubo un error al obtener las órdenes de trabajo', err);
+        this.mostrarAlerta('Error', 'No se pudieron obtener las órdenes de trabajo.', 'error');
+      }
+    });
+  }
+
+  mesesMap: { [key: string]: number } = {
+    'Enero': 1,
+    'Febrero': 2,
+    'Marzo': 3,
+    'Abril': 4,
+    'Mayo': 5,
+    'Junio': 6,
+    'Julio': 7,
+    'Agosto': 8,
+    'Septiembre': 9,
+    'Octubre': 10,
+    'Noviembre': 11,
+    'Diciembre': 12
+  };
+
+  filtrarOrdenes() {
+    const anioSeleccionado = Number(this.anioSeleccionado);
+    const mesSeleccionadoNum = this.mesesMap[this.mesSeleccionado];
+    
+    this.ordenesFiltradas = this.ordenes.filter(orden => {
+
+      const coincideEmpresa = this.filtroEmpresa
+        ? orden.servicio.nombre && orden.servicio.nombre.toLowerCase().includes(this.filtroEmpresa.toLowerCase())
+        : true;
+
+      const coincideMes = mesSeleccionadoNum
+      ? orden.mes === mesSeleccionadoNum
+      : true;
+
+      const coincideAnio = this.anioSeleccionado
+      ? orden.anio === anioSeleccionado
+      : true;
+
+      const coincideEstado = this.estadoSeleccionado !== undefined
+        ? (this.estadoSeleccionado === true ? orden.completado === true : orden.completado === false)
+        : true;
+      return coincideEmpresa && coincideMes && coincideAnio && coincideEstado;
+    });
+  
+    console.log('Órdenes filtradas:', this.ordenesFiltradas);
+  }
+
+  obtenerDias(necesidades: any[]): string {
+    const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
+    const diasConHorario = necesidades
+      .filter(n => n.horaInicio !== "00:00:00" && n.horaFin !== "00:00:00")
+      .map(n => diasSemana[parseInt(n.diaSemana, 10) - 1]) 
+      .filter((dia, index, self) => dia && self.indexOf(dia) === index);
+    return diasConHorario.join(', ') || 'No hay días con horarios definidos';
   }
 
   cancelar() {

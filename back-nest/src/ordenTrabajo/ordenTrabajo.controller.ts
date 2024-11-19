@@ -10,12 +10,9 @@ export class OrdenTrabajoController {
 
   @Post()
   async create(@Body() createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
-
     const ordenTrabajo = await this.ordenTrabajoService.createOrdenTrabajo(createOrdenTrabajoDto);
     if (!ordenTrabajo) throw new NotFoundException('No se pudo crear la orden de trabajo');
-
     const ordenTrabajoId = ordenTrabajo.Id;
-
     await this.ordenTrabajoService.createNecesidadHoraria(
       ordenTrabajoId,
       createOrdenTrabajoDto.necesidadHoraria.map(necesidad => ({
@@ -25,9 +22,7 @@ export class OrdenTrabajoController {
         horaFin: necesidad.horaFin,
       })),
     );
-
     await this.ordenTrabajoService.createAsignarHorarios(ordenTrabajoId);
-
     return this.ordenTrabajoService.findOne(ordenTrabajoId);
   }
 
@@ -53,8 +48,56 @@ export class OrdenTrabajoController {
   if (isNaN(mesNumero) || isNaN(anioNumero)) {
     throw new Error('Mes o Año no válidos');
   }
-
     return this.ordenTrabajoService.findMesAnio(mesNumero, anioNumero, completado);
+  }
+
+  @Get('findForEmpleado/:mes/:anio/:completado/:empleadoId')
+  async findForEmpleado(
+    @Param('mes') mes: string,
+    @Param('anio') anio: string,
+    @Param('completado') completado: string,
+    @Param('empleadoId') empleadoId: string
+  ): Promise<any> {
+    const mesNumero = parseInt(mes, 10);
+    const anioNumero = parseInt(anio, 10);
+    const empleadoIdNumero = parseInt(empleadoId, 10);
+    const completadoBool = completado.toLowerCase() === 'true'; 
+
+    if (isNaN(mesNumero) || isNaN(anioNumero) || isNaN(empleadoIdNumero)) {
+      throw new Error('Mes, Año o ID de Empleado no válidos');
+    }
+    return await this.ordenTrabajoService.findForEmpleado(
+      mesNumero,
+      anioNumero,
+      completadoBool,
+      empleadoIdNumero
+    );
+  }
+
+  @Get('findForServicio/:mes/:anio/:completado/:servicioId')
+  async findForServicio(
+    @Param('mes') mes: string,
+    @Param('anio') anio: string,
+    @Param('completado') completado: string,
+    @Param('servicioId') servicioId: string
+  ): Promise<any> {
+    const mesNumero = parseInt(mes, 10);
+    const anioNumero = parseInt(anio, 10);
+    const servicioIdNumero = parseInt(servicioId, 10);
+    const completadoBool = completado.toLowerCase() === 'true'; 
+
+    if (isNaN(mesNumero) || isNaN(anioNumero) || isNaN(servicioIdNumero)) {
+      console.log('Mes:',mesNumero)
+      console.log('Mes:',anioNumero)
+      console.log('Mes:',servicioIdNumero)
+      throw new Error('Mes, Año o ID de Empleado no válidos');
+    }
+    return await this.ordenTrabajoService.findForServicio(
+      mesNumero,
+      anioNumero,
+      completadoBool,
+      servicioIdNumero
+    );
   }
 
   @Get('horas-mes/:mes/:anio/:completado')

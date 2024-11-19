@@ -18,6 +18,7 @@ import { AuthGuard } from './login/auth/auth.guard';
 import { CrearOrdenTrabajoComponent } from './ordenTrabajo/crear-orden-trabajo/crear-orden-trabajo.component';
 import path from 'path';
 import { HorariosAsignadosComponent } from './horariosAsignados/horarios-asignados.component';
+import { ListarOrdenTrabajoComponent } from './ordenTrabajo/listar-orden-trabajo/listar-orden-trabajo.component';
 
 export const routes: Routes = [
     {
@@ -81,6 +82,10 @@ export const routes: Routes = [
     {
         path:'ordentrabajo/create',
         component: CrearOrdenTrabajoComponent
+    },
+    {
+        path:'ordentrabajo',
+        component: ListarOrdenTrabajoComponent
     },
     {
         path:'cargarHorarios',

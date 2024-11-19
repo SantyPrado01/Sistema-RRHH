@@ -16,7 +16,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomeComponent {
   username: string | null = '';
-
   constructor(private authService: AuthService, private ordenTrabajoService: OrdenTrabajoService) {}
 
   ngOnInit(): void {
@@ -24,13 +23,11 @@ export class HomeComponent {
     this.obtenerOrdenes();
     this.obtenerHoras();
   }
-
   ordenes: any[] = [];
   anioActual: number = new Date().getFullYear();
   completado: boolean = false
   horasProyectadas: number = 0
   horasReales: number = 0
-
   meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   mesActual: string = this.meses[new Date().getMonth()];
 
@@ -50,7 +47,6 @@ export class HomeComponent {
   obtenerHoras() {
     const mesNumero = new Date().getMonth() + 1;
     this.ordenTrabajoService.getHorasPorMes(mesNumero, this.anioActual, this.completado).subscribe((data) => {
-      console.log('Horarios', data)
       if (data) {
         this.horasProyectadas = data.horasProyectadas;
         this.horasReales = data.horasReales;
@@ -66,6 +62,4 @@ export class HomeComponent {
       .filter((dia, index, self) => dia && self.indexOf(dia) === index);
     return diasConHorario.join(', ') || 'No hay días con horarios definidos';
   }
-  
-
 }

@@ -49,6 +49,29 @@ let OrdenTrabajoController = class OrdenTrabajoController {
         }
         return this.ordenTrabajoService.findMesAnio(mesNumero, anioNumero, completado);
     }
+    async findForEmpleado(mes, anio, completado, empleadoId) {
+        const mesNumero = parseInt(mes, 10);
+        const anioNumero = parseInt(anio, 10);
+        const empleadoIdNumero = parseInt(empleadoId, 10);
+        const completadoBool = completado.toLowerCase() === 'true';
+        if (isNaN(mesNumero) || isNaN(anioNumero) || isNaN(empleadoIdNumero)) {
+            throw new Error('Mes, Año o ID de Empleado no válidos');
+        }
+        return await this.ordenTrabajoService.findForEmpleado(mesNumero, anioNumero, completadoBool, empleadoIdNumero);
+    }
+    async findForServicio(mes, anio, completado, servicioId) {
+        const mesNumero = parseInt(mes, 10);
+        const anioNumero = parseInt(anio, 10);
+        const servicioIdNumero = parseInt(servicioId, 10);
+        const completadoBool = completado.toLowerCase() === 'true';
+        if (isNaN(mesNumero) || isNaN(anioNumero) || isNaN(servicioIdNumero)) {
+            console.log('Mes:', mesNumero);
+            console.log('Mes:', anioNumero);
+            console.log('Mes:', servicioIdNumero);
+            throw new Error('Mes, Año o ID de Empleado no válidos');
+        }
+        return await this.ordenTrabajoService.findForServicio(mesNumero, anioNumero, completadoBool, servicioIdNumero);
+    }
     async obtenerHorasPorMes(mes, anio, completado) {
         return await this.ordenTrabajoService.obtenerHorasPorMes(mes, anio, completado);
     }
@@ -89,6 +112,26 @@ __decorate([
     __metadata("design:paramtypes", [String, String, Boolean]),
     __metadata("design:returntype", Promise)
 ], OrdenTrabajoController.prototype, "obtenerOrdenesPorMesYAnio", null);
+__decorate([
+    (0, common_1.Get)('findForEmpleado/:mes/:anio/:completado/:empleadoId'),
+    __param(0, (0, common_1.Param)('mes')),
+    __param(1, (0, common_1.Param)('anio')),
+    __param(2, (0, common_1.Param)('completado')),
+    __param(3, (0, common_1.Param)('empleadoId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String, String]),
+    __metadata("design:returntype", Promise)
+], OrdenTrabajoController.prototype, "findForEmpleado", null);
+__decorate([
+    (0, common_1.Get)('findForServicio/:mes/:anio/:completado/:servicioId'),
+    __param(0, (0, common_1.Param)('mes')),
+    __param(1, (0, common_1.Param)('anio')),
+    __param(2, (0, common_1.Param)('completado')),
+    __param(3, (0, common_1.Param)('servicioId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String, String]),
+    __metadata("design:returntype", Promise)
+], OrdenTrabajoController.prototype, "findForServicio", null);
 __decorate([
     (0, common_1.Get)('horas-mes/:mes/:anio/:completado'),
     __param(0, (0, common_1.Param)('mes')),

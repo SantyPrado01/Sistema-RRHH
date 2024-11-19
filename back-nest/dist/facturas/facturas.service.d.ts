@@ -8,7 +8,7 @@ export declare class FacturasService {
     constructor(facturaRepository: Repository<Factura>);
     createFactura(Factura: CreateFacturaDto): HttpException;
     getFacturas(): Promise<Factura[]>;
-    getFactura(facturaId: number): Promise<HttpException | Factura>;
+    getFactura(facturaId: number): Promise<Factura | HttpException>;
     updateFactura(facturaId: number, factura: UpdateFacturaDto): Promise<HttpException | (Factura & UpdateFacturaDto)>;
     deleteFactura(facturaId: number): Promise<HttpException>;
     update(id: number, updateFacturaDto: UpdateFacturaDto): string;

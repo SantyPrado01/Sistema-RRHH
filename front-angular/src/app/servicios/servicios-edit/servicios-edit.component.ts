@@ -5,6 +5,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaServicioService } from '../services/categoria-servicios.service'; 
 import { Router, ActivatedRoute } from '@angular/router';
+import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 
 @Component({
   selector: 'app-empresas-edit',
@@ -23,17 +26,35 @@ export class ServiciosEditComponent implements OnInit {
   ciudadNombre: string = '';
   servicioId: string | null = null;
 
+  ordenes: any[] = [];
+  ordenesFiltradas: any[] = [];
+  meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  anios: number[] = Array.from({ length: 11 }, (_, i) => 2024 + i);
+  anioSeleccionado: number = new Date().getFullYear(); 
+  mesSeleccionado: number = new Date().getMonth() + 1; 
+  estadoSeleccionado: boolean = false;
+  filtroEmpleado: string = '';
+
   constructor(
     private http: HttpClient,
     private categoriaEmpresaService: CategoriaServicioService,
     private router: Router,
-    private route: ActivatedRoute 
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private ordenTrabajoService: OrdenTrabajoService   
   ) {}
+
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
+  }
 
   ngOnInit() {
     this.servicioId = this.route.snapshot.paramMap.get('id');
     if (this.servicioId) {
       this.cargarServicio(this.servicioId);
+      this.obtenerOrdenes(this.servicioId)
     }
     this.categoriaEmpresaService.getCategoriasServicio().subscribe({
       next: (data) => {
@@ -141,7 +162,73 @@ export class ServiciosEditComponent implements OnInit {
       });
     }
   }
+
+  obtenerOrdenes(servicioId: string) {
+    this.ordenTrabajoService.getOrdenesForServicio(this.mesSeleccionado, this.anioSeleccionado, this.estadoSeleccionado, servicioId).subscribe({
+      next: (data) => {
+        this.ordenes = data;
+        this.ordenesFiltradas = data
+        console.log('Órdenes obtenidas:', this.ordenesFiltradas);
+      },
+      error: (err) => {
+        console.error('Hubo un error al obtener las órdenes de trabajo', err);
+        this.mostrarAlerta('Error', 'No se pudieron obtener las órdenes de trabajo.', 'error');
+      }
+    });
+  }
+
+  mesesMap: { [key: string]: number } = {
+    'Enero': 1,
+    'Febrero': 2,
+    'Marzo': 3,
+    'Abril': 4,
+    'Mayo': 5,
+    'Junio': 6,
+    'Julio': 7,
+    'Agosto': 8,
+    'Septiembre': 9,
+    'Octubre': 10,
+    'Noviembre': 11,
+    'Diciembre': 12
+  };
+
+  filtrarOrdenes() {
+    const anioSeleccionado = Number(this.anioSeleccionado);
+    const mesSeleccionadoNum = this.mesesMap[this.mesSeleccionado];
+    
+    this.ordenesFiltradas = this.ordenes.filter(orden => {
+
+      const coincideEmpleado = this.filtroEmpleado
+        ? orden.empleado.nombre && orden.empleado.nombre.toLowerCase().includes(this.filtroEmpleado.toLowerCase())
+        : true;
+
+      const coincideMes = mesSeleccionadoNum
+      ? orden.mes === mesSeleccionadoNum
+      : true;
+
+      const coincideAnio = this.anioSeleccionado
+      ? orden.anio === anioSeleccionado
+      : true;
+
+      const coincideEstado = this.estadoSeleccionado !== undefined
+        ? (this.estadoSeleccionado === true ? orden.completado === true : orden.completado === false)
+        : true;
+      return coincideEmpleado && coincideMes && coincideAnio && coincideEstado;
+    });
   
+    console.log('Órdenes filtradas:', this.ordenesFiltradas);
+  }
+
+  obtenerDias(necesidades: any[]): string {
+    const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
+    const diasConHorario = necesidades
+      .filter(n => n.horaInicio !== "00:00:00" && n.horaFin !== "00:00:00")
+      .map(n => diasSemana[parseInt(n.diaSemana, 10) - 1]) 
+      .filter((dia, index, self) => dia && self.indexOf(dia) === index);
+    return diasConHorario.join(', ') || 'No hay días con horarios definidos';
+  }
+  
+
   cancelar() {
     alert('Servicio NO actualizado, operación cancelada.');
     this.router.navigate(['/service']);

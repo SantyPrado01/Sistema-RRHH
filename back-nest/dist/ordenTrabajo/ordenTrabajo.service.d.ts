@@ -7,6 +7,7 @@ import { UpdateOrdenTrabajoDto } from './dto/updateOrdenTrabajo.dto';
 import { CreateNecesidadHorariaDto } from 'src/necesidadHoraria/dto/createNecesidadHoraria.dto';
 import { NecesidadHoraria } from 'src/necesidadHoraria/entities/necesidadHoraria.entity';
 import { HorarioAsignado } from 'src/horariosAsignados/entities/horariosAsignados.entity';
+import { OrdenTrabajoConHoras } from './interface/orden-trabajo-con-horas.interface';
 export declare class OrdenTrabajoService {
     private readonly ordenTrabajoRepository;
     private readonly empleadoRepository;
@@ -19,9 +20,13 @@ export declare class OrdenTrabajoService {
     createAsignarHorarios(ordenTrabajoId: number): Promise<any[]>;
     private obtenerFechasDelMes;
     findAll(): Promise<OrdenTrabajo[]>;
-    findOne(id: number): Promise<OrdenTrabajo>;
+    findOne(id: number): Promise<OrdenTrabajoConHoras>;
     findMesAnio(mes: number, anio: number, completado: boolean): Promise<any>;
+    findForEmpleado(mes: number, anio: number, completado: boolean, empleadoId: number): Promise<any>;
+    findForServicio(mes: number, anio: number, completado: boolean, servicioId: number): Promise<any>;
     obtenerHorasPorMes(mes: number, anio: number, completado: boolean): Promise<any>;
     update(id: number, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     remove(id: number): Promise<void>;
+    private validarDisponibilidadEmpleado;
+    private convertirHoraToDate;
 }

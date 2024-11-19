@@ -20,7 +20,9 @@ import { NabvarComponent } from '../../nabvar/nabvar.component';
 export class CrearOrdenTrabajoComponent {
   horasProyectadas: number = 0;
   empresa: Empresa[] = [];
+  empresaNombre: string = '';
   empleado: Empleado[] = [];
+  empleadoNombre: string = '';
   mes: string = '';
   anio: number = 0;
   seccionActual: string = 'ordenTrabajo';
@@ -88,6 +90,7 @@ export class CrearOrdenTrabajoComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.empresa = result;
+        this.empresaNombre = result.nombre;
       }
     });
   }
@@ -97,6 +100,7 @@ export class CrearOrdenTrabajoComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.empleado = result;
+        this.empleadoNombre = result.nombre
         console.log('Resultado Empleado', this.empleado)
       }
     });

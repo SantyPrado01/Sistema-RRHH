@@ -47,6 +47,7 @@ h2 {
 .sidebar-menu li.active {
   background-color: #CC5600;
   color: white;
+  border-radius: 10px;
 }
 
 /* Form container styling */
@@ -196,6 +197,100 @@ input[type="time"] {
   width: 100%; 
   padding: 5px; 
   box-sizing: border-box; 
+}
+
+.orden-card-container {
+  display: flex; /* Usamos Flexbox */
+  overflow-x: auto; /* Permite desplazamiento horizontal */
+  gap: 20px; /* Espacio entre las órdenes */
+  flex-wrap: nowrap; /* Evita que las tarjetas se acomoden verticalmente */
+  padding-bottom: 10px; /* Un poco de espacio en la parte inferior */
+}
+
+/* Estilo de cada "orden" */
+.orden-card {
+  display: flex;
+  flex-direction: column;
+  width: 280px; /* Ajusta el ancho de cada tarjeta */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.3s ease; /* Transición para efectos */
+}
+
+/* Títulos y encabezado */
+.orden-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.orden-card-header h4 {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.status.completed {
+  background-color: #28a745; /* Verde para completada */
+}
+
+.status.pending {
+  background-color: #ffc107; /* Amarillo para pendiente */
+}
+
+/* Cuerpo de la tarjeta */
+.orden-card-body {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.orden-card-body p {
+  margin-bottom: 5px;
+}
+
+/* Pie de la tarjeta */
+.orden-card-footer {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.orden-card-footer button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.orden-card-footer button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos para un scroll horizontal suave */
+.orden-card-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.orden-card-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.orden-card-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 
 /* Responsive adjustments */

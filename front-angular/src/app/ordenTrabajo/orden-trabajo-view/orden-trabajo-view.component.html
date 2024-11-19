@@ -1,0 +1,63 @@
+<app-nabvar></app-nabvar>
+<h2>Detalle Orden Trabajo</h2>
+<div class="line"></div>
+
+<div class="content-container">
+  <div class="form-container">
+    <div class="form-row">
+        <div class="form-group">
+            <label>Empresa:</label>
+            <input type="text"  readonly />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Empleado:</label>
+            <input type="text"  readonly />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Dias:</label>
+            <input type="text"  readonly />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Horas Proyectadas:</label>
+            <input type="text" readonly />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label>Horas Reales:</label>
+            <input type="text" readonly />
+        </div>
+    </div>
+    </div>
+  </div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Hora Inicio</th>
+          <th>Hora Fin</th>
+          <th>Horario Inicio Real</th>
+          <th>Horario Fin Real</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let horario of horariosAsignados">
+          <td>{{ horario.ordenTrabajo.servicio.nombre }}</td>
+          <td>{{ horario.empleado.apellido }}, {{ horario.empleado.nombre }}</td>
+          <td>{{ horario.fecha | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ horario.horaInicioProyectado }}</td>
+          <td>{{ horario.horaFinProyectado }}</td>
+          <td>{{ horario.estado }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
