@@ -6,8 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { NabvarComponent } from '../nabvar/nabvar.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
-import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
@@ -15,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [CommonModule, FormsModule, NabvarComponent, MatDialogModule],
   templateUrl: './horarios-asignados.component.html',
-  styleUrls: ['./horarios-asignados.component.css'] // Asegúrate de que esto sea "styleUrls"
+  styleUrls: ['./horarios-asignados.component.css'] 
 })
 export class HorariosAsignadosComponent implements OnInit {
   

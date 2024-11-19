@@ -19,6 +19,10 @@ export class OrdenTrabajoService {
     return this.http.get<any[]>(`${this.apiUrl}`);
   }
 
+  getOrdenById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
   getOrdenesPorMesAnio(mes: number, anio: number, completado: boolean): Observable<any> {
     return this.http.get(`${this.apiUrl}/findByMesAnio/${mes}/${anio}/${completado}`);
   }

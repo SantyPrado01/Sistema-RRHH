@@ -19,6 +19,7 @@ import { CrearOrdenTrabajoComponent } from './ordenTrabajo/crear-orden-trabajo/c
 import path from 'path';
 import { HorariosAsignadosComponent } from './horariosAsignados/horarios-asignados.component';
 import { ListarOrdenTrabajoComponent } from './ordenTrabajo/listar-orden-trabajo/listar-orden-trabajo.component';
+import { OrdenTrabajoViewComponent } from './ordenTrabajo/orden-trabajo-view/orden-trabajo-view.component';
 
 export const routes: Routes = [
     {
@@ -86,6 +87,10 @@ export const routes: Routes = [
     {
         path:'ordentrabajo',
         component: ListarOrdenTrabajoComponent
+    },
+    {
+        path:'ordentrabajo/view/:id',
+        component: OrdenTrabajoViewComponent
     },
     {
         path:'cargarHorarios',

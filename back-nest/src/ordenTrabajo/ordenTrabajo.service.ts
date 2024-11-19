@@ -114,16 +114,13 @@ export class OrdenTrabajoService {
   }
   
   async findAll(): Promise<OrdenTrabajo[]> {
-    // Obtén las órdenes desde el repositorio con las relaciones necesarias
     const ordenes = await this.ordenTrabajoRepository.find({ relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'] });
-  
-    // Mapea cada orden para calcular las horas proyectadas y reales
+
     const result = ordenes.map(orden => {
       let horasProyectadas = 0;
       let horasReales = 0;
   
       orden.horariosAsignados.forEach(horario => {
-        // Calcular horas proyectadas
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
           const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":");
           const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":");
@@ -131,11 +128,10 @@ export class OrdenTrabajoService {
           horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
           const horaFin = new Date();
           horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; // Convertir milisegundos a horas
+          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
           horasProyectadas += horas;
         }
-  
-        // Calcular horas reales
+
         if (horario.horaInicioReal && horario.horaFinReal) {
           const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(":");
           const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(":");
@@ -143,23 +139,20 @@ export class OrdenTrabajoService {
           horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
           const horaRealFinDate = new Date();
           horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; // Convertir milisegundos a horas
+          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
           horasReales += horasRealesCalculadas;
         }
       });
-  
-      // Devolver la orden con las horas calculadas
+
       return {
         ...orden,
         horasProyectadas: horasProyectadas,
         horasReales: horasReales
       };
     });
-  
-    // Retornar el resultado mapeado
+
     return result;
   }
-  
 
   async findOne(id: number): Promise<OrdenTrabajoConHoras> {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
@@ -173,7 +166,6 @@ export class OrdenTrabajoService {
     let horasReales = 0;
   
     ordenTrabajo.horariosAsignados.forEach(horario => {
-      // Calcular horas proyectadas
       if (horario.horaInicioProyectado && horario.horaFinProyectado) {
         const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":");
         const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":");
@@ -181,11 +173,10 @@ export class OrdenTrabajoService {
         horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
         const horaFin = new Date();
         horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-        const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; // Convertir milisegundos a horas
+        const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
         horasProyectadas += horas;
       }
   
-      // Calcular horas reales
       if (horario.horaInicioReal && horario.horaFinReal) {
         const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(":");
         const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(":");
@@ -193,17 +184,16 @@ export class OrdenTrabajoService {
         horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
         const horaRealFinDate = new Date();
         horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-        const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; // Convertir milisegundos a horas
+        const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
         horasReales += horasRealesCalculadas;
       }
     });
-  
-    // Devolver la orden con las horas calculadas
+
     return {
       ...ordenTrabajo,
       horasProyectadas: horasProyectadas,
       horasReales: horasReales,
-    } as OrdenTrabajoConHoras; // Aseguramos que el tipo sea OrdenTrabajoConHoras
+    } as OrdenTrabajoConHoras;
   }
   
   

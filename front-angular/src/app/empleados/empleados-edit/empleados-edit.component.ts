@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
 import { NabvarComponent } from '../../nabvar/nabvar.component';
@@ -7,14 +7,13 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
-import { EmpleadoService } from '../services/empleado.service';
 import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
 
 @Component({
   selector: 'app-edit-empleado',
   standalone: true,
   templateUrl: './empleados-edit.component.html',
-  imports:[NabvarComponent, FormsModule, CommonModule],
+  imports:[NabvarComponent, FormsModule, CommonModule, RouterModule],
   styleUrls: ['./empleados-edit.component.css']
 })
 export class EditEmpleadoComponent implements OnInit {
