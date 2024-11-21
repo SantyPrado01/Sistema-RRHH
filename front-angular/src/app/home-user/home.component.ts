@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../login/auth/auth.service';
 import { OrdenTrabajoService } from '../ordenTrabajo/services/orden-trabajo.service';
-import { OrdenTrabajo } from '../ordenTrabajo/models/orden-trabajo.models';
 import { FormsModule } from '@angular/forms';
 
 @Component({

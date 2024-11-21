@@ -75,7 +75,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let horario of horariosAsignados" (click)="selectHorario(horario)">
+        <tr *ngFor="let horario of horariosAsignados" (click)="selectHorario(horario)" [class.selected-row]="horario === selectedHorario">
           <td>{{ horario.ordenTrabajo.servicio.nombre }}</td>
           <td>{{ horario.empleado.apellido }}, {{ horario.empleado.nombre }}</td>
           <td>{{ horario.fecha | date: 'dd/MM/yyyy' }}</td>

@@ -8,6 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
+import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 
 @Component({
   selector: 'app-empresas-edit',
@@ -150,16 +151,29 @@ export class ServiciosEditComponent implements OnInit {
   actualizarEmpresa() {
     const servicioId = this.route.snapshot.paramMap.get('id');
     if (servicioId) {
-      this.http.patch<any>(`http://localhost:3000/servicios/${this.servicioId}`, this.servicio).subscribe({
-        next: (response) => {
-          console.log('Servicio actualizado con éxito:', response);
-          alert('Servicio actualizado con éxito');
-          this.router.navigate(['/service']);
+      const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
+        data: {
+          title: 'Confirmar actualización',
+          message: '¿Está seguro de que desea actualizar esta empresa?',
+          type: 'confirm', // Aquí se asegura que el tipo de diálogo es de confirmación
         },
-        error: (err) => {
-          console.error('Error al actualizar el Servicio:', err);
-        }
       });
+
+      dialogRef.afterClosed().subscribe((confirmado)=>{
+        if(confirmado){
+          this.http.patch<any>(`http://localhost:3000/servicios/${this.servicioId}`, this.servicio).subscribe({
+            next: (response) => {
+              this.mostrarAlerta('Operación Exitosa', 'Empresa actualizada con éxito.', 'success');
+              this.router.navigate(['/service']);
+            },
+            error: (err) => {
+              this.mostrarAlerta('Error Operación', 'Error al actualizar la empresa.', 'error');
+            }
+          });
+        }else{
+          this.mostrarAlerta('Operación Cancelada', 'Operacion Cancelada.', 'error');
+        }
+      })
     }
   }
 

@@ -6,24 +6,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-mensajes-alerta',
+  selector: 'app-mensajes-confirmacion',
   standalone:true,
   imports:[MatDialogModule, MatButtonModule, CommonModule, MatIcon],
-  templateUrl: './mensajes-alerta.component.html',
-  styleUrl: './mensajes-alerta.component.css'
+  templateUrl: './mensajes-confirmacion.component.ts.html',
+  styleUrl: './mensajes-confirmacion.component.css'
 
 })
-export class AlertDialogComponent {
+export class ConfirmacionDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<AlertDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; message: string; type: 'success' | 'error' }
+    public dialogRef: MatDialogRef<ConfirmacionDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { title: string; message: string; type: 'confirm'; }
   ) {}
 
-    confirmAction(): void {
-      this.dialogRef.close(true);  
-    }
-
-    cancelAction(): void {
-      this.dialogRef.close(false); 
-    }
+  close(): void {
+    this.dialogRef.close();
+  }
 }

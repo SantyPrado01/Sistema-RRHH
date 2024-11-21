@@ -48,7 +48,7 @@ export class Empleado {
     @OneToMany(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleadoId, { eager: true })
     disponibilidades: DisponibilidadHoraria[];
 
-    @Column({default:true})
+    @Column({default:false})
     fulltime: boolean
 
 }

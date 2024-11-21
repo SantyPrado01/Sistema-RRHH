@@ -34,7 +34,7 @@ export class HorarioAsignadoService {
         const horariosAsignados = [];
     
         for (const necesidad of necesidadHoraria) {
-            const fechas = this.obtenerFechasDelMes(anio, mes, necesidad.diaSemana);
+            const fechas = this.obtenerFechasDelMes(anio, mes, necesidad.diaSemana.toString());
     
             for (const fecha of fechas) {
                 const horarioAsignado = this.horarioAsignadoRepository.create({
@@ -85,7 +85,8 @@ export class HorarioAsignadoService {
 
     async findAll(): Promise<HorarioAsignado[]> {
         return await this.horarioAsignadoRepository.find({
-            relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'], 
+            relations: ['ordenTrabajo', 'empleado'], 
+            
         });
     }
 

@@ -17,6 +17,7 @@ export declare class OrdenTrabajoService {
     constructor(ordenTrabajoRepository: Repository<OrdenTrabajo>, empleadoRepository: Repository<Empleado>, servicioRepository: Repository<Servicio>, necesidadHorariaRepository: Repository<NecesidadHoraria>, horarioAsignadoRepository: Repository<HorarioAsignado>);
     createOrdenTrabajo(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     createNecesidadHoraria(ordenTrabajoId: number, necesidadesHorarias: CreateNecesidadHorariaDto[]): Promise<NecesidadHoraria[]>;
+    createAsignarHorarioUnico(ordenTrabajoId: number, diaEspecifico: Date, horaInicio: string, horaFin: string): Promise<HorarioAsignado>;
     createAsignarHorarios(ordenTrabajoId: number): Promise<any[]>;
     private obtenerFechasDelMes;
     findAll(): Promise<OrdenTrabajo[]>;
@@ -27,6 +28,4 @@ export declare class OrdenTrabajoService {
     obtenerHorasPorMes(mes: number, anio: number, completado: boolean): Promise<any>;
     update(id: number, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     remove(id: number): Promise<void>;
-    private validarDisponibilidadEmpleado;
-    private convertirHoraToDate;
 }

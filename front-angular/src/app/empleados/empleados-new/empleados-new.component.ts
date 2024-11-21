@@ -37,7 +37,6 @@ export class EmpleadosNewComponent implements OnInit{
     { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: ''},
     { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: ''}
   ];
-
   fullTime: boolean = false;
 
   constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService, private router: Router, private dialog: MatDialog) {}
@@ -131,6 +130,7 @@ export class EmpleadosNewComponent implements OnInit{
         horaInicio: dia.horaInicio,
         horaFin: dia.horaFin,
       }));
+      this.empleado.fulltime = this.fullTime
 
     const url = 'http://localhost:3000/empleados'; 
     this.http.post(url, this.empleado).subscribe({

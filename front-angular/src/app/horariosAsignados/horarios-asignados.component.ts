@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { NabvarComponent } from '../nabvar/nabvar.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
+import { OrdenTrabajoService } from '../ordenTrabajo/services/orden-trabajo.service';
+import { OrdenTrabajo } from '../ordenTrabajo/models/orden-trabajo.models';
 
 
 @Component({
@@ -18,6 +20,7 @@ import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta
 export class HorariosAsignadosComponent implements OnInit {
   
   horariosAsignados: HorarioAsignado[] = [];
+  ordenTrabajo: OrdenTrabajo [] = [];
   selectedHorario: HorarioAsignado | null = null; 
   horaInicioReal: string = '';
   horaFinReal: string = '';
@@ -33,8 +36,10 @@ export class HorariosAsignadosComponent implements OnInit {
     this.observaciones = ''; 
     this.comprobado = true;
   }
+
   
-  constructor(private horarioService: HorariosAsignadosService, private dialog: MatDialog) {}
+  
+  constructor(private horarioService: HorariosAsignadosService, private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService) {}
   
   ngOnInit(): void {
     this.fetchHorarios();
@@ -47,8 +52,9 @@ export class HorariosAsignadosComponent implements OnInit {
   }
   
   fetchHorarios(): void {
-    this.horarioService.getHorariosAsignados().subscribe(data => {
+    this.horarioService.findAll().subscribe(data => {
       this.horariosAsignados = data;
+      console.log('Horarios Obtenidos', this.horariosAsignados)
     });
   }
 

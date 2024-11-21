@@ -152,3 +152,15 @@ table th {
   .btn-cancel:hover {
     background-color: #aaa;
   }
+
+  .clickable-row {
+    cursor: pointer;
+  }
+  
+  .clickable-row:hover {
+    background-color: #f0f0f0; 
+  }
+
+  .selected-row {
+    background-color: #f0f0f0;  /* Fondo verde claro cuando está seleccionada */
+  }

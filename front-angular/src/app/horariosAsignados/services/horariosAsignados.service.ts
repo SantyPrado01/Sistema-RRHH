@@ -24,4 +24,8 @@ export class HorariosAsignadosService {
         return this.http.patch<HorarioAsignado>(`${this.apiUrl}/${horario.horarioAsignadoId}`, horario);
       }
 
+    findAll(): Observable<HorarioAsignado[]>{
+        return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/all`);
+    }
+
 }

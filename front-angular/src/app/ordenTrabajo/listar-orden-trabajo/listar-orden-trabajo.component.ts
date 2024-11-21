@@ -53,7 +53,6 @@ export class ListarOrdenTrabajoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Hubo un error al obtener las órdenes de trabajo', err);
-        this.mostrarAlerta('Error', 'No se pudieron obtener las órdenes de trabajo.', 'error');
       }
     });
   }

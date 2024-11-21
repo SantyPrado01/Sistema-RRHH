@@ -8,7 +8,7 @@ import { CreateNecesidadHorariaDto } from 'src/necesidadHoraria/dto/createNecesi
 export class CreateOrdenTrabajoDto {
 
     @IsNotEmpty()
-    servicio: Servicio ;
+    servicio: Servicio;
 
     @IsNotEmpty()
     empleadoAsignado: Empleado;
@@ -16,7 +16,7 @@ export class CreateOrdenTrabajoDto {
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => CreateHorariosAsignadoDto)
-    horariosAsignados?: CreateHorariosAsignadoDto[]; // Cambiado a un array
+    horariosAsignados?: CreateHorariosAsignadoDto[]; 
 
     @IsArray()
     @ValidateNested({each: true})
@@ -25,10 +25,14 @@ export class CreateOrdenTrabajoDto {
 
     @IsNotEmpty()
     @IsNumber()
-    mes: number;
+    mes?: number;
 
     @IsNotEmpty()
     @IsNumber()
-    anio: number;
+    anio?: number;
+
+    diaEspecifico?: Date;
+    horaInicio?: string;
+    horaFin?: string;
 
 }

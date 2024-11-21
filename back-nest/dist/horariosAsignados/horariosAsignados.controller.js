@@ -55,7 +55,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], HorariosAsignadosController.prototype, "getHorariosAsignados", null);
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('/all'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

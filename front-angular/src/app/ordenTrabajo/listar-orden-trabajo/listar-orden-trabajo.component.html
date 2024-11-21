@@ -60,7 +60,7 @@
           <td>{{ orden.horasProyectadas }}</td>
           <td>{{ orden.horasReales }}</td>
           <td>
-            <button class="btn-edit"><mat-icon>visibility</mat-icon></button>
+            <button class="btn-edit" [routerLink]="['/ordentrabajo/view', orden.Id]"><mat-icon>visibility</mat-icon></button>
             <button class="btn-delete" ><mat-icon>delete</mat-icon></button>
           </td>
         </tr>

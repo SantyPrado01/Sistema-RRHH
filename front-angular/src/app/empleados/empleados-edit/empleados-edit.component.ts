@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
+import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 
 @Component({
   selector: 'app-edit-empleado',
@@ -120,6 +121,9 @@ export class EditEmpleadoComponent implements OnInit {
     this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
       next: (data) => {
         this.empleado = data;
+        console.log(this.empleado)
+        this.fullTime = this.empleado.fulltime || false;
+        console.log('Fulltime', this.empleado.fullTime)
         this.disponibilidad.forEach(dia => {
           const disp = this.empleado.disponibilidades?.find((d: any) => d.diaSemana === dia.diaSemana);
           if (disp) {
@@ -166,23 +170,44 @@ export class EditEmpleadoComponent implements OnInit {
 
   actualizarEmpleado() {
     const empleadoId = this.route.snapshot.paramMap.get('id');
+
     if (empleadoId) {
-      const empleadoActualizado = {
-        ...this.empleado,
-        disponibilidades: this.disponibilidad, 
-      };
-      this.http.patch<any>(`http://localhost:3000/empleados/${empleadoId}`, empleadoActualizado).subscribe({
-        next: (response) => {
-          this.mostrarAlerta('Operación Exitosa', 'Empleado y Disponibilidad actualizados con éxito.', 'success');
-          this.router.navigate(['/employee']);
+      // Abre el diálogo de confirmación
+      const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
+        data: {
+          title: 'Confirmar actualización',
+          message: '¿Está seguro de que desea actualizar este empleado?',
+          type: 'confirm', // Aquí se asegura que el tipo de diálogo es de confirmación
         },
-        error: (err) => {
-          console.error('Error al actualizar el empleado y disponibilidad:', err);
-          this.mostrarAlerta('Error Operación', 'Error al guardar el empleado o disponibilidad.', 'error');
+      });
+
+      // Después de que el usuario cierre el diálogo, se recibe el resultado
+      dialogRef.afterClosed().subscribe((confirmado) => {
+        if (confirmado) {
+          // Si el usuario confirma la acción, realiza la actualización
+          const empleadoActualizado = {
+            ...this.empleado,
+            disponibilidades: this.disponibilidad, 
+            fulltime: this.fullTime,
+          };
+
+          this.http.patch<any>(`http://localhost:3000/empleados/${empleadoId}`, empleadoActualizado).subscribe({
+            next: (response) => {
+              this.mostrarAlerta('Operación Exitosa', 'Empleado actualizado con éxito.', 'success');
+              this.router.navigate(['/employee']);
+            },
+            error: (err) => {
+              console.error('Error al actualizar el empleado:', err);
+              this.mostrarAlerta('Error Operación', 'Error al guardar el empleado.', 'error');
+            }
+          });
+        } else {
+          this.mostrarAlerta('Operación Cancelada', 'Operacion Cancelada.', 'error');
         }
       });
     }
   }
+
 
   buscarCiudad(event: Event) {
     const input = event.target as HTMLInputElement;

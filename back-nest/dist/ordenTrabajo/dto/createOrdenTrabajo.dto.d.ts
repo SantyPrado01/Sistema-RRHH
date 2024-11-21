@@ -7,6 +7,9 @@ export declare class CreateOrdenTrabajoDto {
     empleadoAsignado: Empleado;
     horariosAsignados?: CreateHorariosAsignadoDto[];
     necesidadHoraria?: CreateNecesidadHorariaDto[];
-    mes: number;
-    anio: number;
+    mes?: number;
+    anio?: number;
+    diaEspecifico?: Date;
+    horaInicio?: string;
+    horaFin?: string;
 }

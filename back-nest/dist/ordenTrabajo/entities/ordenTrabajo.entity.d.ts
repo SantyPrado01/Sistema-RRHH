@@ -8,7 +8,10 @@ export declare class OrdenTrabajo {
     empleadoAsignado: Empleado;
     horariosAsignados?: HorarioAsignado[];
     necesidadHoraria?: NecesidadHoraria[];
-    mes: number;
-    anio: number;
+    mes?: number;
+    anio?: number;
+    diaEspecifico?: Date;
+    horaInicio?: string;
+    horaFin?: string;
     completado: boolean;
 }

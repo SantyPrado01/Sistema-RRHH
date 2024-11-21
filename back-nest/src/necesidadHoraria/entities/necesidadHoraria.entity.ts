@@ -14,7 +14,7 @@ export class NecesidadHoraria {
     ordenTrabajo: OrdenTrabajo;
 
     @Column()
-    diaSemana:string
+    diaSemana:number
 
     @Column({type: 'time'})
     horaInicio:string

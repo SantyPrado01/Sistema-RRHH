@@ -9,6 +9,7 @@ import { Empleado } from '../../empleados/models/empleado.models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 
 @Component({
   selector: 'app-crear-orden-trabajo',
@@ -26,6 +27,10 @@ export class CrearOrdenTrabajoComponent {
   mes: string = '';
   anio: number = 0;
   seccionActual: string = 'ordenTrabajo';
+
+  fechaOrden: string = ''; // Para la fecha completa dd/mm/yyyy
+  horaInicio: string = ''; // Para la hora de inicio
+  horaFin: string = ''; // Para la hora de fin
   
   meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   anios: number[] = Array.from({ length: 11 }, (_, i) => 2024 + i);
@@ -42,18 +47,22 @@ export class CrearOrdenTrabajoComponent {
 
   constructor(private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService, private router: Router) {}
 
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
+  }
+
   private contarDiasEnMes(mes: number, anio: number, diaSemana: number): number {
     let contador = 0;
     const fecha = new Date(anio, mes - 1, 1);
     console.log(fecha)
-  
     while (fecha.getMonth() === mes - 1) {
       if (fecha.getDay() === diaSemana) {
         contador++;
       }
       fecha.setDate(fecha.getDate() + 1);
     }
-  
     return contador;
   }
   
@@ -63,13 +72,10 @@ export class CrearOrdenTrabajoComponent {
       if (dia.horaInicio && dia.horaFin) {
         const [inicioHora, inicioMinuto] = dia.horaInicio.split(':').map(Number);
         const [finHora, finMinuto] = dia.horaFin.split(':').map(Number);
-  
         const inicio = new Date();
         inicio.setHours(inicioHora, inicioMinuto, 0);
-  
         const fin = new Date();
         fin.setHours(finHora, finMinuto, 0);
-  
         const diferenciaHoras = (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60);
         const horasDia = diferenciaHoras > 0 ? diferenciaHoras : 0;
 
@@ -83,6 +89,7 @@ export class CrearOrdenTrabajoComponent {
   
   mostrarSeccion(seccion: string): void {
     this.seccionActual = seccion;
+    this.limpiarCampos();
   }
 
   abrirModalEmpresa() {
@@ -109,7 +116,10 @@ export class CrearOrdenTrabajoComponent {
   onSubmit(): void {
     const ordenTrabajoData = {
       servicio: this.empresa, 
-      empleadoAsignado: this.empleado, 
+      empleadoAsignado: this.empleado,
+      diaEspecifico: this.fechaOrden, 
+      horaInicio: this.horaInicio, 
+      horaFin: this.horaFin, 
       mes: this.meses.indexOf(this.mes) + 1, 
       anio: Number(this.anio), 
       horariosAsignados: [],
@@ -124,15 +134,39 @@ export class CrearOrdenTrabajoComponent {
   
     this.ordenTrabajoService.crearOrdenTrabajo(ordenTrabajoData).subscribe({
       next: response => {
-        this.router.navigate(['/ruta-donde-redirigir']);
+        this.mostrarAlerta('Operación Exitosa', 'Orden creada con éxito.', 'success');
+        this.limpiarCampos()
       },
       error: error => {
         if (error.error) {
+          this.mostrarAlerta('Error Operación', 'Error al crear la Orden.', 'error');
           console.error('Detalles del error:', error.error);
         }
         console.error('Error al crear la orden de trabajo:', error);
       }
     });
   }
+
+  limpiarCampos(): void {
+    // Resetear los valores de las variables asociadas con los campos de los formularios
+    this.empresaNombre = '';
+    this.empleadoNombre = '';
+    this.mes = '';
+    this.anio = 0;
+    this.fechaOrden = '';
+    this.horaInicio = '';
+    this.horaFin = '';
+    this.necesidad = [
+      { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
+      { diaSemana: 2, nombre: 'Martes', horaInicio: '', horaFin: '' },
+      { diaSemana: 3, nombre: 'Miércoles', horaInicio: '', horaFin: '' },
+      { diaSemana: 4, nombre: 'Jueves', horaInicio: '', horaFin: '' },
+      { diaSemana: 5, nombre: 'Viernes', horaInicio: '', horaFin: '' },
+      { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: '' },
+      { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: '' }
+    ];
+    this.horasProyectadas = 0;  // Resetear las horas proyectadas
+  }
+  
 
 }

@@ -1,7 +1,7 @@
 
 export class CreateNecesidadHorariaDto {
     
-    diaSemana: string
+    diaSemana: number
 
     horaInicio: string
 

@@ -18,7 +18,7 @@ export class HorariosAsignadosController {
     return this.horariosAsignadosService.getHorariosAsignados(); 
   }
 
-  @Get()
+  @Get('/all')
   findAll() {
     return this.horariosAsignadosService.findAll();
   }

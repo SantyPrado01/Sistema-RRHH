@@ -26,13 +26,18 @@ let OrdenTrabajoController = class OrdenTrabajoController {
         if (!ordenTrabajo)
             throw new common_1.NotFoundException('No se pudo crear la orden de trabajo');
         const ordenTrabajoId = ordenTrabajo.Id;
-        await this.ordenTrabajoService.createNecesidadHoraria(ordenTrabajoId, createOrdenTrabajoDto.necesidadHoraria.map(necesidad => ({
-            ordenTrabajoId,
-            diaSemana: necesidad.diaSemana,
-            horaInicio: necesidad.horaInicio,
-            horaFin: necesidad.horaFin,
-        })));
-        await this.ordenTrabajoService.createAsignarHorarios(ordenTrabajoId);
+        if (createOrdenTrabajoDto.diaEspecifico) {
+            await this.ordenTrabajoService.createAsignarHorarioUnico(ordenTrabajoId, createOrdenTrabajoDto.diaEspecifico, createOrdenTrabajoDto.horaInicio, createOrdenTrabajoDto.horaFin);
+        }
+        else {
+            await this.ordenTrabajoService.createNecesidadHoraria(ordenTrabajoId, createOrdenTrabajoDto.necesidadHoraria.map(necesidad => ({
+                ordenTrabajoId,
+                diaSemana: necesidad.diaSemana,
+                horaInicio: necesidad.horaInicio,
+                horaFin: necesidad.horaFin,
+            })));
+            await this.ordenTrabajoService.createAsignarHorarios(ordenTrabajoId);
+        }
         return this.ordenTrabajoService.findOne(ordenTrabajoId);
     }
     findAll() {

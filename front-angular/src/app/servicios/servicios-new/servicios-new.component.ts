@@ -5,11 +5,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaServicioService } from '../services/categoria-servicios.service'; 
 import { Router } from '@angular/router';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-empresas-new',
   standalone: true,
-  imports: [NabvarComponent, FormsModule, CommonModule],
+  imports: [NabvarComponent, FormsModule, CommonModule, MatDialogModule],
   templateUrl: './servicios-new.component.html',
   styleUrls: ['./servicios-new.component.css']
 })
@@ -22,7 +24,13 @@ export class ServiciosNewComponent implements OnInit {
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
 
-  constructor(private http: HttpClient, private categoriaEmpresaService: CategoriaServicioService, private router: Router) {}
+  constructor(private http: HttpClient, private categoriaEmpresaService: CategoriaServicioService, private router: Router, private dialog: MatDialog) {}
+
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
+  }
 
   ngOnInit() {
     this.categoriaEmpresaService.getCategoriasServicio().subscribe({
@@ -78,13 +86,13 @@ export class ServiciosNewComponent implements OnInit {
     const url = 'http://localhost:3000/servicios'; 
     this.http.post(url, this.servicio).subscribe({
       next: (response) => {
-        console.log('Empresa guardada con éxito:', response);
-        alert('Empresa guardada con éxito');
+        this.mostrarAlerta('Operación Exitosa', 'Empresa guardada con éxito.', 'success');
         this.limpiarFormulario();
         this.router.navigate(['/empresas']);
       },
       error: (err) => {
         console.error('Error al guardar la empresa:', err);
+        this.mostrarAlerta('Error Operación', 'Error al guardar la empresa.', 'error');
       }
     });
   }

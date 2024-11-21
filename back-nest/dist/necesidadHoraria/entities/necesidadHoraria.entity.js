@@ -25,7 +25,7 @@ __decorate([
 ], NecesidadHoraria.prototype, "ordenTrabajo", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], NecesidadHoraria.prototype, "diaSemana", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'time' }),

@@ -9,10 +9,24 @@ export class OrdenTrabajoController {
   constructor(private readonly ordenTrabajoService: OrdenTrabajoService) {}
 
   @Post()
-  async create(@Body() createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
-    const ordenTrabajo = await this.ordenTrabajoService.createOrdenTrabajo(createOrdenTrabajoDto);
-    if (!ordenTrabajo) throw new NotFoundException('No se pudo crear la orden de trabajo');
-    const ordenTrabajoId = ordenTrabajo.Id;
+async create(@Body() createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
+  // Crear la orden de trabajo
+  const ordenTrabajo = await this.ordenTrabajoService.createOrdenTrabajo(createOrdenTrabajoDto);
+  if (!ordenTrabajo) throw new NotFoundException('No se pudo crear la orden de trabajo');
+  
+  const ordenTrabajoId = ordenTrabajo.Id;
+  
+  // Si se ha pasado diaEspecifico, los horarios se asignan directamente a la orden de trabajo
+  if (createOrdenTrabajoDto.diaEspecifico) {
+    // Crear y asignar los horarios únicos para el día específico
+    await this.ordenTrabajoService.createAsignarHorarioUnico(
+      ordenTrabajoId,
+      createOrdenTrabajoDto.diaEspecifico,
+      createOrdenTrabajoDto.horaInicio,
+      createOrdenTrabajoDto.horaFin
+    );
+  } else {
+    // Si no se pasa un día específico, crear la necesidad horaria para los días de la semana
     await this.ordenTrabajoService.createNecesidadHoraria(
       ordenTrabajoId,
       createOrdenTrabajoDto.necesidadHoraria.map(necesidad => ({
@@ -20,11 +34,16 @@ export class OrdenTrabajoController {
         diaSemana: necesidad.diaSemana,
         horaInicio: necesidad.horaInicio,
         horaFin: necesidad.horaFin,
-      })),
+      }))
     );
+    // Crear la asignación de horarios según las necesidades horarias
     await this.ordenTrabajoService.createAsignarHorarios(ordenTrabajoId);
-    return this.ordenTrabajoService.findOne(ordenTrabajoId);
   }
+
+  // Retornar la orden de trabajo completa
+  return this.ordenTrabajoService.findOne(ordenTrabajoId);
+}
+
 
   @Get()
   findAll() {

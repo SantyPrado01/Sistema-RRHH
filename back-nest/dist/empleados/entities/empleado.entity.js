@@ -69,7 +69,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Empleado.prototype, "disponibilidades", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: true }),
+    (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], Empleado.prototype, "fulltime", void 0);
 exports.Empleado = Empleado = __decorate([
