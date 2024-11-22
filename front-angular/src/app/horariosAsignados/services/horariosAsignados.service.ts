@@ -13,9 +13,10 @@ export class HorariosAsignadosService {
 
     getHorariosAsignados(): Observable<HorarioAsignado[]> {
         const today = new Date();
+        today.setHours(0, 0, 0, 0);
         const params = {
             comprobado: 'false',
-            fechaAntes: today.toISOString().split('T')[0] // Formato YYYY-MM-DD
+            fechaAntes: today.toISOString().split('T')[0] 
         };
         return this.http.get<HorarioAsignado[]>(`${this.apiUrl}`, { params });
     }

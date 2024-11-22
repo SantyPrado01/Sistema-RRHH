@@ -37,8 +37,6 @@ export class HorariosAsignadosComponent implements OnInit {
     this.comprobado = true;
   }
 
-  
-  
   constructor(private horarioService: HorariosAsignadosService, private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService) {}
   
   ngOnInit(): void {
@@ -52,7 +50,7 @@ export class HorariosAsignadosComponent implements OnInit {
   }
   
   fetchHorarios(): void {
-    this.horarioService.findAll().subscribe(data => {
+    this.horarioService.getHorariosAsignados().subscribe(data => {
       this.horariosAsignados = data;
       console.log('Horarios Obtenidos', this.horariosAsignados)
     });
