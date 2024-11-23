@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Empresa } from '../models/servicio.models';
 import { ServicioService } from '../services/servicio.service';
-import { CategoriaEmpleadoService } from '../../empleados/services/categoria-empleado.service';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { CategoriaServicioService } from '../services/categoria-servicios.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-servicios-list',
   standalone: true,
-  imports: [NabvarComponent, CommonModule, RouterModule, MatIconModule, FormsModule],
+  imports: [NavbarComponent, CommonModule, RouterModule, MatIconModule, FormsModule],
   templateUrl: './servicios-list.component.html',
   styleUrls: ['./servicios-list.component.css'] 
 })

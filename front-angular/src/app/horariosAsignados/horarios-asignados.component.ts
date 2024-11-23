@@ -3,7 +3,7 @@ import { HorarioAsignado } from './models/horariosAsignados.models';
 import { HorariosAsignadosService } from './services/horariosAsignados.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NabvarComponent } from '../nabvar/nabvar.component';
+import { NavbarComponent } from '../nabvar/navbar.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
 import { OrdenTrabajoService } from '../ordenTrabajo/services/orden-trabajo.service';
@@ -13,7 +13,7 @@ import { OrdenTrabajo } from '../ordenTrabajo/models/orden-trabajo.models';
 @Component({
   selector: 'app-horarios-asignados',
   standalone: true,
-  imports: [CommonModule, FormsModule, NabvarComponent, MatDialogModule],
+  imports: [CommonModule, FormsModule, NavbarComponent, MatDialogModule],
   templateUrl: './horarios-asignados.component.html',
   styleUrls: ['./horarios-asignados.component.css'] 
 })

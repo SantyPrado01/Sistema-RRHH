@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { Empleado } from '../models/empleado.models';
 import { EmpleadoService } from '../services/empleado.service';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-empleados-list',
   standalone: true,
-  imports: [NabvarComponent, CommonModule, RouterModule, MatIconModule, FormsModule],
+  imports: [NavbarComponent, CommonModule, RouterModule, MatIconModule, FormsModule],
   templateUrl: './empleados-list.component.html',
   styleUrl: './empleados-list.component.css'
 })

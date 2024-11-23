@@ -1,7 +1,6 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Usuario } from '../../models/ususario.models';
-import { NabvarComponent } from '../../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../../nabvar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { BuscarEmpleadoComponent } from '../../../Modales/buscar-empleado/buscar-empleado.component';
@@ -12,7 +11,7 @@ import { Empleado } from '../../../empleados/models/empleado.models';
 @Component({
   selector: 'app-usuario-new',
   standalone: true,
-  imports: [FormsModule, NabvarComponent, CommonModule, MatIconModule],
+  imports: [FormsModule, NavbarComponent, CommonModule, MatIconModule],
   templateUrl: './usuario-new.component.html',
   styleUrls: ['./usuario-new.component.css']
 })
@@ -40,7 +39,5 @@ export class UsuarioNewComponent implements OnInit {
       }
     });
   }
-
-
 
 }

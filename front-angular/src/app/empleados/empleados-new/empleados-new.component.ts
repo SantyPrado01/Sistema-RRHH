@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { Empleado } from '../models/empleado.models';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,7 @@ import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-ale
 @Component({
   selector: 'app-empleados-new',
   standalone: true,
-  imports: [NabvarComponent, FormsModule, CommonModule, MatDialogModule],
+  imports: [NavbarComponent, FormsModule, CommonModule, MatDialogModule],
   templateUrl: './empleados-new.component.html',
   styleUrls: ['./empleados-new.component.css']
 })

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { OrdenTrabajoService } from '../services/orden-trabajo.service';
@@ -9,7 +9,7 @@ import { Empleado } from '../../empleados/models/empleado.models';
 @Component({
   selector: 'app-orden-trabajo-view',
   standalone: true,
-  imports: [NabvarComponent, FormsModule, CommonModule],
+  imports: [NavbarComponent, FormsModule, CommonModule],
   templateUrl: './orden-trabajo-view.component.html',
   styleUrl: './orden-trabajo-view.component.css'
 })

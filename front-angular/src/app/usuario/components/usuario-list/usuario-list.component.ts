@@ -4,13 +4,13 @@ import { Usuario } from '../../models/ususario.models';
 import { UsuarioNewComponent } from '../usuario-new/usuario-new.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NabvarComponent } from '../../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../../nabvar/navbar.component';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-usuario-list',
   standalone: true,
-  imports: [NabvarComponent, UsuarioNewComponent, FormsModule, CommonModule, RouterModule],
+  imports: [NavbarComponent, UsuarioNewComponent, FormsModule, CommonModule, RouterModule],
   templateUrl: './usuario-list.component.html',
   styleUrls: ['./usuario-list.component.css']
 })

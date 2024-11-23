@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion
 @Component({
   selector: 'app-empresas-edit',
   standalone: true,
-  imports: [NabvarComponent, FormsModule, CommonModule],
+  imports: [NavbarComponent, FormsModule, CommonModule],
   templateUrl: './servicios-edit.component.html',
   styleUrls: ['./servicios-edit.component.css']
 })

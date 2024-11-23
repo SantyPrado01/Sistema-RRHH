@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-listar-orden-trabajo',
   standalone: true,
-  imports: [NabvarComponent, FormsModule, MatIconModule, CommonModule, RouterModule],
+  imports: [NavbarComponent, FormsModule, MatIconModule, CommonModule, RouterModule],
   templateUrl: './listar-orden-trabajo.component.html',
   styleUrl: './listar-orden-trabajo.component.css'
 })

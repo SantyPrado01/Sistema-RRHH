@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +11,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 @Component({
   selector: 'app-empresas-new',
   standalone: true,
-  imports: [NabvarComponent, FormsModule, CommonModule, MatDialogModule],
+  imports: [NavbarComponent, FormsModule, CommonModule, MatDialogModule],
   templateUrl: './servicios-new.component.html',
   styleUrls: ['./servicios-new.component.css']
 })

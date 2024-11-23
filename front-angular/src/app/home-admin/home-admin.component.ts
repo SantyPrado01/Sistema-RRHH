@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { NabvarComponent } from '../nabvar/nabvar.component';
+import { NavbarComponent } from '../nabvar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../login/auth/auth.service';
 
 @Component({
   selector: 'app-home-admin',
   standalone: true,
-  imports: [NabvarComponent, CommonModule],
+  imports: [NavbarComponent, CommonModule],
   templateUrl: './home-admin.component.html',
   styleUrl: './home-admin.component.css'
 })

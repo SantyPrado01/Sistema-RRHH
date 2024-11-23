@@ -1,11 +1,12 @@
-<app-nabvar></app-nabvar>
-<div class="home-container">
+<app-navbar></app-navbar>
+
   <div class="title-container">
     <div class="title-item">
       <h1>Bienvenido {{ username }}</h1>
-    </div>    
+    </div>
   </div>
 
+<div class="home-container">
   <div class="main-content">
     <!-- Lado izquierdo: Listado de Órdenes de Trabajo -->
     <div class="orden-trabajo-container">
@@ -34,6 +35,10 @@
     <!-- Lado derecho: Información de Horas y Mes -->
     <div class="info-container">
       <h3>Información Mensual</h3>
+      <div class="month-item">
+        <label for="mesActual">Mes en curso:</label>
+        <input type="text" id="mesActual" [(ngModel)]="mesActual" readonly />
+      </div>
       <div class="hours-item">
         <label for="horasProyectadas">Horas Proyectadas:</label>
         <input type="number" id="horasProyectadas" [(ngModel)]="horasProyectadas" readonly />
@@ -41,10 +46,6 @@
       <div class="hours-item">
         <label for="horasReales">Horas Reales:</label>
         <input type="number" id="horasReales" [(ngModel)]="horasReales" readonly />
-      </div>
-      <div class="month-item">
-        <label for="mesActual">Mes en curso:</label>
-        <input type="text" id="mesActual" [(ngModel)]="mesActual" readonly />
       </div>
     </div>
   </div>

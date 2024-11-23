@@ -8,14 +8,14 @@ import { Empresa } from '../../servicios/models/servicio.models';
 import { Empleado } from '../../empleados/models/empleado.models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 
 @Component({
   selector: 'app-crear-orden-trabajo',
   templateUrl: './crear-orden-trabajo.component.html',
   styleUrls: ['./crear-orden-trabajo.component.css'],
-  imports:[CommonModule, FormsModule, NabvarComponent],
+  imports:[CommonModule, FormsModule, NavbarComponent],
   standalone: true,
 })
 export class CrearOrdenTrabajoComponent {

@@ -7,12 +7,13 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
-import { NabvarComponent } from './nabvar/nabvar.component';
+
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { NavbarComponent } from './nabvar/navbar.component';
 
 
 export const appConfig: ApplicationConfig = {
@@ -24,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     BrowserAnimationsModule,
     provideToastr(),
     FormsModule,
-    NabvarComponent,
+    NavbarComponent,
     provideHttpClient(withFetch()), provideAnimationsAsync(), 
     MatDialogModule,
     MatFormFieldModule,

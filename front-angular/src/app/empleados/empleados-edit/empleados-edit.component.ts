@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
-import { NabvarComponent } from '../../nabvar/nabvar.component';
+import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +14,7 @@ import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion
   selector: 'app-edit-empleado',
   standalone: true,
   templateUrl: './empleados-edit.component.html',
-  imports:[NabvarComponent, FormsModule, CommonModule, RouterModule],
+  imports:[NavbarComponent, FormsModule, CommonModule, RouterModule],
   styleUrls: ['./empleados-edit.component.css']
 })
 export class EditEmpleadoComponent implements OnInit {
