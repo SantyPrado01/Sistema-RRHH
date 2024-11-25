@@ -6,14 +6,13 @@ import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtCosntants } from './constants/jwt.constant';
-import { UsersService } from '../users/users.service';
-import { EmpleadosModule } from 'src/empleados/empleados.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/users/user.entity';
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService],
-  imports: [UsersModule,
-    
+  imports: [TypeOrmModule.forFeature([User]),UsersModule,
     JwtModule.register({
       global:true,
       secret: jwtCosntants.secret,

@@ -3,4 +3,5 @@ import { CreateCategoriaServicioDto } from './create-categoria-servicio.dto';
 
 export class UpdateCategoriaServicioDto extends PartialType(CreateCategoriaServicioDto) {
     nombre?: string;
+    eliminado?: Boolean;
 }

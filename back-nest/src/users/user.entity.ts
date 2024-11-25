@@ -1,3 +1,4 @@
+import { CategoriaUsuario } from "src/categoria-usuario/entities/categoria-usuario.entity";
 import { Empleado } from "src/empleados/entities/empleado.entity";
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinColumn, OneToOne } from "typeorm"
 
@@ -16,9 +17,12 @@ export class User {
     @Column()
     password: string
 
-    @Column({default:'user'})
-    rol: string;
+    @ManyToOne(()=> CategoriaUsuario, categoria => categoria.user )
+    categoria: CategoriaUsuario[];
 
     @Column({default:false})
     eliminado: boolean
+
+    @Column({default:true})
+    primerIngreso: boolean
 }

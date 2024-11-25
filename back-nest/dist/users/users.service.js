@@ -23,8 +23,8 @@ let UsersService = class UsersService {
         this.userRepository = userRepository;
     }
     async createUser(user) {
-        const { username, password, rol } = user;
-        const userFound = await this.userRepository.findOne({ where: { username: user.username } });
+        const { userName, password, categoriaId } = user;
+        const userFound = await this.userRepository.findOne({ where: { username: userName } });
         if (userFound) {
             return new common_2.HttpException('El usuario ya existe. Prueba nuevamente.', common_2.HttpStatus.CONFLICT);
         }
@@ -36,9 +36,7 @@ let UsersService = class UsersService {
     }
     async getUsername(username) {
         const userFound = await this.userRepository.findOne({
-            where: {
-                username
-            }
+            where: { username }
         });
         if (!userFound) {
             return null;
@@ -47,12 +45,10 @@ let UsersService = class UsersService {
     }
     async getUserId(id) {
         const userFound = await this.userRepository.findOne({
-            where: {
-                id
-            }
+            where: { id }
         });
         if (!userFound) {
-            return new common_2.HttpException('Usuario no encontrado', common_2.HttpStatus.NOT_FOUND);
+            return null;
         }
         return userFound;
     }
@@ -69,12 +65,9 @@ let UsersService = class UsersService {
     }
     async updateUser(id, user) {
         const userFound = await this.userRepository.findOne({
-            where: {
-                id
-            }
+            where: { id }
         });
         console.log("Se Actualizo");
-        ;
         if (!userFound) {
             return new common_2.HttpException('Usuario no encontrado.', common_2.HttpStatus.NOT_FOUND);
         }

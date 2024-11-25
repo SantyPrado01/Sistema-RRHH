@@ -21,7 +21,7 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(4),
     __metadata("design:type", String)
-], RegisterDto.prototype, "username", void 0);
+], RegisterDto.prototype, "userName", void 0);
 __decorate([
     (0, class_transformer_1.Transform)(({ value }) => value.trim()),
     (0, class_validator_1.IsString)(),
@@ -29,11 +29,15 @@ __decorate([
     __metadata("design:type", String)
 ], RegisterDto.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 'user' }),
-    __metadata("design:type", String)
-], RegisterDto.prototype, "rol", void 0);
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], RegisterDto.prototype, "categoriaId", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], RegisterDto.prototype, "eliminado", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: true }),
+    __metadata("design:type", Boolean)
+], RegisterDto.prototype, "primerIngreso", void 0);
 //# sourceMappingURL=register.dto.js.map

@@ -1,27 +1,22 @@
 //Biblioteca que se comunica con la base de datos
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity'
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { HttpException, HttpStatus } from '@nestjs/common'; 
-import { Empleado } from 'src/empleados/entities/empleado.entity';
 
 
 @Injectable()
 export class UsersService {
 
-    constructor(
-        @InjectRepository(User) private userRepository:Repository<User>, 
-    ){}
+    constructor(@InjectRepository(User) private userRepository:Repository<User>){}
 
     async createUser(user: CreateUserDto){
-
-        const {username, password, rol} = user;
-
-       const userFound = await this.userRepository.findOne({where:{username: user.username}})
+        const {userName, password, categoriaId} = user;
+       const userFound = await this.userRepository.findOne({where:{username: userName}})
         if (userFound){
             return new HttpException('El usuario ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
         }
@@ -34,11 +29,8 @@ export class UsersService {
     }
 
     async getUsername(username:string){
-
         const userFound =await this.userRepository.findOne({
-            where:{
-                username
-            }
+            where:{username}
         })
 
         if (!userFound){
@@ -47,17 +39,11 @@ export class UsersService {
         return userFound
     }
 
-
     async getUserId(id: number) {
         const userFound = await this.userRepository.findOne({
-            where:{
-                id
-            }
+            where:{id}
         })
-
-        if (!userFound){
-            return new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND)
-        }
+        if (!userFound){return null}
         return userFound
     }
 
@@ -78,19 +64,14 @@ export class UsersService {
     async updateUser(id:number, user: UpdateUserDto) {
 
         const userFound = await this.userRepository.findOne({
-            where:{
-                id
-            } 
+            where:{id} 
         })
         console.log("Se Actualizo");
-        ;
         if (!userFound){
             return new HttpException('Usuario no encontrado.', HttpStatus.NOT_FOUND)
         }
 
         const updateUser = Object.assign(userFound, user);
         return this.userRepository.save(updateUser);
-
     }
-
 }

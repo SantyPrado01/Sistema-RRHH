@@ -1,16 +1,34 @@
-import { HttpException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import { CategoriaUsuario } from 'src/categoria-usuario/entities/categoria-usuario.entity';
+import { Repository } from 'typeorm';
+import { User } from 'src/users/user.entity';
 export declare class AuthService {
-    private readonly userService;
+    private readonly userRepository;
     private readonly jwtService;
-    constructor(userService: UsersService, jwtService: JwtService);
-    register({ username, password, rol, eliminado }: RegisterDto): Promise<import("../users/user.entity").User | HttpException>;
-    login({ username, password }: loginDto): Promise<HttpException | {
+    constructor(userRepository: Repository<User>, jwtService: JwtService);
+    register({ userName, categoriaId, eliminado }: RegisterDto): Promise<{
+        message: string;
+        temporaryPassword: string;
+        user: User;
+    }>;
+    login({ userName, password }: loginDto): Promise<{
+        message: string;
+        primerIngreso: boolean;
+        token?: undefined;
+        username?: undefined;
+        role?: undefined;
+    } | {
         token: string;
         username: string;
-        role: string;
+        role: CategoriaUsuario[];
+        primerIngreso: boolean;
+        message?: undefined;
+    }>;
+    updateUsuario(userId: number, updateUserDto: UpdateUserDto): Promise<{
+        message: string;
+        user: User;
     }>;
 }

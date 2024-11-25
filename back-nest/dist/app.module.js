@@ -23,6 +23,7 @@ const facturas_module_1 = require("./facturas/facturas.module");
 const items_facturas_module_1 = require("./items-facturas/items-facturas.module");
 const ordenTrabajo_module_1 = require("./ordenTrabajo/ordenTrabajo.module");
 const horariosAsignados_module_1 = require("./horariosAsignados/horariosAsignados.module");
+const categoria_usuario_module_1 = require("./categoria-usuario/categoria-usuario.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -50,7 +51,8 @@ exports.AppModule = AppModule = __decorate([
             facturas_module_1.FacturasModule,
             items_facturas_module_1.ItemsFacturasModule,
             ordenTrabajo_module_1.OrdenTrabajoModule,
-            horariosAsignados_module_1.HorariosAsignadosModule
+            horariosAsignados_module_1.HorariosAsignadosModule,
+            categoria_usuario_module_1.CategoriaUsuarioModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

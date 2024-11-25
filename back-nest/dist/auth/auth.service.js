@@ -8,53 +8,88 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const users_service_1 = require("../users/users.service");
 const bcrypt = require("bcrypt");
 const jwt_1 = require("@nestjs/jwt");
+const typeorm_1 = require("typeorm");
+const user_entity_1 = require("../users/user.entity");
+const typeorm_2 = require("@nestjs/typeorm");
 let AuthService = class AuthService {
-    constructor(userService, jwtService) {
-        this.userService = userService;
+    constructor(userRepository, jwtService) {
+        this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
-    async register({ username, password, rol, eliminado }) {
-        const user = await this.userService.getUsername(username);
+    async register({ userName, categoriaId, eliminado }) {
+        const user = await this.userRepository.findOne({ where: { username: userName } });
         if (user) {
             throw new common_1.HttpException('El usuario ya existe', common_1.HttpStatus.NOT_ACCEPTABLE);
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+        const hashedPassword = await bcrypt.hash(randomPassword, 10);
         const createUserDto = {
-            username,
+            userName,
             password: hashedPassword,
-            rol,
-            eliminado
+            categoriaId,
+            eliminado: false,
+            primerIngreso: true,
         };
-        return await this.userService.createUser(createUserDto);
+        const newUser = await this.userRepository.create(createUserDto);
+        return {
+            message: 'Usuario registrado con éxito',
+            temporaryPassword: randomPassword,
+            user: newUser
+        };
     }
-    async login({ username, password }) {
-        const user = await this.userService.getUsername(username);
+    async login({ userName, password }) {
+        const user = await this.userRepository.findOne({ where: { username: userName } });
         if (!user) {
-            return new common_1.HttpException('Usuario no Existente', common_1.HttpStatus.NOT_FOUND);
+            throw new common_1.HttpException('Usuario no existente', common_1.HttpStatus.NOT_FOUND);
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            return new common_1.HttpException('Contraseña Incorrecta', common_1.HttpStatus.NOT_ACCEPTABLE);
+            throw new common_1.HttpException('Contraseña incorrecta', common_1.HttpStatus.NOT_ACCEPTABLE);
         }
-        const payload = { username: user.username, role: user.rol };
+        if (user.primerIngreso) {
+            return {
+                message: 'Debe cambiar su contraseña',
+                primerIngreso: true,
+            };
+        }
+        const payload = { username: user.username, role: user.categoria };
         const token = await this.jwtService.signAsync(payload);
         return {
             token,
             username: user.username,
-            role: user.rol
+            role: user.categoria,
+            primerIngreso: false,
         };
+    }
+    async updateUsuario(userId, updateUserDto) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new common_1.HttpException('Usuario no encontrado', common_1.HttpStatus.NOT_FOUND);
+        }
+        if (updateUserDto.password) {
+            const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+            user.password = hashedPassword;
+        }
+        if (updateUserDto.eliminado !== undefined) {
+            user.eliminado = updateUserDto.eliminado;
+        }
+        await this.userRepository.save(user);
+        return { message: 'Usuario actualizado con éxito', user };
     }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [users_service_1.UsersService,
+    __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
+    __metadata("design:paramtypes", [typeorm_1.Repository,
         jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

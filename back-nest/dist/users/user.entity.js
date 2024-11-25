@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+const categoria_usuario_entity_1 = require("../categoria-usuario/entities/categoria-usuario.entity");
 const typeorm_1 = require("typeorm");
 let User = class User {
 };
@@ -27,13 +28,17 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 'user' }),
-    __metadata("design:type", String)
-], User.prototype, "rol", void 0);
+    (0, typeorm_1.ManyToOne)(() => categoria_usuario_entity_1.CategoriaUsuario, categoria => categoria.user),
+    __metadata("design:type", Array)
+], User.prototype, "categoria", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], User.prototype, "eliminado", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: true }),
+    __metadata("design:type", Boolean)
+], User.prototype, "primerIngreso", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)({
         name: 'Usuarios'

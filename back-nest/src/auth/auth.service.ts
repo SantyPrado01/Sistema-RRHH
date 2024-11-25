@@ -5,57 +5,90 @@ import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import { CategoriaUsuario } from 'src/categoria-usuario/entities/categoria-usuario.entity';
 import { Repository } from 'typeorm';
-import { Empleado } from 'src/empleados/entities/empleado.entity';
+import { User } from 'src/users/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
 
     constructor(
-        private readonly userService: UsersService,
+      @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService,
     ){}
 
-    async register({ username, password, rol, eliminado}: RegisterDto) {
-        const user = await this.userService.getUsername(username);
-    
+    async register({ userName, categoriaId, eliminado }: RegisterDto) {
+        const user = await this.userRepository.findOne({where:{username: userName}});
         if (user) {
           throw new HttpException('El usuario ya existe', HttpStatus.NOT_ACCEPTABLE);
         }
-    
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+        const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      
         const createUserDto: CreateUserDto = {
-          username,
+          userName,
           password: hashedPassword,
-          rol,
-          eliminado
+          categoriaId,
+          eliminado: false, 
+          primerIngreso: true, 
         };
-    
-        return await this.userService.createUser(createUserDto);
+      
+        const newUser = await this.userRepository.create(createUserDto);
+      
+        return { 
+          message: 'Usuario registrado con éxito',
+          temporaryPassword: randomPassword,
+          user: newUser
+        };
+      }
+      
+
+      async login({ userName, password }: loginDto) {
+        const user = await this.userRepository.findOne({where:{username: userName}});
+      
+        if (!user) {throw new HttpException('Usuario no existente', HttpStatus.NOT_FOUND);}
+        const isPasswordValid = await bcrypt.compare(password, user.password);      
+        if (!isPasswordValid) {throw new HttpException('Contraseña incorrecta', HttpStatus.NOT_ACCEPTABLE);}
+
+        if (user.primerIngreso) {
+          return {
+            message: 'Debe cambiar su contraseña',
+            primerIngreso: true,
+          };
+        }
+      
+        const payload = { username: user.username, role: user.categoria };
+        const token = await this.jwtService.signAsync(payload);
+      
+        return {
+          token,
+          username: user.username,
+          role: user.categoria,
+          primerIngreso: false,
+        };
       }
 
-    async login({username, password}: loginDto){
-        const user = await this.userService.getUsername(username);
-
-        if (!user){
-            return new HttpException('Usuario no Existente', HttpStatus.NOT_FOUND)
+      async updateUsuario(userId: number, updateUserDto: UpdateUserDto) {
+        
+        const user = await this.userRepository.findOne({where:{id: userId}});
+        if (!user) {
+          throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if(!isPasswordValid){
-            return new HttpException('Contraseña Incorrecta', HttpStatus.NOT_ACCEPTABLE)
+        if (updateUserDto.password) {
+          const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+          user.password = hashedPassword;
         }
 
-        const payload = { username: user.username, role: user.rol };
+        if (updateUserDto.eliminado !== undefined) {
+          user.eliminado = updateUserDto.eliminado;
+        }
 
-        const token = await this.jwtService.signAsync(payload)
-
-        return {
-            token, 
-            username: user.username,
-            role: user.rol 
-        };
-    }
+        await this.userRepository.save(user);
+        return { message: 'Usuario actualizado con éxito', user };
+      }
+      
 }

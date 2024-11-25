@@ -5,7 +5,7 @@ export class loginDto{
     @Transform(({ value })=> value.trim())
     @IsString()
     @MinLength(4)
-    username: string;
+    userName: string;
 
     @Transform(({ value })=> value.trim())
     @IsString()
