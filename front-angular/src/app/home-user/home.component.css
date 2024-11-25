@@ -3,7 +3,7 @@
   flex-direction: column;
   margin-left: 240px;
   margin-right: 100px;
-  margin-top: 25px;
+  margin-top: 1.5em;
 }
 
 .title-container {
@@ -17,7 +17,7 @@
 }
 
 .title-item h1 {
-  color: black;
+  color: #CC5600;
   font-size: 2em;
 }
 

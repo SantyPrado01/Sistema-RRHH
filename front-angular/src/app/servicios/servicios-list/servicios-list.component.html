@@ -1,9 +1,13 @@
 <app-navbar></app-navbar>
+
+<div class="title-container">
+  <div class="title-item">
+    <h1>Listado Empresas</h1>
+  </div>
+</div>
+
+
 <div class="content-container">
-
-  <h2>Visualizar Empresas</h2>
-  <div class="line"></div>
-
   <div class="search-filter-container">
     <div class="search-bar">
       <input type="text" placeholder="Buscar servicio..." [(ngModel)]="searchTerm" (input)="filtrarServicios()"/>

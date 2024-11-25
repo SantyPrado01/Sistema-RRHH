@@ -1,8 +1,12 @@
 <app-navbar></app-navbar>
-<div class="content-container">
-  <h2>Visualizar Empleados</h2>
-  <div class="line"></div>
 
+<div class="title-container">
+  <div class="title-item">
+    <h1>Listado Empleados</h1>
+  </div>
+</div>
+
+<div class="content-container">
   <div class="search-filter-container">
     <div class="search-bar">
       <input type="text" placeholder="Buscar empleado..." [(ngModel)]="searchTerm" (change)="filtrarEmpleados()"/>
