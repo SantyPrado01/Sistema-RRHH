@@ -8,19 +8,33 @@ export declare class AuthController {
     register(registerDto: RegisterDto): Promise<{
         message: string;
         temporaryPassword: string;
-        user: import("../users/user.entity").User;
+        user: import("../users/dto/create-user.dto").CreateUserDto & import("../users/user.entity").User;
+    }>;
+    changePassword(userId: number, newPassword: string): Promise<{
+        message: string;
+    }>;
+    recoverPassword(userId: number): Promise<{
+        message: string;
+        temporaryPassword: string;
+        user: {
+            id: number;
+            username: string;
+            primerIngreso: boolean;
+        };
     }>;
     loging(loginDto: loginDto): Promise<{
+        id: number;
+        username: string;
         message: string;
         primerIngreso: boolean;
         token?: undefined;
-        username?: undefined;
         role?: undefined;
     } | {
         token: string;
         username: string;
         role: import("../categoria-usuario/entities/categoria-usuario.entity").CategoriaUsuario[];
         primerIngreso: boolean;
+        id?: undefined;
         message?: undefined;
     }>;
     profile(req: any): any;

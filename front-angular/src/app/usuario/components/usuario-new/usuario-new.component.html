@@ -1,43 +1,62 @@
 <app-navbar></app-navbar>
-  <h2>Registrar Nuevo Usuario</h2>
-  <div class="line"></div>
-<div class="container">
-  <div class="sidebar"> 
-    <ul class="sidebar-menu">
-      <li (click)="mostrarSeccion('datosUsuario')" [class.active]="seccionActual === 'datosUsuario'">Datos Usuario</li>
-      <li (click)="mostrarSeccion('datosPermisos')" [class.active]="seccionActual === 'Permisos'">Permisos</li>
-    </ul>
+
+<div class="title-container">
+  <div class="title-item">
+    <h1>Usuario</h1>
   </div>
+</div>
 
+<div class="content-container">
   <div class="form-container">
-    <form >
-      <div *ngIf="seccionActual==='datosUsuario'">  
+    <h3>Detalles del Usuario</h3>
+    <form #form="ngForm">
+      <div class="form-row">
         <div class="form-group">
-          <label for="username">Nombre de Usuario:</label>
-          <input type="text" id="username" name="name" [(ngModel)]="usuario.username" class="form-control" placeholder="Nombre de Usuario" autofocus required>
+          <label for="username">Nombre del Usuario</label>
+          <input type="text" id="username" name="name" [(ngModel)]="usuario.username" class="form-control" placeholder="Nombre de Usuario" autofocus required >
         </div>
-
+      </div>
+      <div class="form-row">
         <div class="form-group">
-          <label for="employeeName">Nombre del Empleado:</label>
-          <div class="input-wrapper">
-            <input type="text" id="employeeName" name="employeeName" [(ngModel)]="usuario.empleadoNombre" class="form-control" placeholder="Nombre del Empleado" required>
-            <button type="button" class="btn-search" (click)="abrirModalEmpleado()">
-              <mat-icon>search</mat-icon>
-            </button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="role">Rol:</label>
-          <input type="text" id="role" name="role" [(ngModel)]="usuario.rolID" class="form-control" placeholder="Ingresar Rol">
-        </div>
-
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-save">Guardar Usuario</button>
-          <button type="button" class="btn btn-cancel">Cancelar</button>
+          <label for="categoriaUsuario">Categoria Usuario</label>
+          <select id="categoriaUsuario" [(ngModel)]="usuario.categoriaId" name="categoriaUsuario" class="form-control" required >
+            <option value="" disabled selected>Seleccione una categoría</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.id">
+              {{ categoria.nombre }}
+            </option>
+          </select> 
         </div>
       </div>
 
+      <!-- Botones -->
+      <div class="modal-footer">
+        <button *ngIf="!selectedUsuario" type="button" class="btn btn-save" (click)="guardarUsuario()">Guardar Usuario</button>
+        <button *ngIf="selectedUsuario" type="button" class="btn btn-save" (click)="actualizarUsuario()">Actualizar Usuario</button>
+        <button *ngIf="selectedUsuario" type="button" class="btn btn-save" >Blanquear Contraseña</button>
+        <button *ngIf="selectedUsuario" type="button" class="btn btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
     </form>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Categoria</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let usuario of usuarios" (click)="selectUsuario(usuario)">
+          <td>{{ usuario.username }}</td>
+          <td>{{ getCategoriaNombre(usuario.categoriaId)}}</td>
+          <td>
+            <button class="btn-delete" (click)="eliminarUsuario(usuario)"><mat-icon>delete</mat-icon></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

@@ -17,6 +17,25 @@ export class AuthController {
         return this.authService.register(registerDto)
     };
 
+    @Patch(':userId/change-password') 
+    async changePassword(
+    @Param('userId') userId: number, 
+    @Body('newPassword') newPassword: string, 
+    ) {
+        console.log('Contraseña recibida:', newPassword);
+    return this.authService.changePassword(userId, newPassword); 
+    }
+
+    @Patch('recover-password/:userId')
+    async recoverPassword(@Param('userId') userId: number) {
+        const result = await this.authService.recoverPassword(userId);
+        return {
+          message: result.message,
+          temporaryPassword: result.temporaryPassword,
+          user: result.user
+        };
+      }
+
     @Post('login')
     loging(@Body() loginDto: loginDto){
         return this.authService.login(loginDto);

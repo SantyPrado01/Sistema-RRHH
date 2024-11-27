@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { UsuarioListComponent } from './usuario/components/usuario-list/usuario-list.component';
 import { UsuarioNewComponent } from './usuario/components/usuario-new/usuario-new.component';
-import { UsuarioEditComponent } from './usuario/components/usuario-edit/usuario-edit.component';
 
 import { EmpleadosListComponent } from './empleados/empleados-list/empleados-list.component';
 import { EmpleadosNewComponent } from './empleados/empleados-new/empleados-new.component';
@@ -16,10 +14,10 @@ import { ServiciosEditComponent } from './servicios/servicios-edit/servicios-edi
 
 import { AuthGuard } from './login/auth/auth.guard';
 import { CrearOrdenTrabajoComponent } from './ordenTrabajo/crear-orden-trabajo/crear-orden-trabajo.component';
-import path from 'path';
 import { HorariosAsignadosComponent } from './horariosAsignados/horarios-asignados.component';
 import { ListarOrdenTrabajoComponent } from './ordenTrabajo/listar-orden-trabajo/listar-orden-trabajo.component';
 import { OrdenTrabajoViewComponent } from './ordenTrabajo/orden-trabajo-view/orden-trabajo-view.component';
+import { CambioPasswordComponent } from './login/cambio-password/cambio-password.component';
 
 export const routes: Routes = [
     {
@@ -43,16 +41,12 @@ export const routes: Routes = [
         component: LoginComponent
     },
     {
-        path:'user',
-        component: UsuarioListComponent
-    },
-    {
         path:'user/create',
         component: UsuarioNewComponent,
     },
     {
-        path:'user/edit/:id',
-        component: UsuarioEditComponent,
+        path:'cambio-contrasena/:id/:username',
+        component: CambioPasswordComponent
     },
     {
         path:'employee',

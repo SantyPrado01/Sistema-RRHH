@@ -5,7 +5,7 @@ import { Empleado } from "src/empleados/entities/empleado.entity"
 
 export class CreateUserDto {
 
-    userName: string
+    username: string
     password: string
     categoriaId: number
     eliminado:boolean

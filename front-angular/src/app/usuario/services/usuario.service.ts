@@ -7,7 +7,10 @@ import { Usuario } from '../models/ususario.models';
   providedIn: 'root'
 })
 export class UsuarioService {
-  private baseUrl = 'http://localhost:3000/users';  // Cambia esta URL a la de tu API
+  private baseUrl = 'http://localhost:3000/users';
+  private authUrl = 'http://localhost:3000/auth';
+  private categoriaUrl = 'http://localhost:3000/categoria-usuario';
+    
 
   constructor(private http: HttpClient) { }
 
@@ -19,15 +22,35 @@ export class UsuarioService {
     return this.http.get<Usuario>(`${this.baseUrl}/${id}`);
   }
 
-  createUsuario(ciudad: Usuario): Observable<Usuario> {
-    return this.http.post<Usuario>(this.baseUrl, ciudad);
+  createUsuario(usuario: Usuario): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.authUrl}/register`, usuario);
   }
 
   updateUsuario(id: number, usuario: Usuario): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.baseUrl}/${id}`, usuario);
+    return this.http.put<Usuario>(`${this.authUrl}/${id}`, usuario);
+  }
+
+  recuperarPassword(id:number): Observable<Usuario>{
+    return this.http.patch<Usuario>(`${this.authUrl}/recover-password/${id}`,{});
   }
 
   deleteUsuario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  createCategoriaUser(categoria: {nombre: string}): Observable<any>{
+    return this.http.post(`${this.categoriaUrl}`, categoria)
+  }
+
+  getCategoriasUser(): Observable<any>{
+    return this.http.get(`${this.categoriaUrl}`)
+  }
+
+  getCategoriaUser(nombre: string): Observable<any>{
+    return this.http.get(`${this.categoriaUrl}/${nombre}`)
+  }
+
+  updateCategoriaUser(id: number, categoria: any): Observable<any>{
+    return this.http.get(`${this.categoriaUrl}/${id}`, categoria)
   }
 }

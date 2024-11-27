@@ -23,8 +23,8 @@ let UsersService = class UsersService {
         this.userRepository = userRepository;
     }
     async createUser(user) {
-        const { userName, password, categoriaId } = user;
-        const userFound = await this.userRepository.findOne({ where: { username: userName } });
+        const { username, password, categoriaId } = user;
+        const userFound = await this.userRepository.findOne({ where: { username: username } });
         if (userFound) {
             return new common_2.HttpException('El usuario ya existe. Prueba nuevamente.', common_2.HttpStatus.CONFLICT);
         }

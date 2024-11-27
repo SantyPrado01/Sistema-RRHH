@@ -27,6 +27,18 @@ let AuthController = class AuthController {
         return this.authService.register(registerDto);
     }
     ;
+    async changePassword(userId, newPassword) {
+        console.log('Contraseña recibida:', newPassword);
+        return this.authService.changePassword(userId, newPassword);
+    }
+    async recoverPassword(userId) {
+        const result = await this.authService.recoverPassword(userId);
+        return {
+            message: result.message,
+            temporaryPassword: result.temporaryPassword,
+            user: result.user
+        };
+    }
     loging(loginDto) {
         return this.authService.login(loginDto);
     }
@@ -45,6 +57,21 @@ __decorate([
     __metadata("design:paramtypes", [register_dto_1.RegisterDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "register", null);
+__decorate([
+    (0, common_1.Patch)(':userId/change-password'),
+    __param(0, (0, common_1.Param)('userId')),
+    __param(1, (0, common_1.Body)('newPassword')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "changePassword", null);
+__decorate([
+    (0, common_1.Patch)('recover-password/:userId'),
+    __param(0, (0, common_1.Param)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "recoverPassword", null);
 __decorate([
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),

@@ -22,4 +22,8 @@ export class LoginService{
     register(data:any): Observable<any>{
         return this.http.post<any>(`${this.baseUrl}/register`, data);
     }
+
+    changePassword(userId: number, newPassword: string ): Observable<any> {
+        return this.http.patch<any>(`${this.baseUrl}/${userId}/change-password`, { newPassword });
+      }
 }

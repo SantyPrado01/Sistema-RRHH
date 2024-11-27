@@ -1,13 +1,13 @@
 export class Usuario{
 
+    id: number
     username: string;
-    password: string;
-    rolID?: number;
+    categoriaId: number;
 
-    constructor(username: string, password: string, rolID: number){
+    constructor(id: number, username: string, categoriaId: number){
+        this.id = id
         this.username = username;
-        this.password = password;
-        this.rolID = rolID
+        this.categoriaId = categoriaId;
     }
 
 }

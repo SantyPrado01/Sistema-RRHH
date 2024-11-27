@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../nabvar/navbar.component';
-import { Empleado } from '../models/empleado.models';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
 import { Router } from '@angular/router';
-import { Disponibilidad } from '../models/disponibilidad.models';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 

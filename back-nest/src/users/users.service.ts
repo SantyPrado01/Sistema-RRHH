@@ -15,8 +15,8 @@ export class UsersService {
     constructor(@InjectRepository(User) private userRepository:Repository<User>){}
 
     async createUser(user: CreateUserDto){
-        const {userName, password, categoriaId} = user;
-       const userFound = await this.userRepository.findOne({where:{username: userName}})
+        const {username, password, categoriaId} = user;
+       const userFound = await this.userRepository.findOne({where:{username: username}})
         if (userFound){
             return new HttpException('El usuario ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
         }

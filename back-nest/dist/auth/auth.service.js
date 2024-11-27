@@ -24,29 +24,31 @@ let AuthService = class AuthService {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
-    async register({ userName, categoriaId, eliminado }) {
-        const user = await this.userRepository.findOne({ where: { username: userName } });
+    async register({ username, categoriaId }) {
+        const user = await this.userRepository.findOne({ where: { username: username } });
         if (user) {
             throw new common_1.HttpException('El usuario ya existe', common_1.HttpStatus.NOT_ACCEPTABLE);
         }
         const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
         const hashedPassword = await bcrypt.hash(randomPassword, 10);
+        console.log('registerDto', username, categoriaId);
         const createUserDto = {
-            userName,
+            username,
             password: hashedPassword,
             categoriaId,
             eliminado: false,
             primerIngreso: true,
         };
-        const newUser = await this.userRepository.create(createUserDto);
+        console.log('createUserDto', createUserDto);
+        const newUser = await this.userRepository.save(createUserDto);
         return {
             message: 'Usuario registrado con éxito',
             temporaryPassword: randomPassword,
             user: newUser
         };
     }
-    async login({ userName, password }) {
-        const user = await this.userRepository.findOne({ where: { username: userName } });
+    async login({ username, password }) {
+        const user = await this.userRepository.findOne({ where: { username: username } });
         if (!user) {
             throw new common_1.HttpException('Usuario no existente', common_1.HttpStatus.NOT_FOUND);
         }
@@ -56,6 +58,8 @@ let AuthService = class AuthService {
         }
         if (user.primerIngreso) {
             return {
+                id: user.id,
+                username: user.username,
                 message: 'Debe cambiar su contraseña',
                 primerIngreso: true,
             };
@@ -69,14 +73,48 @@ let AuthService = class AuthService {
             primerIngreso: false,
         };
     }
+    async changePassword(userId, newPassword) {
+        console.log(newPassword);
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new common_1.HttpException('Usuario no encontrado', common_1.HttpStatus.NOT_FOUND);
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        user.primerIngreso = false;
+        await this.userRepository.save(user);
+        return { message: 'Contraseña actualizada con éxito' };
+    }
+    async recoverPassword(userId) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new common_1.HttpException('Usuario no encontrado', common_1.HttpStatus.NOT_FOUND);
+        }
+        const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+        const hashedPassword = await bcrypt.hash(randomPassword, 10);
+        user.password = hashedPassword;
+        user.primerIngreso = true;
+        await this.userRepository.save(user);
+        return {
+            message: 'Contraseña recuperada con éxito',
+            temporaryPassword: randomPassword,
+            user: {
+                id: user.id,
+                username: user.username,
+                primerIngreso: user.primerIngreso
+            }
+        };
+    }
     async updateUsuario(userId, updateUserDto) {
         const user = await this.userRepository.findOne({ where: { id: userId } });
         if (!user) {
             throw new common_1.HttpException('Usuario no encontrado', common_1.HttpStatus.NOT_FOUND);
         }
         if (updateUserDto.password) {
-            const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+            const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+            const hashedPassword = await bcrypt.hash(randomPassword, 10);
             user.password = hashedPassword;
+            user.primerIngreso = true;
         }
         if (updateUserDto.eliminado !== undefined) {
             user.eliminado = updateUserDto.eliminado;

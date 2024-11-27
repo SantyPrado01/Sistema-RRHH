@@ -1,6 +1,6 @@
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsString, MinLength } from "class-validator";
-import { Column, ManyToOne } from "typeorm";
+import { IsString, MinLength } from "class-validator";
+import { Column } from "typeorm";
 
 
 export class RegisterDto{
@@ -8,11 +8,9 @@ export class RegisterDto{
     @Transform(({ value })=> value.trim())
     @IsString()
     @MinLength(4)
-    userName: string;
+    username: string;
 
     @Transform(({ value })=> value.trim())
-    @IsString()
-    @MinLength(6)
     password: string;
 
     @Column()
