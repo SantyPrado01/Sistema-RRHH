@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { AlertDialogComponent } from '../../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/ususario.models';
+import { ConfirmacionDialogComponent } from '../../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 
 @Component({
   selector: 'app-usuario-new',
@@ -132,26 +133,36 @@ export class UsuarioNewComponent implements OnInit {
     }
   }
 
-  eliminarUsuario(usuario: Usuario): void{
-    console.log(usuario)
-    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+  eliminarUsuario(usuario: Usuario): void {
+  const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
+    data: {
+      title: 'Confirmar Eliminación',
+      message: `¿Estás seguro de que deseas eliminar al usuario "${usuario.username}"?`,
+      type: 'confirm',
+    },
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result) { // Si el usuario confirma
       const usuarioId = Number(usuario.id);
 
       this.usuarioService.deleteUsuario(usuarioId).subscribe({
         next: (response) => {
-          console.log('Usuario eliminada con éxito:', response);
-          alert('Usuario eliminada con éxito');
-          this.router.navigate(['/service']); 
+          console.log('Usuario eliminado con éxito:', response);
+          this.mostrarAlerta('Operación Exitosa', 'Usuario eliminado con éxito.', 'success');
+          this.loadUsuarios(); // Recargar la lista de usuarios
         },
         error: (err) => {
-          console.log('ID de la empresa:', usuarioId);
-          console.error('Error al eliminar la empresa:', err);
-        }
+          console.error('Error al eliminar el usuario:', err);
+          this.mostrarAlerta('Error', 'No se pudo eliminar el usuario.', 'error');
+        },
       });
     } else {
-      console.log('Operación cancelada');
+      console.log('Operación de eliminación cancelada');
     }
-  }
+  });
+}
+
 
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {

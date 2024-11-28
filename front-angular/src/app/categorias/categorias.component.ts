@@ -9,6 +9,7 @@ import { Route, Router } from '@angular/router';
 import { CategoriaService } from './services/categoria.service';
 import { response } from 'express';
 import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
+import { ConfirmacionDialogComponent } from '../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 
 @Component({
   selector: 'app-categorias',
@@ -90,6 +91,36 @@ export class CategoriasComponent implements OnInit{
       });
     }
   }
+
+  eliminarCategoria(categoria: Categoria): void {
+    const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
+        data: {
+          title: 'Confirmar Eliminación',
+          message: `¿Estás seguro de que deseas eliminar la categoria "${categoria.nombre}"?`,
+          type: 'confirm',
+        },
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) { // Si el usuario confirma
+          const categoriaId = Number(categoria.id);
+  
+          this.categoriaService.deleteCategoria(categoriaId).subscribe({
+            next: (response) => {
+              console.log('Categoria eliminada con éxito:', response);
+              this.mostrarAlerta('Operación Exitosa', 'Categoria eliminada con éxito.', 'success');
+              this.ngOnInit(); // Recargar la lista de usuarios
+            },
+            error: (err) => {
+              console.error('Error al eliminar la categoria:', err);
+              this.mostrarAlerta('Error', 'No se pudo eliminar la categoria.', 'error');
+            },
+          });
+        } else {
+          console.log('Operación de eliminación cancelada');
+        }
+      });
+    }
 
 
 

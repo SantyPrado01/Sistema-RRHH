@@ -28,4 +28,8 @@ export class CategoriaService {
     return this.http.patch<Categoria>(`${this.baseUrl}/${id}`, categoria);
   }
 
+  deleteCategoria(id: number): Observable<Categoria> {
+    return this.http.delete<Categoria>(`${this.baseUrl}/${id}`);
+  }
+
 }
