@@ -29,7 +29,7 @@ export class AuthService {
         const createUserDto: CreateUserDto = {
           username,
           password: hashedPassword,
-          categoriaId,
+          categoriaId: Number(categoriaId),
           eliminado: false, 
           primerIngreso: true, 
         };

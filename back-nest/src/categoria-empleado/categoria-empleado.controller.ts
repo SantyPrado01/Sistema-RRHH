@@ -3,7 +3,7 @@ import { CategoriaEmpleadoService } from './categoria-empleado.service';
 import { CreateCategoriaEmpleadoDto } from './dto/create-categoria-empleado.dto';
 import { UpdateCategoriaEmpleadoDto } from './dto/update-categoria-empleado.dto';
 
-@Controller('categoria-empleado')
+@Controller('categorias')
 export class CategoriaEmpleadoController {
   constructor(private readonly categoriaEmpleadoService: CategoriaEmpleadoService) {}
 

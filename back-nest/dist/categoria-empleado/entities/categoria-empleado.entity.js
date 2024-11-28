@@ -9,29 +9,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CategoriaEmpleado = void 0;
+exports.Categorias = void 0;
+const servicio_entity_1 = require("../../servicios/entities/servicio.entity");
 const empleado_entity_1 = require("../../empleados/entities/empleado.entity");
 const typeorm_1 = require("typeorm");
-let CategoriaEmpleado = class CategoriaEmpleado {
+let Categorias = class Categorias {
 };
-exports.CategoriaEmpleado = CategoriaEmpleado;
+exports.Categorias = Categorias;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
-], CategoriaEmpleado.prototype, "id", void 0);
+], Categorias.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CategoriaEmpleado.prototype, "nombre", void 0);
+], Categorias.prototype, "nombre", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
-], CategoriaEmpleado.prototype, "eliminado", void 0);
+], Categorias.prototype, "eliminado", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => empleado_entity_1.Empleado, empleado => empleado.categoria),
     __metadata("design:type", empleado_entity_1.Empleado)
-], CategoriaEmpleado.prototype, "empleados", void 0);
-exports.CategoriaEmpleado = CategoriaEmpleado = __decorate([
-    (0, typeorm_1.Entity)({ name: 'categoriaEmpleado' })
-], CategoriaEmpleado);
+], Categorias.prototype, "empleados", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => servicio_entity_1.Servicio, servicio => servicio.categoria),
+    __metadata("design:type", empleado_entity_1.Empleado)
+], Categorias.prototype, "servicios", void 0);
+exports.Categorias = Categorias = __decorate([
+    (0, typeorm_1.Entity)({ name: 'categoria' })
+], Categorias);
 //# sourceMappingURL=categoria-empleado.entity.js.map

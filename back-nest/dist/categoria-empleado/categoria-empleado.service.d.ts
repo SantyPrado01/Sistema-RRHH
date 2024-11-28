@@ -1,18 +1,18 @@
 import { HttpException } from '@nestjs/common';
 import { CreateCategoriaEmpleadoDto } from './dto/create-categoria-empleado.dto';
 import { UpdateCategoriaEmpleadoDto } from './dto/update-categoria-empleado.dto';
-import { CategoriaEmpleado } from './entities/categoria-empleado.entity';
+import { Categorias } from './entities/categoria-empleado.entity';
 import { Repository } from 'typeorm';
 export declare class CategoriaEmpleadoService {
     private categoriaEmpleadoRepository;
-    constructor(categoriaEmpleadoRepository: Repository<CategoriaEmpleado>);
+    constructor(categoriaEmpleadoRepository: Repository<Categorias>);
     create(categoriaEmpleado: CreateCategoriaEmpleadoDto): Promise<HttpException | {
         message: string;
-        categoriaEmpleado: CategoriaEmpleado;
+        categoriaEmpleado: Categorias;
     }>;
-    get(): Promise<CategoriaEmpleado[]>;
-    getNombre(categoriaEmpleadoNombre: string): Promise<CategoriaEmpleado>;
-    getId(categoriaEmpleadoId: number): Promise<CategoriaEmpleado | HttpException>;
+    get(): Promise<Categorias[]>;
+    getNombre(categoriaEmpleadoNombre: string): Promise<Categorias>;
+    getId(categoriaEmpleadoId: number): Promise<HttpException | Categorias>;
     delete(categoriaEmpleadoId: number): Promise<HttpException>;
-    update(categoriaEmpleadoId: number, categoriaEmpleado: UpdateCategoriaEmpleadoDto): Promise<HttpException | (CategoriaEmpleado & UpdateCategoriaEmpleadoDto)>;
+    update(categoriaEmpleadoId: number, categoriaEmpleado: UpdateCategoriaEmpleadoDto): Promise<HttpException | (Categorias & UpdateCategoriaEmpleadoDto)>;
 }

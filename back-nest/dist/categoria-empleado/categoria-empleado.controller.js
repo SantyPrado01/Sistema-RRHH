@@ -74,7 +74,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CategoriaEmpleadoController.prototype, "remove", null);
 exports.CategoriaEmpleadoController = CategoriaEmpleadoController = __decorate([
-    (0, common_1.Controller)('categoria-empleado'),
+    (0, common_1.Controller)('categorias'),
     __metadata("design:paramtypes", [categoria_empleado_service_1.CategoriaEmpleadoService])
 ], CategoriaEmpleadoController);
 //# sourceMappingURL=categoria-empleado.controller.js.map

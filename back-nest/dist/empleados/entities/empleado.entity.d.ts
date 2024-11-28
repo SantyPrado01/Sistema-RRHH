@@ -1,5 +1,5 @@
 import { DisponibilidadHoraria } from "../../disponibilidad-horaria/entities/disponibilidad-horaria.entity";
-import { CategoriaEmpleado } from "../../categoria-empleado/entities/categoria-empleado.entity";
+import { Categorias } from "../../categoria-empleado/entities/categoria-empleado.entity";
 export declare class Empleado {
     Id: number;
     legajo: number;
@@ -12,7 +12,7 @@ export declare class Empleado {
     eliminado: boolean;
     ciudad: number;
     observaciones: string;
-    categoria: CategoriaEmpleado[];
+    categoria: Categorias[];
     disponibilidades: DisponibilidadHoraria[];
     fulltime: boolean;
 }

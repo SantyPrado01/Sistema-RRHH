@@ -32,7 +32,7 @@
       <div class="modal-footer">
         <button *ngIf="!selectedUsuario" type="button" class="btn btn-save" (click)="guardarUsuario()">Guardar Usuario</button>
         <button *ngIf="selectedUsuario" type="button" class="btn btn-save" (click)="actualizarUsuario()">Actualizar Usuario</button>
-        <button *ngIf="selectedUsuario" type="button" class="btn btn-save" >Blanquear Contraseña</button>
+        <button *ngIf="selectedUsuario" type="button" class="btn btn-save" (click)="recuperarPassword()">Blanquear Contraseña</button>
         <button *ngIf="selectedUsuario" type="button" class="btn btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
       </div>
     </form>

@@ -18,6 +18,7 @@ import { HorariosAsignadosComponent } from './horariosAsignados/horarios-asignad
 import { ListarOrdenTrabajoComponent } from './ordenTrabajo/listar-orden-trabajo/listar-orden-trabajo.component';
 import { OrdenTrabajoViewComponent } from './ordenTrabajo/orden-trabajo-view/orden-trabajo-view.component';
 import { CambioPasswordComponent } from './login/cambio-password/cambio-password.component';
+import { CategoriasComponent } from './categorias/categorias.component';
 
 export const routes: Routes = [
     {
@@ -25,12 +26,10 @@ export const routes: Routes = [
         component: HomeAdminComponent,
         canActivate:[AuthGuard],
         data: { expectedRole: 'admin' }
-        
     },
     {
         path:'home',
         component: HomeComponent
-
     },
     {
         path:'',
@@ -43,6 +42,10 @@ export const routes: Routes = [
     {
         path:'user/create',
         component: UsuarioNewComponent,
+    },
+    {
+        path:'categorias',
+        component: CategoriasComponent,
     },
     {
         path:'cambio-contrasena/:id/:username',

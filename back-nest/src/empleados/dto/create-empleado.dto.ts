@@ -1,4 +1,4 @@
-import { CategoriaEmpleado } from "src/categoria-empleado/entities/categoria-empleado.entity";
+
 import { DisponibilidadHoraria } from "src/disponibilidad-horaria/entities/disponibilidad-horaria.entity";
 
 export class CreateEmpleadoDto {

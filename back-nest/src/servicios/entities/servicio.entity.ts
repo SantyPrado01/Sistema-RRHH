@@ -1,7 +1,7 @@
 import { OrdenTrabajo } from "src/ordenTrabajo/entities/ordenTrabajo.entity"; 
-import { CategoriaServicio } from "../../categoria-servicio/entities/categoria-servicio.entity";
 import { Factura } from "../../facturas/entities/factura.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Categorias } from "src/categoria-empleado/entities/categoria-empleado.entity";
 
 @Entity({
     name:'Servicios'
@@ -27,8 +27,8 @@ export class Servicio {
     @Column()
     telefono: string;
 
-    @ManyToOne(()=> CategoriaServicio, categoria => categoria.servicios)
-    categoria: CategoriaServicio[];
+    @ManyToOne(()=> Categorias, categoria => categoria.servicios)
+    categoria: Categorias[];
 
     @Column({default:''})
     descripcion: string

@@ -61,7 +61,7 @@ __decorate([
     __metadata("design:type", String)
 ], Empleado.prototype, "observaciones", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => categoria_empleado_entity_1.CategoriaEmpleado, categoria => categoria.empleados),
+    (0, typeorm_1.ManyToOne)(() => categoria_empleado_entity_1.Categorias, categoria => categoria.empleados),
     __metadata("design:type", Array)
 ], Empleado.prototype, "categoria", void 0);
 __decorate([

@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinTable, JoinColumn, OneToOne } from "typeorm";
 import { DisponibilidadHoraria } from "../../disponibilidad-horaria/entities/disponibilidad-horaria.entity";
-import { CategoriaEmpleado } from "../../categoria-empleado/entities/categoria-empleado.entity";
+import { Categorias } from "../../categoria-empleado/entities/categoria-empleado.entity";
 import { User } from "src/users/user.entity";
 
 @Entity({
@@ -42,8 +42,8 @@ export class Empleado {
     @Column({default:''})
     observaciones: string;
 
-    @ManyToOne(() => CategoriaEmpleado, categoria => categoria.empleados)
-    categoria: CategoriaEmpleado[];
+    @ManyToOne(() => Categorias, categoria => categoria.empleados)
+    categoria: Categorias[];
     
     @OneToMany(() => DisponibilidadHoraria, disponibilidad => disponibilidad.empleadoId, { eager: true })
     disponibilidades: DisponibilidadHoraria[];

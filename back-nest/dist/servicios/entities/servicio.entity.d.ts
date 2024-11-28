@@ -1,6 +1,6 @@
 import { OrdenTrabajo } from "src/ordenTrabajo/entities/ordenTrabajo.entity";
-import { CategoriaServicio } from "../../categoria-servicio/entities/categoria-servicio.entity";
 import { Factura } from "../../facturas/entities/factura.entity";
+import { Categorias } from "src/categoria-empleado/entities/categoria-empleado.entity";
 export declare class Servicio {
     servicioId: number;
     nombre: string;
@@ -8,7 +8,7 @@ export declare class Servicio {
     direccion: string;
     ciudad: number;
     telefono: string;
-    categoria: CategoriaServicio[];
+    categoria: Categorias[];
     descripcion: string;
     eliminado: boolean;
     facturas: Factura[];

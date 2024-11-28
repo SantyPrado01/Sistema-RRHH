@@ -14,15 +14,6 @@ export class UsersService {
 
     constructor(@InjectRepository(User) private userRepository:Repository<User>){}
 
-    async createUser(user: CreateUserDto){
-        const {username, password, categoriaId} = user;
-       const userFound = await this.userRepository.findOne({where:{username: username}})
-        if (userFound){
-            return new HttpException('El usuario ya existe. Prueba nuevamente.', HttpStatus.CONFLICT)
-        }
-        const newUser = this.userRepository.create(user)
-        return this.userRepository.save(newUser)
-    }
 
     getUsers(){
         return this.userRepository.find()
@@ -66,12 +57,12 @@ export class UsersService {
         const userFound = await this.userRepository.findOne({
             where:{id} 
         })
-        console.log("Se Actualizo");
         if (!userFound){
             return new HttpException('Usuario no encontrado.', HttpStatus.NOT_FOUND)
         }
-
+        console.log(user)
         const updateUser = Object.assign(userFound, user);
+        console.log(updateUser)
         return this.userRepository.save(updateUser);
     }
 }

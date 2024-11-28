@@ -22,15 +22,6 @@ let UsersService = class UsersService {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
-    async createUser(user) {
-        const { username, password, categoriaId } = user;
-        const userFound = await this.userRepository.findOne({ where: { username: username } });
-        if (userFound) {
-            return new common_2.HttpException('El usuario ya existe. Prueba nuevamente.', common_2.HttpStatus.CONFLICT);
-        }
-        const newUser = this.userRepository.create(user);
-        return this.userRepository.save(newUser);
-    }
     getUsers() {
         return this.userRepository.find();
     }
@@ -67,11 +58,12 @@ let UsersService = class UsersService {
         const userFound = await this.userRepository.findOne({
             where: { id }
         });
-        console.log("Se Actualizo");
         if (!userFound) {
             return new common_2.HttpException('Usuario no encontrado.', common_2.HttpStatus.NOT_FOUND);
         }
+        console.log(user);
         const updateUser = Object.assign(userFound, user);
+        console.log(updateUser);
         return this.userRepository.save(updateUser);
     }
 };

@@ -1,0 +1,48 @@
+<app-navbar></app-navbar>
+
+<div class="title-container">
+  <div class="title-item">
+    <h1>Categorias</h1>
+  </div>
+</div>
+
+<div class="content-container">
+  <div class="form-container">
+    <h3>Detalles de la Categoria</h3>
+    <form #form="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="username">Nombre: </label>
+          <input type="text" id="nombre" name="name" [(ngModel)]="categoria.nombre" class="form-control" placeholder="Nombre de Usuario" autofocus required >
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+        <button *ngIf="!selectedCategoria" type="button" class="btn btn-save" (click)="guardarCategoria()">Guardar Categoria</button>
+        <button *ngIf="selectedCategoria" type="button" class="btn btn-save" (click)="actualizarCategoria()">Actualizar Categoria</button>
+        <button *ngIf="selectedCategoria" type="button" class="btn btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let categoria of categorias" (click)="selectCategoria(categoria)">
+          <td>{{ categoria.nombre }}</td>
+          <td>
+            <button class="btn-delete"><mat-icon>delete</mat-icon></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

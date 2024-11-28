@@ -17,7 +17,7 @@ let CategoriaEmpleadoModule = class CategoriaEmpleadoModule {
 exports.CategoriaEmpleadoModule = CategoriaEmpleadoModule;
 exports.CategoriaEmpleadoModule = CategoriaEmpleadoModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([categoria_empleado_entity_1.CategoriaEmpleado])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([categoria_empleado_entity_1.Categorias])],
         controllers: [categoria_empleado_controller_1.CategoriaEmpleadoController],
         providers: [categoria_empleado_service_1.CategoriaEmpleadoService],
     })

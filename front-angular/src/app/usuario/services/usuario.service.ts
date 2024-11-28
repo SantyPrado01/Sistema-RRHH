@@ -27,7 +27,7 @@ export class UsuarioService {
   }
 
   updateUsuario(id: number, usuario: Usuario): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.authUrl}/${id}`, usuario);
+    return this.http.patch<Usuario>(`${this.baseUrl}/${id}`, usuario);
   }
 
   recuperarPassword(id:number): Observable<Usuario>{

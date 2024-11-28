@@ -2,13 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCategoriaEmpleadoDto } from './dto/create-categoria-empleado.dto';
 import { UpdateCategoriaEmpleadoDto } from './dto/update-categoria-empleado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CategoriaEmpleado } from './entities/categoria-empleado.entity';
+import { Categorias } from './entities/categoria-empleado.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class CategoriaEmpleadoService {
 
-  constructor(@InjectRepository(CategoriaEmpleado) private categoriaEmpleadoRepository: Repository<CategoriaEmpleado>){}
+  constructor(@InjectRepository(Categorias) private categoriaEmpleadoRepository: Repository<Categorias>){}
 
   async create(categoriaEmpleado: CreateCategoriaEmpleadoDto){
     const categoriaEmpleadoFound = await this.categoriaEmpleadoRepository.findOne({

@@ -11,9 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Servicio = void 0;
 const ordenTrabajo_entity_1 = require("../../ordenTrabajo/entities/ordenTrabajo.entity");
-const categoria_servicio_entity_1 = require("../../categoria-servicio/entities/categoria-servicio.entity");
 const factura_entity_1 = require("../../facturas/entities/factura.entity");
 const typeorm_1 = require("typeorm");
+const categoria_empleado_entity_1 = require("../../categoria-empleado/entities/categoria-empleado.entity");
 let Servicio = class Servicio {
 };
 exports.Servicio = Servicio;
@@ -42,7 +42,7 @@ __decorate([
     __metadata("design:type", String)
 ], Servicio.prototype, "telefono", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => categoria_servicio_entity_1.CategoriaServicio, categoria => categoria.servicios),
+    (0, typeorm_1.ManyToOne)(() => categoria_empleado_entity_1.Categorias, categoria => categoria.servicios),
     __metadata("design:type", Array)
 ], Servicio.prototype, "categoria", void 0);
 __decorate([

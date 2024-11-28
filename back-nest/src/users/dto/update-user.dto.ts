@@ -4,9 +4,5 @@ import { IsNumber, IsOptional } from "class-validator"
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
     username?: string
-    password?: string
-
-    @IsOptional()
-    @IsNumber()
     categoriaId?: number
 }

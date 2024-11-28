@@ -18,7 +18,6 @@ const servicios_module_1 = require("./servicios/servicios.module");
 const disponibilidad_horaria_module_1 = require("./disponibilidad-horaria/disponibilidad-horaria.module");
 const necesidadHoraria_module_1 = require("./necesidadHoraria/necesidadHoraria.module");
 const categoria_empleado_module_1 = require("./categoria-empleado/categoria-empleado.module");
-const categoria_servicio_module_1 = require("./categoria-servicio/categoria-servicio.module");
 const facturas_module_1 = require("./facturas/facturas.module");
 const items_facturas_module_1 = require("./items-facturas/items-facturas.module");
 const ordenTrabajo_module_1 = require("./ordenTrabajo/ordenTrabajo.module");
@@ -47,7 +46,6 @@ exports.AppModule = AppModule = __decorate([
             disponibilidad_horaria_module_1.DisponibilidadHorariaModule,
             necesidadHoraria_module_1.NecesidadHorariaModule,
             categoria_empleado_module_1.CategoriaEmpleadoModule,
-            categoria_servicio_module_1.CategoriaServicioModule,
             facturas_module_1.FacturasModule,
             items_facturas_module_1.ItemsFacturasModule,
             ordenTrabajo_module_1.OrdenTrabajoModule,

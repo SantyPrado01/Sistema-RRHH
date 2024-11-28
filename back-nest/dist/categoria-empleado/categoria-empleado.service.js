@@ -93,7 +93,7 @@ let CategoriaEmpleadoService = class CategoriaEmpleadoService {
 exports.CategoriaEmpleadoService = CategoriaEmpleadoService;
 exports.CategoriaEmpleadoService = CategoriaEmpleadoService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(categoria_empleado_entity_1.CategoriaEmpleado)),
+    __param(0, (0, typeorm_1.InjectRepository)(categoria_empleado_entity_1.Categorias)),
     __metadata("design:paramtypes", [typeorm_2.Repository])
 ], CategoriaEmpleadoService);
 //# sourceMappingURL=categoria-empleado.service.js.map

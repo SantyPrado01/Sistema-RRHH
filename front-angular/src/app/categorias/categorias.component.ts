@@ -1,0 +1,96 @@
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NavbarComponent } from '../nabvar/navbar.component';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { Categoria } from './models/categoria.models';
+import { MatDialog } from '@angular/material/dialog';
+import { Route, Router } from '@angular/router';
+import { CategoriaService } from './services/categoria.service';
+import { response } from 'express';
+import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
+
+@Component({
+  selector: 'app-categorias',
+  standalone: true,
+  imports: [FormsModule, NavbarComponent, CommonModule, MatIconModule],
+  templateUrl: './categorias.component.html',
+  styleUrl: './categorias.component.css'
+})
+export class CategoriasComponent implements OnInit{
+
+  categorias: Categoria[] = [];
+  categoria: any = {};
+  selectedCategoria: Categoria | null = null;
+
+  constructor(private dialog: MatDialog, private router: Router, private categoriaService: CategoriaService){}
+
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
+  }
+
+  ngOnInit(): void {
+    this.categoriaService.getCategorias().subscribe({
+      next:(data: Categoria[]) =>{
+        this.categorias = data
+      },
+      error: (err) =>{
+        console.error('Error al cargar las categorias', err)
+      }
+    })
+  }
+
+  selectCategoria(categoria:Categoria): void{
+    this.selectedCategoria = categoria;
+    this.categoria = {...categoria}
+  }
+
+  cancelarEdicion(): void{
+    this.selectedCategoria = null
+    this.categoria = {
+      nombre: ''
+    }
+  }
+
+  guardarCategoria(): void{
+    this.categoriaService.createCategoria(this.categoria).subscribe({
+      next: (response) =>{
+        console.log('Categoria Guardada', response)
+        this.mostrarAlerta('Operación Exitosa', 'Categoria guardada con éxito.', 'success');
+        this.cancelarEdicion()
+        this.ngOnInit()
+      },
+      error:(err) =>{
+        console.error('Error al guardar el usuario', err);
+        this.mostrarAlerta('Error', 'No se pudo guardar el usuario.', 'error');
+      }
+    })
+  }
+
+  actualizarCategoria(): void{
+    if (!this.selectedCategoria) {
+      this.mostrarAlerta('Error', 'Debes seleccionar una categoria para actualizar.', 'error');
+      return;
+    }
+
+    const categoriaId = this.selectedCategoria.id;
+
+    if (categoriaId) {
+      this.categoriaService.updateCategoria(categoriaId, this.categoria).subscribe({
+        next: (response) => {
+          this.mostrarAlerta('Operación Exitosa', 'Categoria actualizada con éxito.', 'success');
+          this.cancelarEdicion(); // Limpiar el formulario después de la actualización
+        },
+        error: (err) => {
+          console.error('Error al actualizar la categoria.', err);
+          this.mostrarAlerta('Error', 'No se pudo actualizar la categoria.', 'error');
+        },
+      });
+    }
+  }
+
+
+
+}

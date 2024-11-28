@@ -11,7 +11,6 @@ import { ServiciosModule } from './servicios/servicios.module';
 import { DisponibilidadHorariaModule } from './disponibilidad-horaria/disponibilidad-horaria.module';
 import { NecesidadHorariaModule } from './necesidadHoraria/necesidadHoraria.module'; 
 import { CategoriaEmpleadoModule } from './categoria-empleado/categoria-empleado.module';
-import { CategoriaServicioModule } from './categoria-servicio/categoria-servicio.module';
 import { FacturasModule } from './facturas/facturas.module';
 import { ItemsFacturasModule } from './items-facturas/items-facturas.module';
 import { OrdenTrabajoModule } from './ordenTrabajo/ordenTrabajo.module'; 
@@ -37,7 +36,6 @@ import { CategoriaUsuarioModule } from './categoria-usuario/categoria-usuario.mo
     DisponibilidadHorariaModule,
     NecesidadHorariaModule,
     CategoriaEmpleadoModule,
-    CategoriaServicioModule,
     FacturasModule,
     ItemsFacturasModule,
     OrdenTrabajoModule,

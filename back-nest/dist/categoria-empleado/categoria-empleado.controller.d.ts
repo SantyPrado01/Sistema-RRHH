@@ -6,10 +6,10 @@ export declare class CategoriaEmpleadoController {
     constructor(categoriaEmpleadoService: CategoriaEmpleadoService);
     create(createCategoriaEmpleadoDto: CreateCategoriaEmpleadoDto): Promise<import("@nestjs/common").HttpException | {
         message: string;
-        categoriaEmpleado: import("./entities/categoria-empleado.entity").CategoriaEmpleado;
+        categoriaEmpleado: import("./entities/categoria-empleado.entity").Categorias;
     }>;
-    findAll(): Promise<import("./entities/categoria-empleado.entity").CategoriaEmpleado[]>;
-    findOne(id: string): Promise<import("./entities/categoria-empleado.entity").CategoriaEmpleado | import("@nestjs/common").HttpException>;
-    update(id: string, updateCategoriaEmpleadoDto: UpdateCategoriaEmpleadoDto): Promise<import("@nestjs/common").HttpException | (import("./entities/categoria-empleado.entity").CategoriaEmpleado & UpdateCategoriaEmpleadoDto)>;
+    findAll(): Promise<import("./entities/categoria-empleado.entity").Categorias[]>;
+    findOne(id: string): Promise<import("@nestjs/common").HttpException | import("./entities/categoria-empleado.entity").Categorias>;
+    update(id: string, updateCategoriaEmpleadoDto: UpdateCategoriaEmpleadoDto): Promise<import("@nestjs/common").HttpException | (import("./entities/categoria-empleado.entity").Categorias & UpdateCategoriaEmpleadoDto)>;
     remove(id: string): Promise<import("@nestjs/common").HttpException>;
 }

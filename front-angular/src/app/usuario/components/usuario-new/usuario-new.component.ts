@@ -65,16 +65,40 @@ export class UsuarioNewComponent implements OnInit {
   }
 
   cancelarEdicion(): void {
-    this.selectedUsuario = null;  // Resetear el formulario
+    this.selectedUsuario = null;
+    this.usuario = {
+      username: ''
+    }  
   }
+
+  recuperarPassword(): void {
+    if (!this.selectedUsuario) {
+      this.mostrarAlerta('Error', 'Debes seleccionar un usuario para recuperar la contraseña.', 'error');
+      return;
+    }
+  
+    const usuarioId = this.selectedUsuario.id;
+  
+    this.usuarioService.recuperarPassword(usuarioId).subscribe({
+      next: (response:any) => {
+        const mensaje = `Contraseña recuperada con éxito. Contraseña temporal: ${response.temporaryPassword}`;
+        this.mostrarAlerta('Operación Exitosa', mensaje, 'success');
+      },
+      error: (err) => {
+        console.error('Error al recuperar la contraseña', err);
+        this.mostrarAlerta('Error', 'No se pudo recuperar la contraseña.', 'error');
+      },
+    });
+  }
+  
 
   guardarUsuario(): void {
     this.usuarioService.createUsuario(this.usuario).subscribe({
-      next: (response) => {
-        console.log('Usuario Guardado', response);
-        console.log(this.usuario)
-        this.mostrarAlerta('Operación Exitosa', 'Usuario guardado con éxito.' , 'success');
-        this.cancelarEdicion(); // Limpiar el formulario después de guardar
+      next: (response: any) => {
+        const mensaje = `Usuario guardado con éxito. Contraseña temporal: ${response.temporaryPassword}`;
+        this.mostrarAlerta('Operación Exitosa', mensaje, 'success');
+        this.cancelarEdicion(); 
+        this.loadUsuarios();
       },
       error: (err) => {
         console.log(this.usuario)
@@ -85,12 +109,20 @@ export class UsuarioNewComponent implements OnInit {
   }
 
   actualizarUsuario(): void {
-    if (this.usuario.id) {
-      this.usuarioService.updateUsuario(this.usuario.Id, this.usuario).subscribe({
+    if (!this.selectedUsuario) {
+      this.mostrarAlerta('Error', 'Debes seleccionar un usuario para actualizar.', 'error');
+      return;
+    }
+
+    const usuarioId = this.selectedUsuario.id;
+
+    if (usuarioId) {
+      this.usuario.categoriaId = Number(this.usuario.categoriaId);
+      this.usuarioService.updateUsuario(usuarioId, this.usuario).subscribe({
         next: (response) => {
-          console.log('Usuario actualizado', response);
           this.mostrarAlerta('Operación Exitosa', 'Usuario actualizado con éxito.', 'success');
-          this.cancelarEdicion(); // Limpiar el formulario después de la actualización
+          this.cancelarEdicion();
+          this.loadUsuarios(); 
         },
         error: (err) => {
           console.error('Error al actualizar el usuario', err);
