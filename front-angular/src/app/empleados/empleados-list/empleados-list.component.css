@@ -88,12 +88,6 @@ table {
     border-collapse: collapse;
 }
 
-table th, table td {
-    padding: 10px;
-    border: 1px solid #CCC;
-    text-align: left;
-}
-
 .btn-edit, .btn-delete {
     background-color: transparent;
     border: none;
@@ -102,7 +96,7 @@ table th, table td {
 }
 
 .btn-edit {
-    color: #28a745;
+    color: grey;
 }
 
 .btn-delete {

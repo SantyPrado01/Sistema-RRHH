@@ -19,6 +19,7 @@ import { OrdenTrabajoViewComponent } from './ordenTrabajo/orden-trabajo-view/ord
 import { CambioPasswordComponent } from './login/cambio-password/cambio-password.component';
 import { CategoriasComponent } from './categorias/categorias.component';
 import { CrearFacturaComponent } from './facturas/facturas-new/facturas.component';
+import { FacturasListComponent } from './facturas/facturas-list/facturas-list.component';
 
 export const routes: Routes = [
     {
@@ -90,6 +91,10 @@ export const routes: Routes = [
     {
         path:'factura/create',
         component: CrearFacturaComponent
+    },
+    {
+        path:'facturas',
+        component: FacturasListComponent
     },
 
 

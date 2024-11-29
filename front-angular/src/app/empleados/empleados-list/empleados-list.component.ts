@@ -97,24 +97,5 @@ export class EmpleadosListComponent implements OnInit {
         console.log('Operacion de eliminacion cancelada.')
       }
     })
-
-
-    if (confirm('¿Estás seguro de que deseas marcar a este empleado como inactivo?')) {
-      const empleadoId = empleado.Id;
-      console.log('Empleado ID:', empleado.Id);
-      this.http.patch<Empleado>(`http://localhost:3000/empleados/${empleadoId}`, { eliminado: true }).subscribe({
-        next: (response) => {
-          console.log('Empleado eliminado con éxito:', response);
-          alert('Empleado eliminado con éxito');
-          this.obtenerEmpleados();  // Recargar los empleados después de la eliminación
-        },
-        error: (err) => {
-          console.log('ID del empleado:', empleadoId);
-          console.error('Error al eliminar el empleado:', err);
-        }
-      });
-    } else {
-      console.log('Operación cancelada');
-    }
   }
 }

@@ -32,7 +32,7 @@
       <div class="modal-footer">
         <button *ngIf="!selectedUsuario" type="button" class="btn btn-save" (click)="guardarUsuario()">Guardar Usuario</button>
         <button *ngIf="selectedUsuario" type="button" class="btn btn-save" (click)="actualizarUsuario()">Actualizar Usuario</button>
-        <button *ngIf="selectedUsuario" type="button" class="btn btn-save" (click)="recuperarPassword()">Blanquear Contraseña</button>
+        <button *ngIf="selectedUsuario" type="button" class="btn btn-password" (click)="recuperarPassword()">Blanquear Contraseña</button>
         <button *ngIf="selectedUsuario" type="button" class="btn btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
       </div>
     </form>
@@ -40,7 +40,7 @@
 
   <!-- Tabla de usuarios -->
   <div class="table-container">
-    <table>
+    <table class="table">
       <thead>
         <tr>
           <th>Usuario</th>

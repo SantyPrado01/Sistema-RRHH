@@ -1,1 +1,67 @@
-<p>facturas-list works!</p>
+<app-navbar></app-navbar>
+
+<div class="title-container">
+  <div class="title-item">
+    <h1>Listado Ordenes de Trabajo</h1>
+  </div>
+</div>
+
+
+<div class="content-container">
+  <div class="search-filter-container">
+    <div class="search-bar">
+      <input type="text" placeholder="Buscar por Empresa..." />
+      <button routerLink='/factura/create' class="btn btn-primary">+</button>
+    </div>
+
+    <div class="filters">
+      <div class="filter">
+        <label for="visualizarPor">Visualizar por:</label>
+        <select id="visualizarPor" >
+          <option [ngValue]="false">En Curso</option>
+          <option [ngValue]="true">Completado</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label for="ordenarPor">Mes</label>
+        <select id="ordenarPor" >
+          <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label for="ordenarPor">Año</label>
+        <select id="ordenarPor" >
+          <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Servicio</th>
+          <th>Fecha</th>
+          <th>Total</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let factura of facturas">
+          <td>{{ factura.facturaId }}</td>
+          <td>{{ factura.servicio.nombre }}</td>
+          <td>{{ factura.fecha }}</td>
+          <td>{{ factura.total }}</td>
+          <td>
+            <button class="btn-edit" [routerLink]="['/ordentrabajo/view', factura.facturaId]"><mat-icon>visibility</mat-icon></button>
+            <button class="btn-delete" ><mat-icon>delete</mat-icon></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -53,7 +53,7 @@ let FacturasService = class FacturasService {
     async findAll() {
         try {
             const facturas = await this.facturaRepository.find({
-                relations: ['items'],
+                relations: ['items', 'servicio'],
             });
             return facturas;
         }

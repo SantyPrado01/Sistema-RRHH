@@ -4,16 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaServicioService } from '../services/categoria-servicios.service'; 
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-empresas-edit',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, CommonModule],
+  imports: [NavbarComponent, FormsModule, CommonModule, RouterModule, MatIconModule],
   templateUrl: './servicios-edit.component.html',
   styleUrls: ['./servicios-edit.component.css']
 })

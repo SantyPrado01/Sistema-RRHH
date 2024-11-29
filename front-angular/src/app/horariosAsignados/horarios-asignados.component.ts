@@ -29,12 +29,17 @@ export class HorariosAsignadosComponent implements OnInit {
   comprobado: boolean = true; 
 
   selectHorario(horario: HorarioAsignado): void {
-    this.selectedHorario = horario;
-    this.horaInicioReal = '';
-    this.horaFinReal = '';
-    this.estado = '';
-    this.observaciones = ''; 
-    this.comprobado = true;
+    if (this.selectedHorario === horario) {
+      this.selectedHorario = null;  // Desmarcar
+    } else {
+      this.selectedHorario = horario;
+      this.horaInicioReal = '';
+      this.horaFinReal = '';
+      this.estado = '';
+      this.observaciones = ''; 
+      this.comprobado = true;  // Seleccionar
+    }
+
   }
 
   constructor(private horarioService: HorariosAsignadosService, private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService) {}
@@ -55,6 +60,7 @@ export class HorariosAsignadosComponent implements OnInit {
       console.log('Horarios Obtenidos', this.horariosAsignados)
     });
   }
+  
 
   actualizarHorarios(){
     if (!this.selectedHorario) return;

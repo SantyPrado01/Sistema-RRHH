@@ -28,7 +28,14 @@
 
 .orden-trabajo-container {
   width: 70%;
-  height: 60%;
+  height: 60vh;
+  overflow-y: auto;
+  margin-right: 10px;
+}
+
+.table{
+  width: 100%;
+  table-layout: fixed;
 }
 
 .info-container {

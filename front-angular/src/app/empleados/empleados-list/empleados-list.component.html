@@ -32,7 +32,7 @@
   </div>
 
   <div class="table-container">
-    <table>
+    <table class="table">
       <thead>
         <tr>
           <th>Legajo</th>
@@ -51,7 +51,7 @@
           <td>{{ empleado.telefono }}</td>
           <td>{{ empleado.email }}</td>
           <td>
-            <button class="btn-edit" [routerLink]="['/employee/edit', empleado.Id]"><mat-icon>edit</mat-icon></button>
+            <button class="btn-edit" [routerLink]="['/employee/edit', empleado.Id]"><mat-icon>visibility</mat-icon></button>
             <button class="btn-delete" (click)="eliminarEmpleado(empleado)"><mat-icon>delete</mat-icon></button>
           </td>
         </tr>

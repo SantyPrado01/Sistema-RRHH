@@ -5,16 +5,43 @@
     margin-right: 100px;
     margin-top: 1.5em;
   }
+
   .title-container {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1);
-    background-color:#f4f4f9;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+    background-color:#333333;
     text-align: center;
     height: 6.2em;
   }
+
+  .title-item h1 {
+    color: white;
+    font-size: 2em;
+  }
+
+  .form-factura{
+    display: flex;
+  }
   
+  .datos-container{
+    background-color: #f8f9fa;
+    width: 40vh;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 3em;
+  }
+
+  .form-row-container{
+    
+    width: 60vh;
+  }
+
   .title-item h1 {
     color: #CC5600;
     font-size: 2em;

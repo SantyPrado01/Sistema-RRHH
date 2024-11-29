@@ -6,6 +6,7 @@ import { FacturaResponse } from '../models/factura.models';
 import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 
 @Component({
   selector: 'app-facturas',
@@ -33,6 +34,12 @@ export class CrearFacturaComponent implements OnInit {
 
   constructor(private facturaService: FacturaService, private dialog: MatDialog) { }
 
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
+  }
+
   abrirModalEmpresa() {
     const dialogRef = this.dialog.open(BuscarEmpresaComponent);
     dialogRef.afterClosed().subscribe(result => {
@@ -48,7 +55,7 @@ export class CrearFacturaComponent implements OnInit {
   }
 
   agregarItem(): void {
-    this.factura.items.push({ cantidad: 1, descripcion: '', valor: 0 });
+    this.factura.items.push({ cantidad: 0, descripcion: '', valor: 0 });
   }
 
   calcularTotal(): void {
@@ -66,9 +73,11 @@ export class CrearFacturaComponent implements OnInit {
   onSubmit(): void {
     this.facturaService.crearFactura(this.factura).subscribe(
       (response: FacturaResponse) => {
+        this.mostrarAlerta('Operación Exitosa', 'Factura creada con éxito.', 'success');
         console.log('Factura creada con éxito', response);
       },
       (error) => {
+        this.mostrarAlerta('Error Operación', 'Error al crear la Factura.', 'error');
         console.error('Error al crear la factura', error);
       }
     );

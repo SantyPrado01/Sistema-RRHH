@@ -9,34 +9,55 @@
 <div class="content-container">
   <div class="form-container">
     <div class="form-row">
-        <div class="form-group">
-            <label>Empresa: {{ empresa }}</label>
-        </div>
+      <div class="form-group">
+        <label for="empresa">Empresa:</label>
+        <input type="text" id="empresa" [(ngModel)]="empresa" readonly />
+      </div>
+      <div class="form-group">
+        <label for="empleado">Empleado:</label>
+        <input type="text" id="empleado" [(ngModel)]="empleadoNombre" readonly />
+      </div>
     </div>
+
     <div class="form-row">
-        <div class="form-group">
-            <label>Empleado: {{ empleado.apellido }}, {{ empleado.nombre }}</label>
-        </div>
+      <div class="form-group">
+        <label for="empleado">Mes:</label>
+        <input type="text" id="mes" [(ngModel)]="mes" readonly />
+      </div>
+      <div class="form-group">
+        <label for="dias">Días:</label>
+        <input type="text" id="dias" [(ngModel)]="dias" readonly />
+      </div>
     </div>
+
     <div class="form-row">
-        <div class="form-group">
-            <label>Dias: {{ obtenerDias(necesidad) }} </label>
-        </div>
+      <div class="form-group">
+        <label for="horasProyectadas">Horas Proyectadas:</label>
+        <input type="text" id="horasProyectadas" [(ngModel)]="horasProyectadas" readonly />
+      </div>
+      <div class="form-group">
+        <label for="horasReales">Horas Reales:</label>
+        <input type="text" id="horasReales" [(ngModel)]="horasReales" readonly />
+      </div>
     </div>
-    <div class="form-row">
-        <div class="form-group">
-            <label>Horas Proyectadas: {{ horasProyectadas }}</label>
-        </div>
+
+    <div class="form-row-footer">
+      <div class="form-group-footer">
+        <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
+          <mat-icon>picture_as_pdf</mat-icon> Descargar PDF
+        </button>
+      </div>
+      <div class="form-group-footer">
+        <button mat-raised-button class="button-footer-excel" color="accent" (click)="descargarExcel()">
+          <mat-icon>file_download</mat-icon> Descargar Excel
+        </button>
+      </div>
     </div>
-    <div class="form-row">
-        <div class="form-group">
-            <label>Horas Reales: {{horasReales}}</label>
-        </div>
-    </div>
-  </div> <!-- Aquí cerramos el div.form-container -->
+
+  </div> 
   
   <div class="table-container">
-    <table>
+    <table class="table">
       <thead>
         <tr>
           <th>Fecha</th>

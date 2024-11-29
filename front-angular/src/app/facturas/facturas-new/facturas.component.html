@@ -7,30 +7,46 @@
 
 <div class="container">
   <div class="form-container">
-    <form (ngSubmit)="onSubmit()">
-      <!-- Número de factura -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="numero">Número de Factura</label>
-          <input type="number" id="numero" [(ngModel)]="factura.numero" name="numero" class="form-control" required />
+    <form class="form-factura" (ngSubmit)="onSubmit()">
+      <div class="datos-container">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="numero">Número de Factura</label>
+            <input type="number" id="numero" [(ngModel)]="factura.numero" name="numero" class="form-control" required />
+          </div>
         </div>
-        <div class="form-group">
-          <label for="empresa">Empresa</label>
-          <div class="form-group-inline">
-            <input type="text" id="empresa" [(ngModel)]="empresaNombre" name="empresa" class="form-control" placeholder="Ingrese la Empresa" required [disabled]="true" />
-            <div class="input-group-append">
-              <button type="button" class="btn btn-secondary" (click)="abrirModalEmpresa()">Buscar</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="empresa">Empresa</label>
+            <div class="form-group-inline">
+              <input type="text" id="empresa" [(ngModel)]="empresaNombre" name="empresa" class="form-control" placeholder="Ingrese la Empresa" required [disabled]="true" />
+              <div class="input-group-append">
+                <button type="button" class="btn btn-secondary" (click)="abrirModalEmpresa()">Buscar</button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="fecha">Fecha</label>
-          <input type="date" id="fecha" [(ngModel)]="factura.fecha" name="fecha" class="form-control" required />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" [(ngModel)]="factura.fecha" name="fecha" class="form-control" required />
+          </div>
         </div>
-      </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="total">Total</label>
+            <input type="number" id="total" [(ngModel)]="factura.total" name="total" class="form-control" readonly />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <button type="submit" class="btn btn-success">Guardar Factura</button>
+          </div>
+        </div>
+      </div>  
 
-      <!-- Listado de items de la factura -->
-      <div class="form-row">
+      <!-- Contenedor con el formulario y la lista de items -->
+      <div class="form-row-container">
         <div class="form-group">
           <label>Items</label>
           <table class="table">
@@ -63,16 +79,6 @@
           <button type="button" class="btn btn-primary" (click)="agregarItem()">Agregar Item</button>
         </div>
       </div>
-
-      <!-- Total de la factura -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="total">Total</label>
-          <input type="number" id="total" [(ngModel)]="factura.total" name="total" class="form-control" readonly />
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-success">Guardar Factura</button>
     </form>
   </div>
 </div>
