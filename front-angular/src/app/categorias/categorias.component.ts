@@ -5,9 +5,8 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Categoria } from './models/categoria.models';
 import { MatDialog } from '@angular/material/dialog';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CategoriaService } from './services/categoria.service';
-import { response } from 'express';
 import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
 import { ConfirmacionDialogComponent } from '../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 
@@ -75,9 +74,7 @@ export class CategoriasComponent implements OnInit{
       this.mostrarAlerta('Error', 'Debes seleccionar una categoria para actualizar.', 'error');
       return;
     }
-
     const categoriaId = this.selectedCategoria.id;
-
     if (categoriaId) {
       this.categoriaService.updateCategoria(categoriaId, this.categoria).subscribe({
         next: (response) => {
@@ -102,14 +99,13 @@ export class CategoriasComponent implements OnInit{
       });
   
       dialogRef.afterClosed().subscribe((result) => {
-        if (result) { // Si el usuario confirma
+        if (result) {
           const categoriaId = Number(categoria.id);
-  
           this.categoriaService.deleteCategoria(categoriaId).subscribe({
             next: (response) => {
               console.log('Categoria eliminada con éxito:', response);
               this.mostrarAlerta('Operación Exitosa', 'Categoria eliminada con éxito.', 'success');
-              this.ngOnInit(); // Recargar la lista de usuarios
+              this.ngOnInit(); 
             },
             error: (err) => {
               console.error('Error al eliminar la categoria:', err);

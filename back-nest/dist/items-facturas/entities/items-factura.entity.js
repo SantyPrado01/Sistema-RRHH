@@ -21,6 +21,10 @@ __decorate([
 ], ItemsFactura.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], ItemsFactura.prototype, "cantidad", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], ItemsFactura.prototype, "descripcion", void 0);
 __decorate([
@@ -30,8 +34,8 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => factura_entity_1.Factura, factura => factura.items, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ name: 'factura_id' }),
-    __metadata("design:type", factura_entity_1.Factura)
-], ItemsFactura.prototype, "factura", void 0);
+    __metadata("design:type", Number)
+], ItemsFactura.prototype, "facturaId", void 0);
 exports.ItemsFactura = ItemsFactura = __decorate([
     (0, typeorm_1.Entity)({
         name: 'ItemsFactura'

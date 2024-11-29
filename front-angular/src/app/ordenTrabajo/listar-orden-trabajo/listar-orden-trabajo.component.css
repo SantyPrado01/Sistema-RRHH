@@ -134,3 +134,20 @@ table th {
 .btn-primary:focus {
     outline: none;
 }
+.status {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  
+  .status.completed {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .status.pending {
+    background-color: #ffc107;
+    color: white;
+  }

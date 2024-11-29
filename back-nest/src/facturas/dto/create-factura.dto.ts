@@ -1,3 +1,5 @@
+import { CreateItemsFacturaDto } from "src/items-facturas/dto/create-items-factura.dto"
+
 export class CreateFacturaDto {
 
     facturaId: number
@@ -5,6 +7,7 @@ export class CreateFacturaDto {
     fecha: Date
     total: number
     servicioId: number
-    itemsFacturaId: number
+    eliminado:boolean
+    items: CreateItemsFacturaDto[];
 
 }

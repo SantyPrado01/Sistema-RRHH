@@ -1,16 +1,17 @@
-import { HttpException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Factura } from './entities/factura.entity';
 import { CreateFacturaDto } from './dto/create-factura.dto';
 import { UpdateFacturaDto } from './dto/update-factura.dto';
-import { Factura } from './entities/factura.entity';
-import { Repository } from 'typeorm';
+import { ItemsFactura } from 'src/items-facturas/entities/items-factura.entity';
 export declare class FacturasService {
-    private facturaRepository;
-    constructor(facturaRepository: Repository<Factura>);
-    createFactura(Factura: CreateFacturaDto): HttpException;
-    getFacturas(): Promise<Factura[]>;
-    getFactura(facturaId: number): Promise<HttpException | Factura>;
-    updateFactura(facturaId: number, factura: UpdateFacturaDto): Promise<HttpException | (Factura & UpdateFacturaDto)>;
-    deleteFactura(facturaId: number): Promise<HttpException>;
-    update(id: number, updateFacturaDto: UpdateFacturaDto): string;
-    remove(id: number): string;
+    private readonly facturaRepository;
+    private readonly itemsFacturaRepository;
+    constructor(facturaRepository: Repository<Factura>, itemsFacturaRepository: Repository<ItemsFactura>);
+    createFactura(createFacturaDto: CreateFacturaDto): Promise<Factura>;
+    findAll(): Promise<Factura[]>;
+    findOne(facturaId: number): Promise<Factura>;
+    updateFactura(facturaId: number, updateFacturaDto: UpdateFacturaDto): Promise<Factura & UpdateFacturaDto>;
+    deleteFactura(facturaId: number): Promise<{
+        message: string;
+    }>;
 }

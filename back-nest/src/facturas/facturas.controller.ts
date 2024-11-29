@@ -14,21 +14,21 @@ export class FacturasController {
 
   @Get()
   findAll() {
-    return this.facturasService.getFacturas();
+    return this.facturasService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.facturasService.getFactura(+id);
+    return this.facturasService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateFacturaDto: UpdateFacturaDto) {
-    return this.facturasService.update(+id, updateFacturaDto);
+    return this.facturasService.updateFactura(+id, updateFacturaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.facturasService.remove(+id);
+    return this.facturasService.deleteFactura(+id);
   }
 }

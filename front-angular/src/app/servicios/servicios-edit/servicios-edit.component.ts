@@ -155,7 +155,7 @@ export class ServiciosEditComponent implements OnInit {
         data: {
           title: 'Confirmar actualización',
           message: '¿Está seguro de que desea actualizar esta empresa?',
-          type: 'confirm', // Aquí se asegura que el tipo de diálogo es de confirmación
+          type: 'confirm',
         },
       });
 
@@ -178,7 +178,7 @@ export class ServiciosEditComponent implements OnInit {
   }
 
   obtenerOrdenes(servicioId: string) {
-    this.ordenTrabajoService.getOrdenesForServicio(this.mesSeleccionado, this.anioSeleccionado, this.estadoSeleccionado, servicioId).subscribe({
+    this.ordenTrabajoService.getOrdenesForServicio(this.mesSeleccionado, this.anioSeleccionado, servicioId).subscribe({
       next: (data) => {
         this.ordenes = data;
         this.ordenesFiltradas = data

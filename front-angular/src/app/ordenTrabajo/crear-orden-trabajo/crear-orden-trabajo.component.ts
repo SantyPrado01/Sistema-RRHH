@@ -28,9 +28,9 @@ export class CrearOrdenTrabajoComponent {
   anio: number = 0;
   seccionActual: string = 'ordenTrabajo';
 
-  fechaOrden: string = ''; // Para la fecha completa dd/mm/yyyy
-  horaInicio: string = ''; // Para la hora de inicio
-  horaFin: string = ''; // Para la hora de fin
+  fechaOrden: string = ''; 
+  horaInicio: string = '';
+  horaFin: string = '';
   
   meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   anios: number[] = Array.from({ length: 11 }, (_, i) => 2024 + i);

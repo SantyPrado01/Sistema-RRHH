@@ -8,10 +8,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMan
 
 export class Factura {
 
-    @PrimaryGeneratedColumn({
-        type: 'int',
-        name:'id'
-    })
+    @PrimaryGeneratedColumn({type: 'int',name:'id'})
     facturaId:number
 
     @Column()
@@ -30,6 +27,6 @@ export class Factura {
     @JoinColumn({ name: 'servicioId' })
     servicio: Servicio;
 
-    @OneToMany(() => ItemsFactura, item => item.factura, { cascade: true })
+    @OneToMany(() => ItemsFactura, item => item.facturaId, { cascade: true })
     items: ItemsFactura[];
 }

@@ -46,45 +46,43 @@ let OrdenTrabajoController = class OrdenTrabajoController {
     findOne(id) {
         return this.ordenTrabajoService.findOne(+id);
     }
-    async obtenerOrdenesPorMesYAnio(mes, anio, completado) {
+    async obtenerOrdenesPorMesYAnio(mes, anio) {
         const mesNumero = parseInt(mes, 10);
         const anioNumero = parseInt(anio, 10);
         if (isNaN(mesNumero) || isNaN(anioNumero)) {
             throw new Error('Mes o Año no válidos');
         }
-        return this.ordenTrabajoService.findMesAnio(mesNumero, anioNumero, completado);
+        return this.ordenTrabajoService.findMesAnio(mesNumero, anioNumero);
     }
     async findForEmpleado(mes, anio, completado, empleadoId) {
         const mesNumero = parseInt(mes, 10);
         const anioNumero = parseInt(anio, 10);
         const empleadoIdNumero = parseInt(empleadoId, 10);
-        const completadoBool = completado.toLowerCase() === 'true';
         if (isNaN(mesNumero) || isNaN(anioNumero) || isNaN(empleadoIdNumero)) {
             throw new Error('Mes, Año o ID de Empleado no válidos');
         }
-        return await this.ordenTrabajoService.findForEmpleado(mesNumero, anioNumero, completadoBool, empleadoIdNumero);
+        return await this.ordenTrabajoService.findForEmpleado(mesNumero, anioNumero, empleadoIdNumero);
     }
-    async findForServicio(mes, anio, completado, servicioId) {
+    async findForServicio(mes, anio, servicioId) {
         const mesNumero = parseInt(mes, 10);
         const anioNumero = parseInt(anio, 10);
         const servicioIdNumero = parseInt(servicioId, 10);
-        const completadoBool = completado.toLowerCase() === 'true';
         if (isNaN(mesNumero) || isNaN(anioNumero) || isNaN(servicioIdNumero)) {
             console.log('Mes:', mesNumero);
             console.log('Mes:', anioNumero);
             console.log('Mes:', servicioIdNumero);
             throw new Error('Mes, Año o ID de Empleado no válidos');
         }
-        return await this.ordenTrabajoService.findForServicio(mesNumero, anioNumero, completadoBool, servicioIdNumero);
+        return await this.ordenTrabajoService.findForServicio(mesNumero, anioNumero, servicioIdNumero);
     }
-    async obtenerHorasPorMes(mes, anio, completado) {
-        return await this.ordenTrabajoService.obtenerHorasPorMes(mes, anio, completado);
+    async obtenerHorasPorMes(mes, anio) {
+        return await this.ordenTrabajoService.obtenerHorasPorMes(mes, anio);
     }
     update(id, updateOrdenTrabajoDto) {
         return this.ordenTrabajoService.update(+id, updateOrdenTrabajoDto);
     }
     remove(id) {
-        return this.ordenTrabajoService.remove(+id);
+        return this.ordenTrabajoService.deleteOrdenTrabajo(+id);
     }
 };
 exports.OrdenTrabajoController = OrdenTrabajoController;
@@ -109,16 +107,15 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], OrdenTrabajoController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Get)('findByMesAnio/:mes/:anio/:completado'),
+    (0, common_1.Get)('findByMesAnio/:mes/:anio'),
     __param(0, (0, common_1.Param)('mes')),
     __param(1, (0, common_1.Param)('anio')),
-    __param(2, (0, common_1.Param)('completado')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Boolean]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], OrdenTrabajoController.prototype, "obtenerOrdenesPorMesYAnio", null);
 __decorate([
-    (0, common_1.Get)('findForEmpleado/:mes/:anio/:completado/:empleadoId'),
+    (0, common_1.Get)('findForEmpleado/:mes/:anio/:empleadoId'),
     __param(0, (0, common_1.Param)('mes')),
     __param(1, (0, common_1.Param)('anio')),
     __param(2, (0, common_1.Param)('completado')),
@@ -128,22 +125,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], OrdenTrabajoController.prototype, "findForEmpleado", null);
 __decorate([
-    (0, common_1.Get)('findForServicio/:mes/:anio/:completado/:servicioId'),
+    (0, common_1.Get)('findForServicio/:mes/:anio/:servicioId'),
     __param(0, (0, common_1.Param)('mes')),
     __param(1, (0, common_1.Param)('anio')),
-    __param(2, (0, common_1.Param)('completado')),
-    __param(3, (0, common_1.Param)('servicioId')),
+    __param(2, (0, common_1.Param)('servicioId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String]),
+    __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], OrdenTrabajoController.prototype, "findForServicio", null);
 __decorate([
-    (0, common_1.Get)('horas-mes/:mes/:anio/:completado'),
+    (0, common_1.Get)('horas-mes/:mes/:anio'),
     __param(0, (0, common_1.Param)('mes')),
     __param(1, (0, common_1.Param)('anio')),
-    __param(2, (0, common_1.Param)('completado')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, Boolean]),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
 ], OrdenTrabajoController.prototype, "obtenerHorasPorMes", null);
 __decorate([

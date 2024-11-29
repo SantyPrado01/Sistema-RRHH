@@ -10,14 +10,14 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1);
-  background-color:#f4f4f9;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+  background-color:#333333;
   text-align: center;
   height: 6.2em;
 }
 
 .title-item h1 {
-  color: #CC5600;
+  color: white;
   font-size: 2em;
 }
 
@@ -27,17 +27,19 @@
 }
 
 .orden-trabajo-container {
-  width: 80%;
+  width: 70%;
   height: 60%;
 }
 
 .info-container {
-  width: 20%;
-  background-color: #f4f4f9;
+  width: 25%;
+  background-color: #f8f9fa;
   padding: 20px;
+  border: 1px solid #ffba8c;
   border-radius: 8px;
+  border-width: 1px;
   border-color: #ffba8c;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); 
 }
 
 h3 {
@@ -67,30 +69,6 @@ h3 {
   outline: none;
 }
 
-.orden-card-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.orden-card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  transition: transform 0.3s ease;
-}
-
-.orden-card:hover {
-  transform: translateY(-5px);
-}
-
-.orden-card-header h4 {
-  font-size: 1.5em;
-  color: #333;
-}
 
 .status {
   padding: 5px 10px;
@@ -101,25 +79,19 @@ h3 {
 }
 
 .status.completed {
-  background-color: #4CAF50;
+  background-color: #28a745;
+  border-color: #343a40;
   color: white;
 }
 
 .status.pending {
-  background-color: grey;
+  background-color: #fd7e14;
   color: white;
 }
 
-.orden-card-footer button {
-  background-color: #CC5600;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+.btn-info {
+  color: #343a40;
+  background-color: white;
+  border: white;
   cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.orden-card-footer button:hover {
-  background-color: #a94400;
 }

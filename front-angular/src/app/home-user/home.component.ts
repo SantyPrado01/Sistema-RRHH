@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../login/auth/auth.service';
 import { OrdenTrabajoService } from '../ordenTrabajo/services/orden-trabajo.service';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NavbarComponent, CommonModule, RouterModule, FormsModule],
+  imports: [NavbarComponent, CommonModule, RouterModule, FormsModule, MatIconModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -33,9 +34,9 @@ export class HomeComponent {
 
   obtenerOrdenes() {
     const mesNumero = new Date().getMonth() + 1;
-    this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioActual, this.completado).subscribe(
+    this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioActual).subscribe(
       (data) => {
-        this.ordenes = data; // Guardamos las órdenes en la variable `ordenes`
+        this.ordenes = data;
         console.log(this.ordenes)
       },
       (error) => {
@@ -46,7 +47,7 @@ export class HomeComponent {
 
   obtenerHoras() {
     const mesNumero = new Date().getMonth() + 1;
-    this.ordenTrabajoService.getHorasPorMes(mesNumero, this.anioActual, this.completado).subscribe((data) => {
+    this.ordenTrabajoService.getHorasPorMes(mesNumero, this.anioActual).subscribe((data) => {
       if (data) {
         this.horasProyectadas = data.horasProyectadas;
         this.horasReales = data.horasReales;

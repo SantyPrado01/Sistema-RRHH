@@ -17,10 +17,7 @@ let Factura = class Factura {
 };
 exports.Factura = Factura;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)({
-        type: 'int',
-        name: 'id'
-    }),
+    (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', name: 'id' }),
     __metadata("design:type", Number)
 ], Factura.prototype, "facturaId", void 0);
 __decorate([
@@ -45,7 +42,7 @@ __decorate([
     __metadata("design:type", servicio_entity_1.Servicio)
 ], Factura.prototype, "servicio", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => items_factura_entity_1.ItemsFactura, item => item.factura, { cascade: true }),
+    (0, typeorm_1.OneToMany)(() => items_factura_entity_1.ItemsFactura, item => item.facturaId, { cascade: true }),
     __metadata("design:type", Array)
 ], Factura.prototype, "items", void 0);
 exports.Factura = Factura = __decorate([

@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateFacturaDto } from './create-factura.dto';
+import { CreateItemsFacturaDto } from 'src/items-facturas/dto/create-items-factura.dto';
 
 export class UpdateFacturaDto extends PartialType(CreateFacturaDto) {
 
@@ -7,6 +8,6 @@ export class UpdateFacturaDto extends PartialType(CreateFacturaDto) {
     fecha?: Date;
     total?: number;
     servicioId?: number;
-    itemsFacturaId?: number;
+    items?: CreateItemsFacturaDto[];
 
 }

@@ -9,6 +9,11 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
+import { title } from 'process';
+import { response } from 'express';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 
 @Component({
   selector: 'app-empleados-list',
@@ -26,7 +31,14 @@ export class EmpleadosListComponent implements OnInit {
 
 
   constructor(private empleadoService: EmpleadoService, private route: ActivatedRoute, 
-    private router: Router, private http: HttpClient ) {}
+    private router: Router, private http: HttpClient, private dialog: MatDialog ) {}
+
+
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+      this.dialog.open(AlertDialogComponent, {
+        data: { title: titulo, message: mensaje, type: tipo },
+      });
+    }
 
   ngOnInit(): void {
     this.obtenerEmpleados();
@@ -60,6 +72,33 @@ export class EmpleadosListComponent implements OnInit {
   }
 
   eliminarEmpleado(empleado: Empleado) {
+    const dialogRef = this.dialog.open(ConfirmacionDialogComponent,{
+      data:{
+        title: 'Confirmar Eliminación',
+        message: `¿Estás seguro de que deseas eliminar la categoria "${empleado.apellido} ${empleado.nombre}"?`,
+        type: 'confirm'
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) =>{
+      if (result){
+        const empleadoId = Number(empleado.Id);
+        this.empleadoService.deleteEmpleado(empleadoId).subscribe({
+          next: (response) =>{
+            console.log('Empleado eliminado con éxito', response);
+            this.mostrarAlerta('Operación Exitosa', 'Empleado eliminada con éxito.', 'success');
+            this.ngOnInit();
+          },
+          error:(err) => {
+            console.error('Error al eliminar la categoria:', err);
+            this.mostrarAlerta('Error', 'No se pudo eliminar la categoria.', 'error');
+          },
+        });
+      } else {
+        console.log('Operacion de eliminacion cancelada.')
+      }
+    })
+
+
     if (confirm('¿Estás seguro de que deseas marcar a este empleado como inactivo?')) {
       const empleadoId = empleado.Id;
       console.log('Empleado ID:', empleado.Id);

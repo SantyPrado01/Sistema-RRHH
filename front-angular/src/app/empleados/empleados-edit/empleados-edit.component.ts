@@ -9,12 +9,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
 import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-edit-empleado',
   standalone: true,
   templateUrl: './empleados-edit.component.html',
-  imports:[NavbarComponent, FormsModule, CommonModule, RouterModule],
+  imports:[NavbarComponent, FormsModule, CommonModule, RouterModule, MatIconModule],
   styleUrls: ['./empleados-edit.component.css']
 })
 export class EditEmpleadoComponent implements OnInit {
@@ -170,21 +171,17 @@ export class EditEmpleadoComponent implements OnInit {
 
   actualizarEmpleado() {
     const empleadoId = this.route.snapshot.paramMap.get('id');
-
     if (empleadoId) {
-      // Abre el diálogo de confirmación
       const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
         data: {
           title: 'Confirmar actualización',
           message: '¿Está seguro de que desea actualizar este empleado?',
-          type: 'confirm', // Aquí se asegura que el tipo de diálogo es de confirmación
+          type: 'confirm', 
         },
       });
 
-      // Después de que el usuario cierre el diálogo, se recibe el resultado
       dialogRef.afterClosed().subscribe((confirmado) => {
         if (confirmado) {
-          // Si el usuario confirma la acción, realiza la actualización
           const empleadoActualizado = {
             ...this.empleado,
             disponibilidades: this.disponibilidad, 
@@ -238,7 +235,7 @@ export class EditEmpleadoComponent implements OnInit {
   }
 
   obtenerOrdenes(empleadoId: string) {
-    this.ordenTrabajoService.getOrdenesForEmpleado(this.mesSeleccionado, this.anioSeleccionado, this.estadoSeleccionado, empleadoId).subscribe({
+    this.ordenTrabajoService.getOrdenesForEmpleado(this.mesSeleccionado, this.anioSeleccionado, empleadoId).subscribe({
       next: (data) => {
         this.ordenes = data;
         this.ordenesFiltradas = data

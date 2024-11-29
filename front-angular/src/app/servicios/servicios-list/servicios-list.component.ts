@@ -10,6 +10,10 @@ import { catchError, forkJoin, map, of } from 'rxjs';
 import { CategoriaServicioService } from '../services/categoria-servicios.service';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
+
 
 @Component({
   selector: 'app-servicios-list',
@@ -33,7 +37,8 @@ export class ServiciosListComponent implements OnInit {
     private servicioService: ServicioService, 
     private router: Router, 
     private http: HttpClient,
-    private categoria: CategoriaServicioService
+    private categoria: CategoriaServicioService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -106,23 +111,37 @@ export class ServiciosListComponent implements OnInit {
   }
   
   eliminarServicio(empresa: Empresa): void {
-    if (confirm('¿Estás seguro de que deseas eliminar esta empresa?')) {
-      const empresaId = empresa.servicioId;
+    const dialogRef = this.dialog.open(ConfirmacionDialogComponent,{
+      data:{
+        title:'Confirmar Eliminación',
+        message:`¿Estás seguro de que deseas eliminar la Empresa "${empresa.nombre}"?`,
+        type: 'confirm',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result)=>{
+      if (result){
+        const empresaId = Number(empresa.servicioId);
+        this.servicioService.deleteServicio(empresaId).subscribe({
+          next: (response) =>{
+            console.log('Empresa eliminada con éxito:', response)
+            this.mostrarAlerta('Operación Exitosa', 'Empresa eliminada con éxito.', 'success')
+            this.ngOnInit();
+          },
+          error:(err) =>{
+            console.log('ID de la empresa:', empresaId);
+            console.error('Error al eliminar la empresa:', err);
+          }
+        });
+      } else {
+        console.log('Operación cancelada');
+      }
+    })
+  }
 
-      this.http.patch<Empresa>(`http://localhost:3000/servicios/${empresaId}`, { eliminado: true }).subscribe({
-        next: (response) => {
-          console.log('Servicio eliminada con éxito:', response);
-          alert('Servicio eliminada con éxito');
-          this.router.navigate(['/service']); 
-        },
-        error: (err) => {
-          console.log('ID de la empresa:', empresaId);
-          console.error('Error al eliminar la empresa:', err);
-        }
-      });
-    } else {
-      console.log('Operación cancelada');
-    }
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
   }
 }
 

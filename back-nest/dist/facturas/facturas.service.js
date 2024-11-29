@@ -15,71 +15,115 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FacturasService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const factura_entity_1 = require("./entities/factura.entity");
 const typeorm_2 = require("typeorm");
+const factura_entity_1 = require("./entities/factura.entity");
+const common_2 = require("@nestjs/common");
+const items_factura_entity_1 = require("../items-facturas/entities/items-factura.entity");
 let FacturasService = class FacturasService {
-    constructor(facturaRepository) {
+    constructor(facturaRepository, itemsFacturaRepository) {
         this.facturaRepository = facturaRepository;
+        this.itemsFacturaRepository = itemsFacturaRepository;
     }
-    createFactura(Factura) {
-        const newFactura = this.facturaRepository.create(Factura);
-        return this.facturaRepository.save(newFactura),
-            new common_1.HttpException('La factura se guardo con exito.', common_1.HttpStatus.ACCEPTED);
-    }
-    getFacturas() {
-        return this.facturaRepository.find({
-            where: {
-                eliminado: false
+    async createFactura(createFacturaDto) {
+        const factura = this.facturaRepository.create(createFacturaDto);
+        const savedFactura = await this.facturaRepository.save(factura);
+        const itemsFactura = [];
+        for (const item of createFacturaDto.items) {
+            const existingItem = await this.itemsFacturaRepository.findOne({
+                where: {
+                    descripcion: item.descripcion,
+                    valor: item.valor,
+                    facturaId: savedFactura.facturaId,
+                },
+            });
+            let newItem;
+            if (existingItem) {
+                newItem = existingItem;
             }
-        });
+            else {
+                newItem = this.itemsFacturaRepository.create(item);
+            }
+            newItem.facturaId = savedFactura.facturaId;
+            itemsFactura.push(newItem);
+        }
+        await this.itemsFacturaRepository.save(itemsFactura);
+        savedFactura.items = itemsFactura;
+        return savedFactura;
     }
-    async getFactura(facturaId) {
+    async findAll() {
+        try {
+            const facturas = await this.facturaRepository.find({
+                relations: ['items'],
+            });
+            return facturas;
+        }
+        catch (error) {
+            throw new common_2.HttpException('Error al obtener las facturas', common_2.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    async findOne(facturaId) {
+        try {
+            const factura = await this.facturaRepository.findOne({
+                where: { facturaId },
+                relations: ['items'],
+            });
+            if (!factura) {
+                throw new common_2.HttpException('Factura no encontrada', common_2.HttpStatus.NOT_FOUND);
+            }
+            return factura;
+        }
+        catch (error) {
+            throw new common_2.HttpException('Error al obtener la factura', common_2.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    async updateFactura(facturaId, updateFacturaDto) {
         const facturaFound = await this.facturaRepository.findOne({
-            where: {
-                facturaId
-            }
+            where: { facturaId },
+            relations: ['items'],
         });
         if (!facturaFound) {
-            return new common_1.HttpException('Factura no encontrada.', common_1.HttpStatus.NOT_FOUND);
+            throw new common_2.HttpException('Factura no encontrada.', common_2.HttpStatus.NOT_FOUND);
         }
-        return facturaFound;
-    }
-    async updateFactura(facturaId, factura) {
-        const facturaFound = await this.facturaRepository.findOne({
-            where: {
-                facturaId
-            }
-        });
-        if (!facturaFound) {
-            return new common_1.HttpException('Factura no Encontrada.', common_1.HttpStatus.NOT_FOUND);
+        const updatedFactura = Object.assign(facturaFound, updateFacturaDto);
+        if (updateFacturaDto.items && updateFacturaDto.items.length > 0) {
+            const itemsToUpdate = updateFacturaDto.items.map(item => {
+                const existingItem = facturaFound.items.find(existingItem => existingItem.id === item.id);
+                if (existingItem) {
+                    existingItem.descripcion = item.descripcion;
+                    existingItem.valor = item.valor;
+                    return existingItem;
+                }
+                else {
+                    const newItem = this.itemsFacturaRepository.create({
+                        ...item,
+                        facturaId: facturaFound.facturaId,
+                    });
+                    return newItem;
+                }
+            });
+            await this.itemsFacturaRepository.save(itemsToUpdate);
         }
-        const updateFactura = Object.assign(facturaFound, factura);
-        return this.facturaRepository.save(updateFactura);
+        const savedFactura = await this.facturaRepository.save(updatedFactura);
+        return savedFactura;
     }
     async deleteFactura(facturaId) {
-        const facturaFound = await this.facturaRepository.findOne({
-            where: {
-                facturaId
-            }
+        const factura = await this.facturaRepository.findOne({
+            where: { facturaId },
         });
-        if (!facturaFound) {
-            return new common_1.HttpException('Factura no encontrada.', common_1.HttpStatus.ACCEPTED);
+        if (!factura) {
+            throw new common_2.HttpException('Factura no encontrada', common_2.HttpStatus.NOT_FOUND);
         }
-        facturaFound.eliminado = true;
-        await this.facturaRepository.save(facturaFound);
-        throw new common_1.HttpException('Factura Eliminada.', common_1.HttpStatus.ACCEPTED);
-    }
-    update(id, updateFacturaDto) {
-        return `This action updates a #${id} factura`;
-    }
-    remove(id) {
-        return `This action removes a #${id} factura`;
+        factura.eliminado = true;
+        await this.facturaRepository.save(factura);
+        return { message: 'Factura marcada como eliminada con éxito' };
     }
 };
 exports.FacturasService = FacturasService;
 exports.FacturasService = FacturasService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(factura_entity_1.Factura)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(items_factura_entity_1.ItemsFactura)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], FacturasService);
 //# sourceMappingURL=facturas.service.js.map

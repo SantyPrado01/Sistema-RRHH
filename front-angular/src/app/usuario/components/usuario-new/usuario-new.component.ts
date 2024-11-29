@@ -135,33 +135,33 @@ export class UsuarioNewComponent implements OnInit {
 
   eliminarUsuario(usuario: Usuario): void {
   const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
-    data: {
-      title: 'Confirmar Eliminación',
-      message: `¿Estás seguro de que deseas eliminar al usuario "${usuario.username}"?`,
-      type: 'confirm',
-    },
-  });
+      data: {
+        title: 'Confirmar Eliminación',
+        message: `¿Estás seguro de que deseas eliminar al usuario "${usuario.username}"?`,
+        type: 'confirm',
+      },
+    });
 
-  dialogRef.afterClosed().subscribe((result) => {
-    if (result) { // Si el usuario confirma
-      const usuarioId = Number(usuario.id);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) { // Si el usuario confirma
+        const usuarioId = Number(usuario.id);
 
-      this.usuarioService.deleteUsuario(usuarioId).subscribe({
-        next: (response) => {
-          console.log('Usuario eliminado con éxito:', response);
-          this.mostrarAlerta('Operación Exitosa', 'Usuario eliminado con éxito.', 'success');
-          this.loadUsuarios(); // Recargar la lista de usuarios
-        },
-        error: (err) => {
-          console.error('Error al eliminar el usuario:', err);
-          this.mostrarAlerta('Error', 'No se pudo eliminar el usuario.', 'error');
-        },
-      });
-    } else {
-      console.log('Operación de eliminación cancelada');
-    }
-  });
-}
+        this.usuarioService.deleteUsuario(usuarioId).subscribe({
+          next: (response) => {
+            console.log('Usuario eliminado con éxito:', response);
+            this.mostrarAlerta('Operación Exitosa', 'Usuario eliminado con éxito.', 'success');
+            this.loadUsuarios(); // Recargar la lista de usuarios
+          },
+          error: (err) => {
+            console.error('Error al eliminar el usuario:', err);
+            this.mostrarAlerta('Error', 'No se pudo eliminar el usuario.', 'error');
+          },
+        });
+      } else {
+        console.log('Operación de eliminación cancelada');
+      }
+    });
+  }
 
 
 

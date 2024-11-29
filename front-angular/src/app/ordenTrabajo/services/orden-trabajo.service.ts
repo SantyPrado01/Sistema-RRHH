@@ -23,20 +23,20 @@ export class OrdenTrabajoService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  getOrdenesPorMesAnio(mes: number, anio: number, completado: boolean): Observable<any> {
-    return this.http.get(`${this.apiUrl}/findByMesAnio/${mes}/${anio}/${completado}`);
+  getOrdenesPorMesAnio(mes: number, anio: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/findByMesAnio/${mes}/${anio}`);
   }
 
-  getHorasPorMes(mes: number, anio: number, completado: boolean): Observable<any>{
-    return this.http.get(`${this.apiUrl}/horas-mes/${mes}/${anio}/${completado}`)
+  getHorasPorMes(mes: number, anio: number): Observable<any>{
+    return this.http.get(`${this.apiUrl}/horas-mes/${mes}/${anio}`)
   }
 
-  getOrdenesForEmpleado(mes: number, anio: number, completado: boolean, empleadoId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/findForEmpleado/${mes}/${anio}/${completado}/${empleadoId}`);
+  getOrdenesForEmpleado(mes: number, anio: number, empleadoId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/findForEmpleado/${mes}/${anio}/${empleadoId}`);
   }
 
-  getOrdenesForServicio(mes: number, anio: number, completado: boolean, servicioId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/findForServicio/${mes}/${anio}/${completado}/${servicioId}`);
+  getOrdenesForServicio(mes: number, anio: number, servicioId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/findForServicio/${mes}/${anio}/${servicioId}`);
   }
 
   obtenerEmpresas(): Observable<any[]> {

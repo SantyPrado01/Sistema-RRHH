@@ -84,6 +84,7 @@ let OrdenTrabajoService = class OrdenTrabajoService {
             const disponibilidadEmpleado = disponibilidades.find(d => d.diaSemana === diaSemana);
             if (disponibilidadEmpleado) {
                 if (!esValida(horaInicio, horaFin, disponibilidadEmpleado.horaInicio, disponibilidadEmpleado.horaFin)) {
+                    await this.deleteOrdenTrabajo(ordenTrabajoId);
                     throw new common_1.BadRequestException(`La Necesidad Horaria para el dia ${diaSemana} no esta completamente dentro de la disponibilidad del empleado.`);
                 }
             }
@@ -163,8 +164,15 @@ let OrdenTrabajoService = class OrdenTrabajoService {
         return fechas;
     }
     async findAll() {
-        const ordenes = await this.ordenTrabajoRepository.find({ relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'] });
-        const result = ordenes.map(orden => {
+        const ordenes = await this.ordenTrabajoRepository.find({
+            relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
+        });
+        const result = await Promise.all(ordenes.map(async (orden) => {
+            const todosComprobados = orden.horariosAsignados.every(horario => horario.comprobado === true);
+            if (todosComprobados) {
+                orden.completado = true;
+                await this.ordenTrabajoRepository.save(orden);
+            }
             let horasProyectadas = 0;
             let horasReales = 0;
             orden.horariosAsignados.forEach(horario => {
@@ -194,7 +202,7 @@ let OrdenTrabajoService = class OrdenTrabajoService {
                 horasProyectadas: horasProyectadas,
                 horasReales: horasReales
             };
-        });
+        }));
         return result;
     }
     async findOne(id) {
@@ -234,9 +242,9 @@ let OrdenTrabajoService = class OrdenTrabajoService {
             horasReales: horasReales,
         };
     }
-    async findMesAnio(mes, anio, completado) {
+    async findMesAnio(mes, anio) {
         const ordenes = await this.ordenTrabajoRepository.find({
-            where: { mes: mes, anio: anio, completado: completado },
+            where: { mes: mes, anio: anio },
             relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
         });
         const result = ordenes.map(orden => {
@@ -272,12 +280,11 @@ let OrdenTrabajoService = class OrdenTrabajoService {
         });
         return result;
     }
-    async findForEmpleado(mes, anio, completado, empleadoId) {
+    async findForEmpleado(mes, anio, empleadoId) {
         const ordenes = await this.ordenTrabajoRepository.find({
             where: {
                 mes: mes,
                 anio: anio,
-                completado: completado,
                 empleadoAsignado: { Id: empleadoId },
             },
             relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
@@ -315,12 +322,11 @@ let OrdenTrabajoService = class OrdenTrabajoService {
         });
         return result;
     }
-    async findForServicio(mes, anio, completado, servicioId) {
+    async findForServicio(mes, anio, servicioId) {
         const ordenes = await this.ordenTrabajoRepository.find({
             where: {
                 mes: mes,
                 anio: anio,
-                completado: completado,
                 servicio: { servicioId: servicioId },
             },
             relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
@@ -359,9 +365,9 @@ let OrdenTrabajoService = class OrdenTrabajoService {
         console.log(result);
         return result;
     }
-    async obtenerHorasPorMes(mes, anio, completado) {
+    async obtenerHorasPorMes(mes, anio) {
         const ordenes = await this.ordenTrabajoRepository.find({
-            where: { mes: mes, anio: anio, completado: completado },
+            where: { mes: mes, anio: anio },
             relations: ['horariosAsignados'],
         });
         let horasProyectadas = 0;
@@ -408,7 +414,7 @@ let OrdenTrabajoService = class OrdenTrabajoService {
         Object.assign(ordenTrabajo, updateOrdenTrabajoDto);
         return this.ordenTrabajoRepository.save(ordenTrabajo);
     }
-    async remove(id) {
+    async deleteOrdenTrabajo(id) {
         const result = await this.ordenTrabajoRepository.delete(id);
         if (result.affected === 0)
             throw new common_1.NotFoundException('Orden de trabajo no encontrada');

@@ -7,7 +7,6 @@ import { EmpleadosNewComponent } from './empleados/empleados-new/empleados-new.c
 import { EditEmpleadoComponent } from './empleados/empleados-edit/empleados-edit.component';
 
 import { HomeComponent } from './home-user/home.component';
-import { HomeAdminComponent } from './home-admin/home-admin.component';
 import { ServiciosNewComponent } from './servicios/servicios-new/servicios-new.component';
 import { ServiciosListComponent } from './servicios/servicios-list/servicios-list.component';
 import { ServiciosEditComponent } from './servicios/servicios-edit/servicios-edit.component';
@@ -19,14 +18,9 @@ import { ListarOrdenTrabajoComponent } from './ordenTrabajo/listar-orden-trabajo
 import { OrdenTrabajoViewComponent } from './ordenTrabajo/orden-trabajo-view/orden-trabajo-view.component';
 import { CambioPasswordComponent } from './login/cambio-password/cambio-password.component';
 import { CategoriasComponent } from './categorias/categorias.component';
+import { CrearFacturaComponent } from './facturas/facturas-new/facturas.component';
 
 export const routes: Routes = [
-    {
-        path:'home-admin',
-        component: HomeAdminComponent,
-        canActivate:[AuthGuard],
-        data: { expectedRole: 'admin' }
-    },
     {
         path:'home',
         component: HomeComponent
@@ -92,7 +86,11 @@ export const routes: Routes = [
     {
         path:'cargarHorarios',
         component: HorariosAsignadosComponent
-    }
+    },
+    {
+        path:'factura/create',
+        component: CrearFacturaComponent
+    },
 
 
 ];

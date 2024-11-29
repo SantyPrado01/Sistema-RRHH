@@ -25,16 +25,16 @@ let FacturasController = class FacturasController {
         return this.facturasService.createFactura(createFacturaDto);
     }
     findAll() {
-        return this.facturasService.getFacturas();
+        return this.facturasService.findAll();
     }
     findOne(id) {
-        return this.facturasService.getFactura(+id);
+        return this.facturasService.findOne(+id);
     }
     update(id, updateFacturaDto) {
-        return this.facturasService.update(+id, updateFacturaDto);
+        return this.facturasService.updateFactura(+id, updateFacturaDto);
     }
     remove(id) {
-        return this.facturasService.remove(+id);
+        return this.facturasService.deleteFactura(+id);
     }
 };
 exports.FacturasController = FacturasController;

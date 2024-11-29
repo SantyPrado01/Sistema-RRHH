@@ -47,7 +47,7 @@
           <th>Servicio</th>
           <th>Empleado</th>
           <th>Mes</th>
-          <th>Dias</th>
+          <th>Estado</th>
           <th>Horas P.</th>
           <th>Horas R.</th>
           <th>Acciones</th>
@@ -59,7 +59,10 @@
           <td>{{ orden.servicio.nombre }}</td>
           <td>{{ orden.empleadoAsignado.apellido }}, {{ orden.empleadoAsignado.nombre }}</td>
           <td>{{ orden.mes }}</td>
-          <td>{{ obtenerDias(orden.necesidadHoraria) }}</td>
+          <td>
+            <span *ngIf="orden.completado" class="status completed">Completada</span>
+            <span *ngIf="!orden.completado" class="status pending">En Curso</span>
+          </td>
           <td>{{ orden.horasProyectadas }}</td>
           <td>{{ orden.horasReales }}</td>
           <td>
