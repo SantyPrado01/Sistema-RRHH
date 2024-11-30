@@ -113,12 +113,6 @@ export class EditEmpleadoComponent implements OnInit {
     });
   }
 
-  getCategoriaNombre(id: number): string {
-    const categoria = this.categorias.find(c => c.categoria === id);
-    console.log('Esto es en el GET:',categoria)
-    return categoria ? categoria.nombreCategoriaEmpleado : 'Desconocido';
-  }
-
   toggleFullTime() {
     if (this.fullTime) {
       this.disponibilidad.forEach(dia => {
@@ -132,7 +126,11 @@ export class EditEmpleadoComponent implements OnInit {
     this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
       next: (data) => {
         this.empleado = data;
+        console.log('informacion empleado', this.empleado)
         this.fullTime = this.empleado.fulltime || false;
+        if (this.empleado.categoria && typeof this.empleado.categoria === 'object'){
+          this.empleado.categoria = this.empleado.categoria.id
+        }
 
         this.disponibilidad.forEach(dia => {
           const disp = this.empleado.disponibilidades?.find((d: any) => d.diaSemana === dia.diaSemana);
@@ -196,7 +194,7 @@ export class EditEmpleadoComponent implements OnInit {
             disponibilidades: this.disponibilidad, 
             fulltime: this.fullTime,
           };
-
+          console.log(empleadoActualizado)
           this.http.patch<any>(`http://localhost:3000/empleados/${empleadoId}`, empleadoActualizado).subscribe({
             next: (response) => {
               this.mostrarAlerta('Operación Exitosa', 'Empleado actualizado con éxito.', 'success');

@@ -16,7 +16,8 @@ export class UsersService {
 
 
     getUsers(){
-        return this.userRepository.find()
+
+        return this.userRepository.find({relations:['categoria']})
     }
 
     async getUsername(username:string){

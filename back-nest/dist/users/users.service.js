@@ -23,7 +23,7 @@ let UsersService = class UsersService {
         this.userRepository = userRepository;
     }
     getUsers() {
-        return this.userRepository.find();
+        return this.userRepository.find({ relations: ['categoria'] });
     }
     async getUsername(username) {
         const userFound = await this.userRepository.findOne({

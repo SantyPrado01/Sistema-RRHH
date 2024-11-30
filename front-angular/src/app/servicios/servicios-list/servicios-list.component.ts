@@ -87,11 +87,6 @@ export class ServiciosListComponent implements OnInit {
     });
 }
 
-  getCategoriaNombre(id: number): string {
-    const categoria = this.categorias.find(c => c.categoria === id);
-    return categoria ? categoria.nombre : 'Desconocido';
-  }
-
   buscarServicios(): void {
     this.filtrarServicios();
   }
@@ -106,7 +101,7 @@ export class ServiciosListComponent implements OnInit {
     if (this.filtroOrdenar === 'nombre') {
       this.empresasFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
     } else if (this.filtroOrdenar === 'categoria') {
-      this.empresasFiltradas.sort((a, b) => this.getCategoriaNombre(a.categoria).localeCompare(this.getCategoriaNombre(b.categoria)));
+      
     }
   }
   

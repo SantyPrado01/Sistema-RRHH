@@ -49,7 +49,7 @@
           <td>{{ empresa.nombre }}</td>
           <td>{{ empresa.telefono }}</td>
           <td>{{ empresa.ciudad }}</td>
-          <td>{{ getCategoriaNombre(empresa.categoria) }}</td>
+          <td>{{ empresa.categoria.nombre }}</td>
           <td>
             <button class="btn-edit" [routerLink]="['/service/edit', empresa.servicioId]"><mat-icon>visibility</mat-icon></button>
             <button class="btn-delete" (click)="eliminarServicio(empresa)"><mat-icon>delete</mat-icon></button>

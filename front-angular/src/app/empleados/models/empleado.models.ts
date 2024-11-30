@@ -1,3 +1,5 @@
+import { CategoriaEmpleado } from "./categoria.models";
+
 export class Empleado {
     Id: number;
     legajo: number;
@@ -10,7 +12,7 @@ export class Empleado {
     eliminado: boolean;
     ciudad:number;
     observaciones:string;
-    categoria: number;
+    categoria: CategoriaEmpleado;
     disponibilidadID: number;
   
     constructor(
@@ -23,7 +25,7 @@ export class Empleado {
       email: string,
       eliminado: boolean,
       ciudad: number,
-      categoria: number,
+      categoria: CategoriaEmpleado,
       observaciones: string,
       disponibilidadID: number,
       fechaIngreso?: Date,

@@ -6,7 +6,7 @@ export declare class UpdateServicioDto extends UpdateServicioDto_base {
     direccion?: string;
     ciudadID?: number;
     telefono?: string;
-    categoriaID?: number;
+    categoria?: number;
     descripcion?: string;
     eliminado?: boolean;
     necesidadHorariaID?: number;

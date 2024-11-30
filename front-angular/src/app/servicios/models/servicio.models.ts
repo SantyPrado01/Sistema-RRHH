@@ -1,10 +1,12 @@
+import { CategoriaServicio } from "./categoria.models";
+
 export class Empresa {
     servicioId: number;
     nombre: string;
     cuit: string;
     direccion: string;
     telefono: number;
-    categoria: number;
+    categoria: CategoriaServicio;
     email: string;
     eliminado: boolean;
     ciudad: number;
@@ -16,7 +18,7 @@ export class Empresa {
         cuit: string,
         direccion: string,
         telefono: number,
-        categoria: number,
+        categoria: CategoriaServicio,
         email: string,
         eliminado: boolean,
         ciudad: number,

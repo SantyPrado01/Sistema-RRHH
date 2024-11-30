@@ -1,4 +1,4 @@
-export interface CategoriaEmpleado {
+export interface CategoriaUsuario {
     nombre: string;
     eliminado: boolean;
   }

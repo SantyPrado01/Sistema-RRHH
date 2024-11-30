@@ -34,13 +34,12 @@ let ServiciosService = class ServiciosService {
         return this.servicioRepository.save(newServicio);
     }
     getServicios() {
-        return this.servicioRepository.find({});
+        return this.servicioRepository.find({ relations: ['categoria'] });
     }
     async getServicioId(id) {
         const servicio = await this.servicioRepository.findOne({
-            where: {
-                servicioId: id
-            }
+            where: { servicioId: id },
+            relations: ['categoria']
         });
         if (!servicio) {
             throw new common_1.HttpException('Servicio no encontrado.', common_1.HttpStatus.NOT_FOUND);

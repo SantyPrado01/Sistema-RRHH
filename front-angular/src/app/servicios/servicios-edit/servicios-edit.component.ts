@@ -82,6 +82,9 @@ export class ServiciosEditComponent implements OnInit {
     this.http.get<any>(`http://localhost:3000/servicios/${id}`).subscribe({
       next:(data)=>{
         this.servicio = data;
+        if (this.servicio.categoria && typeof this.servicio.categoria === 'object') {
+          this.servicio.categoria = this.servicio.categoria.id; // Asegura que sea solo el ID
+        }
         console.log('Informacion de Servicio:', this.servicio)
         if (this.servicio.ciudad){
           this.obtenerNombreCiudad(this.servicio.ciudad.toString()).subscribe({

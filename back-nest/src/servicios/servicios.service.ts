@@ -24,14 +24,13 @@ export class ServiciosService {
   }
 
   getServicios(){
-    return this.servicioRepository.find({})
+    return this.servicioRepository.find({relations:['categoria']})
   }
 
   async getServicioId(id: number): Promise<Servicio> {
     const servicio = await this.servicioRepository.findOne({
-      where:{
-        servicioId: id
-      }
+      where:{servicioId: id},
+      relations:['categoria']
     });
     if (!servicio) {
       throw new HttpException('Servicio no encontrado.', HttpStatus.NOT_FOUND);

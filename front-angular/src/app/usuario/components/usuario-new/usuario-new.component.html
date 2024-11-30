@@ -51,7 +51,7 @@
       <tbody>
         <tr *ngFor="let usuario of usuarios" (click)="selectUsuario(usuario)">
           <td>{{ usuario.username }}</td>
-          <td>{{ getCategoriaNombre(usuario.categoriaId)}}</td>
+          <td>{{ usuario.categoria.nombre }}</td>
           <td>
             <button class="btn-delete" (click)="eliminarUsuario(usuario)"><mat-icon>delete</mat-icon></button>
           </td>

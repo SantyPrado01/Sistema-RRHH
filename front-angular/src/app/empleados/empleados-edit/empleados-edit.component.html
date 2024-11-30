@@ -90,7 +90,7 @@
               <label for="categoriaEmpleado">Categoría de Empleado:</label>
               <select id="categoriaEmpleado" [(ngModel)]="empleado.categoria" name="categoriaEmpleado" class="form-control" required #categoriaEmpleado="ngModel">
                 <option value="" disabled selected>Seleccione una categoría</option>
-                <option *ngFor="let categoria of categorias" [value]="categoria.categoriaEmpleadoId">
+                <option *ngFor="let categoria of categorias" [value]="categoria.id">
                   {{ categoria.nombre }}
                 </option>
                 <div *ngIf="categoriaEmpleado.invalid && categoriaEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La categoría de empleado es requerida.</div>

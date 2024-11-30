@@ -64,9 +64,8 @@ export class EmpleadosService {
 
   async getId(id: number){
     const empleadoFound = await this.empleadoRepository.findOne({
-      where:{
-        Id: id
-      }
+      where:{Id: id},
+      relations:['categoria']
     })
     if (!empleadoFound){
       return new HttpException('Empleado no encontrado', HttpStatus.NOT_FOUND)

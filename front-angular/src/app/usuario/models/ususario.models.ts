@@ -1,13 +1,15 @@
+import { CategoriaUsuario } from "./categoria.models";
+
 export class Usuario{
 
     id: number
     username: string;
-    categoriaId: number;
+    categoria: CategoriaUsuario;
 
-    constructor(id: number, username: string, categoriaId: number){
+    constructor(id: number, username: string, categoria: CategoriaUsuario){
         this.id = id
         this.username = username;
-        this.categoriaId = categoriaId;
+        this.categoria = categoria;
     }
 
 }

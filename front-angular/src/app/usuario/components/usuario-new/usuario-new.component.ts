@@ -53,6 +53,7 @@ export class UsuarioNewComponent implements OnInit {
     this.usuarioService.getUsuarios().subscribe({
       next: (data: Usuario[]) => {
         this.usuarios = data;
+        console.log(this.usuarios)
       },
       error: (err) => {
         console.error('Error al cargar los usuarios', err);
