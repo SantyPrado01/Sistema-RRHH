@@ -65,7 +65,7 @@ export class FacturasService {
     try {
       const factura = await this.facturaRepository.findOne({
         where: { facturaId },
-        relations: ['items'], 
+        relations: ['items','servicio'], 
       });
 
       if (!factura) {
@@ -97,7 +97,7 @@ export class FacturasService {
   async updateFactura(facturaId: number, updateFacturaDto: UpdateFacturaDto) {
     const facturaFound = await this.facturaRepository.findOne({
       where: { facturaId },
-      relations: ['items'], 
+      relations: ['items','servicio'], 
     });
   
     if (!facturaFound) {

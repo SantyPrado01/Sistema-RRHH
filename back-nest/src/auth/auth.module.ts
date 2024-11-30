@@ -8,11 +8,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtCosntants } from './constants/jwt.constant';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
+import { CategoriaUsuario } from 'src/categoria-usuario/entities/categoria-usuario.entity';
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService],
-  imports: [TypeOrmModule.forFeature([User]),UsersModule,
+  imports: [TypeOrmModule.forFeature([User, CategoriaUsuario]),UsersModule,
     JwtModule.register({
       global:true,
       secret: jwtCosntants.secret,

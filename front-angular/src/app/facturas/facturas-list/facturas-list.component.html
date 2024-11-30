@@ -18,8 +18,8 @@
       <div class="filter">
         <label for="visualizarPor">Visualizar por:</label>
         <select id="visualizarPor" >
-          <option [ngValue]="false">En Curso</option>
-          <option [ngValue]="true">Completado</option>
+          <option [ngValue]="false">Activas</option>
+          <option [ngValue]="true">Eliminadas</option>
         </select>
       </div>
 
@@ -57,7 +57,7 @@
           <td>{{ factura.fecha }}</td>
           <td>{{ factura.total }}</td>
           <td>
-            <button class="btn-edit" [routerLink]="['/ordentrabajo/view', factura.facturaId]"><mat-icon>visibility</mat-icon></button>
+            <button class="btn-edit" [routerLink]="['/factura/view', factura.facturaId]"><mat-icon>visibility</mat-icon></button>
             <button class="btn-delete" ><mat-icon>delete</mat-icon></button>
           </td>
         </tr>

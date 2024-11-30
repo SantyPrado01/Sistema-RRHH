@@ -18,8 +18,7 @@ export class User {
     password: string
 
     @ManyToOne(()=> CategoriaUsuario, categoria => categoria.user )
-    @JoinColumn({ name: 'categoriaId' })
-    categoria: CategoriaUsuario[];
+    categoria: CategoriaUsuario;
 
     @Column({default:false})
     eliminado: boolean

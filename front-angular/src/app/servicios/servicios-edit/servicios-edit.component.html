@@ -152,11 +152,6 @@
 
     <div *ngIf="seccionActual === 'facturas'">
       <div class="form-row">
-      
-        <div class="form-group">
-          <label for="empresaInput">Buscar por Empleado:</label>
-          <input id="empresaInput" type="text" class="form-control" [(ngModel)]="filtroEmpleado" (ngModelChange)="filtrarOrdenes()" placeholder="Nombre del Empleado"/>
-        </div>
     
         <div class="form-group">
           <label for="mesSelect">Mes:</label>
@@ -178,37 +173,30 @@
           <label for="estadoSelect">Estado:</label>
           <select id="estadoSelect" class="form-control" [(ngModel)]="estadoSeleccionado" (ngModelChange)="filtrarOrdenes()" >
             <option value="" disabled selected>Seleccionar Estado</option>
-            <option [ngValue]="true">Completado</option>
-            <option [ngValue]="false">En Curso</option>
+            <option [ngValue]="true">Activo</option>
+            <option [ngValue]="false">Eliminado</option>
           </select>
         </div>
       </div>
     
       <div class="orden-trabajo-container">
-        <h3>Listado de Órdenes de Trabajo</h3>
+        <h3>Listado de Facturas</h3>
           <table class="table">
             <thead>
               <tr>
-                <th>Orden N°</th>
-                <th>Empleado</th>
-                <th>Horas Proyectadas</th>
-                <th>Horas Reales</th>
-                <th>Estado</th>
+                <th>N°</th>
+                <th>Fecha</th>
+                <th>Total</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let orden of ordenesFiltradas">
-                <td>{{ orden.Id }}</td>
-                <td>{{ orden.empleadoAsignado.nombre }} {{ orden.empleadoAsignado.apellido }}</td>
-                <td>{{ orden.horasProyectadas }} horas</td>
-                <td>{{ orden.horasReales }} horas</td>
+              <tr *ngFor="let factura of facturasFiltradas">
+                <td>{{ factura.numero }}</td>
+                <td>{{ factura.fecha }}</td>
+                <td>{{ factura.total }}</td>
                 <td>
-                  <span *ngIf="orden.completado" class="status completed">Completada</span>
-                  <span *ngIf="!orden.completado" class="status pending">En Curso</span>
-                </td>
-                <td>
-                  <button [routerLink]="['/ordentrabajo/view', orden.Id]" class="btn btn-info"><mat-icon>visibility</mat-icon></button>
+                  <button [routerLink]="['/factura/view', factura.facturaId]" class="btn btn-info"><mat-icon>visibility</mat-icon></button>
                 </td>
               </tr>
             </tbody>

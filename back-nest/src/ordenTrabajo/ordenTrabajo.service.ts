@@ -39,8 +39,8 @@ export class OrdenTrabajoService {
     let anioExtraido = anio;
     console.log(mesExtraido)
     if (diaEspecifico){
-      const fecha = new Date(diaEspecifico);  // Convertir la fecha en formato aaaa/mm/dd
-      mesExtraido = fecha.getMonth() + 1;  // Obtener el mes (getMonth devuelve un índice de 0 a 11)
+      const fecha = new Date(diaEspecifico);  
+      mesExtraido = fecha.getMonth() + 1;  
       anioExtraido = fecha.getFullYear();
     }
 

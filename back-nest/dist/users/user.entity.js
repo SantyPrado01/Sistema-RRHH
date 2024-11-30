@@ -29,8 +29,7 @@ __decorate([
 ], User.prototype, "password", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => categoria_usuario_entity_1.CategoriaUsuario, categoria => categoria.user),
-    (0, typeorm_1.JoinColumn)({ name: 'categoriaId' }),
-    __metadata("design:type", Array)
+    __metadata("design:type", categoria_usuario_entity_1.CategoriaUsuario)
 ], User.prototype, "categoria", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false }),

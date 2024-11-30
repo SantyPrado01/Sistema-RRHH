@@ -1,7 +1,8 @@
+import { CategoriaUsuario } from "src/categoria-usuario/entities/categoria-usuario.entity";
 export declare class CreateUserDto {
     username: string;
     password: string;
-    categoriaId: number;
+    categoria: CategoriaUsuario;
     eliminado: boolean;
     primerIngreso: boolean;
 }

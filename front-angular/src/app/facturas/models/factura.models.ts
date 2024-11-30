@@ -1,4 +1,5 @@
 import { Empresa } from "../../servicios/models/servicio.models";
+import { ItemFactura } from "./items.models";
 
 export interface FacturaResponse {
     facturaId: number;
@@ -6,4 +7,5 @@ export interface FacturaResponse {
     fecha: string;
     total: number;
     servicio: Empresa;
+    items: ItemFactura[];
   }

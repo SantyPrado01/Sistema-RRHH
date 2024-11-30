@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 import { MatIconModule } from '@angular/material/icon';
+import { FacturaService } from '../../facturas/services/factura.service';
 
 @Component({
   selector: 'app-empresas-edit',
@@ -30,6 +31,8 @@ export class ServiciosEditComponent implements OnInit {
 
   ordenes: any[] = [];
   ordenesFiltradas: any[] = [];
+  facturas: any[] = [];
+  facturasFiltradas: any[] = [];
   meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   anios: number[] = Array.from({ length: 11 }, (_, i) => 2024 + i);
   anioSeleccionado: number = new Date().getFullYear(); 
@@ -43,7 +46,8 @@ export class ServiciosEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private ordenTrabajoService: OrdenTrabajoService   
+    private ordenTrabajoService: OrdenTrabajoService,
+    private facturaService: FacturaService   
   ) {}
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
@@ -57,6 +61,7 @@ export class ServiciosEditComponent implements OnInit {
     if (this.servicioId) {
       this.cargarServicio(this.servicioId);
       this.obtenerOrdenes(this.servicioId)
+      this.obtenerFacturas(this.servicioId)
     }
     this.categoriaEmpresaService.getCategoriasServicio().subscribe({
       next: (data) => {
@@ -187,7 +192,6 @@ export class ServiciosEditComponent implements OnInit {
       },
       error: (err) => {
         console.error('Hubo un error al obtener las órdenes de trabajo', err);
-        this.mostrarAlerta('Error', 'No se pudieron obtener las órdenes de trabajo.', 'error');
       }
     });
   }
@@ -243,6 +247,18 @@ export class ServiciosEditComponent implements OnInit {
     return diasConHorario.join(', ') || 'No hay días con horarios definidos';
   }
   
+  obtenerFacturas(servicioId: string) {
+    this.facturaService.findByServicio(Number(servicioId)).subscribe({
+      next: (data) => {
+        this.facturas = data;
+        this.facturasFiltradas = data
+        console.log('Órdenes obtenidas:', this.facturasFiltradas);
+      },
+      error: (err) => {
+        console.error('Hubo un error al obtener las facturas de trabajo', err);
+      }
+    });
+  }
 
   cancelar() {
     alert('Servicio NO actualizado, operación cancelada.');

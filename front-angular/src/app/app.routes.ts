@@ -20,6 +20,7 @@ import { CambioPasswordComponent } from './login/cambio-password/cambio-password
 import { CategoriasComponent } from './categorias/categorias.component';
 import { CrearFacturaComponent } from './facturas/facturas-new/facturas.component';
 import { FacturasListComponent } from './facturas/facturas-list/facturas-list.component';
+import { FacturasEditComponent } from './facturas/facturas-edit/facturas-edit.component';
 
 export const routes: Routes = [
     {
@@ -95,6 +96,10 @@ export const routes: Routes = [
     {
         path:'facturas',
         component: FacturasListComponent
+    },
+    {
+        path:'factura/view/:id',
+        component: FacturasEditComponent
     },
 
 

@@ -94,6 +94,7 @@ export class UsuarioNewComponent implements OnInit {
   
 
   guardarUsuario(): void {
+    console.log(this.usuario)
     this.usuarioService.createUsuario(this.usuario).subscribe({
       next: (response: any) => {
         const mensaje = `Usuario guardado con éxito. Contraseña temporal: ${response.temporaryPassword}`;

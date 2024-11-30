@@ -20,6 +20,14 @@ export class FacturaService {
     return this.http.get<FacturaResponse>(this.apiUrl)
   }
 
+  findByServicio(id: number): Observable <any>{
+    return this.http.get<FacturaResponse>(`${this.apiUrl}/servicio/${id}`)
+  }
+
+  findOne(id:number): Observable <FacturaResponse>{
+    return this.http.get<FacturaResponse>(`${this.apiUrl}/${id}`)
+  }
+
   updateFactura(id: number, factura: FacturaResponse): Observable <FacturaResponse>{
     return this.http.patch<FacturaResponse>(`${this.apiUrl}/${id}`, factura)
   }

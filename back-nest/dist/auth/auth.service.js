@@ -19,10 +19,12 @@ const jwt_1 = require("@nestjs/jwt");
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("../users/user.entity");
 const typeorm_2 = require("@nestjs/typeorm");
+const categoria_usuario_entity_1 = require("../categoria-usuario/entities/categoria-usuario.entity");
 let AuthService = class AuthService {
-    constructor(userRepository, jwtService) {
+    constructor(userRepository, jwtService, categoriaRepository) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.categoriaRepository = categoriaRepository;
     }
     async register({ username, categoriaId }) {
         const user = await this.userRepository.findOne({ where: { username: username } });
@@ -32,15 +34,16 @@ let AuthService = class AuthService {
         const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
         const hashedPassword = await bcrypt.hash(randomPassword, 10);
         console.log('registerDto', username, categoriaId);
+        const categoria = await this.categoriaRepository.findOne({ where: { id: categoriaId } });
         const createUserDto = {
             username,
             password: hashedPassword,
-            categoriaId: Number(categoriaId),
+            categoria,
             eliminado: false,
             primerIngreso: true,
         };
-        console.log('createUserDto', createUserDto);
         const newUser = await this.userRepository.save(createUserDto);
+        console.log('createUserDto', createUserDto);
         return {
             message: 'Usuario registrado con éxito',
             temporaryPassword: randomPassword,
@@ -127,7 +130,9 @@ exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
+    __param(2, (0, typeorm_2.InjectRepository)(categoria_usuario_entity_1.CategoriaUsuario)),
     __metadata("design:paramtypes", [typeorm_1.Repository,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        typeorm_1.Repository])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

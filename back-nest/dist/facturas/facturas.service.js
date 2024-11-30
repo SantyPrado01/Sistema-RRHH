@@ -65,7 +65,7 @@ let FacturasService = class FacturasService {
         try {
             const factura = await this.facturaRepository.findOne({
                 where: { facturaId },
-                relations: ['items'],
+                relations: ['items', 'servicio'],
             });
             if (!factura) {
                 throw new common_2.HttpException('Factura no encontrada', common_2.HttpStatus.NOT_FOUND);
@@ -96,7 +96,7 @@ let FacturasService = class FacturasService {
     async updateFactura(facturaId, updateFacturaDto) {
         const facturaFound = await this.facturaRepository.findOne({
             where: { facturaId },
-            relations: ['items'],
+            relations: ['items', 'servicio'],
         });
         if (!facturaFound) {
             throw new common_2.HttpException('Factura no encontrada.', common_2.HttpStatus.NOT_FOUND);

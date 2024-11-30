@@ -39,4 +39,5 @@ export class OrdenTrabajo {
 
     @Column({default:false})
     completado: boolean;
+
 }

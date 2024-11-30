@@ -8,6 +8,7 @@ import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CategoriaUsuario } from 'src/categoria-usuario/entities/categoria-usuario.entity';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
       @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService,
+        @InjectRepository(CategoriaUsuario) private categoriaRepository: Repository<CategoriaUsuario>,
     ){}
 
     async register({ username, categoriaId }: RegisterDto) {
@@ -26,16 +28,19 @@ export class AuthService {
         const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
         const hashedPassword = await bcrypt.hash(randomPassword, 10);
         console.log('registerDto', username, categoriaId)
-        const createUserDto: CreateUserDto = {
+
+        const categoria = await this.categoriaRepository.findOne({where:{id: categoriaId}})
+
+        const createUserDto = {
           username,
           password: hashedPassword,
-          categoriaId: Number(categoriaId),
+          categoria,
           eliminado: false, 
           primerIngreso: true, 
         };
-        console.log('createUserDto', createUserDto);
+
         const newUser = await this.userRepository.save(createUserDto);
-      
+        console.log('createUserDto', createUserDto);
         return { 
           message: 'Usuario registrado con éxito',
           temporaryPassword: randomPassword,

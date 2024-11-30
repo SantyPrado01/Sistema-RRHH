@@ -8,7 +8,13 @@ export declare class AuthController {
     register(registerDto: RegisterDto): Promise<{
         message: string;
         temporaryPassword: string;
-        user: import("../users/dto/create-user.dto").CreateUserDto & import("../users/user.entity").User;
+        user: {
+            username: string;
+            password: string;
+            categoria: import("../categoria-usuario/entities/categoria-usuario.entity").CategoriaUsuario;
+            eliminado: boolean;
+            primerIngreso: boolean;
+        } & import("../users/user.entity").User;
     }>;
     changePassword(userId: number, newPassword: string): Promise<{
         message: string;
@@ -32,7 +38,7 @@ export declare class AuthController {
     } | {
         token: string;
         username: string;
-        role: import("../categoria-usuario/entities/categoria-usuario.entity").CategoriaUsuario[];
+        role: import("../categoria-usuario/entities/categoria-usuario.entity").CategoriaUsuario;
         primerIngreso: boolean;
         id?: undefined;
         message?: undefined;

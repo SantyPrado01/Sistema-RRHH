@@ -3,7 +3,7 @@ export declare class User {
     id: number;
     username: string;
     password: string;
-    categoria: CategoriaUsuario[];
+    categoria: CategoriaUsuario;
     eliminado: boolean;
     primerIngreso: boolean;
 }
