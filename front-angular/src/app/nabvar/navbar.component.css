@@ -105,3 +105,9 @@
 .nav-item.open .nav-link .dropdown-arrow {
   transform: rotate(180deg);
 }
+
+.navbar .dropdown-item {
+  white-space: normal;  
+  word-wrap: break-word; 
+  word-break: break-word; 
+}

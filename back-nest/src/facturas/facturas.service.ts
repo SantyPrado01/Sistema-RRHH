@@ -18,44 +18,32 @@ export class FacturasService {
   ) {}
 
   async createFactura(createFacturaDto: CreateFacturaDto) {
-    // Crear la factura con los datos proporcionados
     const factura = this.facturaRepository.create(createFacturaDto);
-    
-    // Guardar la factura en la base de datos
     const savedFactura = await this.facturaRepository.save(factura);
-  
-    // Crear y asociar los items con la factura
     const itemsFactura = [];
   
     for (const item of createFacturaDto.items) {
-      // Verificar si el item ya existe para esta factura
       const existingItem = await this.itemsFacturaRepository.findOne({
         where: {
           descripcion: item.descripcion,
           valor: item.valor,
-          facturaId: savedFactura.facturaId,  // Asegurarnos de que es para esta factura
+          facturaId: savedFactura.facturaId,  
         },
       });
   
       let newItem;
   
       if (existingItem) {
-        // Si el item ya existe, reutilizamos el item existente
         newItem = existingItem;
       } else {
-        // Si no existe, lo creamos como un nuevo item
         newItem = this.itemsFacturaRepository.create(item);
       }
   
-      // Asociar el facturaId
       newItem.facturaId = savedFactura.facturaId;
       itemsFactura.push(newItem);
     }
-  
-    // Guardar los items en la base de datos
+
     await this.itemsFacturaRepository.save(itemsFactura);
-  
-    // Asociar los items guardados a la factura
     savedFactura.items = itemsFactura;
   
     return savedFactura;
@@ -86,6 +74,23 @@ export class FacturasService {
       return factura;
     } catch (error) {
       throw new HttpException('Error al obtener la factura', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async findByServicioId(servicioId: number) {
+    try {
+      const facturas = await this.facturaRepository.find({
+        where: {
+          servicio: { servicioId }, 
+        },
+        relations: ['items', 'servicio'],
+      });
+      if (facturas.length === 0) {
+        throw new HttpException('No se encontraron facturas para este servicio', HttpStatus.NOT_FOUND);
+      }
+      return facturas;
+    } catch (error) {
+      throw new HttpException('Error al obtener las facturas', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

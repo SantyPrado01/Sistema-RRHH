@@ -31,12 +31,12 @@ export class OrdenTrabajoService {
     return this.http.get(`${this.apiUrl}/horas-mes/${mes}/${anio}`)
   }
 
-  getOrdenesForEmpleado(mes: number, anio: number, empleadoId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/findForEmpleado/${mes}/${anio}/${empleadoId}`);
+  getOrdenesForEmpleado(empleadoId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/findForEmpleado/${empleadoId}`);
   }
 
-  getOrdenesForServicio(mes: number, anio: number, servicioId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/findForServicio/${mes}/${anio}/${servicioId}`);
+  getOrdenesForServicio(servicioId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/findForServicio/${servicioId}`);
   }
 
   obtenerEmpresas(): Observable<any[]> {

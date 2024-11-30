@@ -45,7 +45,7 @@ let HorarioAsignadoService = class HorarioAsignadoService {
                     fecha: fecha,
                     horaInicioProyectado: necesidad.horaInicio,
                     horaFinProyectado: necesidad.horaFin,
-                    estado: 'pendiente',
+                    estado: 'Pendiente',
                     suplente: false,
                     empleadoSuplente: null,
                 });

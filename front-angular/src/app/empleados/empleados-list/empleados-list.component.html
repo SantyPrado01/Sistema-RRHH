@@ -9,7 +9,7 @@
 <div class="content-container">
   <div class="search-filter-container">
     <div class="search-bar">
-      <input type="text" placeholder="Buscar empleado..." [(ngModel)]="searchTerm" (change)="filtrarEmpleados()"/>
+      <input type="text" placeholder="Buscar empleado..." [(ngModel)]="searchTerm" (input)="filtrarEmpleados()"/>
       <button routerLink='/employee/create' class="btn btn-primary">+</button>
     </div>
 

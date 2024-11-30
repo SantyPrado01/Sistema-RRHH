@@ -23,6 +23,8 @@ export class HomeComponent {
     this.username = this.authService.getUsername();
     this.obtenerOrdenes();
     this.obtenerHoras();
+    this.ordenTrabajoService.getAll()
+
   }
   ordenes: any[] = [];
   anioActual: number = new Date().getFullYear();

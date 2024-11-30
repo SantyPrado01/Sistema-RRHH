@@ -21,6 +21,11 @@ export class FacturasController {
   findOne(@Param('id') id: string) {
     return this.facturasService.findOne(+id);
   }
+  
+  @Get('servicio/:id')
+  async findFacturasByServicio(@Param('id') servicioId: number) {
+    return this.facturasService.findByServicioId(servicioId);
+  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateFacturaDto: UpdateFacturaDto) {

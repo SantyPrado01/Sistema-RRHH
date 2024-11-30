@@ -179,7 +179,7 @@ export class ServiciosEditComponent implements OnInit {
   }
 
   obtenerOrdenes(servicioId: string) {
-    this.ordenTrabajoService.getOrdenesForServicio(this.mesSeleccionado, this.anioSeleccionado, servicioId).subscribe({
+    this.ordenTrabajoService.getOrdenesForServicio(servicioId).subscribe({
       next: (data) => {
         this.ordenes = data;
         this.ordenesFiltradas = data

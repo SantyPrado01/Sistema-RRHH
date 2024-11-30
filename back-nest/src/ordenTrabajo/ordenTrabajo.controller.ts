@@ -61,47 +61,59 @@ export class OrdenTrabajoController {
     return this.ordenTrabajoService.findMesAnio(mesNumero, anioNumero);
   }
 
-  @Get('findForEmpleado/:mes/:anio/:empleadoId')
+  @Get('findForEmpleado/:empleadoId')
   async findForEmpleado(
-    @Param('mes') mes: string,
-    @Param('anio') anio: string,
-    @Param('completado') completado: string,
     @Param('empleadoId') empleadoId: string
   ): Promise<any> {
-    const mesNumero = parseInt(mes, 10);
-    const anioNumero = parseInt(anio, 10);
     const empleadoIdNumero = parseInt(empleadoId, 10);
 
-    if (isNaN(mesNumero) || isNaN(anioNumero) || isNaN(empleadoIdNumero)) {
+    if (isNaN(empleadoIdNumero)) {
       throw new Error('Mes, Año o ID de Empleado no válidos');
     }
     return await this.ordenTrabajoService.findForEmpleado(
-      mesNumero,
-      anioNumero,
       empleadoIdNumero
     );
   }
 
-  @Get('findForServicio/:mes/:anio/:servicioId')
+  @Get('findByMesAnioEmpleado/:empleadoId/:mes/:anio')
+  async getOrdenesByEmpleadoAndDate(
+    @Param('empleadoId') empleadoId: number,
+    @Param('mes') mes: number,
+    @Param('anio') anio: number,
+  ) {
+    return await this.ordenTrabajoService.findForEmpleadoByMonthAndYear(
+      empleadoId,
+      mes,
+      anio,
+    );
+  }
+
+  @Get('findForServicio/:servicioId')
   async findForServicio(
-    @Param('mes') mes: string,
-    @Param('anio') anio: string,
     @Param('servicioId') servicioId: string
   ): Promise<any> {
-    const mesNumero = parseInt(mes, 10);
-    const anioNumero = parseInt(anio, 10);
+
     const servicioIdNumero = parseInt(servicioId, 10);
 
-    if (isNaN(mesNumero) || isNaN(anioNumero) || isNaN(servicioIdNumero)) {
-      console.log('Mes:',mesNumero)
-      console.log('Mes:',anioNumero)
+    if (isNaN(servicioIdNumero)) {
       console.log('Mes:',servicioIdNumero)
       throw new Error('Mes, Año o ID de Empleado no válidos');
     }
     return await this.ordenTrabajoService.findForServicio(
-      mesNumero,
-      anioNumero,
       servicioIdNumero
+    );
+  }
+
+  @Get('findByMesAnioServicio/:servicioId/:mes/:anio')
+  async getOrdenesByServicioAndDate(
+    @Param('servicioId') servicioId: number,
+    @Param('mes') mes: number,
+    @Param('anio') anio: number,
+  ) {
+    return await this.ordenTrabajoService.findForServicioByMonthAndYear(
+      servicioId,
+      mes,
+      anio,
     );
   }
 

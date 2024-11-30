@@ -10,6 +10,7 @@ export declare class FacturasService {
     createFactura(createFacturaDto: CreateFacturaDto): Promise<Factura>;
     findAll(): Promise<Factura[]>;
     findOne(facturaId: number): Promise<Factura>;
+    findByServicioId(servicioId: number): Promise<Factura[]>;
     updateFactura(facturaId: number, updateFacturaDto: UpdateFacturaDto): Promise<Factura & UpdateFacturaDto>;
     deleteFactura(facturaId: number): Promise<{
         message: string;

@@ -10,6 +10,8 @@ import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-ale
 import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
 import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 import { MatIconModule } from '@angular/material/icon';
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-edit-empleado',
@@ -38,6 +40,14 @@ export class EditEmpleadoComponent implements OnInit {
   estadoSeleccionado: boolean = false;
 
   filtroEmpresa: string = '';
+
+  totalHorasProyectadas: number = 0;
+  totalHorasReales: number = 0;
+  totalAsistencias: number = 0;
+  totalLT: number = 0;
+  totalFC: number = 0;
+  totalFS: number = 0;
+  totalE: number = 0;
 
   disponibilidad = [
     { disponibilidadHorariaId:null, diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
@@ -122,9 +132,8 @@ export class EditEmpleadoComponent implements OnInit {
     this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
       next: (data) => {
         this.empleado = data;
-        console.log(this.empleado)
         this.fullTime = this.empleado.fulltime || false;
-        console.log('Fulltime', this.empleado.fullTime)
+
         this.disponibilidad.forEach(dia => {
           const disp = this.empleado.disponibilidades?.find((d: any) => d.diaSemana === dia.diaSemana);
           if (disp) {
@@ -235,10 +244,11 @@ export class EditEmpleadoComponent implements OnInit {
   }
 
   obtenerOrdenes(empleadoId: string) {
-    this.ordenTrabajoService.getOrdenesForEmpleado(this.mesSeleccionado, this.anioSeleccionado, empleadoId).subscribe({
+    this.ordenTrabajoService.getOrdenesForEmpleado(empleadoId).subscribe({
       next: (data) => {
         this.ordenes = data;
         this.ordenesFiltradas = data
+        this.calcularTotales()
         console.log('Órdenes obtenidas:', this.ordenesFiltradas);
       },
       error: (err) => {
@@ -247,6 +257,27 @@ export class EditEmpleadoComponent implements OnInit {
       }
     });
   }
+
+  calcularTotales(): void {
+    this.totalHorasProyectadas = 0;
+    this.totalHorasReales = 0;
+    this.totalAsistencias = 0;
+    this.totalLT = 0;
+    this.totalFC = 0;
+    this.totalFS = 0;
+    this.totalE = 0;
+  
+    this.ordenesFiltradas.forEach(orden => {
+      this.totalHorasProyectadas += orden.horasProyectadas;
+      this.totalHorasReales += orden.horasReales;
+      this.totalAsistencias += orden.estadoContador.asistio;
+      this.totalLT += orden.estadoContador.llegoTarde;
+      this.totalFC += orden.estadoContador.faltoConAviso;
+      this.totalFS += orden.estadoContador.faltoSinAviso;
+      this.totalE += orden.estadoContador.enfermedad;
+    });
+  }
+  
 
   mesesMap: { [key: string]: number } = {
     'Enero': 1,
@@ -286,9 +317,8 @@ export class EditEmpleadoComponent implements OnInit {
         : true;
       return coincideEmpresa && coincideMes && coincideAnio && coincideEstado;
     });
-  
-    console.log('Órdenes filtradas:', this.ordenesFiltradas);
   }
+
 
   obtenerDias(necesidades: any[]): string {
     const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
@@ -303,5 +333,109 @@ export class EditEmpleadoComponent implements OnInit {
     alert('Empleado NO actualizado, operación cancelada.');
     this.mostrarAlerta('Operacion Cancelada', 'Empleado NO actualizado.', 'success');
     this.router.navigate(['/employee']);
+  }
+
+  descargarPdf(): void {
+    const doc = new jsPDF();
+
+    // Título del documento
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text('Resumen de Cierre Mensual', 20, 20);
+
+    // Subtítulo con totales
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Horas Proyectadas: ${this.totalHorasProyectadas}`, 20, 40);
+    doc.text(`Horas Reales: ${this.totalHorasReales}`, 120, 40);
+    doc.text(`Asistencias: ${this.totalAsistencias}`, 20, 60);
+    doc.text(`Llegada Tarde: ${this.totalLT}`, 20, 70);
+    doc.text(`Faltaron con Aviso: ${this.totalFC}`, 20, 80);
+    doc.text(`Faltaron sin Aviso: ${this.totalFS}`, 20, 90);
+    doc.text(`Enfermedad: ${this.totalE}`, 20, 100);
+
+    // Configuración de la tabla principal
+    const columns = ['Orden N°', 'Servicio', 'Horas Proyectadas', 'Horas Reales', 'A', 'LT', 'FC', 'FS', 'E'];
+    const rows = this.ordenesFiltradas.map(orden => [
+      orden.Id,
+      orden.servicio.nombre,
+      orden.horasProyectadas,
+      orden.horasReales,
+      orden.estadoContador.asistio,
+      orden.estadoContador.llegoTarde,
+      orden.estadoContador.faltoConAviso,
+      orden.estadoContador.faltoSinAviso,
+      orden.estadoContador.enfermedad
+    ]);
+
+    // Agregar tabla al PDF
+    (doc as any).autoTable({
+      head: [columns],
+      body: rows,
+      startY: 110, // Para comenzar la tabla más abajo
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 186, 140], // Color de fondo de los encabezados
+        textColor: [0, 0, 0],        // Color del texto en los encabezados
+        fontSize: 10,
+        fontStyle: 'bold'
+      },
+      bodyStyles: {
+        fontSize: 10,
+        textColor: [0, 0, 0],
+        halign: 'center'
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 240] // Color de las filas alternas
+      },
+      margin: { top: 50 }, // Margen superior
+      styles: {
+        overflow: 'linebreak',
+        font: 'helvetica'
+      }
+    });
+
+    // Descargar el archivo PDF
+    doc.save('cierre_mensual.pdf');
+  }
+
+  descargarExcel(): void {
+    // Crear los encabezados para la tabla principal
+    const columnas = ['Orden N°', 'Servicio', 'Horas Proyectadas', 'Horas Reales', 'A', 'LT', 'FC', 'FS', 'E'];
+
+    // Crear las filas con los datos de las ordenes
+    const filas = this.ordenesFiltradas.map(orden => [
+      orden.Id,
+      orden.servicio.nombre,
+      orden.horasProyectadas,
+      orden.horasReales,
+      orden.estadoContador.asistio,
+      orden.estadoContador.llegoTarde,
+      orden.estadoContador.faltoConAviso,
+      orden.estadoContador.faltoSinAviso,
+      orden.estadoContador.enfermedad
+    ]);
+
+    // Crear los totales como una fila adicional
+    const totales = [
+      '',
+      'Totales',
+      this.totalHorasProyectadas,
+      this.totalHorasReales,
+      this.totalAsistencias,
+      this.totalLT,
+      this.totalFC,
+      this.totalFS,
+      this.totalE
+    ];
+
+    // Crear una hoja de trabajo con los datos (ordenes + totales)
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([columnas, ...filas, [], totales]);
+
+    // Crear un libro de trabajo y agregar la hoja
+    const wb: XLSX.WorkBook = { Sheets: { 'Resumen Mensual': ws }, SheetNames: ['Resumen Mensual'] };
+
+    // Exportar el libro a un archivo Excel
+    XLSX.writeFile(wb, 'cierre_mensual.xlsx');
   }
 }

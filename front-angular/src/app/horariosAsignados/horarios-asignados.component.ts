@@ -80,6 +80,7 @@ export class HorariosAsignadosComponent implements OnInit {
         console.log('Horario actualizado:', response);
         this.mostrarAlerta('Actualización Exitosa', 'El horario ha sido actualizado exitosamente.', 'success');
         this.cancelarEdicion()
+        this.ngOnInit()
       },
       error: (error) => {
         console.error('Error al actualizar el horario:', error);

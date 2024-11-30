@@ -76,6 +76,23 @@ let FacturasService = class FacturasService {
             throw new common_2.HttpException('Error al obtener la factura', common_2.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    async findByServicioId(servicioId) {
+        try {
+            const facturas = await this.facturaRepository.find({
+                where: {
+                    servicio: { servicioId },
+                },
+                relations: ['items', 'servicio'],
+            });
+            if (facturas.length === 0) {
+                throw new common_2.HttpException('No se encontraron facturas para este servicio', common_2.HttpStatus.NOT_FOUND);
+            }
+            return facturas;
+        }
+        catch (error) {
+            throw new common_2.HttpException('Error al obtener las facturas', common_2.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     async updateFactura(facturaId, updateFacturaDto) {
         const facturaFound = await this.facturaRepository.findOne({
             where: { facturaId },

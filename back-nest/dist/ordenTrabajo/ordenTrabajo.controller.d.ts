@@ -6,11 +6,13 @@ export declare class OrdenTrabajoController {
     private readonly ordenTrabajoService;
     constructor(ordenTrabajoService: OrdenTrabajoService);
     create(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo>;
-    findAll(): Promise<OrdenTrabajo[]>;
+    findAll(): Promise<any[]>;
     findOne(id: string): Promise<import("./interface/orden-trabajo-con-horas.interface").OrdenTrabajoConHoras>;
     obtenerOrdenesPorMesYAnio(mes: string, anio: string): Promise<OrdenTrabajo[]>;
-    findForEmpleado(mes: string, anio: string, completado: string, empleadoId: string): Promise<any>;
-    findForServicio(mes: string, anio: string, servicioId: string): Promise<any>;
+    findForEmpleado(empleadoId: string): Promise<any>;
+    getOrdenesByEmpleadoAndDate(empleadoId: number, mes: number, anio: number): Promise<any>;
+    findForServicio(servicioId: string): Promise<any>;
+    getOrdenesByServicioAndDate(servicioId: number, mes: number, anio: number): Promise<any>;
     obtenerHorasPorMes(mes: number, anio: number): Promise<any>;
     update(id: string, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     remove(id: string): Promise<void>;

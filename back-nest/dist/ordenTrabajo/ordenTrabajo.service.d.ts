@@ -20,11 +20,13 @@ export declare class OrdenTrabajoService {
     createAsignarHorarioUnico(ordenTrabajoId: number, diaEspecifico: Date, horaInicio: string, horaFin: string): Promise<HorarioAsignado>;
     createAsignarHorarios(ordenTrabajoId: number): Promise<any[]>;
     private obtenerFechasDelMes;
-    findAll(): Promise<OrdenTrabajo[]>;
+    findAll(): Promise<any[]>;
     findOne(id: number): Promise<OrdenTrabajoConHoras>;
     findMesAnio(mes: number, anio: number): Promise<any>;
-    findForEmpleado(mes: number, anio: number, empleadoId: number): Promise<any>;
-    findForServicio(mes: number, anio: number, servicioId: number): Promise<any>;
+    findForEmpleado(empleadoId: number): Promise<any>;
+    findForEmpleadoByMonthAndYear(empleadoId: number, mes: number, anio: number): Promise<any>;
+    findForServicio(servicioId: number): Promise<any>;
+    findForServicioByMonthAndYear(servicioId: number, mes: number, anio: number): Promise<any>;
     obtenerHorasPorMes(mes: number, anio: number): Promise<any>;
     update(id: number, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     deleteOrdenTrabajo(id: number): Promise<void>;

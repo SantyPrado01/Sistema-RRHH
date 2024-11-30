@@ -35,11 +35,20 @@ export class OrdenTrabajoService {
     const servicioExistente = await this.servicioRepository.findOne({ where: { servicioId: servicio.servicioId } });
     if (!servicioExistente) throw new NotFoundException('Servicio no encontrado');
 
+    let mesExtraido = mes;
+    let anioExtraido = anio;
+    console.log(mesExtraido)
+    if (diaEspecifico){
+      const fecha = new Date(diaEspecifico);  // Convertir la fecha en formato aaaa/mm/dd
+      mesExtraido = fecha.getMonth() + 1;  // Obtener el mes (getMonth devuelve un índice de 0 a 11)
+      anioExtraido = fecha.getFullYear();
+    }
+
     const nuevaOrdenTrabajo = this.ordenTrabajoRepository.create({
       servicio: servicioExistente,
       empleadoAsignado: empleadoExistente,
-      mes,
-      anio,
+      mes: mesExtraido,
+      anio: anioExtraido,
       diaEspecifico,
       horaInicio,
       horaFin
@@ -157,7 +166,7 @@ export class OrdenTrabajoService {
           fecha,
           horaInicioProyectado: necesidad.horaInicio,
           horaFinProyectado: necesidad.horaFin,
-          estado: 'pendiente',
+          estado: 'Pendiente',
           suplente: false,
           empleadoSuplente: null,
         });
@@ -186,55 +195,115 @@ export class OrdenTrabajoService {
     return fechas;
   }
   
-  async findAll(): Promise<OrdenTrabajo[]> {
-    const ordenes = await this.ordenTrabajoRepository.find({ 
+  async findAll(): Promise<any[]> {
+    const ordenes = await this.ordenTrabajoRepository.find({
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
     });
-
-    const result = await Promise.all(ordenes.map(async (orden) => {
-        const todosComprobados = orden.horariosAsignados.every(horario => horario.comprobado === true);
-
-        if (todosComprobados) {
-            orden.completado = true;
-            await this.ordenTrabajoRepository.save(orden); 
-        }
-
+  
+    const result = await Promise.all(
+      ordenes.map(async (orden) => {
         let horasProyectadas = 0;
         let horasReales = 0;
-
-        orden.horariosAsignados.forEach(horario => {
+  
+        if (orden.diaEspecifico === null) {
+          const todosComprobados = orden.horariosAsignados.every(
+            (horario) => horario.comprobado === true,
+          );
+  
+          if (todosComprobados) {
+            orden.completado = true;
+            await this.ordenTrabajoRepository.save(orden);
+          }
+  
+          orden.horariosAsignados.forEach((horario) => {
             if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-                const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":");
-                const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":");
-                const horaInicio = new Date();
-                horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
-                const horaFin = new Date();
-                horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-                const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
-                horasProyectadas += horas;
+              const [horaInicioProyectado, minutoInicioProyectado] =
+                horario.horaInicioProyectado.split(':');
+              const [horaFinProyectado, minutoFinProyectado] =
+                horario.horaFinProyectado.split(':');
+              const horaInicio = new Date();
+              horaInicio.setHours(
+                parseInt(horaInicioProyectado),
+                parseInt(minutoInicioProyectado),
+                0,
+                0,
+              );
+              const horaFin = new Date();
+              horaFin.setHours(
+                parseInt(horaFinProyectado),
+                parseInt(minutoFinProyectado),
+                0,
+                0,
+              );
+              const horas =
+                (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+              horasProyectadas += horas;
             }
 
             if (horario.horaInicioReal && horario.horaFinReal) {
-                const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(":");
-                const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(":");
-                const horaRealInicioDate = new Date();
-                horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
-                const horaRealFinDate = new Date();
-                horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-                const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
-                horasReales += horasRealesCalculadas;
+              const [horaRealInicio, minutoRealInicio] =
+                horario.horaInicioReal.split(':');
+              const [horaRealFin, minutoRealFin] =
+                horario.horaFinReal.split(':');
+              const horaRealInicioDate = new Date();
+              horaRealInicioDate.setHours(
+                parseInt(horaRealInicio),
+                parseInt(minutoRealInicio),
+                0,
+                0,
+              );
+              const horaRealFinDate = new Date();
+              horaRealFinDate.setHours(
+                parseInt(horaRealFin),
+                parseInt(minutoRealFin),
+                0,
+                0,
+              );
+              const horasRealesCalculadas =
+                (horaRealFinDate.getTime() -
+                  horaRealInicioDate.getTime()) /
+                3600000;
+              horasReales += horasRealesCalculadas;
             }
-        });
+          });
+        } else {
+          if (orden.horaInicio && orden.horaFin) {
+            const horarioAsignado = orden.horariosAsignados[0];
+            console.log(horarioAsignado)
+            const comprobado = horarioAsignado ? horarioAsignado.comprobado : false;
 
+            if (comprobado === true) {
+              console.log('Entras Aca?')
+              orden.completado = true;
+              await this.ordenTrabajoRepository.save(orden); // Guardamos la orden con el estado actualizado
+            }
+
+            const [horaInicio, minutoInicio] = orden.horaInicio.split(':');
+            const [horaFin, minutoFin] = orden.horaFin.split(':');
+  
+            const horaInicioDate = new Date(orden.diaEspecifico);
+            horaInicioDate.setHours(parseInt(horaInicio), parseInt(minutoInicio), 0, 0);
+  
+            const horaFinDate = new Date(orden.diaEspecifico);
+            horaFinDate.setHours(parseInt(horaFin), parseInt(minutoFin), 0, 0);
+  
+            horasProyectadas = (horaFinDate.getTime() - horaInicioDate.getTime()) / 3600000;
+  
+            horasReales = horasProyectadas;
+          }
+        }
+  
         return {
-            ...orden,
-            horasProyectadas: horasProyectadas,
-            horasReales: horasReales
+          ...orden,
+          horasProyectadas,
+          horasReales,
         };
-    }));
-
+      }),
+    );
+  
     return result;
-}
+  }
+  
 
   async findOne(id: number): Promise<OrdenTrabajoConHoras> {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
@@ -321,11 +390,9 @@ export class OrdenTrabajoService {
     return result;
   }
 
-  async findForEmpleado(mes: number,anio: number,empleadoId: number): Promise<any> {
+  async findForEmpleado(empleadoId: number): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
       where: {
-        mes: mes,
-        anio: anio,
         empleadoAsignado: { Id: empleadoId }, 
       },
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
@@ -333,6 +400,14 @@ export class OrdenTrabajoService {
     const result = ordenes.map(orden => {
       let horasProyectadas = 0;
       let horasReales = 0;
+
+      const estadoContador = {
+        asistio: 0,
+        llegoTarde: 0,
+        faltoConAviso: 0,
+        faltoSinAviso: 0,
+        enfermedad: 0,
+      };
   
       orden.horariosAsignados.forEach(horario => {
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
@@ -356,21 +431,120 @@ export class OrdenTrabajoService {
           const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
           horasReales += horasRealesCalculadas;
         }
+  
+        switch (horario.estado) {
+          case 'Asistió':
+            estadoContador.asistio++;
+            break;
+          case 'Llegada Tarde':
+            estadoContador.llegoTarde++;
+            break;
+          case 'Faltó Con Aviso':
+            estadoContador.faltoConAviso++;
+            break;
+          case 'Faltó Sin Aviso':
+            estadoContador.faltoSinAviso++;
+            break;
+          case 'Enfermedad':
+            estadoContador.enfermedad++;
+            break;
+        }
       });
+  
       return {
-        ...orden, 
-        horasProyectadas: horasProyectadas,
-        horasReales: horasReales,
+        ...orden,
+        horasProyectadas,
+        horasReales,
+        estadoContador,
       };
     });
+    console.log('Consulta Orden Trabajo',result)
     return result;
   }
 
-  async findForServicio(mes: number, anio: number, servicioId: number): Promise<any> {
+  async findForEmpleadoByMonthAndYear(
+    empleadoId: number,
+    mes: number,
+    anio: number
+  ): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
       where: {
+        empleadoAsignado: { Id: empleadoId },
         mes: mes,
         anio: anio,
+      },
+      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
+    });
+  
+    const result = ordenes.map(orden => {
+      let horasProyectadas = 0;
+      let horasReales = 0;
+
+      const estadoContador = {
+        asistio: 0,
+        llegoTarde: 0,
+        faltoConAviso: 0,
+        faltoSinAviso: 0,
+        enfermedad: 0,
+      };
+  
+      orden.horariosAsignados.forEach(horario => {
+        if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+          const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(':');
+          const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(':');
+          const horaInicio = new Date();
+          horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
+          const horaFin = new Date();
+          horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
+          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+          horasProyectadas += horas;
+        }
+
+        if (horario.horaInicioReal && horario.horaFinReal) {
+          const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(':');
+          const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(':');
+          const horaRealInicioDate = new Date();
+          horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
+          const horaRealFinDate = new Date();
+          horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
+          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+          horasReales += horasRealesCalculadas;
+        }
+  
+        switch (horario.estado) {
+          case 'Asistió':
+            estadoContador.asistio++;
+            break;
+          case 'Llegada Tarde':
+            estadoContador.llegoTarde++;
+            break;
+          case 'Faltó Con Aviso':
+            estadoContador.faltoConAviso++;
+            break;
+          case 'Faltó Sin Aviso':
+            estadoContador.faltoSinAviso++;
+            break;
+          case 'Enfermedad':
+            estadoContador.enfermedad++;
+            break;
+        }
+      });
+  
+      return {
+        ...orden,
+        horasProyectadas,
+        horasReales,
+        estadoContador,
+      };
+    });
+  
+    return result;
+  }
+  
+
+  async findForServicio(servicioId: number): Promise<any> {
+    const ordenes = await this.ordenTrabajoRepository.find({
+      where: {
         servicio: { servicioId: servicioId },
       },
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
@@ -411,6 +585,91 @@ export class OrdenTrabajoService {
     console.log(result)
     return result;
   }
+
+  async findForServicioByMonthAndYear(
+    servicioId: number,
+    mes: number,
+    anio: number
+  ): Promise<any> {
+    // Buscar las órdenes de trabajo del empleado para el mes y año especificados
+    const ordenes = await this.ordenTrabajoRepository.find({
+      where: {
+        servicio: { servicioId: servicioId },
+        mes: mes,
+        anio: anio,
+      },
+      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
+    });
+  
+    const result = ordenes.map(orden => {
+      let horasProyectadas = 0;
+      let horasReales = 0;
+  
+      // Contador de estados
+      const estadoContador = {
+        asistio: 0,
+        llegoTarde: 0,
+        faltoConAviso: 0,
+        faltoSinAviso: 0,
+        enfermedad: 0,
+      };
+  
+      orden.horariosAsignados.forEach(horario => {
+        // Cálculo de horas proyectadas
+        if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+          const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(':');
+          const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(':');
+          const horaInicio = new Date();
+          horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
+          const horaFin = new Date();
+          horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
+          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+          horasProyectadas += horas;
+        }
+  
+        // Cálculo de horas reales
+        if (horario.horaInicioReal && horario.horaFinReal) {
+          const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(':');
+          const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(':');
+          const horaRealInicioDate = new Date();
+          horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
+          const horaRealFinDate = new Date();
+          horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
+          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+          horasReales += horasRealesCalculadas;
+        }
+  
+        // Contar los estados
+        switch (horario.estado) {
+          case 'Asistió':
+            estadoContador.asistio++;
+            break;
+          case 'Llegada Tarde':
+            estadoContador.llegoTarde++;
+            break;
+          case 'Faltó Con Aviso':
+            estadoContador.faltoConAviso++;
+            break;
+          case 'Faltó Sin Aviso':
+            estadoContador.faltoSinAviso++;
+            break;
+          case 'Enfermedad':
+            estadoContador.enfermedad++;
+            break;
+        }
+      });
+  
+      return {
+        ...orden,
+        horasProyectadas,
+        horasReales,
+        estadoContador,
+      };
+    });
+  
+    return result;
+  }
+
   
   async obtenerHorasPorMes(mes: number, anio: number): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
