@@ -58,6 +58,9 @@ let EmpleadosService = class EmpleadosService {
     get() {
         return this.empleadoRepository.find({});
     }
+    getEliminado() {
+        return this.empleadoRepository.find({ where: { eliminado: false } });
+    }
     async getId(id) {
         const empleadoFound = await this.empleadoRepository.findOne({
             where: { Id: id },

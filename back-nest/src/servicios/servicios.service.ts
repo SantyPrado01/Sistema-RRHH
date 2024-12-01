@@ -27,6 +27,10 @@ export class ServiciosService {
     return this.servicioRepository.find({relations:['categoria']})
   }
 
+  getServiciosEliminado(){
+    return this.servicioRepository.find()
+  }
+
   async getServicioId(id: number): Promise<Servicio> {
     const servicio = await this.servicioRepository.findOne({
       where:{servicioId: id},

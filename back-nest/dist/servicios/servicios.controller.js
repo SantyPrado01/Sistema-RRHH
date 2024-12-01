@@ -27,6 +27,9 @@ let ServiciosController = class ServiciosController {
     findAll() {
         return this.serviciosService.getServicios();
     }
+    getServiciosEliminado() {
+        return this.serviciosService.getServiciosEliminado();
+    }
     findOne(id) {
         return this.serviciosService.getServicioId(+id);
     }
@@ -51,6 +54,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ServiciosController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('/true'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ServiciosController.prototype, "getServiciosEliminado", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

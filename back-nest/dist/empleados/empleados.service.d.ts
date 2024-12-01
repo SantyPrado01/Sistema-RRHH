@@ -13,6 +13,7 @@ export declare class EmpleadosService {
     createEmpleado(createEmpleadoDto: CreateEmpleadoDto): Promise<Empleado>;
     createDisponibilidad(empleadoId: number, createDisponibilidadHorariaDto: CreateDisponibilidadHorariaDto[]): Promise<DisponibilidadHoraria[]>;
     get(): Promise<Empleado[]>;
+    getEliminado(): Promise<Empleado[]>;
     getId(id: number): Promise<Empleado | HttpException>;
     delete(empleadoId: number): Promise<HttpException>;
     update(empleadoId: number, empleado: UpdateEmpleadoDto): Promise<HttpException | (Empleado & UpdateEmpleadoDto)>;

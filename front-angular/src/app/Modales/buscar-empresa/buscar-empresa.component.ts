@@ -31,7 +31,7 @@ export class BuscarEmpresaComponent implements OnInit {
   }
 
   cargarEmpresas(): void {
-    this.empresaService.getServicios().subscribe({
+    this.empresaService.getServiciosEliminado().subscribe({
       next: (data: Empresa[]) => {
         this.empresas = data;
         this.empresasFiltradas = []; // Inicialmente vacía

@@ -17,6 +17,10 @@ export class ServicioService {
     return this.http.get<Empresa[]>(`${this.apiUrl}`);
   }
 
+  getServiciosEliminado(): Observable<Empresa[]>{
+    return this.http.get<Empresa[]>(`${this.apiUrl}/true`);
+  }
+
   getServicio(nombre:string): Observable<Empresa[]>{
     return this.http.get<Empresa[]>(`${this.apiUrl}/${nombre}}`);
   }

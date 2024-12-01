@@ -62,6 +62,10 @@ export class EmpleadosService {
     return this.empleadoRepository.find({})
   }
 
+  getEliminado(){
+    return this.empleadoRepository.find({where:{eliminado:false}})
+  }
+
   async getId(id: number){
     const empleadoFound = await this.empleadoRepository.findOne({
       where:{Id: id},

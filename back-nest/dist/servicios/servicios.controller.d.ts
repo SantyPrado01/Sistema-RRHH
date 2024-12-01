@@ -6,6 +6,7 @@ export declare class ServiciosController {
     constructor(serviciosService: ServiciosService);
     create(createServicioDto: CreateServicioDto): Promise<import("./entities/servicio.entity").Servicio>;
     findAll(): Promise<import("./entities/servicio.entity").Servicio[]>;
+    getServiciosEliminado(): Promise<import("./entities/servicio.entity").Servicio[]>;
     findOne(id: string): Promise<import("./entities/servicio.entity").Servicio>;
     update(id: string, updateServicioDto: UpdateServicioDto): Promise<import("./entities/servicio.entity").Servicio & UpdateServicioDto>;
     remove(id: string): Promise<void>;

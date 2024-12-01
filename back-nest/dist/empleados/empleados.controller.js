@@ -35,6 +35,9 @@ let EmpleadosController = class EmpleadosController {
     getEmpleados() {
         return this.empleadosService.get();
     }
+    getEmpleadosEliminado() {
+        return this.empleadosService.getEliminado();
+    }
     getEmpleado(id) {
         return this.empleadosService.getId(+id);
     }
@@ -66,6 +69,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], EmpleadosController.prototype, "getEmpleados", null);
+__decorate([
+    (0, common_1.Get)('/true'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], EmpleadosController.prototype, "getEmpleadosEliminado", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

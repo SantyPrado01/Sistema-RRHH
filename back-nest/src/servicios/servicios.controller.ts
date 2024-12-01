@@ -17,6 +17,12 @@ export class ServiciosController {
     return this.serviciosService.getServicios();
   }
 
+  @Get('/true')
+  getServiciosEliminado(){
+    return this.serviciosService.getServiciosEliminado();
+  }
+
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.serviciosService.getServicioId(+id);

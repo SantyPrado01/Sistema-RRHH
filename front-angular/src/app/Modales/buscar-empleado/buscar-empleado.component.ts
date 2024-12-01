@@ -30,7 +30,7 @@ export class BuscarEmpleadoComponent implements OnInit {
   }
 
   cargarEmpleados(): void {
-    this.empleadosService.getEmpleados().subscribe({
+    this.empleadosService.getEmpleadosEliminado().subscribe({
       next: (data: Empleado[]) => {
         this.empleados = data;
         this.isLoading = false;
@@ -44,7 +44,7 @@ export class BuscarEmpleadoComponent implements OnInit {
 
   buscarEmpleados(): void {
     if (this.searchQuery.trim() === '') {
-      this.empleadosFiltrados = []; // No muestra resultados si no hay búsqueda
+      this.empleadosFiltrados = []; 
     } else {
       this.empleadosFiltrados = this.empleados.filter(empleado =>
         empleado.nombre.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
@@ -54,6 +54,6 @@ export class BuscarEmpleadoComponent implements OnInit {
   }
 
   seleccionarEmpleado(empleado: Empleado): void {
-    this.dialogRef.close(empleado); // Devuelve el empleado seleccionado
+    this.dialogRef.close(empleado); 
   }
 }

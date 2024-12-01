@@ -7,6 +7,7 @@ export declare class ServiciosService {
     constructor(servicioRepository: Repository<Servicio>);
     createServicio(servicio: CreateServicioDto): Promise<Servicio>;
     getServicios(): Promise<Servicio[]>;
+    getServiciosEliminado(): Promise<Servicio[]>;
     getServicioId(id: number): Promise<Servicio>;
     deleteServicio(servicioId: number): Promise<void>;
     updateServicio(servicioId: number, servicio: UpdateServicioDto): Promise<Servicio & UpdateServicioDto>;

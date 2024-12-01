@@ -328,7 +328,6 @@ export class EditEmpleadoComponent implements OnInit {
   }
 
   cancelar() {
-    alert('Empleado NO actualizado, operación cancelada.');
     this.mostrarAlerta('Operacion Cancelada', 'Empleado NO actualizado.', 'success');
     this.router.navigate(['/employee']);
   }

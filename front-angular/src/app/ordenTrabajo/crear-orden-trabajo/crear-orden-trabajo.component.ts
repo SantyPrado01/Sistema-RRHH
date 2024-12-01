@@ -168,5 +168,8 @@ export class CrearOrdenTrabajoComponent {
     this.horasProyectadas = 0;  // Resetear las horas proyectadas
   }
   
-
+  cancelar() {
+    this.mostrarAlerta('Operacion Cancelada', 'Orden de Trabajo no Creada.', 'success');
+    this.router.navigate(['/ordentrabajo']);
+  }
 }
