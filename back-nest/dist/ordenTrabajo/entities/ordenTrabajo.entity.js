@@ -62,6 +62,14 @@ __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], OrdenTrabajo.prototype, "completado", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], OrdenTrabajo.prototype, "eliminado", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Date)
+], OrdenTrabajo.prototype, "fechaEliminado", void 0);
 exports.OrdenTrabajo = OrdenTrabajo = __decorate([
     (0, typeorm_1.Entity)('ordenesTrabajo')
 ], OrdenTrabajo);

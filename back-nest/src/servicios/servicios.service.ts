@@ -28,7 +28,7 @@ export class ServiciosService {
   }
 
   getServiciosEliminado(){
-    return this.servicioRepository.find()
+    return this.servicioRepository.find({where:{eliminado: false}})
   }
 
   async getServicioId(id: number): Promise<Servicio> {

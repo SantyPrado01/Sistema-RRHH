@@ -7,7 +7,7 @@
 
 <div class="container">
   <div class="form-container">
-    <form class="form-factura" (ngSubmit)="onSubmit()">
+    <form class="form-factura" (ngSubmit)="onSubmit()" #form="ngForm">
       <div class="datos-container">
         <div class="form-row">
           <div class="form-group">
@@ -40,7 +40,7 @@
         </div>
         <div class="form-footer">
           <div class="form-group-footer">
-            <button type="submit" class="btn btn-success">Actualizar Factura</button>
+            <button type="submit" class="btn btn-success" [disabled]="!form.valid">Actualizar Factura</button>
           </div>
         </div>
       </div>  

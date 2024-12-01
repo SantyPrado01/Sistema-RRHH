@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { OrdenTrabajoService } from '../services/orden-trabajo.service';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { MatIconModule } from '@angular/material/icon';
+import { OrdenTrabajo } from '../models/orden-trabajo.models';
+import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 
 @Component({
   selector: 'app-listar-orden-trabajo',
@@ -107,6 +109,37 @@ export class ListarOrdenTrabajoComponent implements OnInit {
     });
   
     console.log('Órdenes filtradas:', this.ordenesFiltradas);
+  }
+
+  eliminarOrden(orden: OrdenTrabajo){
+    console.log(orden)
+    const dialogRef = this.dialog.open(ConfirmacionDialogComponent,{
+      data:{
+        title: 'Confirmar Eliminación',
+        message: `¿Estás seguro de que deseas eliminar la Orden "${orden.Id}" y sus horarios asignados?`,
+        type: 'confirm'
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) =>{
+      if (result){
+        const ordenId = Number(orden.Id);
+        console.log(ordenId)
+        this.ordenTrabajoService.eliminarOrden(ordenId).subscribe({
+          next: (response) =>{
+            console.log('Orden de Trabajo eliminada con éxito', response);
+            this.mostrarAlerta('Operación Exitosa', 'Orden de Trabajo eliminada con éxito.', 'success');
+            this.ngOnInit();
+          },
+          error:(err) => {
+            console.error('Error al eliminar la Orden:', err);
+            this.mostrarAlerta('Error', 'No se pudo eliminar la Orden de Trabajo.', 'error');
+          },
+        });
+      } else {
+        console.log('Operacion de eliminacion cancelada.')
+      }
+    })
+
   }
 
 }

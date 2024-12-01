@@ -16,4 +16,5 @@ export declare class OrdenTrabajoController {
     obtenerHorasPorMes(mes: number, anio: number): Promise<any>;
     update(id: string, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     remove(id: string): Promise<void>;
+    deleteLogico(id: number): Promise<void>;
 }

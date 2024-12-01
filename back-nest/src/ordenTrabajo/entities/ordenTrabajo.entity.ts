@@ -40,4 +40,10 @@ export class OrdenTrabajo {
     @Column({default:false})
     completado: boolean;
 
+    @Column({default:false})
+    eliminado?: boolean;
+
+    @Column({ nullable: true })
+    fechaEliminado?: Date;
+
 }

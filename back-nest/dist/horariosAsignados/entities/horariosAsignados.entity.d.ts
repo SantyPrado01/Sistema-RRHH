@@ -14,4 +14,5 @@ export declare class HorarioAsignado {
     suplente: boolean;
     comprobado: boolean;
     observaciones: string;
+    eliminado: boolean;
 }

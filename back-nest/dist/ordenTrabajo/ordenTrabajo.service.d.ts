@@ -30,4 +30,5 @@ export declare class OrdenTrabajoService {
     obtenerHorasPorMes(mes: number, anio: number): Promise<any>;
     update(id: number, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo>;
     deleteOrdenTrabajo(id: number): Promise<void>;
+    delete(id: number): Promise<void>;
 }

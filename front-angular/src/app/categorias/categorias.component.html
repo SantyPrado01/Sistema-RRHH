@@ -19,7 +19,7 @@
 
       <!-- Botones -->
       <div class="modal-footer">
-        <button *ngIf="!selectedCategoria" type="button" class="btn btn-save" (click)="guardarCategoria()">Guardar Categoria</button>
+        <button *ngIf="!selectedCategoria" type="button" class="btn btn-save" (click)="guardarCategoria()" [disabled]="!form.valid">Guardar Categoria</button>
         <button *ngIf="selectedCategoria" type="button" class="btn btn-save" (click)="actualizarCategoria()">Actualizar Categoria</button>
         <button *ngIf="selectedCategoria" type="button" class="btn btn-cancel" (click)="cancelarEdicion()">Cancelar</button>
       </div>

@@ -32,6 +32,17 @@ export class ServiciosNewComponent implements OnInit {
     });
   }
 
+  validarTelefono(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');
+    this.servicio.telefono = input.value;
+  }
+
+  validarSoloLetras(event: any) {
+    const input = event.target;
+    input.value = input.value.replace(/[^a-zA-Z ]/g, '');
+  }
+
   ngOnInit() {
     this.categoriaEmpresaService.getCategoriasServicio().subscribe({
       next: (data) => {

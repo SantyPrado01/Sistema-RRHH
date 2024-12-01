@@ -12,7 +12,7 @@ export declare class CategoriaEmpleadoService {
     }>;
     get(): Promise<Categorias[]>;
     getNombre(categoriaEmpleadoNombre: string): Promise<Categorias>;
-    getId(categoriaEmpleadoId: number): Promise<HttpException | Categorias>;
+    getId(categoriaEmpleadoId: number): Promise<Categorias | HttpException>;
     delete(categoriaEmpleadoId: number): Promise<HttpException>;
     update(categoriaEmpleadoId: number, categoriaEmpleado: UpdateCategoriaEmpleadoDto): Promise<HttpException | (Categorias & UpdateCategoriaEmpleadoDto)>;
 }

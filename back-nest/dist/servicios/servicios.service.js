@@ -37,7 +37,7 @@ let ServiciosService = class ServiciosService {
         return this.servicioRepository.find({ relations: ['categoria'] });
     }
     getServiciosEliminado() {
-        return this.servicioRepository.find();
+        return this.servicioRepository.find({ where: { eliminado: false } });
     }
     async getServicioId(id) {
         const servicio = await this.servicioRepository.findOne({

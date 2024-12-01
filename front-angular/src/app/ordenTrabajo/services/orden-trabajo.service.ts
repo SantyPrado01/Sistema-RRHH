@@ -46,4 +46,8 @@ export class OrdenTrabajoService {
   obtenerEmpleados(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:3000/empleados'); 
   }
+
+  eliminarOrden(id: number): Observable<any> {
+    return this.http.patch<any[]>(`${this.apiUrl}/delete/${id}`,{})
+  }
 }

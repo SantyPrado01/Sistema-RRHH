@@ -7,12 +7,12 @@
 
 <div class="container">
   <div class="form-container">
-    <form class="form-factura" (ngSubmit)="onSubmit()">
+    <form class="form-factura" (ngSubmit)="onSubmit()" #form="ngForm">
       <div class="datos-container">
         <div class="form-row">
           <div class="form-group">
             <label for="numero">Número de Factura</label>
-            <input type="number" id="numero" [(ngModel)]="factura.numero" name="numero" class="form-control" required />
+            <input type="number" id="numero" [(ngModel)]="factura.numero" name="numero" class="form-control" pattern="^[0-9]{8}$" required />
           </div>
         </div>
         <div class="form-row">
@@ -40,7 +40,7 @@
         </div>
         <div class="form-footer">
           <div class="form-group-footer">
-            <button type="submit" class="btn btn-success">Guardar Factura</button>
+            <button type="submit" class="btn btn-success" [disabled]="!form.valid">Guardar Factura</button>
           </div>
         </div>
       </div>  
@@ -60,13 +60,13 @@
             <tbody>
               <tr *ngFor="let item of factura.items; let i = index">
                 <td>
-                  <input type="number" [(ngModel)]="item.cantidad" name="cantidad{{i}}" class="form-control" required (ngModelChange)="calcularTotal()" />
+                  <input type="number" [(ngModel)]="item.cantidad" name="cantidad{{i}}" class="form-control" required (ngModelChange)="calcularTotal()" pattern="^[0-9]{8}$"/>
                 </td>
                 <td>
                   <input type="text" [(ngModel)]="item.descripcion" name="descripcion{{i}}" class="form-control" required (ngModelChange)="calcularTotal()" />
                 </td>
                 <td>
-                  <input type="number" [(ngModel)]="item.valor" name="valor{{i}}" class="form-control" required (ngModelChange)="calcularTotal()" />
+                  <input type="number" [(ngModel)]="item.valor" name="valor{{i}}" class="form-control" required (ngModelChange)="calcularTotal()" pattern="^[0-9]{8}$" />
                 </td>
                 <td>
                   <button type="button" class="btn btn-danger" (click)="eliminarItem(i)">Eliminar</button>

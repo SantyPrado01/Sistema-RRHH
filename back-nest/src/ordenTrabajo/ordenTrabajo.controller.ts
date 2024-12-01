@@ -134,4 +134,9 @@ export class OrdenTrabajoController {
   remove(@Param('id') id: string) {
     return this.ordenTrabajoService.deleteOrdenTrabajo(+id);
   }
+
+  @Patch('delete/:id')
+  deleteLogico(@Param('id') id: number) {
+    return this.ordenTrabajoService.delete(+id);
+  }
 }

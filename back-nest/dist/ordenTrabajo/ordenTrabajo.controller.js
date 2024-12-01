@@ -84,6 +84,9 @@ let OrdenTrabajoController = class OrdenTrabajoController {
     remove(id) {
         return this.ordenTrabajoService.deleteOrdenTrabajo(+id);
     }
+    deleteLogico(id) {
+        return this.ordenTrabajoService.delete(+id);
+    }
 };
 exports.OrdenTrabajoController = OrdenTrabajoController;
 __decorate([
@@ -169,6 +172,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], OrdenTrabajoController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Patch)('delete/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], OrdenTrabajoController.prototype, "deleteLogico", null);
 exports.OrdenTrabajoController = OrdenTrabajoController = __decorate([
     (0, common_1.Controller)('ordenTrabajo'),
     __metadata("design:paramtypes", [ordenTrabajo_service_1.OrdenTrabajoService])

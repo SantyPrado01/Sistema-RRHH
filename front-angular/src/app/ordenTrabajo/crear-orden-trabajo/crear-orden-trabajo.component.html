@@ -14,7 +14,7 @@
   </div>
 
   <div class="form-container">
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" #form="ngForm">
       <div *ngIf="seccionActual === 'ordenTrabajo'">
         <div class="form-row">
           <div class="form-group">
@@ -66,10 +66,10 @@
           <div *ngFor="let dia of necesidad; let i = index" class="grid-row">
             <div>{{ dia.nombre }}</div>
             <div>
-              <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio{{i}}" (ngModelChange)="calcularHorasProyectadas()" required />
+              <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio{{i}}" (ngModelChange)="calcularHorasProyectadas()"/>
             </div>
             <div>
-              <input type="time" [(ngModel)]="dia.horaFin" name="horaFin{{i}}" (ngModelChange)="calcularHorasProyectadas()" required />
+              <input type="time" [(ngModel)]="dia.horaFin" name="horaFin{{i}}" (ngModelChange)="calcularHorasProyectadas()"/>
             </div>
           </div>
         </div>
@@ -127,8 +127,8 @@
       </div>
            
       <div class="modal-footer">
-        <button type="submit" class="btn btn-save">Guardar Orden de Trabajo</button>
-        <button type="button" class="btn btn-cancel">Cancelar</button>
+        <button type="submit" class="btn btn-save" [disabled]="!form.valid">Guardar Orden de Trabajo</button>
+        <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
       </div>
     </form>
   </div>

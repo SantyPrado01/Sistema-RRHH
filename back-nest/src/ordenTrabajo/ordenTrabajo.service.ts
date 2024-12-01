@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, MoreThanOrEqual, Repository } from 'typeorm';
 import { OrdenTrabajo } from './entities/ordenTrabajo.entity'; 
 import { CreateOrdenTrabajoDto } from './dto/createOrdenTrabajo.dto'; 
 import { Empleado } from 'src/empleados/entities/empleado.entity';
@@ -60,10 +60,7 @@ export class OrdenTrabajoService {
     return ordenGuardada;
   }
   
-  async createNecesidadHoraria(
-    ordenTrabajoId: number,
-    necesidadesHorarias: CreateNecesidadHorariaDto[],
-): Promise<NecesidadHoraria[]> {
+  async createNecesidadHoraria(ordenTrabajoId: number, necesidadesHorarias: CreateNecesidadHorariaDto[]): Promise<NecesidadHoraria[]> {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({ where: { Id: ordenTrabajoId }, relations: ['empleadoAsignado'] });
     if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
 
@@ -111,23 +108,16 @@ export class OrdenTrabajoService {
             console.log(`No hay disponibilidad para el día ${diaSemana}, pero no se valida.`);
         }
     }
-
     const nuevasNecesidades = necesidadesHorarias.map((necesidad) =>
         this.necesidadHorariaRepository.create({
             ...necesidad,
             ordenTrabajo,
         })
     );
-
     return this.necesidadHorariaRepository.save(nuevasNecesidades);
-}
+  }
 
-  async createAsignarHorarioUnico(
-    ordenTrabajoId: number,
-    diaEspecifico: Date,
-    horaInicio: string,
-    horaFin: string,
-  ) {
+  async createAsignarHorarioUnico(ordenTrabajoId: number, diaEspecifico: Date, horaInicio: string, horaFin: string) {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
       where: { Id: ordenTrabajoId },
       relations: ['empleadoAsignado'],
@@ -148,10 +138,7 @@ export class OrdenTrabajoService {
   
 
   async createAsignarHorarios(ordenTrabajoId: number) {
-    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
-      where: { Id: ordenTrabajoId },
-      relations: ['necesidadHoraria', 'empleadoAsignado'],
-    });
+    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({where: { Id: ordenTrabajoId }, relations: ['necesidadHoraria', 'empleadoAsignado']});
     if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
     const horariosAsignados = [];
     const necesidadesValidas = ordenTrabajo.necesidadHoraria.filter(
@@ -182,24 +169,31 @@ export class OrdenTrabajoService {
     const fechas: Date[] = [];
     const primerDiaMes = new Date(anio, mes - 1, 1); 
     const ultimoDiaMes = new Date(anio, mes, 0).getDate(); 
+
     const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-    const diaIndice = parseInt(diaSemana) - 1; 
+    
+    const diaIndice = parseInt(diaSemana);  
+    console.log(diaIndice); 
+  
     if (diaIndice < 0 || diaIndice > 6) return fechas;
+  
+    // Itera sobre los días del mes
     for (let dia = 1; dia <= ultimoDiaMes; dia++) {
       const fecha = new Date(anio, mes - 1, dia); 
+      
+      // Compara el día de la semana usando getDay()
       if (fecha.getDay() === diaIndice) {
         fechas.push(fecha); 
       }
     }
+  
     console.log(fechas);
     return fechas;
   }
   
-  async findAll(): Promise<any[]> {
-    const ordenes = await this.ordenTrabajoRepository.find({
-      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
-    });
   
+  async findAll(): Promise<any[]> {
+    const ordenes = await this.ordenTrabajoRepository.find({relations: ['servicio', 'empleadoAsignado', 'horariosAsignados']});
     const result = await Promise.all(
       ordenes.map(async (orden) => {
         let horasProyectadas = 0;
@@ -273,9 +267,8 @@ export class OrdenTrabajoService {
             const comprobado = horarioAsignado ? horarioAsignado.comprobado : false;
 
             if (comprobado === true) {
-              console.log('Entras Aca?')
               orden.completado = true;
-              await this.ordenTrabajoRepository.save(orden); // Guardamos la orden con el estado actualizado
+              await this.ordenTrabajoRepository.save(orden); 
             }
 
             const [horaInicio, minutoInicio] = orden.horaInicio.split(':');
@@ -392,9 +385,7 @@ export class OrdenTrabajoService {
 
   async findForEmpleado(empleadoId: number): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
-      where: {
-        empleadoAsignado: { Id: empleadoId }, 
-      },
+      where: {empleadoAsignado: { Id: empleadoId }},
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
     });
     const result = ordenes.map(orden => {
@@ -544,9 +535,7 @@ export class OrdenTrabajoService {
 
   async findForServicio(servicioId: number): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
-      where: {
-        servicio: { servicioId: servicioId },
-      },
+      where: {servicio: { servicioId: servicioId }},
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
     });
   
@@ -591,7 +580,6 @@ export class OrdenTrabajoService {
     mes: number,
     anio: number
   ): Promise<any> {
-    // Buscar las órdenes de trabajo del empleado para el mes y año especificados
     const ordenes = await this.ordenTrabajoRepository.find({
       where: {
         servicio: { servicioId: servicioId },
@@ -604,8 +592,7 @@ export class OrdenTrabajoService {
     const result = ordenes.map(orden => {
       let horasProyectadas = 0;
       let horasReales = 0;
-  
-      // Contador de estados
+
       const estadoContador = {
         asistio: 0,
         llegoTarde: 0,
@@ -615,7 +602,7 @@ export class OrdenTrabajoService {
       };
   
       orden.horariosAsignados.forEach(horario => {
-        // Cálculo de horas proyectadas
+
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
           const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(':');
           const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(':');
@@ -726,6 +713,35 @@ export class OrdenTrabajoService {
   async deleteOrdenTrabajo(id: number): Promise<void> {
     const result = await this.ordenTrabajoRepository.delete(id);
     if (result.affected === 0) throw new NotFoundException('Orden de trabajo no encontrada');
-}
+  }
+
+  async delete(id: number): Promise<void> {
+    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
+      where: { Id: id },
+      relations: ['horariosAsignados'],
+    });
+
+    if (!ordenTrabajo) {
+      throw new Error('Orden de trabajo no encontrada');
+    }
+
+    ordenTrabajo.eliminado = true;
+    ordenTrabajo.fechaEliminado = new Date(); 
+    await this.ordenTrabajoRepository.save(ordenTrabajo);
+
+    const fechaEliminacion = ordenTrabajo.fechaEliminado;
+    const horariosAsignados = await this.horarioAsignadoRepository.find({
+      where: {
+        ordenTrabajo: { Id: id }, 
+        fecha: MoreThanOrEqual(fechaEliminacion), 
+      },
+    });
+
+    for (const horario of horariosAsignados) {
+      horario.eliminado = true;
+      horario.estado = 'Eliminado';
+      await this.horarioAsignadoRepository.save(horario);
+    }
+  }
   
 }

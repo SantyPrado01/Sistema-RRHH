@@ -12,7 +12,7 @@ export declare class CategoriaUsuarioService {
     }>;
     findAll(): Promise<CategoriaUsuario[]>;
     findName(nombreCategoriaUsuario: string): Promise<CategoriaUsuario>;
-    findOne(categoriaUsuarioId: number): Promise<CategoriaUsuario | HttpException>;
+    findOne(categoriaUsuarioId: number): Promise<HttpException | CategoriaUsuario>;
     update(categoriaUsuarioId: number, categoriaUsuario: UpdateCategoriaUsuarioDto): Promise<HttpException | (CategoriaUsuario & UpdateCategoriaUsuarioDto)>;
     remove(categoriaUsuarioId: number): Promise<HttpException>;
 }

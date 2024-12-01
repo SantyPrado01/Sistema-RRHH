@@ -34,7 +34,6 @@ export class BuscarEmpresaComponent implements OnInit {
     this.empresaService.getServiciosEliminado().subscribe({
       next: (data: Empresa[]) => {
         this.empresas = data;
-        this.empresasFiltradas = []; // Inicialmente vacía
         this.isLoading = false;
       },
       error: (err) => {

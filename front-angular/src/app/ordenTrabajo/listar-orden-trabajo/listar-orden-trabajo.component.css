@@ -67,7 +67,7 @@
 }
 
 .table-container {
-    max-height: 400px; 
+    max-height: 600px; 
     overflow-y: auto;
     margin-top: 20px;
 }
@@ -138,5 +138,11 @@ table {
   
   .status.pending {
     background-color: #ffc107;
+    color: white;
+  }
+
+  .status.delete {
+    margin-left: 1em;
+    background-color: red;
     color: white;
   }

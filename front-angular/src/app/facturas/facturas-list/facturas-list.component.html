@@ -2,7 +2,7 @@
 
 <div class="title-container">
   <div class="title-item">
-    <h1>Listado Ordenes de Trabajo</h1>
+    <h1>Listado Facturas</h1>
   </div>
 </div>
 
@@ -10,14 +10,14 @@
 <div class="content-container">
   <div class="search-filter-container">
     <div class="search-bar">
-      <input type="text" placeholder="Buscar por Empresa..." />
+      <input type="text" placeholder="Buscar por Empresa..." [(ngModel)]="filtroEmpresa" (ngModelChange)="filtrarFacturas()"/>
       <button routerLink='/factura/create' class="btn btn-primary">+</button>
     </div>
 
     <div class="filters">
       <div class="filter">
         <label for="visualizarPor">Visualizar por:</label>
-        <select id="visualizarPor" >
+        <select id="visualizarPor" [(ngModel)]="estadoSeleccionado" (ngModelChange)="filtrarFacturas()">
           <option [ngValue]="false">Activas</option>
           <option [ngValue]="true">Eliminadas</option>
         </select>
@@ -25,14 +25,14 @@
 
       <div class="filter">
         <label for="ordenarPor">Mes</label>
-        <select id="ordenarPor" >
+        <select id="ordenarPor"[(ngModel)]="mesSeleccionado" (ngModelChange)="filtrarFacturas()" >
           <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
         </select>
       </div>
 
       <div class="filter">
         <label for="ordenarPor">Año</label>
-        <select id="ordenarPor" >
+        <select id="ordenarPor" [(ngModel)]="anioSeleccionado" (ngModelChange)="filtrarFacturas()">
           <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
         </select>
       </div>
@@ -44,21 +44,21 @@
       <thead>
         <tr>
           <th>Numero</th>
-          <th>Servicio</th>
+          <th>Empresa</th>
           <th>Fecha</th>
           <th>Total</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let factura of facturas">
+        <tr *ngFor="let factura of facturasFiltradas">
           <td>{{ factura.facturaId }}</td>
           <td>{{ factura.servicio.nombre }}</td>
           <td>{{ factura.fecha }}</td>
           <td>{{ factura.total }}</td>
           <td>
             <button class="btn-edit" [routerLink]="['/factura/view', factura.facturaId]"><mat-icon>visibility</mat-icon></button>
-            <button class="btn-delete" ><mat-icon>delete</mat-icon></button>
+            <button class="btn-delete" (click)="eliminarFactura(factura)"><mat-icon>delete</mat-icon></button>
           </td>
         </tr>
       </tbody>

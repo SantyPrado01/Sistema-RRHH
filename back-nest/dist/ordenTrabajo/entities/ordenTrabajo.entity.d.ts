@@ -14,4 +14,6 @@ export declare class OrdenTrabajo {
     horaInicio?: string;
     horaFin?: string;
     completado: boolean;
+    eliminado?: boolean;
+    fechaEliminado?: Date;
 }
