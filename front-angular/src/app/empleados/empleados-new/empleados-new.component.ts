@@ -35,7 +35,7 @@ export class EmpleadosNewComponent implements OnInit{
     { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: ''},
     { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: ''}
   ];
-  fullTime: boolean = false;
+  fullTime: boolean = true;
 
   constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService, private router: Router, private dialog: MatDialog) {}
 
@@ -136,11 +136,11 @@ export class EmpleadosNewComponent implements OnInit{
         console.log('Empleado guardado con éxito:', response);
         this.mostrarAlerta('Operación Exitosa', 'Empleado guardado con éxito.', 'success');
         this.limpiarFormulario();
-        this.router.navigate(['/empleados']);
+        this.router.navigate(['/employee']);
       },
       error: (err) => {
         console.error('Error al guardar el empleado:', err);
-        this.mostrarAlerta('Error Operación', 'Error al guardar el empleado.', 'error');
+        this.mostrarAlerta('Error Operación', 'Error al guardar el empleado. Campos requeridos no completados.', 'error');
       }
     });
   }

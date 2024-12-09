@@ -31,6 +31,8 @@ export const appConfig: ApplicationConfig = {
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule, 
+    
   ]
+  
 
 };

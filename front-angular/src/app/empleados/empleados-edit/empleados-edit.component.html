@@ -12,7 +12,7 @@
         <li (click)="mostrarSeccion('datosPersonales')" [class.active]="seccionActual === 'datosPersonales'">Datos Personales</li>
         <li (click)="mostrarSeccion('datosLaborales')" [class.active]="seccionActual === 'datosLaborales'">Datos Laborales</li>
         <li (click)="mostrarSeccion('ordenesTrabajo')" [class.active]="seccionActual === 'ordenesTrabajo'">Ordenes de Trabajo</li>
-        <li (click)="mostrarSeccion('cierreMensual')" [class.active]="seccionActual === 'cierreMensual'">Informacion Mensual</li>
+        <li (click)="mostrarSeccion('cierreMensual'); filtrarMensual()" [class.active]="seccionActual === 'cierreMensual'">Informacion Mensual</li>
       </ul>
     </div>
 
@@ -176,6 +176,7 @@
               <tr>
                 <th>Orden N°</th>
                 <th>Empresa</th>
+                <th>Mes</th>
                 <th>Horas Proyectadas</th>
                 <th>Horas Reales</th>
                 <th>Estado</th>
@@ -186,11 +187,13 @@
               <tr *ngFor="let orden of ordenesFiltradas">
                 <td>{{ orden.Id }}</td>
                 <td>{{ orden.servicio.nombre }}</td>
-                <td>{{ orden.horasProyectadas }} </td>
-                <td>{{ orden.horasReales }} </td>
+                <td>{{ orden.mes }}</td>
+                <td>{{ truncateToTwoDecimals(orden.horasProyectadas) }}</td>
+                <td>{{ truncateToTwoDecimals(orden.horasReales) }}</td>
                 <td>
                   <span *ngIf="orden.completado" class="status completed">Completada</span>
                   <span *ngIf="!orden.completado" class="status pending">En Curso</span>
+                  <span *ngIf="orden.eliminado" class="status delete">Eliminado</span>
                 </td>
                 <td>
                   <button [routerLink]="['/ordentrabajo/view', orden.Id]" class="btn btn-info"><mat-icon>visibility</mat-icon></button>
@@ -231,7 +234,8 @@
             <thead>
               <tr>
                 <th>Orden N°</th>
-                <th>Servicio</th>
+                <th>Empresa</th>
+                <th>Mes</th>
                 <th>Horas Proyectadas</th>
                 <th>Horas Reales</th>
                 <th>A</th>
@@ -245,8 +249,9 @@
               <tr *ngFor="let orden of ordenesFiltradas">
                 <td>{{ orden.Id }}</td>
                 <td>{{ orden.servicio.nombre }}</td>
-                <td>{{ orden.horasProyectadas }} </td>
-                <td>{{ orden.horasReales }}</td>
+                <td>{{ orden.mes }}</td>
+                <td>{{ truncateToTwoDecimals(orden.horasProyectadas) }}</td>
+                <td>{{ truncateToTwoDecimals(orden.horasReales) }}</td>
                 <td>{{ orden.estadoContador.asistio }}</td>
                 <td>{{ orden.estadoContador.llegoTarde }}</td>
                 <td>{{ orden.estadoContador.faltoConAviso }}</td>

@@ -99,7 +99,7 @@ export class ServiciosNewComponent implements OnInit {
       next: (response) => {
         this.mostrarAlerta('Operación Exitosa', 'Empresa guardada con éxito.', 'success');
         this.limpiarFormulario();
-        this.router.navigate(['/empresas']);
+        this.router.navigate(['/service']);
       },
       error: (err) => {
         console.error('Error al guardar la empresa:', err);

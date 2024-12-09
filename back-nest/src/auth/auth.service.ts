@@ -50,7 +50,7 @@ export class AuthService {
       
 
       async login({ username, password }: loginDto) {
-        const user = await this.userRepository.findOne({where:{username: username}});
+        const user = await this.userRepository.findOne({where:{username: username}, relations:['categoria']});
       
         if (!user) {throw new HttpException('Usuario no existente', HttpStatus.NOT_FOUND);}
         const isPasswordValid = await bcrypt.compare(password, user.password);      
@@ -65,7 +65,7 @@ export class AuthService {
           };
         }
       
-        const payload = { username: user.username, role: user.categoria };
+        const payload = { username: user.username, role: user.categoria.nombre };
         const token = await this.jwtService.signAsync(payload);
       
         return {

@@ -22,7 +22,8 @@ export class UsersService {
 
     async getUsername(username:string){
         const userFound =await this.userRepository.findOne({
-            where:{username}
+            where:{username},
+            relations: ['categoria']
         })
 
         if (!userFound){
@@ -33,7 +34,7 @@ export class UsersService {
 
     async getUserId(id: number) {
         const userFound = await this.userRepository.findOne({
-            where:{id}
+            where:{id},
         })
         if (!userFound){return null}
         return userFound

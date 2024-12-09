@@ -267,4 +267,7 @@ export class ServiciosEditComponent implements OnInit {
     alert('Servicio NO actualizado, operación cancelada.');
     this.router.navigate(['/service']);
   }
+  truncateToTwoDecimals(value: number): string {
+    return Math.floor(value * 100) / 100 + ''; 
+  }
 }

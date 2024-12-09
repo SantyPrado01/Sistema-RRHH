@@ -98,7 +98,9 @@ export class AuthService {
       return null;
     }
     const payload = JSON.parse(atob(token.split('.')[1]));
+    console.log(payload.role)
     return payload.role; // Retorna el rol
+
   }
 
   getUsername(): string | null {
@@ -115,4 +117,6 @@ export class AuthService {
     localStorage.removeItem(this.refreshTokenKey);
     this.router.navigate(['/login']);
   }
+
+  
 }

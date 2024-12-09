@@ -289,6 +289,25 @@ h3 {
   background-color: #14892c; 
 }
 
+.orden-trabajo-container, .orden-mensual-container {
+  max-width: 100%; /* Asegura que el contenedor no sobrepase el tamaño de la pantalla */
+  overflow-x: auto; /* Habilita el scroll horizontal si la tabla excede el ancho */
+  overflow-y: auto; /* Habilita el scroll vertical si la tabla excede el alto */
+  max-height: 60vh; /* Ajusta la altura máxima del contenedor según sea necesario */
+}
+
+/* Estilo para las tablas */
+table.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.status.delete {
+  margin-left: 1em;
+  background-color: red;
+  color: white;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .container {

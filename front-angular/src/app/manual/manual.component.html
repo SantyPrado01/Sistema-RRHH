@@ -1,0 +1,402 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+          <p id="indice_head">Índice</p>
+          <li [class.active]="selectedSection === 'h1'"><a (click)="scrollToSection('h1')"><span>Ingreso de Usuario</span></a></li>
+          <li [class.active]="selectedSection === 'h2'"><a (click)="scrollToSection('h2')"><span>Permisos de Administrador</span></a></li>
+          <li [class.active]="selectedSection === 'h3'"><a (click)="scrollToSection('h3')"><span>Navegación General</span></a></li>
+          <li [class.active]="selectedSection === 'h4'"><a (click)="scrollToSection('h4')"><span>Empleados</span></a></li>
+          <li [class.active]="selectedSection === 'h5'"><a (click)="scrollToSection('h5')"><span>Empresas</span></a></li>
+          <li [class.active]="selectedSection === 'h6'"><a (click)="scrollToSection('h6')"><span>Órdenes de Trabajo</span></a></li>
+          <li [class.active]="selectedSection === 'h7'"><a (click)="scrollToSection('h7')"><span>Cargar Horarios</span></a></li>
+          <li [class.active]="selectedSection === 'h8'"><a (click)="scrollToSection('h8')"><span>Facturas</span></a></li>
+        </ul>
+    </div>
+
+    <div id="main_manual">
+
+        <div class="hoja">
+            <p class="a" id="h1">Ingreso de usuario</p>
+            <p class="b">Al ingresar como un usuario registrado con una contraseña definitiva, se deberá ingresar el nombre de usuario y contraseña vinculados al perfil del usuario al cual se quiere acceder.</p>
+            <img src="./assets/Inicio de Sesion.png">
+
+            <p class="ab">Ingreso por primera vez</p>
+            <p class="b">Al ingresar por primera vez, el usuario será provisto de una contraseña temporal. Ya dentro del sistema, el usuario deberá ingresar una nueva contraseña para ser usada de ahora en adelante.</p>
+            <img src="./assets/Formulario Cambio de Contrasena.png">
+        </div>
+
+        <div class="hoja">
+            <p class="a" id="h2">Permisos de Administrador</p>
+            
+            <p class="ab">Visualizar Usuarios</p>
+            <p class="b">Al ingresar como un usuario con permisos de administrador, el usuario se puede mover al apartado de <strong>Usuarios</strong>; al cual se accede desde el icono “<strong>Configuración</strong>” en la barra de navegación lateral.</p>
+            <img src="./assets/detalle usuario.png">
+
+            <p class="b">Una vez en el apartado de <strong>Usuarios</strong>, el usuario se encontrará con un listado de todos los usuarios registrados en el sistema, al igual que su información pertinente, como nombre y categoría.</p>
+
+            <p class="ab">Registrar un nuevo usuario</p>
+            <p class="b">Desde la pantalla de <strong>Usuarios</strong>, se pueden registrar nuevos usuarios rellenando los campos del formulario de <strong>Detalles del Usuario</strong>. Una vez registrado, el sistema le notificará al usuario la contraseña temporal asignada al mismo.</p>
+            <img src="./assets/usuario_registrado.png" style="width: 50%;">
+
+            <p class="ab">Editar los datos de un usuario.</p>
+            <p class="b">Desde la pantalla de <strong>Usuarios</strong>, se puede editar los datos de un usuario al hacer clic en la fila del usuario correspondiente. Se puede modificar la información asociada al usuario, así como blanquear la contraseña y otorgarle una nueva contraseña temporal para su reingreso en caso de olvido.</p>
+
+            <div class="imagenes_hermanas">
+                <img src="./assets/detalle usuario 2.png" style="width: 50%;">
+                <img src="./assets/usuario_registrado.png" style="width: 50%;">
+            </div>
+
+            <p class="ab">Eliminar usuario.</p>
+            <p class="b">Desde la pantalla de <strong>Usuarios</strong>, los usuarios pueden ser dados de baja al hacer clic en el icono de eliminar en la fila del usuario correspondiente. Estos usuarios seguirán estando registrados en el sistema, pero ya no tendrán acceso al mismo, y solo serán visibles al visualizar usuarios inactivos.</p>
+
+            <div class="imagenes_hermanas">
+                <img src="./assets/eliminar_usuario.png" style="width: 50%; padding-bottom: 2%;">
+                <img src="./assets/eliminar_usuario_2.png" style="width: 50%; padding-bottom: 2%;">
+            </div>
+
+            <p class="ab">Visualizar categorías.</p>
+            <p class="b">Al ingresar como un usuario con permisos de administrador, el usuario se puede mover al apartado de <strong>Categorías</strong>; al cual se accede desde el icono “<strong>Configuración</strong>” en la barra de navegación lateral.</p>
+            <img src="./assets/categorias.png">
+
+            <p class="b">Una vez en el apartado de <strong>Categorías</strong>, el usuario se encontrará con un listado de todas las categorías registradas en el sistema.</p>
+            <p class="ab">Registrar nueva categoría.</p>
+            <p class="b">Desde la pantalla de <strong>Categorías</strong>, se pueden registrar nuevas categorías rellenando los campos del formulario de <strong>Detalles de la Categoría</strong>.</p>
+            <img src="./assets/eliminar categoria.png" style="width: 50%;">
+
+            <p class="ab">Eliminar categoría.</p>
+            <p class="b">Desde la pantalla de <strong>Categorías</strong>, se puede eliminar una categoría seleccionando el icono de eliminar en la fila del usuario correspondiente.</p>
+            <img src="./assets/eliminar categoria 2.png" style="width: 50%;">
+        </div>
+        
+        <div class="hoja">
+            <p class="a" id="h3">Navegación General</p>
+            
+            <p class="b">Al iniciar sesión en el sistema, lo primero con lo que el usuario se encuentra es el menú de inicio.</p>
+            <img src="./assets/main_menu.png">
+
+            <p class="b">A la izquierda se puede ver la barra de navegación la cual persiste a lo largo de todas las pantallas. Al presionar una de las pestañas, se despliegan distintas opciones.</p>
+
+            <p class="ab">Cerrar Sesión</p>
+            <p class="b">El usuario puede cerrar sesión haciendo clic en la pestaña <strong>Usuario</strong> y entonces haciendo clic en la opción <strong>Cerrar Sesión</strong>.</p>
+
+            <p class="ab">Usuario</p>
+            <p class="b">El usuario puede regresar al menú principal haciendo clic en el icono <strong>Inicio</strong> en la parte superior de la barra de navegación lateral.</p>
+        </div>
+
+         <div class="hoja">
+            <p class="a" id="h4">Visualizar Empleados</p>
+            <p class="b">El usuario se puede mover al apartado de <strong>Listado Empleados</strong>; al cual se accede desde la pestaña “<strong>Empleados</strong>” en la barra de navegación lateral.</p>
+            <p class="b">Una vez en el apartado de <strong>Listado empleados</strong>, el usuario se encontrará con un listado de todos los empleados registrados en el sistema, al igual que su información pertinente, como Legajo, nombre, apellido, teléfono y email.</p>
+            <img src="./assets/Lista empleados.png">
+
+            <p class="b">Se pueden registrar nuevos usuarios al hacer clic en el botón más ( + ) naranja al lado de la barra de búsqueda.</p>
+            <img src="./assets/boton_naranja.png" class="left_image">
+
+            <p class="b">La columna de Acciones contiene un icono de vista y un icono de eliminar por cada empleado. Presionar el icono de vista le permite al usuario visualizar a los empleados en detalle.</p>
+            <img src="./assets/vista.png" class="left_image">
+            <p class="b">Presionar el icono de eliminar muestra una pantalla que le pregunta al usuario si está seguro de eliminar al empleado. Confirmar la eliminación marcará al empleado como eliminado. Estos empleados seguirán estando registrados en el sistema, pero solo serán visibles al visualizar empleados eliminados.</p>
+            <img src="./assets/eliminar.png" class="left_image">
+
+            <p class="ab">Buscar Empleados.</p>
+            <p class="b">Desde la pantalla de <strong>visualizar empleados</strong>, el usuario puede usar la barra de búsqueda para escribir el nombre o apellido de un empleado y la lista filtrara los empleados que trae para mostrar solo aquellos que comparten los mismos datos que lo escrito en la barra de búsqueda.</p>
+
+            <img src="./assets/buscar_empleado.png" class="left_image" style="width: 15em;">
+            <p class="b">El usuario puede filtrar los resultados enlistados. Se pueden visualizar empleados activos, o eliminados. Se puede ordenar la lista de los empleados por nombre, o apellido.</p>
+
+            <div class="imagenes_hermanas">
+                <img src="./assets/buscar_empleado_activo (1).png" style="width: 30%; padding-bottom: 2%;">
+                <img src="./assets/buscar_empleado_nombre.png" style="width: 30%; padding-bottom: 2%;">
+            </div>
+
+            <div class="hr"></div>
+            <p class="a">Registrar Empleado</p>
+            <p class="b">Desde la pantalla de <strong>visualizar empleados</strong>, se puede registrar un nuevo empleado al hacer clic en el botón más ( + ) naranja al lado de la barra de navegación. Esto lleva a una pantalla con múltiples pestañas, en las que se puede guardar los datos de un empleado.</p>
+
+            <p class="ac">Datos Personales</p>
+            <img src="./assets/registrar empleado (1).png">
+
+            <p class="b">Aquí se encuentran los campos de Nombre, Apellido, Número de Documento, Teléfono, Email, Ciudad, y Observaciones.</p>
+
+            <div class="validacion_head">
+                <p class="ac">Validaciones</p>
+            </div>
+
+            <div class="validacion">
+                <p class="b">Los campos de Nombre y Apellido no aceptan números.</p>
+                <p class="b">Los campos de Teléfono y Número de documento no aceptan letras.</p>
+                <p class="b">A medida que se escribe en el campo de Ciudad, abajo se van mostrando las ciudades que coinciden en nombre. No se puede escribir por completo el nombre de la ciudad en este campo. Es necesario elegir una opción de la lista.</p>
+                <p class="b">Todos los campos de datos personales distintos a observaciones son obligatorios. El intentar dejar los campos obligatorios vacíos resultará en una advertencia debajo de cada campo obligatorio que se dejó vacío, hasta que el campo sea llenado correctamente.</p>
+
+                <img src="./assets/validaciones empleado.png">
+                <p class="b">El botón para guardar el empleado se mantendrá desactivado y de un color opaco hasta que todos los campos obligatorios se encuentren rellenos, tanto los de esta pestaña como los de la pestaña de datos laborales.</p>
+            </div>
+
+            <p class="ab">Datos Laborales</p>
+            <p class="b">Aquí se encuentran los campos Legajo, Fecha de Contratación, y Categoría de Empleado.</p>
+            
+            <img src="./assets/registrar empleado (2).png">
+            <p class="b">Los campos Legajo, y Categoría de Empleado solo aceptan letras, mientras que el campo de Fecha de contratación solo acepta números.</p>
+            <p class="b">El empleado se encuentra marcado como Full Time por defecto, lo cual indica que este tiene disponibilidad a tiempo completo para ser designado a órdenes de trabajo de cualquier horario.</p>
+            <p class="b">También se puede desmarcar la casilla Full Time e ingresar Horas de inicio y Fin en las que el usuario se encuentra disponible por cada día de la semana. Realizar click en el icono de reloj de cada campo despliega un pequeño menú en el que se puede seleccionar el horario. Se puede usar la rueda del mouse para deslizarse por cada columna, y usar las flechas del teclado permite moverse entre las columnas y entre los valores de cada columna.</p>
+
+            <img src="./assets/seleccionar horario.png" class="left_image" style="width: 15em;">
+
+            <p class="b">Hacer click en uno de las entradas del campo te permite escribir por teclado un nuevo valor, o usar las flechas del teclado para moverse un valor arriba, abajo, o para moverse al próximo valor del campo.</p>
+            <p class="b">Presionar la tecla TAB ( Tabulador ) te avanza al siguiente entrada del campo, o al siguiente campo si la última entrada se encuentra seleccionada.</p>
+
+            <p class="ac">Horarios Nocturnos</p>
+            <p class="b">No se puede ingresar una Hora Fin que sea menor a una Hora Inicio. Al guardar Horas de inicio y final con la intención de designar horarios nocturnos, se deben ingresar los horarios de la noche a la que el empleado asiste al trabajo, y de la madrugada del día siguiente en la que el usuario termina de trabajar.</p>
+
+            <div class="hr"></div>
+            <p class="a">Ver Empleado en detalle</p>
+            <p class="b">Desde la pantalla de <strong>Visualizar Empleados</strong>, se puede visualizar en detalle los datos de un empleado al hacer clic en el icono de vista en la fila del empleado correspondiente. Esto lleva a una pantalla con múltiples pestañas, en las que se puede ver, editar, y guardar los datos de un empleado.</p>
+            <p class="b">Se pueden visualizar los Datos Personales y los Datos Laborales. Estos tienen las mismas validaciones que al momento de registrar un empleado. Se pueden realizar cambios en los campos, y esto permite editar la información del empleado al presionar el botón Guardar Empleado.</p>
+
+            <p class="ab">Ordenes de Trabajo</p>
+            <p class="b">Aquí se encuentran todas las órdenes de trabajo a las que este se encuentra asociado el empleado, al igual que las horas proyectadas, horas reales y estado de cada una.</p>
+
+            <img src="./assets/empleado_ordenes_trabajo.png">
+
+            <p class="b">Se puede buscar una orden de trabajo en específico usando la barra de navegación, escribiendo el nombre del servicio que se desea buscar.</p>
+            
+            <img src="./assets/empleado_ordenes_buscar_por_empresa.png" class="left_image" style="width: 15em;">
+            <p class="b">Se pueden ver ordenes de trabajo de un mes, año, o estado en específico usando los campos.</p>
+
+            <img src="./assets/mes_ano_estado.png" class="left_image" style="width: 40em;">
+
+            <p class="b">Se puede presionar el icono de vista para ver en detalle cada una de las órdenes de trabajo.</p>
+            <img src="./assets/vista.png" class="left_image">
+
+            <p class="ab">Información Mensual</p>
+            <p class="b">Aquí se encuentran todas las órdenes de trabajo a las que este se encuentra asociado el empleado, con una cuenta de todas las asistencias, llegadas tarde, faltas con aviso, faltas sin aviso, y días enfermo del empleado con cada orden de trabajo.</p>
+            <p class="b">Los estados de la asistencia se encuentran abreviados. Para el recordatorio de que significa cada abreviación, hay un recordatorio cerca del final de la página.</p>
+            
+            <img src="./assets/Perfil empleado 4.png">
+            <p class="b">Se puede buscar una orden de trabajo en específico usando la barra de navegación, escribiendo el nombre de la empresa que se desea buscar.</p>
+
+            <img src="./assets/empleado_ordenes_buscar_por_empresa.png" class="left_image" style="width: 15em;">
+            <p class="b">Se pueden ver ordenes de trabajo de un mes o año en específico usando los campos.</p>
+
+            <img src="./assets/mes_ano.png" class="left_image" style="width: 30em;">
+            <p class="b">Debajo de la lista de Órdenes de trabajo se encuentra un total de las Horas Proyectadas, Horas Totales, y de todos las asistencias, llegadas tarde, faltas con aviso, faltas sin aviso, y faltas por enfermedad que tuvo el empleado a lo largo de todas las órdenes de trabajo.</p>
+
+            <img src="./assets/Perfil empleado 5.png" class="left_image" style="width: 45em;">
+            <p class="b">Se puede descargar un PDF o Excel con el resumen de los datos traídos por la lista y el total de las horas proyectadas, horas reales, y cantidad de estados.</p>
+        </div>
+
+        <div class="hoja">
+            <p class="a" id="h5">Visualizar Empresas</p>
+            <p class="b">El usuario se puede mover al apartado de <strong>Listado Empresas</strong>; al cual se accede desde la pestaña “<strong>Empresas</strong>” en la barra de navegación lateral.</p>
+
+            <p class="b">Una vez en el apartado de <strong>Listado Empresas</strong>, el usuario se encontrará con un listado de todos las empresas registradas en el sistema, al igual que su información pertinente, como Nombre, Teléfono, Ciudad, y Categoría.</p>
+
+            <img src="./assets/visualizar empresas.png">
+
+            <p class="b">Se pueden registrar nuevas empresas al hacer clic en el botón más ( + ) naranja al lado de la barra de búsqueda.</p>
+            <img src="./assets/boton_naranja.png" class="left_image">
+
+            <p class="b">La columna de Acciones contiene un icono de vista y un icono de eliminar por cada empresa. Presionar el icono de vista le permite al usuario visualizar a las empresas en detalle.</p>
+            <img src="./assets/vista.png" class="left_image">
+
+            <p class="b">Presionar el icono de eliminar muestra una pantalla que le pregunta al usuario si está seguro de eliminar la empresa. Confirmar la eliminación marcará la empresa como eliminada. Estas empresas seguirán estando registradas en el sistema, pero solo serán visibles al visualizar empresas eliminadas.</p>
+            <img src="./assets/eliminar.png" class="left_image">
+
+            <p class="ab">Buscar empresas</p>
+            <p class="b">Desde la pantalla de <strong>visualizar Empresas</strong>, el usuario puede usar la barra de búsqueda para escribir el nombre de una empresa y la lista filtrara las empresas que trae para mostrar solo aquellas empresas que coincidan con lo escrito en la barra de búsqueda.</p>
+            <img src="./assets/buscar_empleado.png" class="left_image" style="width: 15em;">
+
+            <p class="b">El usuario puede filtrar los resultados enlistados. Se pueden visualizar empresas activas, o eliminadas. Se puede ordenar la lista de los empresas por nombre, o por categoría.</p>
+
+            <div class="imagenes_hermanas">
+                <img src="./assets/buscar_empleado_activo (1).png" style="width: 30%; padding-bottom: 2%;">
+                <img src="./assets/nombre_categoria.png" style="width: 30%; padding-bottom: 2%;">
+            </div>
+
+            <div class="hr"></div>
+            <p class="a">Registrar Empresa</p>
+            <p class="b">Desde la pantalla de <strong>Visualizar Empresas</strong>, se puede registrar una nueva empresa al hacer clic en el botón más ( + ) naranja al lado de la barra de navegación. Esto lleva a una pantalla con múltiples pestañas, en las que se puede guardar los datos de una empresa.</p>
+            <p class="b">Aquí se encuentran los campos de Nombre de la empresa, Cuit, Categoría de empresa,  Dirección, Teléfono, Ciudad, y Observaciones.</p>
+            <img src="./assets/registrar_empresa.png">
+
+            <div class="validacion_head">
+                <p class="ac">Validaciones</p>
+            </div>
+
+            <div class="validacion">
+                <p class="b">Los campos de Nombre de la Empresa, Categoría, Dirección, y Ciudad no aceptan números.</p>
+                <p class="b">Los campos de Teléfono y CUIT no aceptan letras.</p>
+                <p class="b">Todos los campos de datos de empresa distintos a observaciones son obligatorios. El intentar dejar los campos obligatorios vacíos resultará en una advertencia debajo de cada campo obligatorio que se dejó vacío, hasta que el campo sea llenado correctamente.</p>
+
+                <img src="./assets/validaciones_empresa.png" style="width: 70%;">
+                <p class="b">El botón para guardar la empresa se mantendrá desactivado y de un color opaco hasta que todos los campos obligatorios se encuentren rellenos.</p>
+            </div>
+
+            <div class="hr"></div>
+
+            <p class="a">Ver empresa en detalle</p>
+            <p class="b">Desde la pantalla de <strong>Visualizar Empresas</strong>, se puede visualizar en detalle los datos de una empresa al hacer clic en el icono de vista en la fila de la empresa correspondiente. Esto lleva a una pantalla con múltiples pestañas, en las que se puede ver, editar, y guardar los datos de una empresa.</p>
+            <p class="b">Se pueden visualizar los Datos de la Empresa, y estos tienen las mismas validaciones que al momento de registrar una empresa. Se pueden realizar cambios en los campos, y esto permite editar la información de la empresa al presionar el botón Guardar Empresa.</p>
+            <p class="ab">Ordenes de Trabajo asignadas a una empresa</p>
+            <p class="b">Esta es una pestaña que solo se puede encontrar en el perfil de la empresa luego de que ésta haya sido registrada. Aquí se encuentran todas las órdenes de trabajo a las que esta se encuentra asociada, al igual que las horas proyectadas, horas reales y estado de cada una.</p>
+
+            <img src="./assets/keep (1).png">
+            <p class="b">Se puede buscar una orden de trabajo en específico usando la barra de navegación, escribiendo el nombre del servicio que se desea buscar.</p>
+            <img src="./assets/keep (2).png"  class="left_image" style="width: 15em;">
+            <p class="b">Se pueden ver órdenes de trabajo de un mes, año, o estado en específico usando los campos.</p>
+            <img src="./assets/mes_ano_estado.png" class="left_image" style="width: 40em;">
+            <p class="b">Se puede presionar el icono de vista para ver en detalle cada una de las órdenes de trabajo.</p>
+            <img src="./assets/vista.png"  class="left_image">
+            <p class="ab">Facturas</p>
+            <p class="b">Esta es una pestaña que solo se puede encontrar en el Perfil Empresa luego de que ésta haya sido registrada. Aquí se encuentran todas las facturas a las que esta se encuentra asociada, con su información tal como número de factura.</p>
+            <img src="./assets/keep (3).png">
+            <p class="b">Se pueden ver las facturas de un mes o año en específico usando los campos.</p>
+            <img src="./assets/mes_ano.png" class="left_image" style="width: 30em;">
+            <p class="b">Se puede presionar el icono de vista para ver detalles o editar cada una de las facturas.</p>
+            <img src="./assets/vista.png"  class="left_image">
+        </div>
+
+        <div class="hoja">
+
+            <p class="a" id="h6">Visualizar Órdenes de trabajo</p>
+            <p class="b">El usuario se puede mover al apartado de <strong>Listado Órdenes de Trabajo</strong>; al cual se accede desde la pestaña “<strong>Órdenes de trabajo</strong>” en la barra de navegación lateral.</p>
+            <p class="b">Una vez en el apartado de <strong>Órdenes de Trabajo</strong>, el usuario se encontrará con un listado de todas las órdenes de trabajo registradas en el sistema, al igual que su información pertinente, como Empresa, Empleado, Mes, Estado, Horas Proyectadas, y Horas Reales.</p>
+            <img src="./assets/keep (4).png">
+            <p class="b">Se pueden registrar nuevas órdenes de trabajo al hacer clic en el botón más ( + ) naranja al lado de la barra de búsqueda.</p>
+            <img src="./assets/boton_naranja.png" class="left_image">
+            <p class="b">La columna de Acciones contiene un icono de vista y un icono de eliminar por cada orden de trabajo. Presionar el icono de vista le permite al usuario visualizar las órdenes de trabajo en detalle.</p>
+            <img src="./assets/vista.png" class="left_image">
+            <p class="b">Presionar el icono de eliminar muestra una pantalla que le pregunta al usuario si está seguro de eliminar la orden de trabajo. Confirmar la eliminación marcará la orden de trabajo como eliminada. Estas órdenes de trabajo seguirán estando registradas en el sistema, pero solo serán visibles al visualizar órdenes de trabajo eliminadas.</p>
+            <img src="./assets/eliminar.png" class="left_image">
+            <p class="ab">Buscar Órdenes de Trabajo.</p>
+            <p class="b">Desde la pantalla de <strong>visualizar Órdenes de Trabajo</strong>, el usuario puede usar la barra de búsqueda para escribir la empresa y la lista filtrará las órdenes de trabajo que trae para mostrar solo aquellos que coinciden en lo escrito en la barra de búsqueda.</p>
+            <img src="./assets/buscar_por_empresa.png" class="left_image" style="width: 15em;">
+            <p class="b">El usuario puede filtrar los resultados enlistados. Se pueden visualizar órdenes de trabajo en curso, o completadas. Se pueden ver órdenes de trabajo de un mes o año seleccionados.</p>
+            <img src="./assets/estado_mes_ano.png" class="left_image" style="width: 38em;">
+
+            <div class="hr"></div>
+
+            <p class="a">Registrar órdenes de trabajo.</p>
+            <p class="b">Desde la pantalla de <strong>visualizar órdenes de trabajo</strong>, se pueden registrar nuevas Órdenes de Trabajo al hacer clic en el botón más ( + ) naranja al lado de la barra de búsqueda. Esto llevará al usuario a una pantalla en la que se deben ingresar los datos de la orden de trabajo que se desea registrar.</p>
+            <img src="./assets/registrar_orden_trabajo.png">
+            <p class="b">Para ingresar el nombre de una empresa, y el de un empleado se debe presionar el botón gris oscuro de Buscar. Esto desplegará un cuadro en el que se debe ingresar el nombre de la empresa o empleado. A medida que se escribe en este campo, debajo se van a ir mostrando todos los empleados o empresas que coinciden.</p>
+
+            <div class="imagenes_hermanas">
+                <img src="./assets/keep (5).png" style="height: 20em; width: 22em;">
+                <img src="./assets/keep (6).png"style="height: 18em; width: 21em;">
+            </div>
+
+            <p class="b">Se debe seleccionar el mes y año en el que la orden de trabajo tomará curso. Se debe ingresar Horas de inicio y Fin en las que se llevará a cabo el trabajo durante cada día de la semana en el mes y año elegidos.</p>
+
+            <img src="./assets/mes_ano_long.png" class="left_image" style="width: 55em;">
+
+            <p class="b">Realizar click en el icono de reloj de cada campo despliega un pequeño menú en el que se puede seleccionar el horario. Se puede usar la rueda del mouse para deslizarse por cada columna, y usar las flechas del teclado permite moverse entre las columnas y entre los valores de cada columna.</p>
+
+            <img src="./assets/seleccionar horario.png" class="left_image" style="width: 15em;">
+
+            <p class="b">Hacer click en una de las entradas del campo te permite escribir por teclado un nuevo valor, o usar las flechas del teclado para moverse un valor arriba, abajo, o para moverse al próximo valor del campo.</p>
+
+            <p class="b">Presionar la tecla TAB (Tabulador) te avanza al siguiente entrada del campo, o al siguiente campo si la última entrada se encuentra seleccionada.</p>
+
+            <p class="ab">Horarios Nocturnos</p>
+            <p class="b">No se puede ingresar una Hora Fin que sea menor a una Hora Inicio. Al guardar Horas de inicio y final con la intención de designar horarios nocturnos, se deben ingresar los horarios de la noche a la que el empleado asiste al trabajo, y de la madrugada del día siguiente en la que el usuario termina de trabajar.</p>
+
+            <p class="b">También se pueden registrar órdenes de trabajo únicas. En estas solo es necesario una Hora Inicio y Hora Fin, al igual que una única fecha en la que se llevará a cabo el trabajo.</p>
+
+            <img src="./assets/registrar_orden_trabajo_unica.png">
+
+            <div class="hr"></div>
+
+            <p class="a">Ver órdenes de trabajo en detalle.</p>
+
+            <p class="b">Tanto desde la pantalla de <strong>visualizar Órdenes de Trabajo</strong>, como desde las Órdenes de trabajo en el Menú de Inicio; se puede visualizar en detalle los datos de una orden de trabajo al hacer clic en el icono de vista en la fila de la orden de trabajo correspondiente. Esto lleva a una pantalla con los datos de la orden de trabajo, y la información de todos los horarios asignados, tal como Fecha, Hora Inicio, Fecha Fin, Horario Inicio Real, Horario Fin Real, y Estado.</p>
+
+            <img src="./assets/orden_trabajo_detalle.png">
+
+            <p class="b">Se puede descargar en formato PDF y Excel el listado de los horarios asignados y el resumen de las horas proyectadas en comparación con las horas reales cumplidas.</p>
+
+        </div>
+
+        <!-- ########################################################################### -->
+
+        <div class="hoja">
+
+            <p class="a" id="h7">Registrar Horarios</p>
+
+            <p class="b">El usuario se puede mover al apartado de <strong>Cargar Horarios</strong>; al cual se accede desde la opción “<strong>Cargar Horarios</strong>” en la pestaña “<strong>Orden Trabajo</strong>” de la barra de navegación lateral.</p>
+
+            <img src="./assets/keep (7).png" class="left_image" style="width: 12em;">
+
+            <p class="b">Una vez en el apartado de <strong>Cargar Horarios</strong>, el usuario se encontrará con un formulario y un listado de todas las horas asignadas de todas las órdenes de trabajo, al igual que su información pertinente, como Empresa, Empleado, Fecha, Hora Inicio, y Hora Fin.</p>
+
+            <img src="./assets/cargar_horarios.png" >
+
+            <p class="b">Al seleccionar una fila del listado, se muestran los datos de la hora asignada en el formulario y se habilitan los campos para que el usuario ingrese Hora Inicio Real, Hora Fin Real, y Estado.</p>
+
+            <div class="imagenes_hermanas">
+                <img src="./assets/cargando_horario (2).png" style="height: 30em; width: 25em;">
+                <img src="./assets/cargando_horario (1).png"style="height: 15em; width: 25em;">
+            </div>
+
+            <p class="b">Al guardar el horario, ahora se le suma la hora real a todas las comparaciones de horas proyectadas y horas reales de ese empleado, empresa, y orden de trabajo.</p>
+
+        </div>
+
+        <!-- ########################################################################### -->
+
+        <div class="hoja">
+
+            <p class="a" id="h8">Visualizar Facturas</p>
+
+            <p class="b">El usuario se puede mover al apartado de <strong>Listado Facturas</strong>; al cual se accede desde la opción “<strong>Visualizar Facturas</strong>” en la pestaña “<strong>Facturación</strong>” de la barra de navegación lateral.</p>
+
+            <img src="./assets/listado_factura.png">
+
+            <p class="b">Se pueden registrar nuevas facturas haciendo clic en el botón más ( + ) naranja al lado de la barra de búsqueda.</p>
+
+            <img src="./assets/boton_naranja.png" class="left_image">
+
+            <p class="b">La columna de Acciones contiene un icono de vista y un icono de eliminar por cada factura. Presionar el icono de vista le permite al usuario visualizar las facturas en detalle.</p>
+
+            <img src="./assets/vista.png" class="left_image">
+
+            <p class="b">Presionar el icono de eliminar muestra una pantalla que le pregunta al usuario si está seguro de eliminar la factura. Confirmar la eliminación marcará la factura como eliminada. Las facturas eliminadas seguirán estando registradas en el sistema, pero solo serán visibles al visualizar facturas eliminadas.</p>
+
+            <img src="./assets/eliminar.png" class="left_image">
+
+            <p class="ab" id="8a">Buscar Facturas.</p>
+            <p class="b">Desde la pantalla de <strong>visualizar facturas</strong>, el usuario puede usar la barra de búsqueda para escribir la empresa, y la lista filtrará las facturas que trae para mostrar solo aquellas que comparten la misma empresa escrita en la barra de búsqueda.</p>
+
+            <img src="./assets/buscar_por_empresa.png" class="left_image" style="width: 15em;">
+
+            <p class="b">El usuario puede filtrar los resultados enlistados. Se pueden visualizar facturas activas, o eliminadas. Se pueden ver órdenes de trabajo de un mes o año seleccionados.</p>
+
+            <img src="./assets/estado_mes_ano.png" class="left_image" style="width: 40em;">
+
+            <div class="hr"></div>
+
+            <p class="a" id="8b">Registrar Factura</p>
+
+            <p class="b">Desde la pantalla de <strong>Listado Facturas</strong>, se puede registrar una nueva factura al hacer clic en el botón más ( + ) naranja al lado de la barra de navegación. Esto lleva a una pantalla en la que se puede guardar los datos e ítems de una factura.
+            </p>
+
+            <img src="./assets/crear_factura.png">
+
+            <p class="b">Se puede guardar una factura llenando los campos de Número de Factura, Empresa, y Fecha. Se pueden agregar una cantidad indefinida de ítems a una factura. Cada ítem tiene una cantidad, descripción, y valor, así mismo un botón para borrarlo de la lista.</p>
+
+            <p class="b">El campo Total del formulario calcula el valor total de todos los ítems sumando la cantidad de cada ítem multiplicado por su valor.</p>
+
+            <div class="hr"></div>
+
+            <p class="a" id="8b">Ver Factura en detalle</p>
+
+            <p class="b">Desde la pantalla de <strong>Listado Facturas</strong>, se puede visualizar en detalle los datos de una factura al hacer clic en el icono de vista en la fila de la factura correspondiente. Esto lleva a una pantalla con un formulario y una lista de items.
+            </p>
+
+            <img src="./assets/ver_factura.png">
+
+            <p class="b">Se puede editar los datos de una factura escribiendo sobre los campos de Número de Factura, Empresa, y Fecha.
+            </p>
+        </div>   
+    </div>
+</div>

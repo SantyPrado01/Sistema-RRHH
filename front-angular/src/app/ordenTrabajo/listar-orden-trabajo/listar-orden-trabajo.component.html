@@ -62,10 +62,10 @@
           <td>
             <span *ngIf="orden.completado" class="status completed">Completada</span>
             <span *ngIf="!orden.completado" class="status pending">En Curso</span>
-            <span *ngIf="!orden.eliminado" class="status delete">Eliminado</span>
+            <span *ngIf="orden.eliminado" class="status delete">Eliminado</span>
           </td>
-          <td>{{ orden.horasProyectadas }}</td>
-          <td>{{ orden.horasReales }}</td>
+          <td>{{ truncateToTwoDecimals(orden.horasProyectadas) }}</td>
+          <td>{{ truncateToTwoDecimals(orden.horasReales) }}</td>
           <td>
             <button class="btn-edit" [routerLink]="['/ordentrabajo/view', orden.Id]"><mat-icon>visibility</mat-icon></button>
             <button class="btn-delete" (click)="eliminarOrden(orden)"><mat-icon>delete</mat-icon></button>

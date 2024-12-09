@@ -2,6 +2,9 @@ import { Component, HostListener } from '@angular/core';
 import { AuthService } from '../login/auth/auth.service';   
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ConfirmacionDialogComponent } from '../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
 
 @Component({
   selector: 'app-navbar',
@@ -20,7 +23,7 @@ export class NavbarComponent {
 
   username: string | null = '';
 
-  constructor(private authService: AuthService ) {document.addEventListener('click', this.handleClickOutside.bind(this));}
+  constructor(private authService: AuthService,private dialog: MatDialog ) {document.addEventListener('click', this.handleClickOutside.bind(this));}
 
   ngOnInit(): void {
     this.username = this.authService.getUsername(); 
@@ -62,8 +65,26 @@ export class NavbarComponent {
   }
 
   onLogout(): void {
-    if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-      this.authService.logout();
-    }
+    const dialogRef = this.dialog.open(ConfirmacionDialogComponent,{
+      data:{
+        title:'Confirmar Cierre de Sesion',
+        message:`¿Estás seguro de que deseas cerrar sesion?`,
+        type: 'confirm',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result)=>{
+      if (result){
+        this.authService.logout();
+        this.mostrarAlerta('Operación Exitosa', 'Cerraste Sesion con éxito.', 'success')
+      } else {
+        console.log('Operación cancelada');
+      }
+    })
+  }
+
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo },
+    });
   }
 }

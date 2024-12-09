@@ -21,11 +21,20 @@ import { CategoriasComponent } from './categorias/categorias.component';
 import { CrearFacturaComponent } from './facturas/facturas-new/facturas.component';
 import { FacturasListComponent } from './facturas/facturas-list/facturas-list.component';
 import { FacturasEditComponent } from './facturas/facturas-edit/facturas-edit.component';
+import { ManualComponent } from './manual/manual.component';
 
 export const routes: Routes = [
     {
+        path:'manual-usuario',
+        component: ManualComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
+    },
+    {
         path:'home',
-        component: HomeComponent
+        component: HomeComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole: 'Administrador'}
     },
     {
         path:'',
@@ -38,10 +47,14 @@ export const routes: Routes = [
     {
         path:'user/create',
         component: UsuarioNewComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole: 'Administrador'}
     },
     {
         path:'categorias',
         component: CategoriasComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole: 'Administrador'}
     },
     {
         path:'cambio-contrasena/:id/:username',
@@ -50,56 +63,83 @@ export const routes: Routes = [
     {
         path:'employee',
         component: EmpleadosListComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole: 'Administrador'}
+        
     },
 
     {
         path:'employee/create',
-        component: EmpleadosNewComponent
+        component: EmpleadosNewComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
 
     },
     {
         path: 'employee/edit/:id', 
-        component: EditEmpleadoComponent 
+        component: EditEmpleadoComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'service/create',
-        component:ServiciosNewComponent
+        component:ServiciosNewComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'service',
-        component: ServiciosListComponent
+        component: ServiciosListComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'service/edit/:id',
-        component: ServiciosEditComponent    
+        component: ServiciosEditComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}   
     },
     {
         path:'ordentrabajo/create',
-        component: CrearOrdenTrabajoComponent
+        component: CrearOrdenTrabajoComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'ordentrabajo',
-        component: ListarOrdenTrabajoComponent
+        component: ListarOrdenTrabajoComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'ordentrabajo/view/:id',
-        component: OrdenTrabajoViewComponent
+        component: OrdenTrabajoViewComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'cargarHorarios',
-        component: HorariosAsignadosComponent
+        component: HorariosAsignadosComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'factura/create',
-        component: CrearFacturaComponent
+        component: CrearFacturaComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'facturas',
-        component: FacturasListComponent
+        component: FacturasListComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
     {
         path:'factura/view/:id',
-        component: FacturasEditComponent
+        component: FacturasEditComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
     },
 
 

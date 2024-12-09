@@ -40,7 +40,7 @@
         </div>
         <div class="form-footer">
           <div class="form-group-footer">
-            <button type="submit" class="btn btn-success" [disabled]="!form.valid">Guardar Factura</button>
+            <button type="submit" class="btn btn-success">Guardar Factura</button>
           </div>
         </div>
       </div>  
@@ -60,13 +60,13 @@
             <tbody>
               <tr *ngFor="let item of factura.items; let i = index">
                 <td>
-                  <input type="number" [(ngModel)]="item.cantidad" name="cantidad{{i}}" class="form-control" required (ngModelChange)="calcularTotal()" pattern="^[0-9]{8}$"/>
+                  <input type="number" [(ngModel)]="item.cantidad" name="cantidad{{i}}" class="form-control"  (ngModelChange)="calcularTotal()" pattern="^[0-9]{8}$"/>
                 </td>
                 <td>
-                  <input type="text" [(ngModel)]="item.descripcion" name="descripcion{{i}}" class="form-control" required (ngModelChange)="calcularTotal()" />
+                  <input type="text" [(ngModel)]="item.descripcion" name="descripcion{{i}}" class="form-control"  (ngModelChange)="calcularTotal()" />
                 </td>
                 <td>
-                  <input type="number" [(ngModel)]="item.valor" name="valor{{i}}" class="form-control" required (ngModelChange)="calcularTotal()" pattern="^[0-9]{8}$" />
+                  <input type="number" [(ngModel)]="item.valor" name="valor{{i}}" class="form-control"  (ngModelChange)="calcularTotal()" pattern="^[0-9]{8}$" />
                 </td>
                 <td>
                   <button type="button" class="btn btn-danger" (click)="eliminarItem(i)">Eliminar</button>

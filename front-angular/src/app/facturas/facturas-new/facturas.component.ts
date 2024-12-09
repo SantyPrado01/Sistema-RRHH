@@ -7,6 +7,7 @@ import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-facturas',
@@ -32,7 +33,7 @@ export class CrearFacturaComponent implements OnInit {
   meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   anios = [2023, 2024, 2025]; 
 
-  constructor(private facturaService: FacturaService, private dialog: MatDialog) { }
+  constructor(private facturaService: FacturaService, private dialog: MatDialog, private router: Router) { }
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
     this.dialog.open(AlertDialogComponent, {
@@ -75,6 +76,7 @@ export class CrearFacturaComponent implements OnInit {
       (response: FacturaResponse) => {
         this.mostrarAlerta('Operación Exitosa', 'Factura creada con éxito.', 'success');
         console.log('Factura creada con éxito', response);
+        this.router.navigate(['/facturas']);
       },
       (error) => {
         this.mostrarAlerta('Error Operación', 'Error al crear la Factura.', 'error');

@@ -67,12 +67,12 @@
         <i class="fas dropdown-arrow"></i>
       </a>
       <div class="dropdown-menu" *ngIf="isUserOpen">
-        <a class="dropdown-item" href="#">{{ username }}</a>
+        <a class="dropdown-item">{{ username }}</a>
         <a class="dropdown-item" (click)="onLogout()">Cerrar Sesión</a>
       </div>
     </li>
     <li class="nav-item">
-      <a class="nav-link" >
+      <a class="nav-link" routerLink="/manual-usuario" target="_blank">
         <i class="fas fa-question-circle"></i> Ayuda
         <i class="fas dropdown-arrow"></i>
       </a>

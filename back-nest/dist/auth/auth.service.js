@@ -51,7 +51,7 @@ let AuthService = class AuthService {
         };
     }
     async login({ username, password }) {
-        const user = await this.userRepository.findOne({ where: { username: username } });
+        const user = await this.userRepository.findOne({ where: { username: username }, relations: ['categoria'] });
         if (!user) {
             throw new common_1.HttpException('Usuario no existente', common_1.HttpStatus.NOT_FOUND);
         }
@@ -67,7 +67,7 @@ let AuthService = class AuthService {
                 primerIngreso: true,
             };
         }
-        const payload = { username: user.username, role: user.categoria };
+        const payload = { username: user.username, role: user.categoria.nombre };
         const token = await this.jwtService.signAsync(payload);
         return {
             token,

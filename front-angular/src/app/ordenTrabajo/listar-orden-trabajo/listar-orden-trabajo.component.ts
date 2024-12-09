@@ -89,7 +89,6 @@ export class ListarOrdenTrabajoComponent implements OnInit {
     const mesSeleccionadoNum = this.mesesMap[this.mesSeleccionado];
     
     this.ordenesFiltradas = this.ordenes.filter(orden => {
-
       const coincideEmpresa = this.filtroEmpresa
         ? orden.servicio.nombre && orden.servicio.nombre.toLowerCase().includes(this.filtroEmpresa.toLowerCase())
         : true;
@@ -139,7 +138,10 @@ export class ListarOrdenTrabajoComponent implements OnInit {
         console.log('Operacion de eliminacion cancelada.')
       }
     })
+  }
 
+  truncateToTwoDecimals(value: number): string {
+    return Math.floor(value * 100) / 100 + ''; // Trunca a 2 decimales
   }
 
 }

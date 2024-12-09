@@ -24,6 +24,7 @@ export class EditEmpleadoComponent implements OnInit {
 
   ordenes: any[] = [];
   ordenesFiltradas: any[] = [];
+  ordenesMensualesFiltradas: any[] = [];
   seccionActual: string = 'datosPersonales';
   empleado: any = {};
   categorias: any[] = [];
@@ -317,6 +318,35 @@ export class EditEmpleadoComponent implements OnInit {
     });
   }
 
+  filtrarMensual() {
+    const anioSeleccionado = Number(this.anioSeleccionado);
+    const mesSeleccionadoNum = this.mesesMap[this.mesSeleccionado];
+    
+    this.ordenesFiltradas = this.ordenes.filter(orden => {
+      const noEliminada = orden.eliminado !== true;
+  
+      const coincideEmpresa = this.filtroEmpresa
+        ? orden.servicio.nombre && orden.servicio.nombre.toLowerCase().includes(this.filtroEmpresa.toLowerCase())
+        : true;
+  
+      const coincideMes = mesSeleccionadoNum
+        ? orden.mes === mesSeleccionadoNum
+        : true;
+  
+      const coincideAnio = this.anioSeleccionado
+        ? orden.anio === anioSeleccionado
+        : true;
+  
+      const coincideEstado = this.estadoSeleccionado !== undefined
+        ? (this.estadoSeleccionado === true ? orden.completado === true : orden.completado === false)
+        : true;
+  
+      return noEliminada && coincideEmpresa && coincideMes && coincideAnio && coincideEstado;
+    });
+    this.calcularTotales()
+  }
+  
+
 
   obtenerDias(necesidades: any[]): string {
     const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
@@ -435,4 +465,9 @@ export class EditEmpleadoComponent implements OnInit {
     // Exportar el libro a un archivo Excel
     XLSX.writeFile(wb, 'cierre_mensual.xlsx');
   }
+  
+  truncateToTwoDecimals(value: number): string {
+    return Math.floor(value * 100) / 100 + ''; // Trunca a 2 decimales
+  }
+
 }

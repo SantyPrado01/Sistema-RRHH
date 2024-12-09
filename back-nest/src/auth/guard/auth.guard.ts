@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
 
   constructor(
     private readonly jwtService: JwtService,
-    private readonly reflector: Reflector // Necesitamos esto para acceder a los metadatos de la ruta
+    private readonly reflector: Reflector 
   ){}
 
   async canActivate( context: ExecutionContext): Promise<boolean> {
@@ -29,11 +29,7 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtCosntants.secret,
       });
-      
-      // Asigna el usuario decodificado a la request
       request['user'] = payload;
-
-      // Si hay roles requeridos, verifica si el usuario tiene el rol adecuado
       if (requiredRoles && !requiredRoles.includes(payload.role)) {
         throw new ForbiddenException('No tienes permiso para acceder a esta ruta');
       }
