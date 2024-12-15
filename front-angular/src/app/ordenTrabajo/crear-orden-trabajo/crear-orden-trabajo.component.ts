@@ -81,9 +81,15 @@ export class CrearOrdenTrabajoComponent {
 
         const ocurrenciasDia = this.contarDiasEnMes(this.meses.indexOf(this.mes) + 1, this.anio, dia.diaSemana);
         totalHoras += horasDia * ocurrenciasDia;
+        if (inicio >= fin) {
+          this.mostrarAlerta(
+            'Error en las horas',
+            'La hora de inicio no puede ser posterior a la hora de fin.',
+            'error'
+          );
+        }
       }
     });
-  
     this.horasProyectadas = totalHoras;
   }
   
@@ -114,41 +120,45 @@ export class CrearOrdenTrabajoComponent {
   }
 
   onSubmit(): void {
-    const ordenTrabajoData = {
-      servicio: this.empresa, 
-      empleadoAsignado: this.empleado,
-      diaEspecifico: this.fechaOrden, 
-      horaInicio: this.horaInicio, 
-      horaFin: this.horaFin, 
-      mes: this.meses.indexOf(this.mes) + 1, 
-      anio: Number(this.anio), 
-      horariosAsignados: [],
-      necesidadHoraria: this.necesidad.map(dia => ({
-        diaSemana: dia.diaSemana,
-        horaInicio: dia.horaInicio,
-        horaFin: dia.horaFin
-      }))
-    };
+      const ordenTrabajoData = {
+        servicio: this.empresa,
+        empleadoAsignado: this.empleado,
+        diaEspecifico: this.fechaOrden,
+        horaInicio: this.horaInicio,
+        horaFin: this.horaFin,
+        mes: this.meses.indexOf(this.mes) + 1,
+        anio: Number(this.anio),
+        horariosAsignados: [],
+        necesidadHoraria: this.necesidad.map((dia) => ({
+          diaSemana: dia.diaSemana,
+          horaInicio: dia.horaInicio,
+          horaFin: dia.horaFin,
+        })),
+      };
   
-    console.log('Datos a enviar:', ordenTrabajoData);
+      console.log('Datos a enviar:', ordenTrabajoData);
   
-    this.ordenTrabajoService.crearOrdenTrabajo(ordenTrabajoData).subscribe({
-      next: response => {
-        this.mostrarAlerta('Operación Exitosa', 'Orden creada con éxito.', 'success');
-        this.limpiarCampos()
-      },
-      error: error => {
-        if (error.error) {
-          this.mostrarAlerta('Error Operación', 'Error al crear la Orden. Los horarios no estan dentro de la disponibilidad del empleado.', 'error');
-          console.error('Detalles del error:', error.error);
-        }
-        console.error('Error al crear la orden de trabajo:', error);
-      }
-    });
+      this.ordenTrabajoService.crearOrdenTrabajo(ordenTrabajoData).subscribe({
+        next: () => {
+          this.mostrarAlerta(
+            'Operación Exitosa',
+            'Orden creada con éxito.',
+            'success'
+          );
+          this.limpiarCampos();
+        },
+        error: (error) => {
+          this.mostrarAlerta(
+            'Error Operación',
+            'Error al crear la Orden.',
+            'error'
+          );
+          console.error('Error al crear la orden de trabajo:', error);
+        },
+      });
   }
-
+  
   limpiarCampos(): void {
-    // Resetear los valores de las variables asociadas con los campos de los formularios
     this.empresaNombre = '';
     this.empleadoNombre = '';
     this.mes = '';

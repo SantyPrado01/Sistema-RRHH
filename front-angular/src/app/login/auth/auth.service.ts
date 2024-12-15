@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { Router} from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
 @Injectable({
@@ -99,7 +99,7 @@ export class AuthService {
     }
     const payload = JSON.parse(atob(token.split('.')[1]));
     console.log(payload.role)
-    return payload.role; // Retorna el rol
+    return payload.role; 
 
   }
 
@@ -109,7 +109,7 @@ export class AuthService {
       return null;
     }
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.username; // Asegúrate de que el nombre de usuario esté en el payload del token
+    return payload.username; 
   }
 
   logout(): void{

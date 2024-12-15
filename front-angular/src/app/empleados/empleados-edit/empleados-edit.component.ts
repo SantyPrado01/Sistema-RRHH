@@ -166,6 +166,7 @@ export class EditEmpleadoComponent implements OnInit {
   
   obtenerNombreCiudad(idCiudad: string) {
     const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}&aplanar=true&campos=nombre&exacto=true`;
+    console.log(url)
     return this.http.get<any>(url);
   }
 
