@@ -115,8 +115,14 @@ export class EmpleadosNewComponent implements OnInit{
 
   seleccionarCiudad(event: any) {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
-    if (selectedCity) {
+    console.log(selectedCity)
+    if (selectedCity.nombre == 'Córdoba'){
+      this.empleado.ciudad = 14014010; 
+      this.ciudadNombre = selectedCity.nombre;
+    } 
+    else {
       this.empleado.ciudad = selectedCity.id; 
+      this.ciudadNombre = selectedCity.nombre;
     }
   }
   

@@ -126,11 +126,6 @@ table {
     background-color: #aaa;
   }
 
-  .selected-row {
-    background-color: #424242; /* Gris oscuro */
-    color: white; /* Texto blanco para contraste */
-    cursor: pointer; /* Cambia el cursor a mano para indicar que es interactivo */
-  }
   tr {
     cursor: pointer;  /* Indica que las filas son clicables */
   }
@@ -139,8 +134,8 @@ table {
       background-color: #f8f9fa; /* Color de fondo al pasar el mouse sobre la fila */
   }
 
-  .selected-row {
-      background-color: #424242; /* Gris oscuro para la fila seleccionada */
-      color: white;  /* Texto blanco para contraste */
-      cursor: pointer; /* Cambia el cursor a mano para indicar que es interactivo */
-  }
+.selected-row {
+    background-color: #424242; /* Gris oscuro para la fila seleccionada */
+    color: white;  /* Texto blanco para contraste */
+    cursor: pointer; /* Cambia el cursor a mano para indicar que es interactivo */
+}

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { FormsModule } from '@angular/forms';
+import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-cambio-password',
@@ -21,7 +23,8 @@ export class CambioPasswordComponent {
  constructor(
    private route: ActivatedRoute,  
    private loginService: LoginService,  
-   private router: Router  
+   private router: Router,
+   private dialog: MatDialog  
  ) {}
 
  ngOnInit(): void {
@@ -32,22 +35,28 @@ export class CambioPasswordComponent {
    });
  }
 
+ mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error' | 'info'): void {
+  this.dialog.open(AlertDialogComponent, {
+    data: { title: titulo, message: mensaje, type: tipo },
+  });
+}
+
  onChangePassword(): void {
 
    if (this.newPassword !== this.confirmNewPassword) {
-     alert('Las contraseñas nuevas no coinciden.');
+     this.mostrarAlerta('Error al cambiar la Contraseña', 'Las contraseñas nuevas no coinciden.', 'error');
      return;
    }
 
    console.log(this.confirmNewPassword)
    this.loginService.changePassword(this.userId, this.confirmNewPassword).subscribe({
      next: (response) => {
-       console.log('Contraseña cambiada con éxito');
+      this.mostrarAlerta('Cambio de Contraseña', 'Contraseña actualizada.', 'success');
        this.router.navigate(['']); 
      },
      error: (err) => {
        console.error('Error al cambiar la contraseña', err);
-       alert('Hubo un problema al cambiar la contraseña.');
+       this.mostrarAlerta('Error al cambiar la Contraseña', 'No se pudo cambiar la Contraseña. Verifique sus credenciales.', 'error');
      }
    });
  }

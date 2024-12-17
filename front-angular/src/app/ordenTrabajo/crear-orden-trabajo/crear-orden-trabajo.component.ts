@@ -113,8 +113,7 @@ export class CrearOrdenTrabajoComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.empleado = result;
-        this.empleadoNombre = result.nombre
-        console.log('Resultado Empleado', this.empleado)
+        this.empleadoNombre = result.nombre + ' ' + result.apellido
       }
     });
   }

@@ -80,6 +80,7 @@ export class CategoriasComponent implements OnInit{
         next: (response) => {
           this.mostrarAlerta('Operación Exitosa', 'Categoria actualizada con éxito.', 'success');
           this.cancelarEdicion(); // Limpiar el formulario después de la actualización
+          this.ngOnInit()
         },
         error: (err) => {
           console.error('Error al actualizar la categoria.', err);

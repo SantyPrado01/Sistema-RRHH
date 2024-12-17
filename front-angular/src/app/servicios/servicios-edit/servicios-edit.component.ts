@@ -85,7 +85,7 @@ export class ServiciosEditComponent implements OnInit {
         if (this.servicio.categoria && typeof this.servicio.categoria === 'object') {
           this.servicio.categoria = this.servicio.categoria.id; // Asegura que sea solo el ID
         }
-        console.log('Informacion de Servicio:', this.servicio)
+        console.log('Informacion de Servicio:', this.servicio.ciudad)
         if (this.servicio.ciudad){
           this.obtenerNombreCiudad(this.servicio.ciudad.toString()).subscribe({
             next: (response) => {
@@ -114,7 +114,7 @@ export class ServiciosEditComponent implements OnInit {
   }
 
   obtenerNombreCiudad(idCiudad: string) {
-    const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}&aplanar=true&campos=nombre&exacto=true`;
+    const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}`
     return this.http.get<any>(url);
   }
 
@@ -145,7 +145,12 @@ export class ServiciosEditComponent implements OnInit {
 
   seleccionarCiudad(event: any) {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
-    if (selectedCity) {
+    console.log(selectedCity)
+    if (selectedCity.nombre == 'Córdoba'){
+      this.servicio.ciudad = 14014010; 
+      this.ciudadNombre = selectedCity.nombre;
+    } 
+    else {
       this.servicio.ciudad = selectedCity.id; 
       this.ciudadNombre = selectedCity.nombre;
     }

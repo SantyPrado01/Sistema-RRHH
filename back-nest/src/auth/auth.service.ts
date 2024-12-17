@@ -80,9 +80,7 @@ export class AuthService {
         console.log(newPassword)
         const user = await this.userRepository.findOne({where:{id: userId}});
       
-        if (!user) {
-          throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-        }
+        if (!user) {throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);}
       
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;

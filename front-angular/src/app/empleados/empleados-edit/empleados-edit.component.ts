@@ -172,8 +172,13 @@ export class EditEmpleadoComponent implements OnInit {
 
   seleccionarCiudad(event: any) {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
-    if (selectedCity) {
-      this.empleado.ciudad = selectedCity.id;
+    console.log(selectedCity)
+    if (selectedCity.nombre == 'Córdoba'){
+      this.empleado.ciudad = 14014010; 
+      this.ciudadNombre = selectedCity.nombre;
+    } 
+    else {
+      this.empleado.ciudad = selectedCity.id; 
       this.ciudadNombre = selectedCity.nombre;
     }
   }
@@ -317,6 +322,7 @@ export class EditEmpleadoComponent implements OnInit {
         : true;
       return coincideEmpresa && coincideMes && coincideAnio && coincideEstado;
     });
+    this.calcularTotales()
   }
 
   filtrarMensual() {
@@ -347,8 +353,6 @@ export class EditEmpleadoComponent implements OnInit {
     this.calcularTotales()
   }
   
-
-
   obtenerDias(necesidades: any[]): string {
     const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
     const diasConHorario = necesidades
@@ -366,12 +370,10 @@ export class EditEmpleadoComponent implements OnInit {
   descargarPdf(): void {
     const doc = new jsPDF();
 
-    // Título del documento
     doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
     doc.text('Resumen de Cierre Mensual', 20, 20);
 
-    // Subtítulo con totales
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
     doc.text(`Horas Proyectadas: ${this.totalHorasProyectadas}`, 20, 40);
@@ -382,7 +384,6 @@ export class EditEmpleadoComponent implements OnInit {
     doc.text(`Faltaron sin Aviso: ${this.totalFS}`, 20, 90);
     doc.text(`Enfermedad: ${this.totalE}`, 20, 100);
 
-    // Configuración de la tabla principal
     const columns = ['Orden N°', 'Servicio', 'Horas Proyectadas', 'Horas Reales', 'A', 'LT', 'FC', 'FS', 'E'];
     const rows = this.ordenesFiltradas.map(orden => [
       orden.Id,
@@ -396,15 +397,14 @@ export class EditEmpleadoComponent implements OnInit {
       orden.estadoContador.enfermedad
     ]);
 
-    // Agregar tabla al PDF
     (doc as any).autoTable({
       head: [columns],
       body: rows,
-      startY: 110, // Para comenzar la tabla más abajo
+      startY: 110, 
       theme: 'grid',
       headStyles: {
-        fillColor: [255, 186, 140], // Color de fondo de los encabezados
-        textColor: [0, 0, 0],        // Color del texto en los encabezados
+        fillColor: [255, 186, 140], 
+        textColor: [0, 0, 0],        
         fontSize: 10,
         fontStyle: 'bold'
       },
@@ -414,9 +414,9 @@ export class EditEmpleadoComponent implements OnInit {
         halign: 'center'
       },
       alternateRowStyles: {
-        fillColor: [240, 240, 240] // Color de las filas alternas
+        fillColor: [240, 240, 240] 
       },
-      margin: { top: 50 }, // Margen superior
+      margin: { top: 50 }, 
       styles: {
         overflow: 'linebreak',
         font: 'helvetica'

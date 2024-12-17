@@ -149,3 +149,13 @@ th {
 .button-footer-excel:hover {
   background-color: #14892c; 
 }
+
+@media(max-width:1360px){
+  .content-container {
+    margin-right: 1em;
+  }
+  .form-container{
+    width: 370px;
+  }
+
+}

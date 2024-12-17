@@ -134,3 +134,9 @@ table {
 .btn-primary:focus {
     outline: none;
 }
+
+@media (max-width:1360px){
+    .content-container {
+        margin-right: 1em;
+    }
+}

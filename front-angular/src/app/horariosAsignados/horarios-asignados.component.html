@@ -38,11 +38,11 @@
       <div class="form-row">
         <div class="form-group">
           <label>Hora Inicio Real:</label>
-          <input type="time" [(ngModel)]="horaInicioReal" name="inicioReal" required/>
+          <input type="time" [(ngModel)]="horaInicioReal" name="inicioReal" />
         </div>
         <div class="form-group">
           <label>Hora Fin Real:</label>
-          <input type="time" [(ngModel)]="horaFinReal" name="finReal" required/>
+          <input type="time" [(ngModel)]="horaFinReal" name="finReal"/>
         </div>
         <div class="form-group">
           <label>Estado:</label>
@@ -79,7 +79,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let horario of horariosAsignados" (click)="selectHorario(horario)" [class.selected-row]="horario === selectedHorario">
+        <tr *ngFor="let horario of horariosAsignados" (click)="selectHorario(horario)" [class.selected-row]="horario == selectedHorario">
           <td>{{ horario.ordenTrabajo.servicio.nombre }}</td>
           <td>{{ horario.empleado.apellido }}, {{ horario.empleado.nombre }}</td>
           <td>{{ horario.fecha | date: 'dd/MM/yyyy' }}</td>

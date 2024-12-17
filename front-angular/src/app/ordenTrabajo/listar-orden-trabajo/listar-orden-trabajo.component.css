@@ -146,3 +146,9 @@ table {
     background-color: red;
     color: white;
   }
+  
+  @media (max-width:1360px){
+    .content-container {
+        margin-right: 1em;
+    }
+}

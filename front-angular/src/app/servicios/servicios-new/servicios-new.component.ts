@@ -88,8 +88,14 @@ export class ServiciosNewComponent implements OnInit {
 
   seleccionarCiudad(event: any) {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
-    if (selectedCity) {
+    console.log(selectedCity)
+    if (selectedCity.nombre == 'Córdoba'){
+      this.servicio.ciudad = 14014010; 
+      this.ciudadNombre = selectedCity.nombre;
+    } 
+    else {
       this.servicio.ciudad = selectedCity.id; 
+      this.ciudadNombre = selectedCity.nombre;
     }
   }
   

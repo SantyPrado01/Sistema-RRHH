@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HorarioAsignado } from './models/horariosAsignados.models';
 import { HorariosAsignadosService } from './services/horariosAsignados.service';
 import { CommonModule } from '@angular/common';
@@ -30,7 +30,7 @@ export class HorariosAsignadosComponent implements OnInit {
 
   selectHorario(horario: HorarioAsignado): void {
     if (this.selectedHorario === horario) {
-      this.selectedHorario = null;  // Desmarcar
+      this.selectedHorario = null; 
     } else {
       this.selectedHorario = horario;
       this.horaInicioReal = '';
@@ -39,10 +39,11 @@ export class HorariosAsignadosComponent implements OnInit {
       this.observaciones = ''; 
       this.comprobado = true;  // Seleccionar
     }
-
+    console.log('Fila seleccionada:', this.selectedHorario);
+    this.cdr.detectChanges();
   }
 
-  constructor(private horarioService: HorariosAsignadosService, private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService) {}
+  constructor(private cdr: ChangeDetectorRef, private horarioService: HorariosAsignadosService, private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService) {}
   
   ngOnInit(): void {
     this.fetchHorarios();
@@ -61,7 +62,6 @@ export class HorariosAsignadosComponent implements OnInit {
     });
   }
   
-
   actualizarHorarios(){
     if (!this.selectedHorario) return;
 

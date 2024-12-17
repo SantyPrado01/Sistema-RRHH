@@ -29,8 +29,8 @@ export class HomeComponent {
   ordenes: any[] = [];
   anioActual: number = new Date().getFullYear();
   completado: boolean = false
-  horasProyectadas: number = 0
-  horasReales: number = 0
+  horasProyectadas: string = ''
+  horasReales: string = ''
   meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   mesActual: string = this.meses[new Date().getMonth()];
 
@@ -64,5 +64,9 @@ export class HomeComponent {
       .map(n => diasSemana[parseInt(n.diaSemana, 10) - 1]) 
       .filter((dia, index, self) => dia && self.indexOf(dia) === index);
     return diasConHorario.join(', ') || 'No hay días con horarios definidos';
+  }
+
+  truncateToTwoDecimals(value: number): string {
+    return Math.floor(value * 100) / 100 + ''; 
   }
 }

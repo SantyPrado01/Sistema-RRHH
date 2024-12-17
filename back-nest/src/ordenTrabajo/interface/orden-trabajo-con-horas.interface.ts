@@ -3,6 +3,6 @@ import { OrdenTrabajo } from "../entities/ordenTrabajo.entity";  // Importar la 
 
 // Extiende la interfaz de OrdenTrabajo
 export interface OrdenTrabajoConHoras extends OrdenTrabajo {
-  horasProyectadas: number;
-  horasReales: number;
+  horasProyectadas: string;
+  horasReales: string;
 }
