@@ -1,5 +1,4 @@
-.body {
-  background-image: url(img/FondoCorsacor.jpg);
+body {
   height: 100vh;
   margin: 0;
   display: flex;
@@ -7,38 +6,28 @@
   justify-content: center;
 }
 
-/* Estilo para el contenedor del título */
-.titulo {
-  width: 100%; 
-  text-align: center; 
-  margin: 0; 
-}
-
-.container{
-  width: 90%;
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Estilo para el h1 */
 h1 {
   background-color: #CC5600;
   color: #ffffff; 
-  padding: 1rem;
+  padding: 1.5rem;
   margin: 0; 
   box-sizing: border-box; 
   width: 100%; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  border-bottom-left-radius: 0;    
-    border-bottom-right-radius: 0;
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
 /* Estilos del formulario */
 .form {
   --bg-light: #ffffff; /* Fondo blanco */
-  --bg-dark: #000000; /* Color principal para los detalles */
   --clr: #CC5600; /* Color principal para detalles y bordes */
-  --clr-alpha: #f5f5f5; /* Fondo muy claro para los campos */
 
   display: flex;
   flex-direction: column;
@@ -49,13 +38,9 @@ h1 {
   height: 50vh;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
   padding: 1rem; 
-
-  border-top-left-radius: 0;         
-  border-top-right-radius: 0;        
-  border-bottom-left-radius: 0.5rem; 
-  border-bottom-right-radius: 0.5rem;
-
+  border-radius: 0 0 0.5rem 0.5rem;
 }
+
 .input-span {
   width: 90%;
   display: flex;
@@ -63,25 +48,24 @@ h1 {
   gap: 0.5rem;
 }
 
-
 .form input[type="text"],
 .form input[type="password"] {
-    border-radius: 0.5rem; 
-    padding: 1rem 0.75rem;
-    width: 100%;
-    border: 1px solid #CC5600; 
-    background-color: #f9f9f9; 
-    outline: none; 
+  border-radius: 0.5rem; 
+  padding: 1rem 0.75rem;
+  width: 100%;
+  border: 1px solid var(--clr); 
+  background-color: #f9f9f9; 
+  outline: none; 
 }
 
 .form input[type="text"]:focus,
 .form input[type="password"]:focus {
-    border-color: #CC5600; 
+  border-color: var(--clr); 
 }
 
 .label {
   align-self: center;
-  color: var(black); 
+  color: black; 
   font-weight: 600;
 }
 
@@ -89,16 +73,38 @@ h1 {
   padding: 1rem 0.75rem;
   width: 80%;
   border-radius: 0.5rem;
-  background-color: #CC5600; 
+  background-color: var(--clr); 
   color: white; 
   border: none;
   cursor: pointer;
   transition: background-color 300ms;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 }
 
 .submit:hover {
   background-color: #a14a00; 
 }
 
+.inicio-sesion, .imagen-logo {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.imagen-logo {
+  height: 100vh;
+
+}
+
+.img-fondo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}

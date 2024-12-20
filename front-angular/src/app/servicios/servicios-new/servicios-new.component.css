@@ -201,18 +201,10 @@ input[type="time"] {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
+@media (max-width:1360px) {
 
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .form-container {
-    padding: 10px;
+  .form-container{
+    max-width: 85vh;
+    margin: 0 0 0 0;
   }
 }
