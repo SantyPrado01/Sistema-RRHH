@@ -26,7 +26,7 @@ __decorate([
     __metadata("design:type", String)
 ], Servicio.prototype, "nombre", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ default: '0' }),
     __metadata("design:type", String)
 ], Servicio.prototype, "cuit", void 0);
 __decorate([
@@ -38,7 +38,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Servicio.prototype, "ciudad", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ default: '0' }),
     __metadata("design:type", String)
 ], Servicio.prototype, "telefono", void 0);
 __decorate([
