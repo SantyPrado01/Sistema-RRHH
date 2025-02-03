@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpEx
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
-import { CreateDisponibilidadHorariaDto } from 'src/disponibilidad-horaria/dto/create-disponibilidad-horaria.dto';
 
 @Controller('empleados')
 export class EmpleadosController {
