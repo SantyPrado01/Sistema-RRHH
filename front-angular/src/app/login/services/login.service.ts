@@ -10,11 +10,11 @@ import jwt_decode from 'jwt-decode';
 export class LoginService{
 
     //Produccion
-    private baseUrl = 'http://http://147.93.15.196:3000/auth';
+    private baseUrl = 'http://147.93.15.196:3000/auth';
 
     //Desarrollo
     //private baseUrl = 'http://localhost:3000/auth';
-    
+
     constructor(private http: HttpClient){}
 
     getUsuarios():Observable<any>{
