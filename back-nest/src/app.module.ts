@@ -27,7 +27,7 @@ import { CategoriaUsuarioModule } from './categoria-usuario/categoria-usuario.mo
       password:'Nfr06950', //1008 en Windows //Nfr06950 en Mac
       database: 'corsacorsql',
       entities: [__dirname + '/**/*.entity{.ts,.js}'], //Podemos leer cualquier archivo entity
-      synchronize:true,
+      synchronize:false,
     }),
     UsersModule,
     AuthModule,

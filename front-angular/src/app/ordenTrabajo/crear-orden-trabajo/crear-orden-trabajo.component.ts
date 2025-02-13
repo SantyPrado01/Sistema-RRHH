@@ -174,7 +174,7 @@ export class CrearOrdenTrabajoComponent {
       { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: '' },
       { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: '' }
     ];
-    this.horasProyectadas = 0;  // Resetear las horas proyectadas
+    this.horasProyectadas = 0; 
   }
   
   cancelar() {

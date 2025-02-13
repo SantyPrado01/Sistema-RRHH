@@ -5,17 +5,16 @@ import { routes } from './app/app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { ExtraOptions } from '@angular/router';
 
-// Configuración del router
 const routerOptions: ExtraOptions = {
-  scrollPositionRestoration: 'enabled',  // Restaurar la posición del scroll
-  anchorScrolling: 'enabled',           // Habilitar anclajes
+  scrollPositionRestoration: 'enabled', 
+  anchorScrolling: 'enabled',           
 };
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(
       routes, 
-      withRouterConfig(routerOptions)  // Usamos withRouterConfig para pasar las opciones
+      withRouterConfig(routerOptions)  
     ),
     provideHttpClient(),
   ],

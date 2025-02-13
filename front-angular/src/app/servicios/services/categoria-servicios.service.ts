@@ -7,7 +7,11 @@ import { Observable } from 'rxjs';
 })
 export class CategoriaServicioService {
 
-  private apiUrl = 'http://localhost:3000/categorias'; 
+  //Produccion
+  private apiUrl = 'http://http://147.93.15.196:3000/categorias';
+
+  //Desarrollo
+  //private apiUrl = 'http://localhost:3000/categorias'; 
 
   constructor(private http: HttpClient) { }
 

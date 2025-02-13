@@ -59,7 +59,6 @@ export class ListarOrdenTrabajoComponent implements OnInit {
     });
   }
 
-
   obtenerDias(necesidades: any[]): string {
     const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
     const diasConHorario = necesidades

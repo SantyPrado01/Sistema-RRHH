@@ -8,7 +8,12 @@ import { Categoria } from '../models/categoria.models';
   providedIn: 'root'
 })
 export class CategoriaService {
-  private baseUrl = 'http://localhost:3000/categorias';
+
+  //Produccion
+  private baseUrl = 'http://147.93.15.196:3000/categorias';
+
+  //Desarrollo
+  //private baseUrl = 'http://localhost:3000/categorias';
 
   constructor(private http: HttpClient) { }
 

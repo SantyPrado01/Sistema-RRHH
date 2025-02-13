@@ -11,6 +11,7 @@ import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-ale
 import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 import { MatIconModule } from '@angular/material/icon';
 import { FacturaService } from '../../facturas/services/factura.service';
+import { ServicioService } from '../services/servicio.service';
 
 @Component({
   selector: 'app-empresas-edit',
@@ -42,6 +43,7 @@ export class ServiciosEditComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
+    private empresaService: ServicioService,
     private categoriaEmpresaService: CategoriaServicioService,
     private router: Router,
     private route: ActivatedRoute,
@@ -79,11 +81,11 @@ export class ServiciosEditComponent implements OnInit {
   }
 
   cargarServicio(id: string) {
-    this.http.get<any>(`http://localhost:3000/servicios/${id}`).subscribe({
+    this.empresaService.getServicioById(Number(id)).subscribe({
       next:(data)=>{
         this.servicio = data;
         if (this.servicio.categoria && typeof this.servicio.categoria === 'object') {
-          this.servicio.categoria = this.servicio.categoria.id; // Asegura que sea solo el ID
+          this.servicio.categoria = this.servicio.categoria.id; 
         }
         console.log('Informacion de Servicio:', this.servicio.ciudad)
         if (this.servicio.ciudad){
@@ -175,7 +177,7 @@ export class ServiciosEditComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((confirmado)=>{
         if(confirmado){
-          this.http.patch<any>(`http://localhost:3000/servicios/${this.servicioId}`, this.servicio).subscribe({
+          this.empresaService.updateServicio(Number(servicioId), this.servicio).subscribe({
             next: (response) => {
               this.mostrarAlerta('Operación Exitosa', 'Empresa actualizada con éxito.', 'success');
               this.router.navigate(['/service']);

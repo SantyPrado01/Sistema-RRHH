@@ -7,7 +7,12 @@ import { HorarioAsignado } from '../models/horariosAsignados.models';
     providedIn: 'root'
 })
 export class HorariosAsignadosService {
-    private apiUrl = 'http://localhost:3000/horariosasignados'; 
+
+    //Produccion
+    private apiUrl = 'http://147.93.15.196:3000/horariosasignados';
+
+    //Desarrollo
+    //private apiUrl = 'http://localhost:3000/horariosasignados'; 
 
     constructor(private http: HttpClient) {}
 
