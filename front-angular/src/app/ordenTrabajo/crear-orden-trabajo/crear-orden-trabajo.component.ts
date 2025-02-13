@@ -42,7 +42,7 @@ export class CrearOrdenTrabajoComponent {
     { diaSemana: 4, nombre: 'Jueves', horaInicio: '', horaFin: '' },
     { diaSemana: 5, nombre: 'Viernes', horaInicio: '', horaFin: '' },
     { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: '' },
-    { diaSemana: 0, nombre: 'Domingo', horaInicio: '', horaFin: '' }
+    { diaSemana: 0, nombre: 'Domingo', horaInicio: '', horaFin: '' },
   ];
 
   constructor(private dialog: MatDialog, private ordenTrabajoService: OrdenTrabajoService, private router: Router) {}

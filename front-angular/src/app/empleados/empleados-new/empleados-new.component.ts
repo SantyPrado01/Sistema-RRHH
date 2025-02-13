@@ -7,6 +7,7 @@ import { CategoriaEmpleadoService } from '../services/categoria-empleado.service
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
+import { EmpleadoService } from '../services/empleado.service';
 
 
 @Component({
@@ -23,6 +24,10 @@ export class EmpleadosNewComponent implements OnInit{
   categorias: any[] = [];
   ciudades: any[] = [];
   provinciaCórdobaId = 14;
+  provinciaSanLuisId = 74;
+  provinciaTucumanId = 90;
+  provinciaCatamarcaId = 10;
+  provinciaLaRiojaId = 46;
   ciudadNombre: string = '';
   contadorCaracteres: number = 0;
 
@@ -37,7 +42,13 @@ export class EmpleadosNewComponent implements OnInit{
   ];
   fullTime: boolean = true;
 
-  constructor(private http: HttpClient, private categoriaEmpleadoService: CategoriaEmpleadoService, private router: Router, private dialog: MatDialog) {}
+  constructor(
+    private http: HttpClient, 
+    private empleadoService: EmpleadoService,
+    private categoriaEmpleadoService: CategoriaEmpleadoService, 
+    private router: Router, 
+    private dialog: MatDialog
+  ) {}
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
     this.dialog.open(AlertDialogComponent, {
@@ -91,14 +102,13 @@ export class EmpleadosNewComponent implements OnInit{
     const query = input.value;
 
     if (query.length > 2) {
-      const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
+      const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId},${this.provinciaSanLuisId},${this.provinciaTucumanId},${this.provinciaCatamarcaId},${this.provinciaLaRiojaId}&nombre=${query}&max=10`;
 
       this.http.get<any>(url).subscribe({
         next: (response) => {
-          console.log('Respuesta de la API:', response);
           this.ciudades = response.localidades.map((localidad: any) => {
             return {
-              id: localidad.id,
+              id: localidad.localidad_censal.id,
               nombre: localidad.nombre,
             };
           });
@@ -116,14 +126,8 @@ export class EmpleadosNewComponent implements OnInit{
   seleccionarCiudad(event: any) {
     const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
     console.log(selectedCity)
-    if (selectedCity.nombre == 'Córdoba'){
-      this.empleado.ciudad = 14014010; 
-      this.ciudadNombre = selectedCity.nombre;
-    } 
-    else {
-      this.empleado.ciudad = selectedCity.id; 
-      this.ciudadNombre = selectedCity.nombre;
-    }
+    this.empleado.ciudad = selectedCity.id; 
+    this.ciudadNombre = selectedCity.nombre;
   }
   
   guardarEmpleado() {
@@ -136,8 +140,7 @@ export class EmpleadosNewComponent implements OnInit{
       }));
       this.empleado.fulltime = this.fullTime
 
-    const url = 'http://localhost:3000/empleados'; 
-    this.http.post(url, this.empleado).subscribe({
+    this.empleadoService.createEmpleado(this.empleado).subscribe({
       next: (response) => {
         console.log('Empleado guardado con éxito:', response);
         this.mostrarAlerta('Operación Exitosa', 'Empleado guardado con éxito.', 'success');

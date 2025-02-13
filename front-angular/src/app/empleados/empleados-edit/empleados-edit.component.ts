@@ -12,6 +12,7 @@ import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion
 import { MatIconModule } from '@angular/material/icon';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
+import { EmpleadoService } from '../services/empleado.service';
 
 @Component({
   selector: 'app-edit-empleado',
@@ -31,6 +32,10 @@ export class EditEmpleadoComponent implements OnInit {
   ciudades: any[] = [];
   categoriaEmpleado: string = '';
   provinciaCórdobaId = 14;
+  provinciaSanLuisId = 74;
+  provinciaTucumanId = 90;
+  provinciaCatamarcaId = 10;
+  provinciaLaRiojaId = 46;
   ciudadNombre: string = '';
   contadorCaracteres: number = 0;
   empleadoId: string | null = null;
@@ -65,6 +70,7 @@ export class EditEmpleadoComponent implements OnInit {
   constructor(
     private http: HttpClient, 
     private categoriaEmpleadoService: CategoriaEmpleadoService,
+    private empleadoService: EmpleadoService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
@@ -124,7 +130,7 @@ export class EditEmpleadoComponent implements OnInit {
   }
 
   cargarEmpleado(empleadoId: string) {
-    this.http.get<any>(`http://localhost:3000/empleados/${empleadoId}`).subscribe({
+    this.empleadoService.getEmpleadoById(Number(this.empleadoId)).subscribe({
       next: (data) => {
         this.empleado = data;
         console.log('informacion empleado', this.empleado)
@@ -202,7 +208,7 @@ export class EditEmpleadoComponent implements OnInit {
             fulltime: this.fullTime,
           };
           console.log(empleadoActualizado)
-          this.http.patch<any>(`http://localhost:3000/empleados/${empleadoId}`, empleadoActualizado).subscribe({
+          this.empleadoService.updateEmpleado(Number(empleadoId), empleadoActualizado).subscribe({
             next: (response) => {
               this.mostrarAlerta('Operación Exitosa', 'Empleado actualizado con éxito.', 'success');
               this.router.navigate(['/employee']);
@@ -224,11 +230,11 @@ export class EditEmpleadoComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const query = input.value;
     if (query.length > 2) {
-      const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
+      const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId},${this.provinciaSanLuisId},${this.provinciaTucumanId},${this.provinciaCatamarcaId},${this.provinciaLaRiojaId}&nombre=${query}&max=10`;
       this.http.get<any>(url).subscribe({
         next: (response) => {
           this.ciudades = response.localidades.map((localidad: any) => ({
-            id: localidad.id,
+            id: localidad.localidad_censal.id,
             nombre: localidad.nombre,
           }));
         },
@@ -423,15 +429,13 @@ export class EditEmpleadoComponent implements OnInit {
       }
     });
 
-    // Descargar el archivo PDF
     doc.save('cierre_mensual.pdf');
   }
 
   descargarExcel(): void {
-    // Crear los encabezados para la tabla principal
+  
     const columnas = ['Orden N°', 'Servicio', 'Horas Proyectadas', 'Horas Reales', 'A', 'LT', 'FC', 'FS', 'E'];
 
-    // Crear las filas con los datos de las ordenes
     const filas = this.ordenesFiltradas.map(orden => [
       orden.Id,
       orden.servicio.nombre,
@@ -444,7 +448,6 @@ export class EditEmpleadoComponent implements OnInit {
       orden.estadoContador.enfermedad
     ]);
 
-    // Crear los totales como una fila adicional
     const totales = [
       '',
       'Totales',
@@ -457,18 +460,15 @@ export class EditEmpleadoComponent implements OnInit {
       this.totalE
     ];
 
-    // Crear una hoja de trabajo con los datos (ordenes + totales)
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([columnas, ...filas, [], totales]);
 
-    // Crear un libro de trabajo y agregar la hoja
     const wb: XLSX.WorkBook = { Sheets: { 'Resumen Mensual': ws }, SheetNames: ['Resumen Mensual'] };
 
-    // Exportar el libro a un archivo Excel
     XLSX.writeFile(wb, 'cierre_mensual.xlsx');
   }
   
   truncateToTwoDecimals(value: number): string {
-    return Math.floor(value * 100) / 100 + ''; // Trunca a 2 decimales
+    return Math.floor(value * 100) / 100 + ''; 
   }
 
 }

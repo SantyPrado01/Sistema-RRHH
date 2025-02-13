@@ -25,7 +25,7 @@ export class EmpleadoService {
     return this.http.post<Empleado>(this.apiUrl, empleado);
   }
   updateEmpleado(id: number, empleado: Empleado): Observable<Empleado> {
-    return this.http.put<Empleado>(`${this.apiUrl}/${id}`, empleado);
+    return this.http.patch<Empleado>(`${this.apiUrl}/${id}`, empleado);
   }
   deleteEmpleado(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);

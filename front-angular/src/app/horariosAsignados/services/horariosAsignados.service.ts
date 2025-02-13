@@ -7,7 +7,7 @@ import { HorarioAsignado } from '../models/horariosAsignados.models';
     providedIn: 'root'
 })
 export class HorariosAsignadosService {
-    private apiUrl = 'http://localhost:3000/horariosasignados'; // Cambia la URL según tu API
+    private apiUrl = 'http://localhost:3000/horariosasignados'; 
 
     constructor(private http: HttpClient) {}
 
@@ -24,6 +24,10 @@ export class HorariosAsignadosService {
     updateHorario(horario: HorarioAsignado): Observable<HorarioAsignado> {
         return this.http.patch<HorarioAsignado>(`${this.apiUrl}/${horario.horarioAsignadoId}`, horario);
       }
+    
+    editHorario(id: number, partialHorario:Partial<HorarioAsignado>): Observable<HorarioAsignado> {
+        return this.http.patch<HorarioAsignado>(`${this.apiUrl}/${id}`, partialHorario);
+    }
 
     findAll(): Observable<HorarioAsignado[]>{
         return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/all`);

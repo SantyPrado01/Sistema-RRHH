@@ -37,7 +37,7 @@ export class HorariosAsignadosComponent implements OnInit {
       this.horaFinReal = '';
       this.estado = '';
       this.observaciones = ''; 
-      this.comprobado = true;  // Seleccionar
+      this.comprobado = true;  
     }
     console.log('Fila seleccionada:', this.selectedHorario);
     this.cdr.detectChanges();

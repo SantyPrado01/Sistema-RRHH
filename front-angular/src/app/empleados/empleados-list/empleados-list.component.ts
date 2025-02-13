@@ -28,8 +28,13 @@ export class EmpleadosListComponent implements OnInit {
   filtroOrdenar: string = 'nombre';     
 
 
-  constructor(private empleadoService: EmpleadoService, private route: ActivatedRoute, 
-    private router: Router, private http: HttpClient, private dialog: MatDialog ) {}
+  constructor(
+    private empleadoService: EmpleadoService, 
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private http: HttpClient, 
+    private dialog: MatDialog 
+  ) {}
 
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {

@@ -141,7 +141,7 @@ export class ListarOrdenTrabajoComponent implements OnInit {
   }
 
   truncateToTwoDecimals(value: number): string {
-    return Math.floor(value * 100) / 100 + ''; // Trunca a 2 decimales
+    return Math.floor(value * 100) / 100 + ''; 
   }
 
 }

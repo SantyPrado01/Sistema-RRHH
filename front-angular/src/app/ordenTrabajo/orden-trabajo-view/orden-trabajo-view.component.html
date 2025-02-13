@@ -17,9 +17,6 @@
         <label for="empleado">Empleado:</label>
         <input type="text" id="empleado" [(ngModel)]="empleadoNombre" readonly />
       </div>
-    </div>
-
-    <div class="form-row">
       <div class="form-group">
         <label for="empleado">Mes:</label>
         <input type="text" id="mes" [(ngModel)]="mes" readonly />
@@ -28,9 +25,6 @@
         <label for="dias">Días:</label>
         <input type="text" id="dias" [(ngModel)]="dias" readonly />
       </div>
-    </div>
-
-    <div class="form-row">
       <div class="form-group">
         <label for="horasProyectadas">Horas Proyectadas:</label>
         <input type="text" id="horasProyectadas" [(ngModel)]="horasProyectadas" readonly />
@@ -39,21 +33,19 @@
         <label for="horasReales">Horas Reales:</label>
         <input type="text" id="horasReales" [(ngModel)]="horasReales" readonly />
       </div>
-    </div>
-
-    <div class="form-row-footer">
-      <div class="form-group-footer">
-        <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
-          <mat-icon>picture_as_pdf</mat-icon> Descargar PDF
-        </button>
+      <div class="form-row-footer">
+        <div class="form-group-footer">
+          <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
+            <mat-icon>get_app</mat-icon> PDF
+          </button>
+        </div>
+        <div class="form-group-footer">
+          <button mat-raised-button class="button-footer-excel" color="primary" (click)="descargarExcel()">
+            <mat-icon>get_app</mat-icon> Excel
+          </button>
+        </div>
       </div>
-      <div class="form-group-footer">
-        <button mat-raised-button class="button-footer-excel" color="accent" (click)="descargarExcel()">
-          <mat-icon>file_download</mat-icon> Descargar Excel
-        </button>
-      </div>
     </div>
-
   </div> 
   
   <div class="table-container">
@@ -67,6 +59,7 @@
           <th>Horario Fin Real</th>
           <th>Estado</th>
           <th>Observaciones</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -74,10 +67,25 @@
           <td>{{ horario.fecha | date: 'dd/MM/yyyy' }}</td>
           <td>{{ horario.horaInicioProyectado }}</td>
           <td>{{ horario.horaFinProyectado }}</td>
-          <td>{{ horario.horaInicioReal }}</td>
-          <td>{{ horario.horaFinReal }}</td>
-          <td>{{ horario.estado }}</td>
-          <td>{{ horario.observaciones }}</td>
+          <td><input type="time" [(ngModel)]="horario.horaInicioReal" [disabled]="!horario.editMode"/></td>
+          <td><input type="time" [(ngModel)]="horario.horaFinReal" [disabled]="!horario.editMode"/></td>
+          <td><select [(ngModel)]="horario.estado" name="estado" [disabled]="!horario.editMode" required> 
+              <option value="Asistió">Asistió</option>
+              <option value="Llegada Tarde">Llegada Tarde</option>
+              <option value="Faltó Con Aviso">Faltó Con Aviso</option>
+              <option value="Faltó Sin Aviso">Faltó Sin Aviso</option>
+              <option value="Enfermedad">Enfermedad</option>
+              <option value="Enfermedad">Sin Servicio</option>
+              <option value="Enfermedad">Licencia</option>
+              <option value="Enfermedad">Vacaciones</option>
+              </select>
+          </td>
+          <td><input type="text" [(ngModel)]="horario.observaciones" [disabled]="!horario.editMode"/></td>
+          <td>
+            <button *ngIf="!horario.editMode" class="btn-edit" (click)="toggleEditMode(horario)"><mat-icon>edit</mat-icon></button>
+            <button *ngIf="horario.editMode" class="btn-save" (click)="saveChanges(horario)"><mat-icon>check</mat-icon></button>
+            <button *ngIf="horario.editMode" class="btn-cancel" (click)="cancelEdit(horario)"><mat-icon>close</mat-icon></button>
+          </td>
         </tr>
       </tbody>
     </table>

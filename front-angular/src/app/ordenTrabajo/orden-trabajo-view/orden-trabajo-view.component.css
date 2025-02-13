@@ -15,15 +15,15 @@
 
 .content-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   margin-left: 240px;
-  margin-right: 100px;
+  margin-right: 1em;
   margin-top: 1.5em;
 }
 
 .table-container {
   flex: 1;
-  margin-left: 3em;
+  margin-top: 2em;
   max-height: 35em;
   overflow-y: auto;
 }
@@ -34,6 +34,7 @@ table {
 }
 
 .form-container {
+  display: flex;
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
@@ -59,6 +60,7 @@ table {
 
 .form-row {
   display: flex;
+  align-items: center;
   justify-content: space-between; 
   gap: 1em; 
   width: 100%; 
@@ -71,19 +73,16 @@ table {
 }
 
 .form-row-footer {
-  display: flex;
   justify-content: center; 
   gap: 1em; 
   margin-left: 0;
   margin-right: 0;
-  padding-top: 1em;
-  padding-bottom: 1em;
 }
 
 .form-group-footer {
   margin-right: 0; 
   margin-left: 0; 
-  margin-bottom: 0; 
+  margin-bottom: 0.5em; 
   width: 100%;
 }
 
@@ -93,13 +92,6 @@ table {
   display: flex; 
   justify-content: center; 
   align-items: center; 
-}
-
-.table-container {
-  flex: 1;
-  margin-left: 3em;
-  max-height: 35em;
-  overflow-y: auto;
 }
 
 table {
@@ -148,6 +140,29 @@ th {
 
 .button-footer-excel:hover {
   background-color: #14892c; 
+}
+
+.btn-edit{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.btn-save{
+  background-color:transparent;
+  color: green;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.btn-cancel{
+  background-color:transparent;
+  color: red;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
 }
 
 @media(max-width:1360px){
