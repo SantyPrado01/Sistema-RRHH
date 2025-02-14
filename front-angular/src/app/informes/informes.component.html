@@ -1,0 +1,82 @@
+<app-navbar></app-navbar>
+
+  <div class="title-container">
+    <div class="title-item">
+      <h1>Informes</h1>
+    </div>
+  </div>
+
+<div class="content-container">
+  <div class="main-content">
+    <div class="form-container">
+
+        <div class="form-row">
+
+          <div class="form-group">
+            <label for="empresa">Reporte:</label>
+            <select id="informeSelect" class="form-control" [(ngModel)]="reporteSeleccionado">
+                <option value="" disabled selected>Seleccionar Reporte</option>
+                <option *ngFor="let reporte of reportes" [value]="reporte.nombre">{{ reporte.nombre }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="mesSelect">Mes:</label>
+            <select id="mesSelect" class="form-control" [(ngModel)]="mesSeleccionado" >
+              <option value="" disabled selected>Seleccionar Mes</option>
+              <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="anioSelect">Año:</label>
+            <select id="anioSelect" class="form-control" [(ngModel)]="anioSeleccionado" >
+              <option value="" disabled selected>Seleccionar Año</option>
+              <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-footer">
+            <div class="form-group">
+                <button class="btn-generar" color="primary" (click)="ejecutarReporte()" >
+                    Generar
+                </button>
+            </div>
+            <div class="group-right">
+                <div class="form-group-footer">
+                    <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
+                    <mat-icon>get_app</mat-icon> PDF
+                    </button>
+                </div>
+                <div class="form-group-footer">
+                    <button mat-raised-button class="button-footer-excel" color="primary" (click)="descargarExcel()">
+                    <mat-icon>get_app</mat-icon> Excel
+                    </button>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <!-- Listado de Órdenes de Trabajo -->
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Empresa</th>
+            <th>Empleado</th>
+            <th>Dias</th>
+            <th>Horas Proyectadas</th>
+            <th>Horas Reales</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let orden of ordenes">
+            <td>{{ orden.servicio.nombre }}</td>
+            <td>{{ orden.empleadoAsignado.nombre }} {{ orden.empleadoAsignado.apellido }}</td>
+            <td>{{ obtenerDias(orden.necesidadHoraria) }}</td>
+            <td>{{ orden.horasProyectadas | number:'1.2-2' }} horas</td>
+            <td>{{ orden.horasReales | number:'1.2-2' }} horas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>

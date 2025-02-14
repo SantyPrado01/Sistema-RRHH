@@ -22,6 +22,7 @@ import { CrearFacturaComponent } from './facturas/facturas-new/facturas.componen
 import { FacturasListComponent } from './facturas/facturas-list/facturas-list.component';
 import { FacturasEditComponent } from './facturas/facturas-edit/facturas-edit.component';
 import { ManualComponent } from './manual/manual.component';
+import { InformesComponent } from './informes/informes.component';
 
 export const routes: Routes = [
     {
@@ -138,6 +139,12 @@ export const routes: Routes = [
     {
         path:'factura/view/:id',
         component: FacturasEditComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
+    },
+    {
+        path:'informes',
+        component: InformesComponent,
         canActivate:[AuthGuard],
         data:{expectedRole:'Administrador'}
     },

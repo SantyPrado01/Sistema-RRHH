@@ -125,7 +125,6 @@ export class OrdenTrabajoViewComponent implements OnInit{
     });
   }
   
-
   cancelEdit(horario: any): void {
     horario.editMode = false;
   }
@@ -194,8 +193,6 @@ export class OrdenTrabajoViewComponent implements OnInit{
     doc.save('listado_horarios.pdf');
   }
   
-  
-
   descargarExcel() {
     const columns = ['Fecha', 'Hora Inicio', 'Hora Fin', 'Horario Inicio Real', 'Horario Fin Real', 'Estado'];
     const data = this.horarios.map(horario => [

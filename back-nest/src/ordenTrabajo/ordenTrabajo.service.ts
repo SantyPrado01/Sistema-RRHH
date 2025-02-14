@@ -176,12 +176,9 @@ export class OrdenTrabajoService {
     console.log(diaIndice); 
   
     if (diaIndice < 0 || diaIndice > 6) return fechas;
-  
-    // Itera sobre los días del mes
+
     for (let dia = 1; dia <= ultimoDiaMes; dia++) {
       const fecha = new Date(anio, mes - 1, dia); 
-      
-      // Compara el día de la semana usando getDay()
       if (fecha.getDay() === diaIndice) {
         fechas.push(fecha); 
       }
@@ -638,7 +635,6 @@ export class OrdenTrabajoService {
           horasProyectadas += horas;
         }
   
-        // Cálculo de horas reales
         if (horario.horaInicioReal && horario.horaFinReal) {
           const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(':');
           const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(':');

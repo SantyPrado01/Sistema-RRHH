@@ -37,7 +37,7 @@ exports.AppModule = AppModule = __decorate([
                 password: 'Nfr06950',
                 database: 'corsacorsql',
                 entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                synchronize: true,
+                synchronize: false,
             }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
