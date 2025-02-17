@@ -7,6 +7,7 @@ import { CategoriaServicioService } from '../services/categoria-servicios.servic
 import { Router } from '@angular/router';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ServicioService } from '../services/servicio.service';
 
 @Component({
   selector: 'app-empresas-new',
@@ -24,7 +25,12 @@ export class ServiciosNewComponent implements OnInit {
   provinciaCórdobaId = 14;
   ciudadNombre: string = '';
 
-  constructor(private http: HttpClient, private categoriaEmpresaService: CategoriaServicioService, private router: Router, private dialog: MatDialog) {}
+  constructor(
+    private http: HttpClient, 
+    private categoriaEmpresaService: CategoriaServicioService, 
+    private empresaService: ServicioService,
+    private router: Router, 
+    private dialog: MatDialog) {}
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
     this.dialog.open(AlertDialogComponent, {
@@ -100,8 +106,7 @@ export class ServiciosNewComponent implements OnInit {
   }
   
   guardarEmpresa() {
-    const url = 'http://localhost:3000/servicios'; 
-    this.http.post(url, this.servicio).subscribe({
+    this.empresaService.createServicio(this.servicio).subscribe({
       next: (response) => {
         this.mostrarAlerta('Operación Exitosa', 'Empresa guardada con éxito.', 'success');
         this.limpiarFormulario();

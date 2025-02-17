@@ -9,10 +9,10 @@ import { HorarioAsignado } from '../models/horariosAsignados.models';
 export class HorariosAsignadosService {
 
     //Produccion
-    private apiUrl = 'http://147.93.15.196:3000/horariosasignados';
+    //private apiUrl = 'http://147.93.15.196:3000/horariosasignados';
 
     //Desarrollo
-    //private apiUrl = 'http://localhost:3000/horariosasignados'; 
+    private apiUrl = 'http://localhost:3000/horariosasignados'; 
 
     constructor(private http: HttpClient) {}
 

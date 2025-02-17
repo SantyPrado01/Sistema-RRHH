@@ -209,7 +209,7 @@ export class OrdenTrabajoService {
           }
   
           orden.horariosAsignados.forEach((horario) => {
-            // Calcular horas proyectadas
+          
             if (horario.horaInicioProyectado && horario.horaFinProyectado) {
               const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":");
               const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":");
@@ -219,9 +219,8 @@ export class OrdenTrabajoService {
         
               const horaFin = new Date();
               horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-        
-              // Calcular horas proyectadas en decimal
-              const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; // en horas decimales
+
+              const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
               horasProyectadas += horas;
             }
   
@@ -237,7 +236,7 @@ export class OrdenTrabajoService {
               horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
         
               // Calcular horas reales en decimal
-              const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; // en horas decimales
+              const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
 
               horasReales += horasRealesCalculadas;
             }
@@ -268,8 +267,6 @@ export class OrdenTrabajoService {
             // Calcular horas proyectadas en formato decimal
             const diferenciaMillis = horaFinDate.getTime() - horaInicioDate.getTime();
             const horasProyectadasDecimal = diferenciaMillis / 3600000;
-  
-            // Convertir horas proyectadas a formato HH:mm
             
             horasReales = horasProyectadas;
           }
@@ -646,7 +643,6 @@ export class OrdenTrabajoService {
           horasReales += horasRealesCalculadas;
         }
   
-        // Contar los estados
         switch (horario.estado) {
           case 'Asistió':
             estadoContador.asistio++;
@@ -677,7 +673,6 @@ export class OrdenTrabajoService {
     return result;
   }
 
-  
   async obtenerHorasPorMes(mes: number, anio: number): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
       where: { mes: mes, anio: anio },
@@ -731,8 +726,30 @@ export class OrdenTrabajoService {
   }
 
   async deleteOrdenTrabajo(id: number): Promise<void> {
-    const result = await this.ordenTrabajoRepository.delete(id);
-    if (result.affected === 0) throw new NotFoundException('Orden de trabajo no encontrada');
+
+    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
+      where:{Id:id},
+      relations: ['horariosAsignados', 'necesidadHoraria'],
+    });
+    if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
+
+    const horariosAsignados = await this.horarioAsignadoRepository.find({
+      where: { ordenTrabajo: { Id: id } },
+    });
+
+    for (const horario of horariosAsignados) {
+      await this.horarioAsignadoRepository.remove(horario);
+    }
+
+    const necesidadesHorarias = await this.necesidadHorariaRepository.find({
+      where: { ordenTrabajo: { Id: id } },
+    });
+
+    for (const necesidad of necesidadesHorarias) {
+      await this.necesidadHorariaRepository.remove(necesidad);
+    }
+
+    await this.ordenTrabajoRepository.remove(ordenTrabajo);
   }
 
   async delete(id: number): Promise<void> {
@@ -763,5 +780,6 @@ export class OrdenTrabajoService {
       await this.horarioAsignadoRepository.save(horario);
     }
   }
+
   
 }

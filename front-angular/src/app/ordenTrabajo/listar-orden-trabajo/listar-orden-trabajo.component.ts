@@ -111,32 +111,63 @@ export class ListarOrdenTrabajoComponent implements OnInit {
 
   eliminarOrden(orden: OrdenTrabajo){
     console.log(orden)
+
+    if (orden.eliminado===false){
     const dialogRef = this.dialog.open(ConfirmacionDialogComponent,{
-      data:{
-        title: 'Confirmar Eliminación',
-        message: `¿Estás seguro de que deseas eliminar la Orden "${orden.Id}" y sus horarios asignados?`,
-        type: 'confirm'
-      }
-    });
-    dialogRef.afterClosed().subscribe((result) =>{
-      if (result){
-        const ordenId = Number(orden.Id);
-        console.log(ordenId)
-        this.ordenTrabajoService.eliminarOrden(ordenId).subscribe({
-          next: (response) =>{
-            console.log('Orden de Trabajo eliminada con éxito', response);
-            this.mostrarAlerta('Operación Exitosa', 'Orden de Trabajo eliminada con éxito.', 'success');
-            this.ngOnInit();
-          },
-          error:(err) => {
-            console.error('Error al eliminar la Orden:', err);
-            this.mostrarAlerta('Error', 'No se pudo eliminar la Orden de Trabajo.', 'error');
-          },
+          data:{
+            title: 'Confirmar Eliminación',
+            message: `¿Estás seguro de que deseas eliminar la Orden "${orden.Id}" y sus horarios asignados? Esta acción marca como eliminada la orden, podras seguir consultado la informacion.`,
+            type: 'confirm'
+          }
+        });
+        dialogRef.afterClosed().subscribe((result) =>{
+          if (result){
+            const ordenId = Number(orden.Id);
+            console.log(ordenId)
+            this.ordenTrabajoService.eliminarOrden(ordenId).subscribe({
+              next: (response) =>{
+                console.log('Orden de Trabajo eliminada con éxito', response);
+                this.mostrarAlerta('Operación Exitosa', 'Orden de Trabajo eliminada con éxito.', 'success');
+                this.ngOnInit();
+              },
+              error:(err) => {
+                console.error('Error al eliminar la Orden:', err);
+                this.mostrarAlerta('Error', 'No se pudo eliminar la Orden de Trabajo.', 'error');
+              },
+            });
+          } else {
+            console.log('Operacion de eliminacion cancelada.')
+          }
         });
       } else {
-        console.log('Operacion de eliminacion cancelada.')
+        const dialogRef = this.dialog.open(ConfirmacionDialogComponent,{
+          data:{
+            title: 'Confirmar Eliminación',
+            message: `¿Estás seguro de que deseas eliminar la Orden "${orden.Id}" y sus horarios asignados de forma definitva? Esta accion no se puede deshacer.`,
+            type: 'confirm'
+          }
+        });
+        dialogRef.afterClosed().subscribe((result) =>{
+          if (result){
+            const ordenId = Number(orden.Id);
+            console.log(ordenId)
+            this.ordenTrabajoService.eliminarOrdenDef(ordenId).subscribe({
+              next: (response) =>{
+                console.log('Orden de Trabajo eliminada con éxito', response);
+                this.mostrarAlerta('Operación Exitosa', 'Orden de Trabajo y horarios asignados eliminados con éxito.', 'success');
+                this.ngOnInit();
+              },
+              error:(err) => {
+                console.error('Error al eliminar la Orden:', err);
+                this.mostrarAlerta('Error', 'No se pudo eliminar la Orden de Trabajo.', 'error');
+              },
+            });
+          } else {
+            console.log('Operacion de eliminacion cancelada.')
+          }
+        });
       }
-    })
+    
   }
 
   truncateToTwoDecimals(value: number): string {

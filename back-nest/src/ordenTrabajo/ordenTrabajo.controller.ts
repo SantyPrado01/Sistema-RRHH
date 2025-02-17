@@ -130,7 +130,7 @@ export class OrdenTrabajoController {
     return this.ordenTrabajoService.update(+id, updateOrdenTrabajoDto);
   }
 
-  @Delete(':id')
+  @Delete('deletedef/:id')
   remove(@Param('id') id: string) {
     return this.ordenTrabajoService.deleteOrdenTrabajo(+id);
   }

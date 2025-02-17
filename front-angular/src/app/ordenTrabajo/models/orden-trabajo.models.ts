@@ -10,4 +10,5 @@ export interface OrdenTrabajo {
     necesidadHoraria?: CreateNecesidadHorariaDto[];
     mes: number;
     anio: number;
+    eliminado: boolean;
   }
