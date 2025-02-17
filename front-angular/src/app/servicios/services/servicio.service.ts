@@ -10,10 +10,10 @@ import { Empresa } from '../models/servicio.models';
 export class ServicioService {
 
   //Produccion
-  //private apiUrl = 'http://147.93.15.196:3000/servicios';
+  private apiUrl = 'http://147.93.15.196:3000/servicios';
 
   //Desarrollo
-  private apiUrl = 'http://localhost:3000/servicios'; 
+  //private apiUrl = 'http://localhost:3000/servicios'; 
 
   constructor(private http: HttpClient) {}
 
