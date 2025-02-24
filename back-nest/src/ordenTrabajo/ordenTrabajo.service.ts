@@ -392,7 +392,12 @@ export class OrdenTrabajoService {
           horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
           const horaFin = new Date();
           horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
+          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
+
+          if (horas < 0) {
+            horas += 24;
+          }
+
           horasProyectadas += horas;
         }
   
@@ -403,7 +408,12 @@ export class OrdenTrabajoService {
           horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
           const horaRealFinDate = new Date();
           horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
+          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
+
+          if (horasRealesCalculadas < 0) {
+            horasRealesCalculadas += 24;
+          }
+
           horasReales += horasRealesCalculadas;
         }
       });
@@ -443,7 +453,12 @@ export class OrdenTrabajoService {
           horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
           const horaFin = new Date();
           horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+
+          if (horas < 0) {
+            horas += 24;
+          }
+
           horasProyectadas += horas;
         }
 
@@ -454,7 +469,12 @@ export class OrdenTrabajoService {
           horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
           const horaRealFinDate = new Date();
           horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+
+          if (horasRealesCalculadas < 0) {
+            horasRealesCalculadas += 24;
+          }
+
           horasReales += horasRealesCalculadas;
         }
   
@@ -522,7 +542,12 @@ export class OrdenTrabajoService {
           horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
           const horaFin = new Date();
           horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+
+          if (horas < 0) {
+            horas += 24;
+          }
+
           horasProyectadas += horas;
         }
 
@@ -533,7 +558,12 @@ export class OrdenTrabajoService {
           horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
           const horaRealFinDate = new Date();
           horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+
+          if (horasRealesCalculadas < 0) {
+            horasRealesCalculadas += 24;
+          }
+
           horasReales += horasRealesCalculadas;
         }
   
@@ -586,7 +616,12 @@ export class OrdenTrabajoService {
           horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
           const horaFin = new Date();
           horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
+          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
+
+          if (horas < 0) {
+            horas += 24;
+          }
+
           horasProyectadas += horas;
         }
         if (horario.horaInicioReal && horario.horaFinReal) {
@@ -596,7 +631,12 @@ export class OrdenTrabajoService {
           horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
           const horaRealFinDate = new Date();
           horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
+          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
+
+          if (horasRealesCalculadas < 0) {
+            horasRealesCalculadas += 24;
+          }
+
           horasReales += horasRealesCalculadas;
         }
       });
@@ -645,7 +685,12 @@ export class OrdenTrabajoService {
           horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
           const horaFin = new Date();
           horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
+
+          if (horas < 0) {
+            horas += 24;
+          }
+
           horasProyectadas += horas;
         }
   
@@ -656,7 +701,12 @@ export class OrdenTrabajoService {
           horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
           const horaRealFinDate = new Date();
           horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+
+          if (horasRealesCalculadas < 0) {
+            horasRealesCalculadas += 24;
+          }
+
           horasReales += horasRealesCalculadas;
         }
   
@@ -704,13 +754,23 @@ export class OrdenTrabajoService {
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
           const horaInicioProyectado = new Date(`1970-01-01T${horario.horaInicioProyectado}`);
           const horaFinProyectado = new Date(`1970-01-01T${horario.horaFinProyectado}`);
-          const diffProyectadas = (horaFinProyectado.getTime() - horaInicioProyectado.getTime()) / 1000 / 60 / 60; 
+          let diffProyectadas = (horaFinProyectado.getTime() - horaInicioProyectado.getTime()) / 1000 / 60 / 60; 
+
+          if (diffProyectadas < 0) {
+            diffProyectadas += 24;
+          }
+
           horasProyectadas += diffProyectadas;
         }
         if (horario.horaInicioReal && horario.horaFinReal) {
           const horaInicioReal = new Date(`1970-01-01T${horario.horaInicioReal}`);
           const horaFinReal = new Date(`1970-01-01T${horario.horaFinReal}`);
-          const diffReales = (horaFinReal.getTime() - horaInicioReal.getTime()) / 1000 / 60 / 60;
+          let diffReales = (horaFinReal.getTime() - horaInicioReal.getTime()) / 1000 / 60 / 60;
+
+          if (diffReales < 0) {
+            diffReales += 24;
+          }
+
           horasReales += diffReales;
         }
       });
