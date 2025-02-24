@@ -51,8 +51,8 @@ export class HomeComponent {
     const mesNumero = new Date().getMonth() + 1;
     this.ordenTrabajoService.getHorasPorMes(mesNumero, this.anioActual).subscribe((data) => {
       if (data) {
-        this.horasProyectadas = parseFloat(data.horasProyectadas).toFixed(2);
-        this.horasReales = parseFloat(data.horasReales).toFixed(2);
+        this.horasProyectadas = data.horasProyectadas;
+        this.horasReales = data.horasReales;
       }
     });
   }
