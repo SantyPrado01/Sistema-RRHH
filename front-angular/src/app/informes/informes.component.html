@@ -73,8 +73,8 @@
             <td>{{ orden.servicio.nombre }}</td>
             <td>{{ orden.empleadoAsignado.nombre }} {{ orden.empleadoAsignado.apellido }}</td>
             <td>{{ obtenerDias(orden.necesidadHoraria) }}</td>
-            <td>{{ orden.horasProyectadas | number:'1.2-2' }} horas</td>
-            <td>{{ orden.horasReales | number:'1.2-2' }} horas</td>
+            <td>{{ orden.horasProyectadas }} horas</td>
+            <td>{{ orden.horasReales }} horas</td>
           </tr>
         </tbody>
       </table>
