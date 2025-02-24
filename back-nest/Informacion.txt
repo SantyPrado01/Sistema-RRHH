@@ -56,12 +56,12 @@ Un estándar para la creación de tokens de acceso que se utilizan para autentic
 Un token JWT contiene información del usuario y una firma digital, permitiendo verificar su autenticidad.
 
 
+Configuracion para el despliegue:
 
-USUARIOS
-usernmae: SPRADO
-password: Ozj03650
-Rol: User
+Cambios desde Github: git pull origin main
 
-username: Admin
-password: Admin1234
-Rol: Admin
+Preparar el backend: npm run build
+Ejecutar PM2 con el backend: pm2 start dist/main.js --name corsacor-api
+
+Preparar el frontend: ng build --configuration production
+Ejecutar PM2 con el frontend: pm2 serve /root/Sistema-RRHH/front-angular/dist/front-angular/browser --name corsacor-front --spa --port 4200
