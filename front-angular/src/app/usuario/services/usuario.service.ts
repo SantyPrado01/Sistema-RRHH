@@ -19,7 +19,6 @@ export class UsuarioService {
   //private baseUrl = 'http://localhost:3000/users';
   //private authUrl = 'http://localhost:3000/auth';
   //private categoriaUrl = 'http://localhost:3000/categoria-usuario';
-    
 
   constructor(private http: HttpClient) { }
 

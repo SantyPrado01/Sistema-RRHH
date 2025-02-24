@@ -220,7 +220,11 @@ export class OrdenTrabajoService {
               const horaFin = new Date();
               horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
 
-              const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
+              let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
+
+              if (horas < 0) {
+                horas += 24; 
+              }
               horasProyectadas += horas;
             }
   
@@ -238,11 +242,15 @@ export class OrdenTrabajoService {
               // Calcular horas reales en decimal
               const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
 
+              if (horasRealesCalculadas < 0) {
+                horasReales += 24; 
+              }
+
               horasReales += horasRealesCalculadas;
             }
           });
-        } else {
-          // Para las ordenes con `diaEspecifico`
+        } else {// Para las ordenes con `diaEspecifico`
+
           if (orden.horaInicio && orden.horaFin) {
             const horarioAsignado = orden.horariosAsignados[0];
             console.log(horarioAsignado);
@@ -308,48 +316,58 @@ export class OrdenTrabajoService {
     ordenTrabajo.horariosAsignados.forEach(horario => {
       // Cálculo de horas proyectadas
       if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-        const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":");
-        const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":");
+        const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":").map(Number);
+        const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":").map(Number);
   
         const horaInicio = new Date();
-        horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
+        horaInicio.setHours(horaInicioProyectado, minutoInicioProyectado, 0, 0);
   
         const horaFin = new Date();
-        horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
+        horaFin.setHours(horaFinProyectado, minutoFinProyectado, 0, 0);
   
-        // Calcular horas proyectadas en decimal
-        const horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; // en horas decimales
+        let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; // en horas decimales
+  
+        // Si las horas calculadas son negativas, significa que cruzó la medianoche
+        if (horas < 0) {
+          horas += 24; // Ajustar sumando 24 horas
+        }
+  
         horasProyectadas += horas;
+
       }
   
       // Cálculo de horas reales
       if (horario.horaInicioReal && horario.horaFinReal) {
-        const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(":");
-        const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(":");
+        const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(":").map(Number);
+        const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(":").map(Number);
   
         const horaRealInicioDate = new Date();
-        horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
+        horaRealInicioDate.setHours(horaRealInicio, minutoRealInicio, 0, 0);
   
         const horaRealFinDate = new Date();
-        horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
+        horaRealFinDate.setHours(horaRealFin, minutoRealFin, 0, 0);
   
-        // Calcular horas reales en decimal
-        const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; // en horas decimales
+        let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
+  
+        if (horasRealesCalculadas < 0) {
+          horasRealesCalculadas += 24;
+        }
+  
         horasReales += horasRealesCalculadas;
       }
     });
   
     // Función para convertir horas decimales a formato HH:mm
     function convertirAHorasYMinutos(decimales: number): string {
-      const horas = Math.floor(decimales); // obtener las horas enteras
-      const minutos = Math.round((decimales - horas) * 60); // obtener los minutos restantes
+      const horas = Math.floor(Math.abs(decimales)); // obtener las horas enteras
+      const minutos = Math.round((Math.abs(decimales) - horas) * 60); // obtener los minutos restantes
       return `${horas}:${minutos < 10 ? '0' + minutos : minutos}`; // formatear a HH:mm
     }
   
     // Convertir las horas proyectadas y reales a formato HH:mm
     const horasProyectadasFormateadas = convertirAHorasYMinutos(horasProyectadas);
     const horasRealesFormateadas = convertirAHorasYMinutos(horasReales);
-  
+
     return {
       ...ordenTrabajo,
       horasProyectadas: horasProyectadasFormateadas,
@@ -357,7 +375,6 @@ export class OrdenTrabajoService {
     } as OrdenTrabajoConHoras;
   }
   
-
   async findMesAnio(mes: number, anio: number): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
       where: { mes: mes, anio: anio },

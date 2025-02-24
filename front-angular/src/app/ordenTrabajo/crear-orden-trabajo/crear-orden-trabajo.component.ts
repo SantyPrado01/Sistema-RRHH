@@ -73,15 +73,23 @@ export class CrearOrdenTrabajoComponent {
         const [inicioHora, inicioMinuto] = dia.horaInicio.split(':').map(Number);
         const [finHora, finMinuto] = dia.horaFin.split(':').map(Number);
         const inicio = new Date();
-        inicio.setHours(inicioHora, inicioMinuto, 0);
+        inicio.setHours(inicioHora, inicioMinuto, 0, 0);
         const fin = new Date();
-        fin.setHours(finHora, finMinuto, 0);
-        const diferenciaHoras = (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60);
-        const horasDia = diferenciaHoras > 0 ? diferenciaHoras : 0;
-
+        fin.setHours(finHora, finMinuto, 0, 0);
+  
+        let diferenciaHoras: number;
+        
+        if (inicio > fin) {
+          let horasAntesMedianoche = (24 - inicioHora) + (finHora); 
+          diferenciaHoras = horasAntesMedianoche;
+        } else {
+          diferenciaHoras = (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60);
+        }
+  
         const ocurrenciasDia = this.contarDiasEnMes(this.meses.indexOf(this.mes) + 1, this.anio, dia.diaSemana);
-        totalHoras += horasDia * ocurrenciasDia;
-        if (inicio >= fin) {
+        totalHoras += diferenciaHoras * ocurrenciasDia;
+  
+        if (inicio >= fin && diferenciaHoras <= 0) {
           this.mostrarAlerta(
             'Error en las horas',
             'La hora de inicio no puede ser posterior a la hora de fin.',
@@ -91,7 +99,8 @@ export class CrearOrdenTrabajoComponent {
       }
     });
     this.horasProyectadas = totalHoras;
-  }
+    
+  }  
   
   mostrarSeccion(seccion: string): void {
     this.seccionActual = seccion;
