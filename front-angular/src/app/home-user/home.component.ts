@@ -53,6 +53,7 @@ export class HomeComponent {
       if (data) {
         this.horasProyectadas = data.horasProyectadas;
         this.horasReales = data.horasReales;
+        console.log(this.horasProyectadas, this.horasReales)
       }
     });
   }

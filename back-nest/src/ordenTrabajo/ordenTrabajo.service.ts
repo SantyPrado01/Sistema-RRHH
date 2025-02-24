@@ -26,6 +26,8 @@ export class OrdenTrabajoService {
     private readonly horarioAsignadoRepository: Repository<HorarioAsignado>,
   ) {}
 
+
+
   async createOrdenTrabajo(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
     const { servicio, empleadoAsignado, mes, anio, diaEspecifico, horaInicio, horaFin } = createOrdenTrabajoDto;
 
@@ -136,7 +138,6 @@ export class OrdenTrabajoService {
     return this.horarioAsignadoRepository.save(horarioAsignado);
   }
   
-
   async createAsignarHorarios(ordenTrabajoId: number) {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({where: { Id: ordenTrabajoId }, relations: ['necesidadHoraria', 'empleadoAsignado']});
     if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
@@ -187,118 +188,80 @@ export class OrdenTrabajoService {
     console.log(fechas);
     return fechas;
   }
+
+  private calcularHoras(horaInicio: string, horaFin: string): number {
+    const [inicioHora, inicioMinuto] = horaInicio.split(':').map(Number);
+    const [finHora, finMinuto] = horaFin.split(':').map(Number);
+    const inicio = new Date();
+    inicio.setHours(inicioHora, inicioMinuto, 0, 0);
+    const fin = new Date();
+    fin.setHours(finHora, finMinuto, 0, 0);
+
+    let diferenciaHoras = (fin.getTime() - inicio.getTime()) / 3600000;
+    if (diferenciaHoras < 0) {
+      diferenciaHoras += 24; // Ajuste para horarios nocturnos que cruzan la medianoche
+    }
+    return diferenciaHoras;
+  }
+
+  private convertirAHorasYMinutos(decimales: number): string {
+    const horas = Math.floor(Math.abs(decimales)); // obtener las horas enteras
+    const minutos = Math.round((Math.abs(decimales) - horas) * 60); // obtener los minutos restantes
+    return `${horas}:${minutos < 10 ? '0' + minutos : minutos}`; // formatear a HH:mm
+  }
   
   async findAll(): Promise<any[]> {
     const ordenes = await this.ordenTrabajoRepository.find({
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
     });
-  
+
     const result = await Promise.all(
       ordenes.map(async (orden) => {
         let horasProyectadas = 0;
         let horasReales = 0;
-  
+
         if (orden.diaEspecifico === null) {
           const todosComprobados = orden.horariosAsignados.every(
             (horario) => horario.comprobado === true,
           );
-  
+
           if (todosComprobados) {
             orden.completado = true;
             await this.ordenTrabajoRepository.save(orden);
           }
-  
+
           orden.horariosAsignados.forEach((horario) => {
-          
             if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-              const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":");
-              const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":");
-        
-              const horaInicio = new Date();
-              horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
-        
-              const horaFin = new Date();
-              horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-
-              let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
-
-              if (horas < 0) {
-                horas += 24; 
-              }
-              horasProyectadas += horas;
+              horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
             }
-  
-            // Calcular horas reales
+
             if (horario.horaInicioReal && horario.horaFinReal) {
-              const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(":");
-              const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(":");
-        
-              const horaRealInicioDate = new Date();
-              horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
-        
-              const horaRealFinDate = new Date();
-              horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-        
-              // Calcular horas reales en decimal
-              const horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
-
-              if (horasRealesCalculadas < 0) {
-                horasReales += 24; 
-              }
-
-              horasReales += horasRealesCalculadas;
+              horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
             }
           });
-        } else {// Para las ordenes con `diaEspecifico`
-
+        } else {
           if (orden.horaInicio && orden.horaFin) {
             const horarioAsignado = orden.horariosAsignados[0];
-            console.log(horarioAsignado);
-  
             const comprobado = horarioAsignado ? horarioAsignado.comprobado : false;
-  
+
             if (comprobado === true) {
               orden.completado = true;
               await this.ordenTrabajoRepository.save(orden);
             }
-  
-            // Convertir las horas proyectadas
-            const [horaInicio, minutoInicio] = orden.horaInicio.split(':');
-            const [horaFin, minutoFin] = orden.horaFin.split(':');
-  
-            const horaInicioDate = new Date(orden.diaEspecifico);
-            horaInicioDate.setHours(parseInt(horaInicio), parseInt(minutoInicio), 0, 0);
-  
-            const horaFinDate = new Date(orden.diaEspecifico);
-            horaFinDate.setHours(parseInt(horaFin), parseInt(minutoFin), 0, 0);
-  
-            // Calcular horas proyectadas en formato decimal
-            const diferenciaMillis = horaFinDate.getTime() - horaInicioDate.getTime();
-            const horasProyectadasDecimal = diferenciaMillis / 3600000;
-            
+
+            horasProyectadas = this.calcularHoras(orden.horaInicio, orden.horaFin);
             horasReales = horasProyectadas;
           }
         }
-        // Función para convertir horas decimales a formato HH:mm
-        function convertirAHorasYMinutos(decimales: number): string {
-          const horas = Math.floor(decimales); // obtener las horas enteras
-          const minutos = Math.round((decimales - horas) * 60); // obtener los minutos restantes
-          return `${horas}:${minutos < 10 ? '0' + minutos : minutos}`; // formatear a HH:mm
-        }
 
-        // Convertir las horas proyectadas y reales a formato HH:mm
-        const horasProyectadasFormateadas = convertirAHorasYMinutos(horasProyectadas);
-        const horasRealesFormateadas = convertirAHorasYMinutos(horasReales);
-
-  
         return {
           ...orden,
-          horasProyectadasFormateadas,
-          horasRealesFormateadas,
+          horasProyectadas,
+          horasReales,
         };
       }),
     );
-  
+
     return result;
   }
 
@@ -314,59 +277,17 @@ export class OrdenTrabajoService {
     let horasReales = 0;
   
     ordenTrabajo.horariosAsignados.forEach(horario => {
-      // Cálculo de horas proyectadas
       if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-        const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":").map(Number);
-        const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":").map(Number);
-  
-        const horaInicio = new Date();
-        horaInicio.setHours(horaInicioProyectado, minutoInicioProyectado, 0, 0);
-  
-        const horaFin = new Date();
-        horaFin.setHours(horaFinProyectado, minutoFinProyectado, 0, 0);
-  
-        let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; // en horas decimales
-  
-        // Si las horas calculadas son negativas, significa que cruzó la medianoche
-        if (horas < 0) {
-          horas += 24; // Ajustar sumando 24 horas
-        }
-  
-        horasProyectadas += horas;
-
+        horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
       }
-  
-      // Cálculo de horas reales
+
       if (horario.horaInicioReal && horario.horaFinReal) {
-        const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(":").map(Number);
-        const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(":").map(Number);
-  
-        const horaRealInicioDate = new Date();
-        horaRealInicioDate.setHours(horaRealInicio, minutoRealInicio, 0, 0);
-  
-        const horaRealFinDate = new Date();
-        horaRealFinDate.setHours(horaRealFin, minutoRealFin, 0, 0);
-  
-        let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
-  
-        if (horasRealesCalculadas < 0) {
-          horasRealesCalculadas += 24;
-        }
-  
-        horasReales += horasRealesCalculadas;
+        horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
       }
     });
   
-    // Función para convertir horas decimales a formato HH:mm
-    function convertirAHorasYMinutos(decimales: number): string {
-      const horas = Math.floor(Math.abs(decimales)); // obtener las horas enteras
-      const minutos = Math.round((Math.abs(decimales) - horas) * 60); // obtener los minutos restantes
-      return `${horas}:${minutos < 10 ? '0' + minutos : minutos}`; // formatear a HH:mm
-    }
-  
-    // Convertir las horas proyectadas y reales a formato HH:mm
-    const horasProyectadasFormateadas = convertirAHorasYMinutos(horasProyectadas);
-    const horasRealesFormateadas = convertirAHorasYMinutos(horasReales);
+    const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+    const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
 
     return {
       ...ordenTrabajo,
@@ -383,48 +304,27 @@ export class OrdenTrabajoService {
     const result = ordenes.map(orden => {
       let horasProyectadas = 0;
       let horasReales = 0;
-  
+
       orden.horariosAsignados.forEach(horario => {
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-          const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(":");
-          const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(":");
-          const horaInicio = new Date();
-          horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
-          const horaFin = new Date();
-          horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
-
-          if (horas < 0) {
-            horas += 24;
-          }
-
-          horasProyectadas += horas;
+          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
         }
-  
+
         if (horario.horaInicioReal && horario.horaFinReal) {
-          const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(":");
-          const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(":");
-          const horaRealInicioDate = new Date();
-          horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
-          const horaRealFinDate = new Date();
-          horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
-
-          if (horasRealesCalculadas < 0) {
-            horasRealesCalculadas += 24;
-          }
-
-          horasReales += horasRealesCalculadas;
+          horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
         }
       });
   
+      const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+      const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
+
       return {
-        ...orden, 
-        horasProyectadas: horasProyectadas, 
-        horasReales: horasReales
+        ...orden,
+        horasProyectadas: horasProyectadasFormateadas,
+        horasReales: horasRealesFormateadas,
       };
     });
-  
+
     return result;
   }
 
@@ -444,40 +344,16 @@ export class OrdenTrabajoService {
         faltoSinAviso: 0,
         enfermedad: 0,
       };
-  
+
       orden.horariosAsignados.forEach(horario => {
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-          const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(':');
-          const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(':');
-          const horaInicio = new Date();
-          horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
-          const horaFin = new Date();
-          horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
-
-          if (horas < 0) {
-            horas += 24;
-          }
-
-          horasProyectadas += horas;
+          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
         }
 
         if (horario.horaInicioReal && horario.horaFinReal) {
-          const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(':');
-          const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(':');
-          const horaRealInicioDate = new Date();
-          horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
-          const horaRealFinDate = new Date();
-          horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
-
-          if (horasRealesCalculadas < 0) {
-            horasRealesCalculadas += 24;
-          }
-
-          horasReales += horasRealesCalculadas;
+          horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
         }
-  
+
         switch (horario.estado) {
           case 'Asistió':
             estadoContador.asistio++;
@@ -496,15 +372,17 @@ export class OrdenTrabajoService {
             break;
         }
       });
-  
+    
+      const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+      const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
+
       return {
         ...orden,
-        horasProyectadas,
-        horasReales,
+        horasProyectadas: horasProyectadasFormateadas,
+        horasReales: horasRealesFormateadas,
         estadoContador,
       };
     });
-    console.log('Consulta Orden Trabajo',result)
     return result;
   }
 
@@ -533,40 +411,16 @@ export class OrdenTrabajoService {
         faltoSinAviso: 0,
         enfermedad: 0,
       };
-  
+
       orden.horariosAsignados.forEach(horario => {
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-          const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(':');
-          const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(':');
-          const horaInicio = new Date();
-          horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
-          const horaFin = new Date();
-          horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
-
-          if (horas < 0) {
-            horas += 24;
-          }
-
-          horasProyectadas += horas;
+          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
         }
 
         if (horario.horaInicioReal && horario.horaFinReal) {
-          const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(':');
-          const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(':');
-          const horaRealInicioDate = new Date();
-          horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
-          const horaRealFinDate = new Date();
-          horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
-
-          if (horasRealesCalculadas < 0) {
-            horasRealesCalculadas += 24;
-          }
-
-          horasReales += horasRealesCalculadas;
+          horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
         }
-  
+
         switch (horario.estado) {
           case 'Asistió':
             estadoContador.asistio++;
@@ -585,11 +439,14 @@ export class OrdenTrabajoService {
             break;
         }
       });
-  
+
+      const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+      const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
+
       return {
         ...orden,
-        horasProyectadas,
-        horasReales,
+        horasProyectadas: horasProyectadasFormateadas,
+        horasReales: horasRealesFormateadas,
         estadoContador,
       };
     });
@@ -597,56 +454,34 @@ export class OrdenTrabajoService {
     return result;
   }
   
-
   async findForServicio(servicioId: number): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
       where: {servicio: { servicioId: servicioId }},
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
     });
-  
+
     const result = ordenes.map(orden => {
       let horasProyectadas = 0;
       let horasReales = 0;
-  
+
       orden.horariosAsignados.forEach(horario => {
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-          const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(':');
-          const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(':');
-          const horaInicio = new Date();
-          horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
-          const horaFin = new Date();
-          horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000; 
-
-          if (horas < 0) {
-            horas += 24;
-          }
-
-          horasProyectadas += horas;
+          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
         }
         if (horario.horaInicioReal && horario.horaFinReal) {
-          const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(':');
-          const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(':');
-          const horaRealInicioDate = new Date();
-          horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
-          const horaRealFinDate = new Date();
-          horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000; 
-
-          if (horasRealesCalculadas < 0) {
-            horasRealesCalculadas += 24;
-          }
-
-          horasReales += horasRealesCalculadas;
+          horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
         }
       });
+
+      const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+      const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
+
       return {
-        ...orden, 
-        horasProyectadas: horasProyectadas,
-        horasReales: horasReales,
+        ...orden,
+        horasProyectadas: horasProyectadasFormateadas,
+        horasReales: horasRealesFormateadas,
       };
     });
-    console.log(result)
     return result;
   }
 
@@ -675,41 +510,16 @@ export class OrdenTrabajoService {
         faltoSinAviso: 0,
         enfermedad: 0,
       };
-  
+
       orden.horariosAsignados.forEach(horario => {
-
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-          const [horaInicioProyectado, minutoInicioProyectado] = horario.horaInicioProyectado.split(':');
-          const [horaFinProyectado, minutoFinProyectado] = horario.horaFinProyectado.split(':');
-          const horaInicio = new Date();
-          horaInicio.setHours(parseInt(horaInicioProyectado), parseInt(minutoInicioProyectado), 0, 0);
-          const horaFin = new Date();
-          horaFin.setHours(parseInt(horaFinProyectado), parseInt(minutoFinProyectado), 0, 0);
-          let horas = (horaFin.getTime() - horaInicio.getTime()) / 3600000;
-
-          if (horas < 0) {
-            horas += 24;
-          }
-
-          horasProyectadas += horas;
+          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
         }
-  
+
         if (horario.horaInicioReal && horario.horaFinReal) {
-          const [horaRealInicio, minutoRealInicio] = horario.horaInicioReal.split(':');
-          const [horaRealFin, minutoRealFin] = horario.horaFinReal.split(':');
-          const horaRealInicioDate = new Date();
-          horaRealInicioDate.setHours(parseInt(horaRealInicio), parseInt(minutoRealInicio), 0, 0);
-          const horaRealFinDate = new Date();
-          horaRealFinDate.setHours(parseInt(horaRealFin), parseInt(minutoRealFin), 0, 0);
-          let horasRealesCalculadas = (horaRealFinDate.getTime() - horaRealInicioDate.getTime()) / 3600000;
-
-          if (horasRealesCalculadas < 0) {
-            horasRealesCalculadas += 24;
-          }
-
-          horasReales += horasRealesCalculadas;
+          horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
         }
-  
+
         switch (horario.estado) {
           case 'Asistió':
             estadoContador.asistio++;
@@ -728,11 +538,14 @@ export class OrdenTrabajoService {
             break;
         }
       });
-  
+
+      const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+      const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
+
       return {
         ...orden,
-        horasProyectadas,
-        horasReales,
+        horasProyectadas: horasProyectadasFormateadas,
+        horasReales: horasRealesFormateadas,
         estadoContador,
       };
     });
@@ -752,33 +565,21 @@ export class OrdenTrabajoService {
     ordenes.forEach((orden) => {
       orden.horariosAsignados.forEach((horario) => {
         if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-          const horaInicioProyectado = new Date(`1970-01-01T${horario.horaInicioProyectado}`);
-          const horaFinProyectado = new Date(`1970-01-01T${horario.horaFinProyectado}`);
-          let diffProyectadas = (horaFinProyectado.getTime() - horaInicioProyectado.getTime()) / 1000 / 60 / 60; 
-
-          if (diffProyectadas < 0) {
-            diffProyectadas += 24;
-          }
-
-          horasProyectadas += diffProyectadas;
+          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
         }
         if (horario.horaInicioReal && horario.horaFinReal) {
-          const horaInicioReal = new Date(`1970-01-01T${horario.horaInicioReal}`);
-          const horaFinReal = new Date(`1970-01-01T${horario.horaFinReal}`);
-          let diffReales = (horaFinReal.getTime() - horaInicioReal.getTime()) / 1000 / 60 / 60;
-
-          if (diffReales < 0) {
-            diffReales += 24;
-          }
-
-          horasReales += diffReales;
+          horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
         }
       });
     });
 
+    const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+    const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
+    console.log('Horas Proyectadas:', horasProyectadasFormateadas);
+    console.log('Horas Reales:', horasRealesFormateadas);
     return {
-      horasProyectadas,
-      horasReales,
+      horasProyectadas: horasProyectadasFormateadas,
+      horasReales: horasRealesFormateadas,
     };
   }
   
