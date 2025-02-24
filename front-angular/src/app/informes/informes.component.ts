@@ -96,8 +96,8 @@ export class InformesComponent {
   
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.text(`Horas Proyectadas: ${this.truncateToTwoDecimals(this.horasProyectadas)}`, 20, 40);
-      doc.text(`Horas Reales: ${this.truncateToTwoDecimals(this.horasReales)}`, 120, 40);
+      doc.text(`Horas Proyectadas: ${(this.horasProyectadas)}`, 20, 40);
+      doc.text(`Horas Reales: ${(this.horasReales)}`, 120, 40);
   
       const columns = ['Empresa','Apellido','Nombre', 'Dias', 'Horas Proyectadas', 'Horas Reales'];
       const rows = this.ordenes.map(orden => [
@@ -105,8 +105,8 @@ export class InformesComponent {
         orden.empleadoAsignado.apellido,
         orden.empleadoAsignado.nombre,
         this.obtenerDias(orden.necesidadHoraria),
-        this.truncateToTwoDecimals(orden.horasProyectadas),
-        this.truncateToTwoDecimals(orden.horasReales),
+        orden.horasProyectadas,
+        orden.horasReales,
 
       ]);
   
@@ -148,13 +148,13 @@ export class InformesComponent {
         orden.empleadoAsignado.apellido,
         orden.empleadoAsignado.nombre,
         this.obtenerDias(orden.necesidadHoraria),
-        this.truncateToTwoDecimals(orden.horasProyectadas),
-        this.truncateToTwoDecimals(orden.horasReales),
+        orden.horasProyectadas,
+        orden.horasReales,
       ]);
       
       const resumen = [
-        ['Horas Proyectadas', this.truncateToTwoDecimals(this.horasProyectadas)],
-        ['Horas Reales', this.truncateToTwoDecimals(this.horasReales)]
+        ['Horas Proyectadas', this.horasProyectadas],
+        ['Horas Reales', this.horasReales]
       ];
   
       const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([...resumen, [], columnas, ...filas]);
