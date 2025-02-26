@@ -22,7 +22,6 @@ export class HomeComponent {
   ngOnInit(): void {
     this.username = this.authService.getUsername();
     this.obtenerOrdenes();
-    this.obtenerHoras();
     this.ordenTrabajoService.getAll()
 
   }
@@ -38,23 +37,14 @@ export class HomeComponent {
     const mesNumero = new Date().getMonth() + 1;
     this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioActual).subscribe(
       (data) => {
-        this.ordenes = data;
+        this.ordenes = data.ordenes;
+        this.horasProyectadas = data.horasProyectadasTotales;
+        this.horasReales = data.horasRealesTotales;
       },
       (error) => {
         console.error('Hubo un error al obtener las órdenes de trabajo', error);
       }
     );
-  }
-
-  obtenerHoras() {
-    const mesNumero = new Date().getMonth() + 1;
-    this.ordenTrabajoService.getHorasPorMes(mesNumero, this.anioActual).subscribe((data) => {
-      if (data) {
-        this.horasProyectadas = data.horasProyectadas;
-        this.horasReales = data.horasReales;
-        console.log(this.horasProyectadas, this.horasReales)
-      }
-    });
   }
 
   obtenerDias(necesidades: any[]): string {
