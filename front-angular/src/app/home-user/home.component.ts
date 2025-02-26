@@ -39,7 +39,6 @@ export class HomeComponent {
     this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioActual).subscribe(
       (data) => {
         this.ordenes = data;
-        console.log(this.ordenes)
       },
       (error) => {
         console.error('Hubo un error al obtener las órdenes de trabajo', error);

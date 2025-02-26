@@ -30,8 +30,6 @@ export class InformesComponent {
   reporteSeleccionado: string = '';
   necesidad: any[]= [];
 
-  
-
   reportes:{ nombre: string, funcion: ()=> void }[] = [
     {nombre:'Reporte de horas por Empleado por Empresa', funcion: this.obtenerOrdenesMesAnio.bind(this)},
   ];
@@ -46,24 +44,16 @@ export class InformesComponent {
     const mesNumero = this.convertirMesANumero(this.mesSeleccionado);
     this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioSeleccionado).subscribe(
       (data) => {
-        this.ordenes = data;
+        this.ordenes = data.ordenes;
+        this.horasProyectadas = data.horasProyectadasTotales;
+        this.horasReales = data.horasRealesTotales;
         this.necesidad = data.necesidadHoraria
-        this.calcularTotales();
-        console.log(this.ordenes);
+        console.log('Horas', this.horasProyectadas);
       },
       (error) => {
         console.error('Hubo un error al obtener las órdenes de trabajo', error);
       }
     );
-  }
-
-  calcularTotales(): void {
-  
-    this.ordenes.forEach(orden => {
-      this.truncateToTwoDecimals(this.horasProyectadas += orden.horasProyectadas);
-      this.truncateToTwoDecimals(this.horasReales += orden.horasReales);
-
-    });
   }
 
   convertirMesANumero(mes: string): number {
@@ -107,13 +97,12 @@ export class InformesComponent {
         this.obtenerDias(orden.necesidadHoraria),
         orden.horasProyectadas,
         orden.horasReales,
-
       ]);
   
       (doc as any).autoTable({
         head: [columns],
         body: rows,
-        startY: 110, 
+        startY: 60, 
         theme: 'grid',
         headStyles: {
           fillColor: [255, 186, 140], 

@@ -301,6 +301,21 @@ export class OrdenTrabajoService {
       where: { mes: mes, anio: anio },
       relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
     });
+
+    let horasProyectadasTotales = 0;
+    let horasRealesTotales = 0;
+
+    ordenes.forEach((orden) => {
+      orden.horariosAsignados.forEach((horario) => {
+        if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+          horasProyectadasTotales += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
+        }
+        if (horario.horaInicioReal && horario.horaFinReal) {
+          horasRealesTotales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+        }
+      });
+    });
+
     const result = ordenes.map(orden => {
       let horasProyectadas = 0;
       let horasReales = 0;
@@ -325,7 +340,11 @@ export class OrdenTrabajoService {
       };
     });
 
-    return result;
+    return {
+      ordenes: result,
+      horasProyectadasTotales: this.convertirAHorasYMinutos(horasProyectadasTotales),
+      horasRealesTotales: this.convertirAHorasYMinutos(horasRealesTotales),
+    };
   }
 
   async findForEmpleado(empleadoId: number): Promise<any> {
@@ -575,8 +594,7 @@ export class OrdenTrabajoService {
 
     const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
     const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
-    console.log('Horas Proyectadas:', horasProyectadasFormateadas);
-    console.log('Horas Reales:', horasRealesFormateadas);
+    
     return {
       horasProyectadas: horasProyectadasFormateadas,
       horasReales: horasRealesFormateadas,
