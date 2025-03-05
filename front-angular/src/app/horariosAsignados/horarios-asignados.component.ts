@@ -8,6 +8,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
 import { OrdenTrabajoService } from '../ordenTrabajo/services/orden-trabajo.service';
 import { OrdenTrabajo } from '../ordenTrabajo/models/orden-trabajo.models';
+import { Empleado } from '../empleados/models/empleado.models';
+import { BuscarEmpleadoComponent } from '../Modales/buscar-empleado/buscar-empleado.component';
 
 
 @Component({
@@ -19,6 +21,7 @@ import { OrdenTrabajo } from '../ordenTrabajo/models/orden-trabajo.models';
 })
 export class HorariosAsignadosComponent implements OnInit {
   
+  mostrarEmpleado: boolean = false;
   horariosAsignados: HorarioAsignado[] = [];
   ordenTrabajo: OrdenTrabajo [] = [];
   selectedHorario: HorarioAsignado | null = null; 
@@ -27,6 +30,10 @@ export class HorariosAsignadosComponent implements OnInit {
   estado: string = ''; 
   observaciones: string = '';
   comprobado: boolean = true; 
+
+  empleadoSuplente: Empleado[] = [];
+  suplente: boolean = false;
+  empleadoSuplenteNombre: string = '';
 
   selectHorario(horario: HorarioAsignado): void {
     if (this.selectedHorario === horario) {
@@ -97,5 +104,15 @@ export class HorariosAsignadosComponent implements OnInit {
     this.estado = '';
     this.observaciones = '';
   }
+
+  abrirModalEmpleado() {
+      const dialogRef = this.dialog.open(BuscarEmpleadoComponent);
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.empleadoSuplente = result;
+          this.empleadoSuplenteNombre = result.nombre + ' ' + result.apellido
+        }
+      });
+    }
 
 }

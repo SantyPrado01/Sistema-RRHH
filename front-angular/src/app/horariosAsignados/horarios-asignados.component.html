@@ -21,6 +21,23 @@
           <input type="text" [value]="(selectedHorario?.empleado?.apellido ?? '') + ', ' + (selectedHorario?.empleado?.nombre ?? '')" readonly required/>
         </div>
       </div>
+
+      <div class="form-row-suplente">
+        <div class="form-group-suplente">
+          <label for="mostrarEmpleado">Empleado Suplente</label>
+          <input type="checkbox" id="mostrarEmpleado" [(ngModel)]="mostrarEmpleado" name="mostrarEmpleado" />
+        </div>
+      </div>
+
+      <div class="form-row-suplente" *ngIf="mostrarEmpleado">
+        <div class="form-group-suplente">
+          <input type="text" id="empleado" [(ngModel)]="empleadoSuplenteNombre" name="empleado" class="form-control" placeholder="Ingrese el Empleado" required [disabled]="true" />
+          <div class="input-group-append">
+            <button type="button" class="btn btn-secondary" (click)="abrirModalEmpleado()">Buscar</button>
+          </div>
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <label>Fecha:</label>

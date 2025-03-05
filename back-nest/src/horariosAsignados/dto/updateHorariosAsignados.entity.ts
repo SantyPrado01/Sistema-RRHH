@@ -10,7 +10,7 @@ export class UpdateHorariosAsignadoDto extends PartialType(CreateHorariosAsignad
 
     empleadoAsignadoId: number;
 
-    empleadoSuplente?: Empleado; 
+    empleadoSuplenteId?: number; 
 
     fecha: String; 
 

@@ -10,10 +10,10 @@ import { Categoria } from '../models/categoria.models';
 export class CategoriaService {
 
   //Produccion
-  private baseUrl = 'http://147.93.15.196:3000/categorias';
+  //private baseUrl = 'http://147.93.15.196:3000/categorias';
 
   //Desarrollo
-  //private baseUrl = 'http://localhost:3000/categorias';
+  private baseUrl = 'http://localhost:3000/categorias';
 
   constructor(private http: HttpClient) { }
 

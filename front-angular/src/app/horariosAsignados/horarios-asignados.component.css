@@ -89,6 +89,14 @@ table {
     flex: 1;
 }
 
+.form-group-suplente{
+  display: flex;
+}
+
+.form-group-suplente label {
+    margin-right: 10px;
+}
+
 .form-container textarea {
     width: 100%;
     padding: 10px;
