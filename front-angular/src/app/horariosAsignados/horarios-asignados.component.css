@@ -89,12 +89,23 @@ table {
     flex: 1;
 }
 
-.form-group-suplente{
+.form-group-suplente-checkbox{
   display: flex;
 }
 
-.form-group-suplente label {
-    margin-right: 10px;
+.form-group-suplente-checkbox label {
+    margin-right: 1em;
+}
+
+.form-group-suplente{
+  display: flex;
+  align-items: center;
+}
+.form-group-suplente input[type="text"] {
+    margin-bottom: 0; 
+}
+.form-row-suplente{
+  margin-bottom: 1.5em;
 }
 
 .form-container textarea {
@@ -104,6 +115,10 @@ table {
     border-radius: 4px;
     outline: none;
     resize: vertical; 
+}
+
+.input-group-append{
+  margin-left: 2em;
 }
 
 .btn {

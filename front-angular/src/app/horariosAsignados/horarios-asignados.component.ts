@@ -31,8 +31,7 @@ export class HorariosAsignadosComponent implements OnInit {
   observaciones: string = '';
   comprobado: boolean = true; 
 
-  empleadoSuplente: Empleado[] = [];
-  suplente: boolean = false;
+  empleadoSup: Empleado | null = null;
   empleadoSuplenteNombre: string = '';
 
   selectHorario(horario: HorarioAsignado): void {
@@ -78,7 +77,10 @@ export class HorariosAsignadosComponent implements OnInit {
       horaFinReal: this.horaFinReal,
       estado: this.estado,
       observaciones: this.observaciones,
-      comprobado: this.comprobado
+      comprobado: this.comprobado,
+      empleadoSuplente: this.empleadoSup!,
+      suplente: this.mostrarEmpleado
+
     };
     console.log('Datos enviados para actualización:', updatedHorario.comprobado);
 
@@ -103,14 +105,16 @@ export class HorariosAsignadosComponent implements OnInit {
     this.horaFinReal = '';
     this.estado = '';
     this.observaciones = '';
+    this.empleadoSuplenteNombre = '';
+    this.mostrarEmpleado = false;
   }
 
   abrirModalEmpleado() {
       const dialogRef = this.dialog.open(BuscarEmpleadoComponent);
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.empleadoSuplente = result;
-          this.empleadoSuplenteNombre = result.nombre + ' ' + result.apellido
+          this.empleadoSup = result;
+          this.empleadoSuplenteNombre = result.nombre + ' ' + result.apellido;
         }
       });
     }
