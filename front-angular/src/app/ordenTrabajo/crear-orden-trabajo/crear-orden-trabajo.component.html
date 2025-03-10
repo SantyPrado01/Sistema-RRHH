@@ -9,7 +9,6 @@
   <div class="sidebar">
     <ul class="sidebar-menu">
       <li (click)="mostrarSeccion('ordenTrabajo')" [class.active]="seccionActual === 'ordenTrabajo'">Crear Orden de Trabajo</li>
-      <li (click)="mostrarSeccion('ordenTrabajoUnica')" [class.active]="seccionActual === 'ordenTrabajoUnica'">Crear Orden de Trabajo Unica</li>
     </ul>
   </div>
 
@@ -40,19 +39,13 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="mes">Mes</label>
-            <select id="mes" [(ngModel)]="mes" name="mes" class="form-control" (ngModelChange)="calcularHorasProyectadas()" required>
-              <option value="" disabled selected>Seleccione un mes</option>
-              <option *ngFor="let m of meses" [value]="m">{{ m }}</option>
-            </select>
+            <label for="fechaOrden">Fecha Desde</label>
+            <input type="date" id="fechaDesde" [(ngModel)]="fechaDesde" name="fechaOrden" class="form-control" required />
           </div>
 
           <div class="form-group">
-            <label for="anio">Año</label>
-            <select id="anio" [(ngModel)]="anio" name="anio" class="form-control" (ngModelChange)="calcularHorasProyectadas()" required>
-              <option value="" disabled selected>Seleccione un año</option>
-              <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
-            </select>
+            <label for="fechaOrden">Fecha Hasta</label>
+            <input type="date" id="fechaHasta" [(ngModel)]="fechaHasta" name="fechaOrden" class="form-control" required  />
           </div>
         </div>
 
@@ -66,63 +59,12 @@
           <div *ngFor="let dia of necesidad; let i = index" class="grid-row">
             <div>{{ dia.nombre }}</div>
             <div>
-              <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio{{i}}" (ngModelChange)="calcularHorasProyectadas()"/>
+              <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio{{i}}" />
             </div>
             <div>
-              <input type="time" [(ngModel)]="dia.horaFin" name="horaFin{{i}}" (ngModelChange)="calcularHorasProyectadas()"/>
+              <input type="time" [(ngModel)]="dia.horaFin" name="horaFin{{i}}" />
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="horasProyectadas" *ngIf="horasProyectadas > 0">
-        Total horas proyectadas: {{ horasProyectadas | number: '1.0-1' }} horas
-      </div>
-      
-      <div *ngIf="seccionActual === 'ordenTrabajoUnica'">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="empresa">Empresa</label>
-            <div class="form-group-inline">
-              <input type="text" id="empresa" [(ngModel)]="empresaNombre" name="empresa" class="form-control" placeholder="Ingrese la Empresa" required [disabled]="true" />
-              <div class="input-group-append">
-                <button type="button" class="btn btn-secondary" (click)="abrirModalEmpresa()">Buscar</button>
-              </div>
-            </div>
-          </div>
-      
-          <div class="form-group">
-            <label for="empleado">Empleado</label>
-            <div class="form-group-inline">
-              <input type="text" id="empleado" [(ngModel)]="empleadoNombre" name="empleado" class="form-control" placeholder="Ingrese el Empleado" required [disabled]="true" />
-              <div class="input-group-append">
-                <button type="button" class="btn btn-secondary" (click)="abrirModalEmpleado()">Buscar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      
-        <div class="form-row">
-          <div class="form-group">
-            <label for="fechaOrden">Fecha de la Orden</label>
-            <input type="date" id="fechaOrden" [(ngModel)]="fechaOrden" name="fechaOrden" class="form-control" required (ngModelChange)="calcularHorasProyectadas()" />
-          </div>
-        </div>
-      
-        <div class="form-row">
-          <div class="form-group">
-            <label for="horaInicio">Hora Inicio</label>
-            <input type="time" id="horaInicio" [(ngModel)]="horaInicio" name="horaInicio" class="form-control" required (ngModelChange)="calcularHorasProyectadas()" />
-          </div>
-      
-          <div class="form-group">
-            <label for="horaFin">Hora Fin</label>
-            <input type="time" id="horaFin" [(ngModel)]="horaFin" name="horaFin" class="form-control" required (ngModelChange)="calcularHorasProyectadas()" />
-          </div>
-        </div>
-      
-        <div class="horasProyectadas" *ngIf="horasProyectadas > 0" >
-          Total horas proyectadas: {{ horasProyectadas | number: '1.0-1' }} horas
         </div>
       </div>
            

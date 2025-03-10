@@ -26,10 +26,12 @@ export class OrdenTrabajoService {
     private readonly horarioAsignadoRepository: Repository<HorarioAsignado>,
   ) {}
 
-
-
-  async createOrdenTrabajo(createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
-    const { servicio, empleadoAsignado, mes, anio, diaEspecifico, horaInicio, horaFin } = createOrdenTrabajoDto;
+  async createOrdenesTrabajo(
+    createOrdenTrabajoDto: CreateOrdenTrabajoDto, 
+    fechaDesde: string, 
+    fechaHasta: string
+    ): Promise<OrdenTrabajo[]> {
+    const { servicio, empleadoAsignado, necesidadHoraria } = createOrdenTrabajoDto;
 
     const empleadoExistente = await this.empleadoRepository.findOne({ where: { Id: empleadoAsignado.Id } });
     if (!empleadoExistente) throw new NotFoundException('Empleado no encontrado');
@@ -37,87 +39,191 @@ export class OrdenTrabajoService {
     const servicioExistente = await this.servicioRepository.findOne({ where: { servicioId: servicio.servicioId } });
     if (!servicioExistente) throw new NotFoundException('Servicio no encontrado');
 
-    let mesExtraido = mes;
-    let anioExtraido = anio;
-    console.log(mesExtraido)
-    if (diaEspecifico){
-      const fecha = new Date(diaEspecifico);  
-      mesExtraido = fecha.getMonth() + 1;  
-      anioExtraido = fecha.getFullYear();
+    // Convertimos las fechas a objetos Date
+    const inicio = new Date(fechaDesde);
+    const fin = new Date(fechaHasta);
+    console.log('Fecha Inicio:', inicio);
+    console.log('Fecha Fin:', fin);
+
+    const ordenesTrabajo: OrdenTrabajo[] = [];
+
+    // Iteramos mes por mes dentro del rango
+    let fechaIterativa = new Date(inicio);
+    while (fechaIterativa <= fin) {
+        console.log('Estas en el while');
+        const mes = fechaIterativa.getMonth() + 1; // +1 porque getMonth() es base 0
+        const anio = fechaIterativa.getFullYear();
+
+        const nuevaOrdenTrabajo = this.ordenTrabajoRepository.create({
+            servicio: servicioExistente,
+            empleadoAsignado: empleadoExistente,
+            mes,
+            anio,
+        });
+
+        const ordenGuardada = await this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
+        ordenesTrabajo.push(ordenGuardada);
+
+        // **Crear las necesidades horarias para esta orden de trabajo**
+        await this.createNecesidadHoraria(ordenGuardada.Id, necesidadHoraria);
+
+        // **Asignar los horarios según las necesidades horarias** dentro del rango de fechas
+        await this.createHorariosParaOrden(ordenGuardada, necesidadHoraria, inicio, fin);
+
+        // Avanzamos al siguiente mes
+        fechaIterativa.setMonth(fechaIterativa.getMonth() + 1);
     }
 
-    const nuevaOrdenTrabajo = this.ordenTrabajoRepository.create({
-      servicio: servicioExistente,
-      empleadoAsignado: empleadoExistente,
-      mes: mesExtraido,
-      anio: anioExtraido,
-      diaEspecifico,
-      horaInicio,
-      horaFin
-    });
-
-    console.log('Datos de la orden antes de guardar:', nuevaOrdenTrabajo);
-    const ordenGuardada = await this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
-    console.log('Orden de trabajo guardada:', ordenGuardada);
-    return ordenGuardada;
+    return ordenesTrabajo;
   }
-  
+
   async createNecesidadHoraria(ordenTrabajoId: number, necesidadesHorarias: CreateNecesidadHorariaDto[]): Promise<NecesidadHoraria[]> {
-    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({ where: { Id: ordenTrabajoId }, relations: ['empleadoAsignado'] });
-    if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
+  const ordenTrabajo = await this.ordenTrabajoRepository.findOne({ where: { Id: ordenTrabajoId }, relations: ['empleadoAsignado'] });
+  if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
 
+  const empleado = ordenTrabajo.empleadoAsignado;
+
+  if (empleado.fulltime) {
+      console.log('Orden de Trabajo ID:', ordenTrabajoId);
+      const nuevasNecesidades = necesidadesHorarias.map((necesidad) =>
+          this.necesidadHorariaRepository.create({
+              ...necesidad,
+              ordenTrabajo,
+          })
+      );
+      return this.necesidadHorariaRepository.save(nuevasNecesidades);
+  }
+
+  const disponibilidades = empleado.disponibilidades;
+  console.log(disponibilidades);
+
+  const esValida = (horaInicioNecesidad: string, horaFinNecesidad: string, horaInicioDisponibilidad: string, horaFinDisponibilidad: string): boolean => {
+      const inicioNecesidad = new Date(`1970-01-01T${horaInicioNecesidad}`);
+      const finNecesidad = new Date(`1970-01-01T${horaFinNecesidad}`);
+      const inicioDipsonibilidad = new Date(`1970-01-01T${horaInicioDisponibilidad}`);
+      const FinDisponibilidad = new Date(`1970-01-01T${horaFinDisponibilidad}`);
+
+      const esValida = inicioNecesidad >= inicioDipsonibilidad && finNecesidad <= FinDisponibilidad;
+      console.log("Es Valida", esValida);
+      return esValida;
+  };
+
+  for (const necesidad of necesidadesHorarias) {
+      const { diaSemana, horaInicio, horaFin } = necesidad;
+      if (!horaInicio || !horaFin) {
+          console.log(`No se valida la necesidad para el dia ${diaSemana} porque no tiene horarios asignados.`);
+          continue;
+      }
+
+      const disponibilidadEmpleado = disponibilidades.find(d => d.diaSemana === diaSemana);
+      if (disponibilidadEmpleado) {
+          if (!esValida(horaInicio, horaFin, disponibilidadEmpleado.horaInicio, disponibilidadEmpleado.horaFin)) {
+              await this.deleteOrdenTrabajo(ordenTrabajoId);
+              throw new BadRequestException(`La Necesidad Horaria para el dia ${diaSemana} no esta completamente dentro de la disponibilidad del empleado.`);
+          }
+      } else {
+          console.log(`No hay disponibilidad para el día ${diaSemana}, pero no se valida.`);
+      }
+  }
+  const nuevasNecesidades = necesidadesHorarias.map((necesidad) =>
+      this.necesidadHorariaRepository.create({
+          ...necesidad,
+          ordenTrabajo,
+      })
+  );
+  return this.necesidadHorariaRepository.save(nuevasNecesidades);
+  }
+
+  async createHorariosParaOrden(
+    ordenTrabajo: OrdenTrabajo, 
+    horarios: { diaSemana: number, horaInicio: string, horaFin: string }[], 
+    fechaDesde: Date, 
+    fechaHasta: Date
+) {
     const empleado = ordenTrabajo.empleadoAsignado;
+    const horariosAsignados = [];
 
-    if (empleado.fulltime) {
-        console.log('Orden de Trabajo ID:', ordenTrabajoId);
-        const nuevasNecesidades = necesidadesHorarias.map((necesidad) =>
-            this.necesidadHorariaRepository.create({
-                ...necesidad,
-                ordenTrabajo,
-            })
-        );
-        return this.necesidadHorariaRepository.save(nuevasNecesidades);
-    }
+    const inicio = new Date(fechaDesde);
+    inicio.setHours(inicio.getHours() + inicio.getTimezoneOffset() / 60); // Ajustar a la zona horaria local
 
-    const disponibilidades = empleado.disponibilidades;
-    console.log(disponibilidades);
+    const fin = new Date(fechaHasta);
+    fin.setHours(fin.getHours() + fin.getTimezoneOffset() / 60); // Ajustar a la zona horaria local
 
-    const esValida = (horaInicioNecesidad: string, horaFinNecesidad: string, horaInicioDisponibilidad: string, horaFinDisponibilidad: string): boolean => {
-        const inicioNecesidad = new Date(`1970-01-01T${horaInicioNecesidad}`);
-        const finNecesidad = new Date(`1970-01-01T${horaFinNecesidad}`);
-        const inicioDipsonibilidad = new Date(`1970-01-01T${horaInicioDisponibilidad}`);
-        const FinDisponibilidad = new Date(`1970-01-01T${horaFinDisponibilidad}`);
 
-        const esValida = inicioNecesidad >= inicioDipsonibilidad && finNecesidad <= FinDisponibilidad;
-        console.log("Es Valida", esValida);
-        return esValida;
-    };
+    console.log(`Rango de fechas: ${inicio.toISOString()} - ${fin.toISOString()}`);
+  
+    for (const horario of horarios) {
+        const { diaSemana, horaInicio, horaFin } = horario;
 
-    for (const necesidad of necesidadesHorarias) {
-        const { diaSemana, horaInicio, horaFin } = necesidad;
         if (!horaInicio || !horaFin) {
-            console.log(`No se valida la necesidad para el dia ${diaSemana} porque no tiene horarios asignados.`);
+            console.log(`⚠️ Horario ignorado para el día ${diaSemana} porque falta horaInicio (${horaInicio || 'vacío'}) o horaFin (${horaFin || 'vacío'})`);
             continue;
         }
+    
+        const fechas = this.obtenerFechasDelMes(ordenTrabajo.anio, ordenTrabajo.mes, diaSemana.toString());
+  
+        console.log(`Fechas generadas para el día ${diaSemana}:`, fechas);
+  
+        for (const fecha of fechas) {
+            // Asegúrate de comparar solo las fechas, sin tener en cuenta la hora
+            const fechaSoloDia = new Date(fecha);
+            fechaSoloDia.setHours(0, 0, 0, 0); // Elimina la hora para comparación sin zona horaria
 
-        const disponibilidadEmpleado = disponibilidades.find(d => d.diaSemana === diaSemana);
-        if (disponibilidadEmpleado) {
-            if (!esValida(horaInicio, horaFin, disponibilidadEmpleado.horaInicio, disponibilidadEmpleado.horaFin)) {
-                await this.deleteOrdenTrabajo(ordenTrabajoId);
-                throw new BadRequestException(`La Necesidad Horaria para el dia ${diaSemana} no esta completamente dentro de la disponibilidad del empleado.`);
+            // Solo agregamos la fecha si está dentro del rango permitido
+            if (fechaSoloDia >= inicio && fechaSoloDia <= fin) {
+                console.log(`Fecha válida: ${fechaSoloDia.toISOString()}`);
+
+                if (!empleado.fulltime) {
+                    const disponibilidadEmpleado = empleado.disponibilidades.find(d => d.diaSemana === diaSemana);
+                    if (!disponibilidadEmpleado || !this.validarDisponibilidad(horaInicio, horaFin, disponibilidadEmpleado.horaInicio, disponibilidadEmpleado.horaFin)) {
+                        console.log(`Horario ${horaInicio} - ${horaFin} no disponible para el empleado en ${fechaSoloDia}`);
+                        continue;
+                    }
+                }
+
+                const horarioAsignado = this.horarioAsignadoRepository.create({
+                    ordenTrabajo,
+                    empleado,
+                    fecha: fechaSoloDia,
+                    horaInicioProyectado: horaInicio,
+                    horaFinProyectado: horaFin,
+                    estado: 'Pendiente',
+                    suplente: false,
+                    empleadoSuplente: null,
+                });
+
+                horariosAsignados.push(horarioAsignado);
             }
-        } else {
-            console.log(`No hay disponibilidad para el día ${diaSemana}, pero no se valida.`);
         }
     }
-    const nuevasNecesidades = necesidadesHorarias.map((necesidad) =>
-        this.necesidadHorariaRepository.create({
-            ...necesidad,
-            ordenTrabajo,
-        })
-    );
-    return this.necesidadHorariaRepository.save(nuevasNecesidades);
+
+    if (horariosAsignados.length > 0) {
+        await this.horarioAsignadoRepository.save(horariosAsignados);
+    } else {
+        console.log('No se asignaron horarios dentro del rango especificado.');
+    }
   }
+
+  
+  /**
+ * Verifica si un horario solicitado está dentro del rango de disponibilidad del empleado.
+ */
+  private validarDisponibilidad=(
+    horaInicioNecesidad: string, 
+    horaFinNecesidad: string, 
+    horaInicioDisponibilidad: string, 
+    horaFinDisponibilidad: string
+): boolean => {
+    const inicioNecesidad = new Date(`1970-01-01T${horaInicioNecesidad}Z`);
+    const finNecesidad = new Date(`1970-01-01T${horaFinNecesidad}Z`);
+    const inicioDisponibilidad = new Date(`1970-01-01T${horaInicioDisponibilidad}Z`);
+    const finDisponibilidad = new Date(`1970-01-01T${horaFinDisponibilidad}Z`);
+
+    const esValida = inicioNecesidad >= inicioDisponibilidad && finNecesidad <= finDisponibilidad;
+    console.log(`Validación horario (${horaInicioNecesidad}-${horaFinNecesidad}): ${esValida}`);
+    return esValida;
+  }
+
 
   async createAsignarHorarioUnico(ordenTrabajoId: number, diaEspecifico: Date, horaInicio: string, horaFin: string) {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
@@ -253,11 +359,13 @@ export class OrdenTrabajoService {
             horasReales = horasProyectadas;
           }
         }
+        const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+        const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
 
         return {
           ...orden,
-          horasProyectadas,
-          horasReales,
+          horasProyectadas: horasProyectadasFormateadas,
+        horasReales: horasRealesFormateadas,
         };
       }),
     );

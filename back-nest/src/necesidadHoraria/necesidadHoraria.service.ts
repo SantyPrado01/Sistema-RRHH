@@ -3,15 +3,14 @@ import { UpdateNecesidadHorariaDto } from './dto/updateNecesidadHoraria.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NecesidadHoraria } from './entities/necesidadHoraria.entity'; 
 import { Repository } from 'typeorm';
-import { OrdenTrabajoService } from 'src/ordenTrabajo/ordenTrabajo.service';
+
 
 @Injectable()
 export class NecesidadHorariaService {
 
   constructor(
     @InjectRepository(NecesidadHoraria)
-    private readonly necesidadHorariaRepository: Repository<NecesidadHoraria>,
-    private readonly ordenTrabajoService: OrdenTrabajoService
+    private readonly necesidadHorariaRepository: Repository<NecesidadHoraria>
   ){}
 
   async findAll(): Promise<NecesidadHoraria[]> {

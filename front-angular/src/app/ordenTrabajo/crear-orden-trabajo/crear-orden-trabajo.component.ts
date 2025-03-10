@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Data, Router } from '@angular/router';
 import { OrdenTrabajoService } from '../services/orden-trabajo.service';
 import { BuscarEmpresaComponent } from '../../Modales/buscar-empresa/buscar-empresa.component';
 import { BuscarEmpleadoComponent } from '../../Modales/buscar-empleado/buscar-empleado.component';
@@ -24,12 +24,12 @@ export class CrearOrdenTrabajoComponent {
   empresaNombre: string = '';
   empleado: Empleado[] = [];
   empleadoNombre: string = '';
-  mes: string = '';
-  anio: number = 0;
   seccionActual: string = 'ordenTrabajo';
+  fechaDesde: string = '';
+  fechaHasta: string = '';
 
-  fechaOrden: string = ''; 
-  horaInicio: string = '';
+  fechaOrden: Date = new Date(); 
+  horaInicio: Date = new Date();
   horaFin: string = '';
   
   meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -65,42 +65,7 @@ export class CrearOrdenTrabajoComponent {
     }
     return contador;
   }
-  
-  calcularHorasProyectadas(): void {
-    let totalHoras = 0;
-    this.necesidad.forEach(dia => {
-      if (dia.horaInicio && dia.horaFin) {
-        const [inicioHora, inicioMinuto] = dia.horaInicio.split(':').map(Number);
-        const [finHora, finMinuto] = dia.horaFin.split(':').map(Number);
-        const inicio = new Date();
-        inicio.setHours(inicioHora, inicioMinuto, 0, 0);
-        const fin = new Date();
-        fin.setHours(finHora, finMinuto, 0, 0);
-  
-        let diferenciaHoras: number;
-        
-        if (inicio > fin) {
-          let horasAntesMedianoche = (24 - inicioHora) + (finHora); 
-          diferenciaHoras = horasAntesMedianoche;
-        } else {
-          diferenciaHoras = (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60);
-        }
-  
-        const ocurrenciasDia = this.contarDiasEnMes(this.meses.indexOf(this.mes) + 1, this.anio, dia.diaSemana);
-        totalHoras += diferenciaHoras * ocurrenciasDia;
-  
-        if (inicio >= fin && diferenciaHoras <= 0) {
-          this.mostrarAlerta(
-            'Error en las horas',
-            'La hora de inicio no puede ser posterior a la hora de fin.',
-            'error'
-          );
-        }
-      }
-    });
-    this.horasProyectadas = totalHoras;
-    
-  }  
+   
   
   mostrarSeccion(seccion: string): void {
     this.seccionActual = seccion;
@@ -128,14 +93,12 @@ export class CrearOrdenTrabajoComponent {
   }
 
   onSubmit(): void {
+
       const ordenTrabajoData = {
+        fechaDesde: this.fechaDesde,
+        fechaHasta: this.fechaHasta,
         servicio: this.empresa,
         empleadoAsignado: this.empleado,
-        diaEspecifico: this.fechaOrden,
-        horaInicio: this.horaInicio,
-        horaFin: this.horaFin,
-        mes: this.meses.indexOf(this.mes) + 1,
-        anio: Number(this.anio),
         horariosAsignados: [],
         necesidadHoraria: this.necesidad.map((dia) => ({
           diaSemana: dia.diaSemana,
@@ -169,10 +132,10 @@ export class CrearOrdenTrabajoComponent {
   limpiarCampos(): void {
     this.empresaNombre = '';
     this.empleadoNombre = '';
-    this.mes = '';
-    this.anio = 0;
-    this.fechaOrden = '';
-    this.horaInicio = '';
+    this.fechaDesde = '';
+    this.fechaHasta = '';
+    this.fechaOrden = new Date();
+    this.horaInicio = new Date();
     this.horaFin = '';
     this.necesidad = [
       { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },

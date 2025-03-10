@@ -23,16 +23,5 @@ export class CreateOrdenTrabajoDto {
     @Type(() => CreateNecesidadHorariaDto)
     necesidadHoraria?: CreateNecesidadHorariaDto[];
 
-    @IsNotEmpty()
-    @IsNumber()
-    mes?: number;
-
-    @IsNotEmpty()
-    @IsNumber()
-    anio?: number;
-
-    diaEspecifico?: Date;
-    horaInicio?: string;
-    horaFin?: string;
 
 }

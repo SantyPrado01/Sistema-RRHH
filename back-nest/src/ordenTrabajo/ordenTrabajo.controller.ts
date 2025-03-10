@@ -9,32 +9,22 @@ export class OrdenTrabajoController {
   constructor(private readonly ordenTrabajoService: OrdenTrabajoService) {}
 
   @Post()
-  async create(@Body() createOrdenTrabajoDto: CreateOrdenTrabajoDto): Promise<OrdenTrabajo> {
-
-  const ordenTrabajo = await this.ordenTrabajoService.createOrdenTrabajo(createOrdenTrabajoDto);
-  if (!ordenTrabajo) throw new NotFoundException('No se pudo crear la orden de trabajo');
-  
-  const ordenTrabajoId = ordenTrabajo.Id;
-  if (createOrdenTrabajoDto.diaEspecifico) {
-    await this.ordenTrabajoService.createAsignarHorarioUnico(
-      ordenTrabajoId,
-      createOrdenTrabajoDto.diaEspecifico,
-      createOrdenTrabajoDto.horaInicio,
-      createOrdenTrabajoDto.horaFin
-    );
-  } else {
-    await this.ordenTrabajoService.createNecesidadHoraria(
-      ordenTrabajoId,
-      createOrdenTrabajoDto.necesidadHoraria.map(necesidad => ({
-        ordenTrabajoId,
-        diaSemana: necesidad.diaSemana,
-        horaInicio: necesidad.horaInicio,
-        horaFin: necesidad.horaFin,
-      }))
-    );
-    await this.ordenTrabajoService.createAsignarHorarios(ordenTrabajoId);
-  }
-  return this.ordenTrabajoService.findOne(ordenTrabajoId);
+  async create(
+    @Body() createOrdenTrabajoDto: CreateOrdenTrabajoDto,
+    @Body('fechaDesde') fechaDesde: string,
+    @Body('fechaHasta') fechaHasta:string,
+  ){
+    try{
+      const ordenesTrabajo = await this.ordenTrabajoService.createOrdenesTrabajo(
+        createOrdenTrabajoDto,
+        fechaDesde,
+        fechaHasta
+      );
+      return ordenesTrabajo;
+    }
+    catch(error){
+      throw new NotFoundException(error.message);
+    }
 }
 
   @Get()

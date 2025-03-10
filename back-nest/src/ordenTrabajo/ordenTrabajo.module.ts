@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { OrdenTrabajoService } from './ordenTrabajo.service';
+import { OrdenTrabajoService } from './ordenTrabajo.service'; 
 import { OrdenTrabajoController } from './ordenTrabajo.controller'; 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrdenTrabajo } from './entities/ordenTrabajo.entity'; 

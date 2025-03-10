@@ -22,10 +22,10 @@ export class OrdenTrabajo {
     @OneToMany(() => NecesidadHoraria, (necesidades) => necesidades.ordenTrabajo, { eager: true })
     necesidadHoraria?: NecesidadHoraria[];
 
-    @Column({ nullable: true })
+    @Column()
     mes?: number; 
 
-    @Column({ nullable: true })
+    @Column()
     anio?: number;
     
     @Column({ nullable: true })
