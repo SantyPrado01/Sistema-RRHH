@@ -8,10 +8,10 @@ import { Observable } from 'rxjs';
 export class CategoriaServicioService {
 
   //Produccion
-  //private apiUrl = 'http://147.93.15.196:3000/categorias';
+  private apiUrl = 'http://147.93.15.196:3000/categorias';
 
   //Desarrollo
-  private apiUrl = 'http://localhost:3000/categorias'; 
+  //private apiUrl = 'http://localhost:3000/categorias'; 
 
   constructor(private http: HttpClient) { }
 
