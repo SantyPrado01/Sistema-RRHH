@@ -25,8 +25,8 @@ export class CrearOrdenTrabajoComponent {
   empleado: Empleado[] = [];
   empleadoNombre: string = '';
   seccionActual: string = 'ordenTrabajo';
-  fechaDesde: string = '';
-  fechaHasta: string = '';
+  fechaDesde: Date = new Date();
+  fechaHasta: Date = new Date();
 
   fechaOrden: Date = new Date(); 
   horaInicio: Date = new Date();
@@ -66,7 +66,6 @@ export class CrearOrdenTrabajoComponent {
     return contador;
   }
    
-  
   mostrarSeccion(seccion: string): void {
     this.seccionActual = seccion;
     this.limpiarCampos();
@@ -93,7 +92,6 @@ export class CrearOrdenTrabajoComponent {
   }
 
   onSubmit(): void {
-
       const ordenTrabajoData = {
         fechaDesde: this.fechaDesde,
         fechaHasta: this.fechaHasta,
@@ -132,8 +130,8 @@ export class CrearOrdenTrabajoComponent {
   limpiarCampos(): void {
     this.empresaNombre = '';
     this.empleadoNombre = '';
-    this.fechaDesde = '';
-    this.fechaHasta = '';
+    this.fechaDesde = new Date();
+    this.fechaHasta = new Date();
     this.fechaOrden = new Date();
     this.horaInicio = new Date();
     this.horaFin = '';

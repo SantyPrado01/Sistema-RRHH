@@ -40,8 +40,9 @@ export class OrdenTrabajoService {
     if (!servicioExistente) throw new NotFoundException('Servicio no encontrado');
 
     // Convertimos las fechas a objetos Date
-    const inicio = new Date(fechaDesde);
-    const fin = new Date(fechaHasta);
+    const inicio = new Date(`${fechaDesde}T00:00:00`);
+    const fin = new Date(`${fechaHasta}T00:00:00`);
+
     console.log('Fecha Inicio:', inicio);
     console.log('Fecha Fin:', fin);
 
@@ -49,9 +50,12 @@ export class OrdenTrabajoService {
 
     // Iteramos mes por mes dentro del rango
     let fechaIterativa = new Date(inicio);
+    console.log('Fecha Iterativa:', fechaIterativa);
+
     while (fechaIterativa <= fin) {
         console.log('Estas en el while');
         const mes = fechaIterativa.getMonth() + 1; // +1 porque getMonth() es base 0
+        console.log('Mes:', mes);
         const anio = fechaIterativa.getFullYear();
 
         const nuevaOrdenTrabajo = this.ordenTrabajoRepository.create({
@@ -84,7 +88,6 @@ export class OrdenTrabajoService {
   const empleado = ordenTrabajo.empleadoAsignado;
 
   if (empleado.fulltime) {
-      console.log('Orden de Trabajo ID:', ordenTrabajoId);
       const nuevasNecesidades = necesidadesHorarias.map((necesidad) =>
           this.necesidadHorariaRepository.create({
               ...necesidad,
@@ -95,7 +98,6 @@ export class OrdenTrabajoService {
   }
 
   const disponibilidades = empleado.disponibilidades;
-  console.log(disponibilidades);
 
   const esValida = (horaInicioNecesidad: string, horaFinNecesidad: string, horaInicioDisponibilidad: string, horaFinDisponibilidad: string): boolean => {
       const inicioNecesidad = new Date(`1970-01-01T${horaInicioNecesidad}`);
@@ -144,13 +146,11 @@ export class OrdenTrabajoService {
     const horariosAsignados = [];
 
     const inicio = new Date(fechaDesde);
-    inicio.setHours(inicio.getHours() + inicio.getTimezoneOffset() / 60); // Ajustar a la zona horaria local
-
     const fin = new Date(fechaHasta);
-    fin.setHours(fin.getHours() + fin.getTimezoneOffset() / 60); // Ajustar a la zona horaria local
 
-
-    console.log(`Rango de fechas: ${inicio.toISOString()} - ${fin.toISOString()}`);
+    // Comparamos las fechas con .getTime() para obtener el valor en milisegundos
+    const inicioTime = inicio.getTime();
+    const finTime = fin.getTime();
   
     for (const horario of horarios) {
         const { diaSemana, horaInicio, horaFin } = horario;
@@ -161,17 +161,19 @@ export class OrdenTrabajoService {
         }
     
         const fechas = this.obtenerFechasDelMes(ordenTrabajo.anio, ordenTrabajo.mes, diaSemana.toString());
-  
         console.log(`Fechas generadas para el día ${diaSemana}:`, fechas);
   
         for (const fecha of fechas) {
-            // Asegúrate de comparar solo las fechas, sin tener en cuenta la hora
+            // Asegúrate de comparar solo las fechas sin tener en cuenta la hora
             const fechaSoloDia = new Date(fecha);
-            fechaSoloDia.setHours(0, 0, 0, 0); // Elimina la hora para comparación sin zona horaria
+            const fechaSoloDiaTime = fechaSoloDia.getTime();
 
-            // Solo agregamos la fecha si está dentro del rango permitido
-            if (fechaSoloDia >= inicio && fechaSoloDia <= fin) {
-                console.log(`Fecha válida: ${fechaSoloDia.toISOString()}`);
+            console.log('La fecha es:', fechaSoloDia)
+
+            // Comparar las fechas con getTime() en lugar de los objetos Date directamente
+            if (fechaSoloDiaTime >= inicioTime && fechaSoloDiaTime <= finTime) {
+                
+                console.log(`Fecha válida: ${fechaSoloDia}`);
 
                 if (!empleado.fulltime) {
                     const disponibilidadEmpleado = empleado.disponibilidades.find(d => d.diaSemana === diaSemana);
@@ -180,11 +182,12 @@ export class OrdenTrabajoService {
                         continue;
                     }
                 }
-
+                const fechaISO = fechaSoloDia.toISOString();
+                
                 const horarioAsignado = this.horarioAsignadoRepository.create({
                     ordenTrabajo,
                     empleado,
-                    fecha: fechaSoloDia,
+                    fecha: fechaISO,
                     horaInicioProyectado: horaInicio,
                     horaFinProyectado: horaFin,
                     estado: 'Pendiente',
@@ -202,12 +205,14 @@ export class OrdenTrabajoService {
     } else {
         console.log('No se asignaron horarios dentro del rango especificado.');
     }
-  }
+}
+
 
   
   /**
  * Verifica si un horario solicitado está dentro del rango de disponibilidad del empleado.
  */
+
   private validarDisponibilidad=(
     horaInicioNecesidad: string, 
     horaFinNecesidad: string, 
