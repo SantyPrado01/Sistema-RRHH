@@ -12,6 +12,11 @@ export class ServiciosController {
     return this.serviciosService.createServicio(createServicioDto);
   }
 
+  @Get('buscar')
+  buscar(@Query('nombre') termino: string) {
+    return this.serviciosService.buscarPorNombre(termino);
+  }
+
   @Get()
   findAll() {
     return this.serviciosService.getServicios();

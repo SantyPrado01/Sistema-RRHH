@@ -17,6 +17,10 @@ export class ServicioService {
 
   constructor(private http: HttpClient) {}
 
+   buscarEmpresas(termino: string): Observable<Empresa[]> {
+      return this.http.get<Empresa[]>(`${this.apiUrl}/buscar?nombre=${termino}`);
+    }
+
   getServicios(): Observable<Empresa[]> {
     return this.http.get<Empresa[]>(`${this.apiUrl}`);
   }

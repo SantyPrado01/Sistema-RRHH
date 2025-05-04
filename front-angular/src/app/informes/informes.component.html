@@ -8,75 +8,218 @@
 
 <div class="content-container">
   <div class="main-content">
+
     <div class="form-container">
+      <div class="div-mat-reporte">
+        <div class="div-mat-option-reporte">
+          <mat-form-field appearance="fill" class="mat-reportes"> 
+            <mat-label class="mat-label">Reporte:</mat-label>
+            <mat-select
+              [(ngModel)]="reporteSeleccionado"
+              name="reporte" 
+              placeholder="Seleccionar Reporte" 
+              (selectionChange)="onReporteSeleccionado()">
+              
+              <mat-option *ngFor="let reporte of reportes" [value]="reporte.nombre">
+                {{ reporte.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <!-- Reporte de horas por Empleado por Empresa -->
+        <div *ngIf="reporteSeleccionado === 'Reporte de horas por Empleado por Empresa'" class="div-reporte-mes-anio">
+          <mat-form-field appearance="fill" class="mat-form-field">
+            <mat-label class="mat-label">Mes:</mat-label>
+            <mat-select id="mesSelect" [(ngModel)]="mesSeleccionado" name="mesSelect">
+              <mat-option value="" disabled selected>Seleccionar Mes</mat-option>
+              <mat-option *ngFor="let mes of meses" [value]="mes">{{ mes }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        
+          <mat-form-field appearance="fill" class="mat-form-field-ultimo">
+            <mat-label class="mat-label">Año:</mat-label>
+            <mat-select id="anioSelect" [(ngModel)]="anioSeleccionado" name="anioSelect">
+               <mat-option value="" disabled selected>Seleccionar Año</mat-option>
+              <mat-option *ngFor="let anio of anios" [value]="anio">{{ anio }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-        <div class="form-row">
+        <!-- Reporte de horas por Dia -->
+        <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'" class="div-reporte-fecha-dia">
 
-          <div class="form-group">
-            <label for="empresa">Reporte:</label>
-            <select id="informeSelect" class="form-control" [(ngModel)]="reporteSeleccionado">
-                <option value="" disabled selected>Seleccionar Reporte</option>
-                <option *ngFor="let reporte of reportes" [value]="reporte.nombre">{{ reporte.nombre }}</option>
-            </select>
+          <mat-form-field appearance="fill" class="mat-form-field">
+            <mat-label class="mat-label">Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="fecha" id="fecha" />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="mat-form-field">
+            <mat-label class="mat-label">Buscar Empleado</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="empleadoControl"
+              [matAutocomplete]="autoEmpleado"
+            />
+            <mat-autocomplete #autoEmpleado="matAutocomplete" (optionSelected)="seleccionarEmpleado($event.option.value)" [displayWith]="displayEmployeeName">
+              <mat-option *ngFor="let empleado of empleadosFiltrados" [value]="empleado">
+                {{ empleado.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="mat-form-field-ultimo">
+            <mat-label class="mat-label">Buscar Servicios</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="empresaControl"
+              [matAutocomplete]="autoServicio"
+            />
+            <mat-autocomplete #autoServicio="matAutocomplete" (optionSelected)="seleccionarEmpresa($event.option.value)" [displayWith]="displayEmpresaName">
+              <mat-option *ngFor="let empresa of empresasFiltradas" [value]="empresa">
+                {{ empresa.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <div *ngIf="reporteSeleccionado" class="form-row-footer">
+        <div class="form-group">
+            <button mat-flat-button class="btn-generar" color="primary" (click)="ejecutarReporte()" >Generar</button>
+        </div>
+        <div class="group-right">
+          <div class="form-group-footer">
+              <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
+              <mat-icon>get_app</mat-icon> PDF
+              </button>
           </div>
-
-          <div class="form-group">
-            <label for="mesSelect">Mes:</label>
-            <select id="mesSelect" class="form-control" [(ngModel)]="mesSeleccionado" >
-              <option value="" disabled selected>Seleccionar Mes</option>
-              <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="anioSelect">Año:</label>
-            <select id="anioSelect" class="form-control" [(ngModel)]="anioSeleccionado" >
-              <option value="" disabled selected>Seleccionar Año</option>
-              <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
-            </select>
+          <div class="form-group-footer">
+              <button mat-raised-button class="button-footer-excel" color="primary" (click)="descargarExcel()">
+              <mat-icon>get_app</mat-icon> Excel
+              </button>
           </div>
         </div>
-        <div class="form-row-footer">
-            <div class="form-group">
-                <button class="btn-generar" color="primary" (click)="ejecutarReporte()" >
-                    Generar
-                </button>
-            </div>
-            <div class="group-right">
-                <div class="form-group-footer">
-                    <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
-                    <mat-icon>get_app</mat-icon> PDF
-                    </button>
-                </div>
-                <div class="form-group-footer">
-                    <button mat-raised-button class="button-footer-excel" color="primary" (click)="descargarExcel()">
-                    <mat-icon>get_app</mat-icon> Excel
-                    </button>
-                </div>
-            </div>
-        </div>        
-    </div>
+      </div>        
+
     <!-- Listado de Órdenes de Trabajo -->
-    <div class="table-container">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Empresa</th>
-            <th>Empleado</th>
-            <th>Dias</th>
-            <th>Horas Proyectadas</th>
-            <th>Horas Reales</th>
+    <div *ngIf="reporteSeleccionado === 'Reporte de horas por Empleado por Empresa'">
+
+      <div class="table-container mat-elevation-z8"> 
+        <table mat-table [dataSource]="dataSource" matSort> 
+          <ng-container matColumnDef="empresa">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.servicio.nombre }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="empleado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Empleado </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.empleadoAsignado.nombre }}, {{ orden.empleadoAsignado.apellido }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="dias">
+            <th mat-header-cell *matHeaderCellDef> Dias </th>
+            <td mat-cell *matCellDef="let orden"> {{ obtenerDias(orden.necesidadHoraria) }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="horasProyectadas">
+            <th mat-header-cell *matHeaderCellDef> Horas Proyectadas </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.horasReales }} </td> 
+          </ng-container> 
+  
+          <ng-container matColumnDef="horasReales">
+            <th mat-header-cell *matHeaderCellDef> Horas Reales </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.horasReales }} </td> 
+          </ng-container> 
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsObtenerOrdenes"></tr>
+    
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsObtenerOrdenes;"></tr>
+    
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [colSpan]="displayedColumnsObtenerOrdenes.length">
+              No se encontraron informes con los filtros seleccionados.
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let orden of ordenes">
-            <td>{{ orden.servicio.nombre }}</td>
-            <td>{{ orden.empleadoAsignado.nombre }} {{ orden.empleadoAsignado.apellido }}</td>
-            <td>{{ obtenerDias(orden.necesidadHoraria) }}</td>
-            <td>{{ orden.horasProyectadas }} horas</td>
-            <td>{{ orden.horasReales }} horas</td>
-          </tr>
-        </tbody>
-      </table>
+        </table>
+
+        <mat-paginator [pageSize]="[5,10,25,100]" aria-label="Seleccionar Pagina de Informes"></mat-paginator>
+
+        <div *ngIf="loading" class="mat-spinner-container">
+            <mat-spinner [diameter]="40"></mat-spinner>
+        </div>
+
+      </div>
     </div>
+
+    <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'">
+
+      <div class="table-container mat-elevation-z8"> 
+        <table mat-table [dataSource]="dataSource" matSort> 
+          <ng-container matColumnDef="empresa">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.ordenTrabajo.servicio.nombre }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="empleado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Empleado </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.empleado.nombre }} {{ orden.empleado.apellido }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.fecha | date:'yyyy-MM-dd' }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="horasInicioProyectado">
+            <th mat-header-cell *matHeaderCellDef> Horas Inicio </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.horaInicioProyectado }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="horasFinProyectado">
+            <th mat-header-cell *matHeaderCellDef> Horas Fin </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.horaFinProyectado }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="horaInicioReal">
+            <th mat-header-cell *matHeaderCellDef> Hora Inicio R </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.horaInicioReal }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="horaFinReal">
+            <th mat-header-cell *matHeaderCellDef> Hora Fin R </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.horaFinReal }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef> Estado </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.estado }} </td> 
+          </ng-container> 
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsBuscarHorarios"></tr>
+    
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsBuscarHorarios;"></tr>
+    
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [colSpan]="displayedColumnsBuscarHorarios.length">
+              No se encontraron informes con los filtros seleccionados.
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5,10,25,100]" [pageSize]="10" aria-label="Seleccionar Pagina de Informes"></mat-paginator>
+  
+        <div *ngIf="loading" class="mat-spinner-container">
+            <mat-spinner [diameter]="40"></mat-spinner>
+        </div>
+      </div>
+      
+    </div>
+
+  </div>
 </div>

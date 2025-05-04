@@ -7,6 +7,8 @@ import { Repository } from 'typeorm';
 import { CreateDisponibilidadHorariaDto } from 'src/disponibilidad-horaria/dto/create-disponibilidad-horaria.dto';
 import { DisponibilidadHoraria } from 'src/disponibilidad-horaria/entities/disponibilidad-horaria.entity';
 import { UpdateDisponibilidadHorariaDto } from 'src/disponibilidad-horaria/dto/update-disponibilidad-horaria.dto';
+import { ILike } from 'typeorm';
+
 
 
 @Injectable()
@@ -132,6 +134,17 @@ export class EmpleadosService {
     console.log('Estas son las disponibilidades al guardar', empleado.disponibilidades)
     return { message: 'Disponibilidades actualizadas con éxito' };
   }
+
+  async buscarPorNombre(termino: string): Promise<Empleado[]> {
+    return this.empleadoRepository.find({
+      where: {
+        nombre: ILike(`%${termino}%`), // <-- busca parcialmente sin importar mayúsculas/minúsculas
+        eliminado: false,              // <-- si estás manejando soft-delete
+      },
+      take: 6, // <-- opcional: limita la cantidad de resultados
+    });
+  }
+  
   
   
 }

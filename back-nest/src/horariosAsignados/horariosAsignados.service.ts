@@ -103,6 +103,39 @@ export class HorarioAsignadoService {
         return horarioAsignado;
     }
 
+    async buscarHorariosAsignados(
+      fecha?: string,
+      empleadoId?: number,
+      servicioId?: number,
+    ): Promise<HorarioAsignado[]> {
+      const query = this.horarioAsignadoRepository
+        .createQueryBuilder('horario')
+        .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
+        .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
+        .leftJoinAndSelect('horario.empleado', 'empleado')
+        .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
+        .where('horario.eliminado = false');
+    
+      if (fecha) {
+        const fechaObj = new Date(fecha);
+        const inicio = fechaObj.toISOString().split('T')[0]; // Solo la fecha en formato YYYY-MM-DD
+        query.andWhere('horario.fecha = :inicio', { inicio });
+      }
+    
+      if (empleadoId) {
+        query.andWhere(
+          '(empleado.Id = :empleadoId OR empleadoSuplente.Id = :empleadoId)',
+          { empleadoId },
+        );
+      }
+    
+      if (servicioId) {
+        query.andWhere('servicio.servicioId = :servicioId', { servicioId });
+      }
+    
+      return query.getMany();
+    }
+
     async update(id: number, updateData: Partial<CreateHorariosAsignadoDto>): Promise<HorarioAsignado> {
         await this.horarioAsignadoRepository.update(id, updateData);
         return this.findOne(id);

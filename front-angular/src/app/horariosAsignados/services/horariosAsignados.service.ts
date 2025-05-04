@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HorarioAsignado } from '../models/horariosAsignados.models';
 
@@ -37,5 +37,19 @@ export class HorariosAsignadosService {
     findAll(): Observable<HorarioAsignado[]>{
         return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/all`);
     }
+
+    buscarHorarios(fecha: string, empleadoId?: number, servicioId?: number): Observable<any> {
+        let params = new HttpParams().set('fecha', fecha);
+    
+        if (empleadoId) {
+          params = params.set('empleadoId', empleadoId.toString());
+        }
+    
+        if (servicioId) {
+          params = params.set('servicioId', servicioId.toString());
+        }
+    
+        return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/buscar?`, { params });
+      }
 
 }

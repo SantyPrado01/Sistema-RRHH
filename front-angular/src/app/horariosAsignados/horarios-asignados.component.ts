@@ -64,7 +64,7 @@ export class HorariosAsignadosComponent implements OnInit {
   fetchHorarios(): void {
     this.horarioService.getHorariosAsignados().subscribe(data => {
       this.horariosAsignados = data;
-      console.log('Horarios Obtenidos', this.horariosAsignados)
+
     });
   }
   

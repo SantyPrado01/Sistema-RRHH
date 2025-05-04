@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
@@ -26,6 +26,11 @@ export class EmpleadosController {
       empleado,
       disponibilidadesHorarias,
     };
+  }
+
+  @Get('buscar')
+  buscar(@Query('nombre') termino: string) {
+    return this.empleadosService.buscarPorNombre(termino);
   }
 
   @Get()
@@ -64,8 +69,6 @@ export class EmpleadosController {
     empleado: empleadoActualizado,
   };
 }
-
-
 
   @Delete(':id')
   deleteEmpleado(@Param('id') id: string) {

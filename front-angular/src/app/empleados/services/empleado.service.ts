@@ -16,10 +16,12 @@ export class EmpleadoService {
 
   constructor(private http: HttpClient) {}
 
+  buscarEmpleados(termino: string): Observable<any[]> {
+    return this.http.get<Empleado[]>(`${this.apiUrl}/buscar?nombre=${termino}`);
+  }
   getEmpleados(): Observable<Empleado[]> {
     return this.http.get<Empleado[]>(`${this.apiUrl}`);
   }
-
   getEmpleadosEliminado(): Observable<Empleado[]>{
     return this.http.get<Empleado[]>(`${this.apiUrl}/true`);
   }

@@ -26,6 +26,7 @@ export class HomeComponent {
 
   }
   ordenes: any[] = [];
+  horasPorMes: any[] = [];
   anioActual: number = new Date().getFullYear();
   completado: boolean = false
   horasProyectadas: string = ''
@@ -35,11 +36,16 @@ export class HomeComponent {
 
   obtenerOrdenes() {
     const mesNumero = new Date().getMonth() + 1;
+    this.ordenTrabajoService.getHorasPorMes(mesNumero, this.anioActual).subscribe(
+      (data) => {
+        this.horasProyectadas = data.horasProyectadas;
+        this.horasReales = data.horasReales;
+      }
+    )
     this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioActual).subscribe(
       (data) => {
-        this.ordenes = data.ordenes;
-        this.horasProyectadas = data.horasProyectadasTotales;
-        this.horasReales = data.horasRealesTotales;
+        this.ordenes = data;
+        console.log('Órdenes de trabajo obtenidas:', data);
       },
       (error) => {
         console.error('Hubo un error al obtener las órdenes de trabajo', error);

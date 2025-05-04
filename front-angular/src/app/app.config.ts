@@ -14,7 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from './nabvar/navbar.component';
-
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,5 +31,6 @@ export const appConfig: ApplicationConfig = {
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,  
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
   ]
 };

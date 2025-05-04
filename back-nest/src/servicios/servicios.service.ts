@@ -4,6 +4,7 @@ import { UpdateServicioDto } from './dto/update-servicio.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Servicio } from './entities/servicio.entity';
+import { ILike } from 'typeorm';
 
 @Injectable()
 export class ServiciosService {
@@ -71,4 +72,14 @@ export class ServiciosService {
     const updateServicio = Object.assign(servicioFound, servicio);
     return this.servicioRepository.save(updateServicio);
 }
+
+async buscarPorNombre(termino: string): Promise<Servicio[]> {
+    return this.servicioRepository.find({
+      where: {
+        nombre: ILike(`%${termino}%`), // <-- busca parcialmente sin importar mayúsculas/minúsculas
+        eliminado: false,              // <-- si estás manejando soft-delete
+      },
+      take: 6, // <-- opcional: limita la cantidad de resultados
+    });
+  }
 }
