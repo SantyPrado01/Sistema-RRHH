@@ -68,6 +68,7 @@ export class OrdenTrabajoViewComponent implements OnInit{
   cargarOrden(ordenId: number){
     this.ordenTrabajoService.getOrdenById(ordenId).subscribe({
       next:(data) => {
+        console.log('Orden de trabajo:', data)
         this.ordenAsignada = data;
         this.horarios = data.horariosAsignados
         this.empresa = data.servicio.nombre

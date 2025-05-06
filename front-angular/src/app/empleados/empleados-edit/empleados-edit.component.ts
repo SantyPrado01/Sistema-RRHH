@@ -13,12 +13,27 @@ import { MatIconModule } from '@angular/material/icon';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import { EmpleadoService } from '../services/empleado.service';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
+
+import { MatButtonModule } from '@angular/material/button';
+import { OrdenGrupo, OrdenTrabajo } from '../../ordenTrabajo/models/orden-trabajo.models';
+import { MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { getSpanishPaginatorIntl } from '../../spanish-paginator-intl';
+import { HorariosAsignadosService } from '../../horariosAsignados/services/horariosAsignados.service';
+import { HorarioAsignado } from '../../horariosAsignados/models/horariosAsignados.models';
 
 @Component({
   selector: 'app-edit-empleado',
   standalone: true,
   templateUrl: './empleados-edit.component.html',
-  imports:[NavbarComponent, FormsModule, CommonModule, RouterModule, MatIconModule],
+  providers:[
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
+    { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() }
+  ],
+  imports:[NavbarComponent, FormsModule, CommonModule, RouterModule, MatIconModule, MatExpansionModule, MatCardModule, MatButtonModule, MatPaginator],
   styleUrls: ['./empleados-edit.component.css']
 })
 export class EditEmpleadoComponent implements OnInit {
@@ -26,6 +41,13 @@ export class EditEmpleadoComponent implements OnInit {
   ordenes: any[] = [];
   ordenesFiltradas: any[] = [];
   ordenesMensualesFiltradas: any[] = [];
+  ordenesAgrupadas: OrdenGrupo[] = [];
+  ordenesAgrupadasPaginadas: OrdenGrupo[] = [];
+
+  horariosRealizados: any[] = [];
+  horariosAgrupados: any[] = [];
+  totalHorasCalculadasFormateadas: string = '00:00';
+
   seccionActual: string = 'datosPersonales';
   empleado: any = {};
   categorias: any[] = [];
@@ -44,6 +66,9 @@ export class EditEmpleadoComponent implements OnInit {
   anioSeleccionado: number = new Date().getFullYear(); 
   mesSeleccionado: number = new Date().getMonth() + 1; 
   estadoSeleccionado: boolean = false;
+
+  pageSize: number = 6;
+  pageIndex: number = 0;
 
   filtroEmpresa: string = '';
 
@@ -74,7 +99,8 @@ export class EditEmpleadoComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
-    private ordenTrabajoService: OrdenTrabajoService  
+    private ordenTrabajoService: OrdenTrabajoService,
+    private horariosAsignadosService: HorariosAsignadosService,  
   ) {}
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
@@ -105,9 +131,11 @@ export class EditEmpleadoComponent implements OnInit {
 
   ngOnInit() {
     this.empleadoId = this.route.snapshot.paramMap.get('id');
+    
     if (this.empleadoId){
       this.cargarEmpleado(this.empleadoId)
       this.obtenerOrdenes(this.empleadoId)
+      this.obtenerHorarios(Number(this.empleadoId));
     };
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
       next: (data) => {
@@ -116,6 +144,42 @@ export class EditEmpleadoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al obtener las categorías', err);
+      }
+    });
+  }
+
+  actualizarPagina(){
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.ordenesAgrupadasPaginadas = this.ordenesAgrupadas.slice(startIndex, endIndex);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    this.actualizarPagina();
+  }
+
+  agruparOrdenes(ordenes: OrdenTrabajo[]): OrdenGrupo[] {
+    const mapa = new Map<string, OrdenGrupo>();
+  
+    for (const orden of ordenes) {
+      const clave = `${orden.anio}-${orden.mes}`;
+      if (!mapa.has(clave)) {
+        mapa.set(clave, {
+          anio: orden.anio,
+          mes: orden.mes,
+          ordenes: []
+        });
+      }
+      mapa.get(clave)?.ordenes.push(orden);
+    }
+  
+    return Array.from(mapa.values()).sort((a, b) => {
+      if (a.anio !== b.anio) {
+        return b.anio - a.anio; 
+      } else {
+        return b.mes - a.mes;   
       }
     });
   }
@@ -225,7 +289,6 @@ export class EditEmpleadoComponent implements OnInit {
     }
   }
 
-
   buscarCiudad(event: Event) {
     const input = event.target as HTMLInputElement;
     const query = input.value;
@@ -260,6 +323,8 @@ export class EditEmpleadoComponent implements OnInit {
         this.ordenes = data;
         this.ordenesFiltradas = data
         this.calcularTotales()
+        this.ordenesAgrupadas = this.agruparOrdenes(this.ordenes);
+        this.actualizarPagina();
         console.log('Órdenes obtenidas:', this.ordenesFiltradas);
       },
       error: (err) => {
@@ -267,6 +332,40 @@ export class EditEmpleadoComponent implements OnInit {
         this.mostrarAlerta('Error', 'No se pudieron obtener las órdenes de trabajo.', 'error');
       }
     });
+  }
+
+  obtenerHorarios(empleadoId: number) {
+    this.horariosAsignadosService.buscarHorariosPorEmpleado(empleadoId).subscribe((res: any) => {
+      const horarios: HorarioAsignado[] = res.horarios;
+  
+      const agrupadosPorAnio: Record<number, Record<number, HorarioAsignado[]>> = horarios.reduce(
+        (acc: Record<number, Record<number, HorarioAsignado[]>>, horario: HorarioAsignado) => {
+          const fecha = new Date(horario.fecha);
+          const anio = fecha.getFullYear();
+          const mes = fecha.getMonth() + 1;
+  
+          if (!acc[anio]) acc[anio] = {};
+          if (!acc[anio][mes]) acc[anio][mes] = [];
+  
+          acc[anio][mes].push(horario);
+          return acc;
+        },
+        {}
+      );
+  
+      this.horariosAgrupados = Object.entries(agrupadosPorAnio)
+        .map(([anio, meses]) => ({
+          anio: +anio,
+          meses: Object.entries(meses)
+            .map(([mes, horarios]) => ({
+              mes: +mes,
+              horarios,
+            }))
+            .sort((a, b) => b.mes - a.mes),
+        }))
+        .sort((a, b) => b.anio - a.anio);
+    });
+  
   }
 
   calcularTotales(): void {
@@ -287,6 +386,42 @@ export class EditEmpleadoComponent implements OnInit {
       this.totalFS += orden.estadoContador.faltoSinAviso;
       this.totalE += orden.estadoContador.enfermedad;
     });
+  }
+
+  private convertirDecimalAHora(decimal: number): string {
+    const horas = Math.floor(decimal); // Obtener la parte entera (horas)
+    const minutos = Math.round((decimal - horas) * 60); // Obtener los minutos restantes
+  
+    // Aseguramos que las horas y minutos tengan siempre 2 dígitos
+    const horasFormato = horas < 10 ? `0${horas}` : `${horas}`;
+    const minutosFormato = minutos < 10 ? `0${minutos}` : `${minutos}`;
+  
+    return `${horasFormato}:${minutosFormato}`;
+  }
+  
+
+  private convertirHoraAHoras(horaInicio: string, horaFin: string): number {
+    if (!horaInicio || !horaFin) return 0; // Si no hay horas, retornamos 0.
+  
+    const [inicioH, inicioM] = horaInicio.split(':').map(Number);
+    const [finH, finM] = horaFin.split(':').map(Number);
+  
+    const inicioMinutos = inicioH * 60 + inicioM;
+    const finMinutos = finH * 60 + finM;
+  
+    const totalMinutos = finMinutos - inicioMinutos;
+    const totalHoras = totalMinutos / 60;
+    this.totalHorasCalculadasFormateadas = this.convertirDecimalAHora(totalHoras);
+    
+    return totalHoras; // Retornamos el valor en formato numérico
+  }
+  
+  
+
+  getHorasTotales(horarios: HorarioAsignado[]): number {
+    return horarios.reduce((total, h) => {
+      return total + this.convertirHoraAHoras(h.horaInicioReal || '', h.horaFinReal || '');
+    }, 0);
   }
   
 
@@ -366,6 +501,14 @@ export class EditEmpleadoComponent implements OnInit {
       .map(n => diasSemana[parseInt(n.diaSemana, 10) - 1]) 
       .filter((dia, index, self) => dia && self.indexOf(dia) === index);
     return diasConHorario.join(', ') || 'No hay días con horarios definidos';
+  }
+
+  getNombreMes(mes: number): string {
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    return meses[mes - 1];
   }
 
   cancelar() {

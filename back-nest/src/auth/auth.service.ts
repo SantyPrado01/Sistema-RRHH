@@ -3,7 +3,6 @@ import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { loginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/user.entity';
@@ -13,129 +12,129 @@ import { CategoriaUsuario } from 'src/categoria-usuario/entities/categoria-usuar
 @Injectable()
 export class AuthService {
 
-    constructor(
-      @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-        private readonly jwtService: JwtService,
-        @InjectRepository(CategoriaUsuario) private categoriaRepository: Repository<CategoriaUsuario>,
-    ){}
+  constructor(
+    @InjectRepository(User)
+      private readonly userRepository: Repository<User>,
+      private readonly jwtService: JwtService,
+      @InjectRepository(CategoriaUsuario) private categoriaRepository: Repository<CategoriaUsuario>,
+  ){}
 
-    async register({ username, categoriaId }: RegisterDto) {
-        const user = await this.userRepository.findOne({where:{username: username}});
-        if (user) {
-          throw new HttpException('El usuario ya existe', HttpStatus.NOT_ACCEPTABLE);
-        }
-        const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
-        const hashedPassword = await bcrypt.hash(randomPassword, 10);
-        console.log('registerDto', username, categoriaId)
+  async register({ username, categoriaId }: RegisterDto) {
+    const user = await this.userRepository.findOne({where:{username: username}});
+    if (user) {
+      throw new HttpException('El usuario ya existe', HttpStatus.NOT_ACCEPTABLE);
+    }
+    const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+    console.log('registerDto', username, categoriaId)
 
-        const categoria = await this.categoriaRepository.findOne({where:{id: categoriaId}})
+    const categoria = await this.categoriaRepository.findOne({where:{id: categoriaId}})
 
-        const createUserDto = {
-          username,
-          password: hashedPassword,
-          categoria,
-          eliminado: false, 
-          primerIngreso: true, 
-        };
+    const createUserDto = {
+      username,
+      password: hashedPassword,
+      categoria,
+      eliminado: false, 
+      primerIngreso: true, 
+    };
 
-        const newUser = await this.userRepository.save(createUserDto);
-        console.log('createUserDto', createUserDto);
-        return { 
-          message: 'Usuario registrado con éxito',
-          temporaryPassword: randomPassword,
-          user: newUser
-        };
-      }
-      
+    const newUser = await this.userRepository.save(createUserDto);
+    console.log('createUserDto', createUserDto);
+    return { 
+      message: 'Usuario registrado con éxito',
+      temporaryPassword: randomPassword,
+      user: newUser
+    };
+  }
+    
 
-      async login({ username, password }: loginDto) {
-        const user = await this.userRepository.findOne({where:{username: username}, relations:['categoria']});
-      
-        if (!user) {throw new HttpException('Usuario no existente', HttpStatus.NOT_FOUND);}
-        const isPasswordValid = await bcrypt.compare(password, user.password);      
-        if (!isPasswordValid) {throw new HttpException('Contraseña incorrecta', HttpStatus.NOT_ACCEPTABLE);}
+  async login({ username, password }: loginDto) {
+    const user = await this.userRepository.findOne({where:{username: username}, relations:['categoria']});
+  
+    if (!user) {throw new HttpException('Usuario no existente', HttpStatus.NOT_FOUND);}
+    const isPasswordValid = await bcrypt.compare(password, user.password);      
+    if (!isPasswordValid) {throw new HttpException('Contraseña incorrecta', HttpStatus.NOT_ACCEPTABLE);}
 
-        if (user.primerIngreso) {
-          return {
+    if (user.primerIngreso) {
+      return {
+        id: user.id,
+        username: user.username,
+        message: 'Debe cambiar su contraseña',
+        primerIngreso: true,
+      };
+    }
+  
+    const payload = { username: user.username, role: user.categoria.nombre };
+    const token = await this.jwtService.signAsync(payload);
+  
+    return {
+      token,
+      username: user.username,
+      role: user.categoria,
+      primerIngreso: false,
+    };
+  }
+
+  async changePassword(userId: number, newPassword: string) {
+    console.log(newPassword)
+    const user = await this.userRepository.findOne({where:{id: userId}});
+  
+    if (!user) {throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);}
+  
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.primerIngreso = false;
+  
+    await this.userRepository.save(user);
+  
+    return { message: 'Contraseña actualizada con éxito' };
+  }
+
+  async recoverPassword(userId: number) {
+    const user = await this.userRepository.findOne({ where: { id:userId} });
+    
+    if (!user) {
+        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+    }
+    const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+    user.password = hashedPassword;
+    user.primerIngreso = true;
+    
+    await this.userRepository.save(user);
+    
+    return { 
+        message: 'Contraseña recuperada con éxito',
+        temporaryPassword: randomPassword, 
+        user: {
             id: user.id,
             username: user.username,
-            message: 'Debe cambiar su contraseña',
-            primerIngreso: true,
-          };
+            primerIngreso: user.primerIngreso
         }
-      
-        const payload = { username: user.username, role: user.categoria.nombre };
-        const token = await this.jwtService.signAsync(payload);
-      
-        return {
-          token,
-          username: user.username,
-          role: user.categoria,
-          primerIngreso: false,
-        };
-      }
+    };
+  }
 
-      async changePassword(userId: number, newPassword: string) {
-        console.log(newPassword)
-        const user = await this.userRepository.findOne({where:{id: userId}});
-      
-        if (!user) {throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);}
-      
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedPassword;
-        user.primerIngreso = false;
-      
-        await this.userRepository.save(user);
-      
-        return { message: 'Contraseña actualizada con éxito' };
-      }
-
-      async recoverPassword(userId: number) {
-        const user = await this.userRepository.findOne({ where: { id:userId} });
-        
-        if (!user) {
-            throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-        }
-        const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
-        const hashedPassword = await bcrypt.hash(randomPassword, 10);
-
-        user.password = hashedPassword;
-        user.primerIngreso = true;
-        
-        await this.userRepository.save(user);
-        
-        return { 
-            message: 'Contraseña recuperada con éxito',
-            temporaryPassword: randomPassword, 
-            user: {
-                id: user.id,
-                username: user.username,
-                primerIngreso: user.primerIngreso
-            }
-        };
+  async updateUsuario(userId: number, updateUserDto: UpdateUserDto) {
+    
+    const user = await this.userRepository.findOne({where:{id: userId}});
+    if (!user) {
+      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
 
-      async updateUsuario(userId: number, updateUserDto: UpdateUserDto) {
-        
-        const user = await this.userRepository.findOne({where:{id: userId}});
-        if (!user) {
-          throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-        }
+    if (updateUserDto.password) {
+      const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      user.password = hashedPassword;
+      user.primerIngreso = true
+    }
 
-        if (updateUserDto.password) {
-          const randomPassword = Math.floor(1000 + Math.random() * 9000).toString();
-          const hashedPassword = await bcrypt.hash(randomPassword, 10);
-          user.password = hashedPassword;
-          user.primerIngreso = true
-        }
+    if (updateUserDto.eliminado !== undefined) {
+      user.eliminado = updateUserDto.eliminado;
+    }
 
-        if (updateUserDto.eliminado !== undefined) {
-          user.eliminado = updateUserDto.eliminado;
-        }
-
-        await this.userRepository.save(user);
-        return { message: 'Usuario actualizado con éxito', user };
-      }
+    await this.userRepository.save(user);
+    return { message: 'Usuario actualizado con éxito', user };
+  }
       
 }

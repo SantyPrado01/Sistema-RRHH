@@ -2,7 +2,6 @@ import { Transform } from "class-transformer";
 import { IsString, MinLength } from "class-validator";
 import { Column } from "typeorm";
 
-
 export class RegisterDto{
 
     @Transform(({ value })=> value.trim())

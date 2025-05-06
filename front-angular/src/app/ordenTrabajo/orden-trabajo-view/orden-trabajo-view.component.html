@@ -53,18 +53,23 @@
       <thead>
         <tr>
           <th>Fecha</th>
+          <th>Empleado Suplente</th>
           <th>Hora Inicio</th>
           <th>Hora Fin</th>
           <th>Horario Inicio Real</th>
           <th>Horario Fin Real</th>
           <th>Estado</th>
-          <th>Observaciones</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let horario of horarios">
           <td>{{ horario.fecha | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            <span *ngIf="horario.empleadoSuplente">
+              {{ horario.empleadoSuplente.apellido }}, {{ horario.empleadoSuplente.nombre }}
+            </span>
+            </td>
           <td>{{ horario.horaInicioProyectado }}</td>
           <td>{{ horario.horaFinProyectado }}</td>
           <td><input type="time" [(ngModel)]="horario.horaInicioReal" [disabled]="!horario.editMode"/></td>
@@ -80,7 +85,6 @@
               <option value="Vacaciones">Vacaciones</option>
               </select>
           </td>
-          <td><input type="text" [(ngModel)]="horario.observaciones" [disabled]="!horario.editMode"/></td>
           <td>
             <button *ngIf="!horario.editMode" class="btn-edit" (click)="toggleEditMode(horario)"><mat-icon>edit</mat-icon></button>
             <button *ngIf="horario.editMode" class="btn-save" (click)="saveChanges(horario)"><mat-icon>check</mat-icon></button>

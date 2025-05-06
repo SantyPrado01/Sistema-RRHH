@@ -8,48 +8,62 @@ import { HorarioAsignado } from '../models/horariosAsignados.models';
 })
 export class HorariosAsignadosService {
 
-    //Produccion
-    private apiUrl = 'http://147.93.15.196:3000/horariosasignados';
+  //Produccion
+  //private apiUrl = 'http://147.93.15.196:3000/horariosasignados';
 
-    //Desarrollo
-    //private apiUrl = 'http://localhost:3000/horariosasignados'; 
+  //Desarrollo
+  private apiUrl = 'http://localhost:3000/horariosasignados'; 
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-    getHorariosAsignados(): Observable<HorarioAsignado[]> {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const params = {
-            comprobado: 'false',
-            fechaAntes: today.toISOString().split('T')[0] 
-        };
-        return this.http.get<HorarioAsignado[]>(`${this.apiUrl}`, { params });
+  updateHorario(horario: HorarioAsignado): Observable<HorarioAsignado> {
+    return this.http.patch<HorarioAsignado>(`${this.apiUrl}/${horario.horarioAsignadoId}`, horario);
+  }
+  
+  editHorario(id: number, partialHorario:Partial<HorarioAsignado>): Observable<HorarioAsignado> {
+    return this.http.patch<HorarioAsignado>(`${this.apiUrl}/${id}`, partialHorario);
+  }
+
+  findAll(): Observable<HorarioAsignado[]>{
+    return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/all`);
+  }
+
+  buscarHorarios(fecha: string, empleadoId?: number, servicioId?: number): Observable<any> {
+    let params = new HttpParams().set('fecha', fecha);
+
+    if (empleadoId) {
+      params = params.set('empleadoId', empleadoId.toString());
     }
 
-    updateHorario(horario: HorarioAsignado): Observable<HorarioAsignado> {
-        return this.http.patch<HorarioAsignado>(`${this.apiUrl}/${horario.horarioAsignadoId}`, horario);
-      }
-    
-    editHorario(id: number, partialHorario:Partial<HorarioAsignado>): Observable<HorarioAsignado> {
-        return this.http.patch<HorarioAsignado>(`${this.apiUrl}/${id}`, partialHorario);
+    if (servicioId) {
+      params = params.set('servicioId', servicioId.toString());
     }
 
-    findAll(): Observable<HorarioAsignado[]>{
-        return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/all`);
+    return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/buscar?`, { params });
+  }
+
+  getHorariosAsignados(): Observable<HorarioAsignado[]> {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const params = {
+          comprobado: 'false',
+          fechaAntes: today.toISOString().split('T')[0] 
+      };
+      return this.http.get<HorarioAsignado[]>(`${this.apiUrl}`, { params });
+  }
+
+  buscarHorariosPorEmpleado(empleadoId: number, mes?: number, anio?: number): Observable<any> {
+    let params = new HttpParams()
+
+    if (mes) {
+      params = params.set('mes', mes.toString());
     }
 
-    buscarHorarios(fecha: string, empleadoId?: number, servicioId?: number): Observable<any> {
-        let params = new HttpParams().set('fecha', fecha);
-    
-        if (empleadoId) {
-          params = params.set('empleadoId', empleadoId.toString());
-        }
-    
-        if (servicioId) {
-          params = params.set('servicioId', servicioId.toString());
-        }
-    
-        return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/buscar?`, { params });
-      }
+    if (anio) {
+      params = params.set('anio', anio.toString());
+    }
+
+    return this.http.get<any>(`${this.apiUrl}/buscarPorEmpleado/${empleadoId}`, { params });
+  }
 
 }

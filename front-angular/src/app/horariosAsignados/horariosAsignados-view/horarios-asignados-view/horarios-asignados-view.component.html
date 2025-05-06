@@ -1,0 +1,141 @@
+<app-navbar></app-navbar>
+
+<div class="title-container">
+    <div class="title-item">
+      <h1>Horarios Realizados</h1>
+    </div>
+</div>
+
+<div class="content-container">
+    <div class="main-content">
+  
+      <div class="form-container">
+        <div class="div-mat-reporte">
+          
+          <!-- Seleccion Reporte de horas por Dia -->
+          <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'" class="div-reporte-fecha-dia">
+            <mat-form-field appearance="fill" class="mat-form-field">
+              <mat-label class="mat-label">Buscar Empleado</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="empleadoControl"
+                [matAutocomplete]="autoEmpleado"
+              />
+              <mat-autocomplete #autoEmpleado="matAutocomplete" (optionSelected)="seleccionarEmpleado($event.option.value)" [displayWith]="displayEmployeeName">
+                <mat-option *ngFor="let empleado of empleadosFiltrados" [value]="empleado">
+                  {{ empleado.nombre }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="mat-form-field">
+              <mat-label class="mat-label">Mes</mat-label>
+              <input matInput type="text" />
+            </mat-form-field>
+  
+            <mat-form-field appearance="fill" class="mat-form-field-ultimo">
+              <mat-label class="mat-label">Buscar Servicios</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="empresaControl"
+                [matAutocomplete]="autoServicio"
+              />
+              <mat-autocomplete #autoServicio="matAutocomplete" (optionSelected)="seleccionarEmpresa($event.option.value)" [displayWith]="displayEmpresaName">
+                <mat-option *ngFor="let empresa of empresasFiltradas" [value]="empresa">
+                  {{ empresa.nombre }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+  
+        </div>
+  
+        <div class="form-row-footer">
+
+          <div class="group-right">
+            <div class="form-group-footer">
+                <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
+                <mat-icon>get_app</mat-icon> PDF
+                </button>
+            </div>
+            <div class="form-group-footer">
+                <button mat-raised-button class="button-footer-excel" color="primary" (click)="descargarExcel()">
+                <mat-icon>get_app</mat-icon> Excel
+                </button>
+            </div>
+          </div>
+        </div>        
+  
+      <!-- Tabla Reporte de horas por Dia -->
+      <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'">
+  
+        <div class="table-container mat-elevation-z8"> 
+          <table mat-table [dataSource]="dataSource" matSort> 
+            <ng-container matColumnDef="ordenTrabajo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Orden N°</th>
+                <td mat-cell *matCellDef="let orden"> {{ orden.ordenTrabajo.servicio.nombre }} </td>
+            </ng-container>
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+              <td mat-cell *matCellDef="let orden"> {{ orden.ordenTrabajo.servicio.nombre }} </td>
+            </ng-container>
+            <ng-container matColumnDef="empresa">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
+              <td mat-cell *matCellDef="let orden"> {{ orden.ordenTrabajo.servicio.nombre }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="horasInicioProyectado">
+              <th mat-header-cell *matHeaderCellDef> Horas Inicio </th>
+              <td mat-cell *matCellDef="let orden"> {{ orden.horaInicioProyectado }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="horasFinProyectado">
+              <th mat-header-cell *matHeaderCellDef> Horas Fin </th>
+              <td mat-cell *matCellDef="let orden"> {{ orden.horaFinProyectado }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="horaInicioReal">
+              <th mat-header-cell *matHeaderCellDef> Hora Inicio R </th>
+              <td mat-cell *matCellDef="let orden"> {{ orden.horaInicioReal }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="horaFinReal">
+              <th mat-header-cell *matHeaderCellDef> Hora Fin R </th>
+              <td mat-cell *matCellDef="let orden"> {{ orden.horaFinReal }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef> Estado </th>
+              <td mat-cell *matCellDef="let orden"> {{ orden.estado }} </td> 
+            </ng-container> 
+
+            <ng-container matColumnDef="observaciones">
+                <th mat-header-cell *matHeaderCellDef>observaciones</th>
+                <td mat-cell *matCellDef="let orden"> {{ orden.estado }} </td> 
+              </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsBuscarHorarios"></tr>
+      
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsBuscarHorarios;"></tr>
+      
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" [colSpan]="displayedColumnsBuscarHorarios.length">
+                No se encontraron informes con los filtros seleccionados.
+              </td>
+            </tr>
+          </table>
+  
+          <mat-paginator [pageSizeOptions]="[5,10,25,100]" [pageSize]="10" aria-label="Seleccionar Pagina de Informes"></mat-paginator>
+    
+          <div *ngIf="loading" class="mat-spinner-container">
+              <mat-spinner [diameter]="40"></mat-spinner>
+          </div>
+        </div>
+        
+      </div>
+  
+    </div>
+  </div>
+  

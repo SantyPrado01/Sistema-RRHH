@@ -16,3 +16,13 @@ export interface HorarioAsignado {
     comprobado: boolean;
     observaciones?: string;
 }
+
+interface HorarioPorMes {
+    mes: number;
+    horarios: HorarioAsignado[];
+  }
+  
+  interface HorarioPorAnio {
+    anio: number;
+    meses: HorarioPorMes[];
+  }

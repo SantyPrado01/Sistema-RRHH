@@ -136,76 +136,72 @@
 
       <!-- Ordenes de Trabajo -->
       <div *ngIf="seccionActual === 'ordenesTrabajo'">
-        <div class="form-row">
-        
-          <div class="form-group">
-            <label for="empresaInput">Buscar por Empresa:</label>
-            <input id="empresaInput" type="text" class="form-control" [(ngModel)]="filtroEmpresa" (change)="filtrarOrdenes()" placeholder="Nombre de la Empresa"/>
-          </div>
-      
-          <div class="form-group">
-            <label for="mesSelect">Mes:</label>
-            <select id="mesSelect" class="form-control" [(ngModel)]="mesSeleccionado" (change)="filtrarOrdenes()" >
-              <option value="" disabled selected>Seleccionar Mes</option>
-              <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
-            </select>
-          </div>
 
-          <div class="form-group">
-            <label for="anioSelect">Año:</label>
-            <select id="anioSelect" class="form-control" [(ngModel)]="anioSeleccionado" (change)="filtrarOrdenes()" >
-              <option value="" disabled selected>Seleccionar Año</option>
-              <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="estadoSelect">Estado:</label>
-            <select id="estadoSelect" class="form-control" [(ngModel)]="estadoSeleccionado" (change)="filtrarOrdenes()" >
-              <option value="" disabled selected>Seleccionar Estado</option>
-              <option [ngValue]="true">Completado</option>
-              <option [ngValue]="false">En Curso</option>
-            </select>
-          </div>
-        </div>
-      
-        <div class="orden-trabajo-container">
-          <h3>Listado de Órdenes de Trabajo</h3>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Orden N°</th>
-                <th>Empresa</th>
-                <th>Mes</th>
-                <th>Horas Proyectadas</th>
-                <th>Horas Reales</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let orden of ordenesFiltradas">
-                <td>{{ orden.Id }}</td>
-                <td>{{ orden.servicio.nombre }}</td>
-                <td>{{ orden.mes }}</td>
-                <td>{{ orden.horasProyectadas }}</td>
-                <td>{{ orden.horasReales }}</td>
-                <td>
-                  <span *ngIf="orden.completado" class="status completed">Completada</span>
-                  <span *ngIf="!orden.completado" class="status pending">En Curso</span>
-                  <span *ngIf="orden.eliminado" class="status delete">Eliminado</span>
-                </td>
-                <td>
-                  <button [routerLink]="['/ordentrabajo/view', orden.Id]" class="btn btn-info"><mat-icon>visibility</mat-icon></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="form-column-accordion">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let grupo of ordenesAgrupadasPaginadas">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{ getNombreMes(grupo.mes) }} {{ grupo.anio }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              
+              <div class="card-container">
+                <mat-card
+                  *ngFor="let orden of grupo.ordenes"
+                  class="orden-card"
+                  [routerLink]="['/ordentrabajo/view', orden.Id]"
+                  style="cursor: pointer;
+                  margin: 0.5em;
+                  padding: 0.5em;
+                  "
+                >
+                  <mat-card-title style="font-size: 1em; margin-left: 1em; margin-bottom: 1em;">N°{{ orden.Id }}/{{ orden.servicio.nombre }}</mat-card-title>
+                  <mat-card-content>
+                    <p><strong>Horas proyectadas:</strong> {{ orden.horasProyectadas }}</p>
+                    <p><strong>Horas reales:</strong> {{ orden.horasReales }}</p>
+                    <p><strong>Estado:</strong> 
+                      <span *ngIf="orden.completado" class="status completed">Completado</span>
+                      <span *ngIf="!orden.completado" class="status pending">En Curso</span>
+                    </p>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+          
+          <mat-paginator
+            [length]="ordenesAgrupadas.length"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex"
+            [pageSizeOptions]="[5, 10, 20]"
+            (page)="onPageChange($event)">
+          </mat-paginator>
         </div>
       </div>
 
       <div *ngIf="seccionActual === 'cierreMensual'">
         <div class="form-row">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let grupo of horariosAgrupados">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Año {{ grupo.anio }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+          
+              <div class="meses-container">
+                <mat-card *ngFor="let mes of grupo.meses" class="mes-card">
+                  <mat-card-title>{{ getNombreMes(mes.mes) }}</mat-card-title>
+                  <mat-card-content>
+                    <p><strong>Total horas reales:</strong> {{ getHorasTotales(mes.horarios) }}</p>
+                    <!-- Puedes agregar más info aquí si querés -->
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+          
         
           <div class="form-group">
             <label for="empresaInput">Buscar por Empresa:</label>

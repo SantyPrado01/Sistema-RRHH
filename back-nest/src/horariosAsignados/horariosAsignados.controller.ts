@@ -18,6 +18,19 @@ export class HorariosAsignadosController {
     return this.horariosAsignadosService.getHorariosAsignados(); 
   }
 
+  @Get('buscarPorEmpleado/:empleadoId')
+  async obtenerHorariosPorEmpleado(
+    @Param('empleadoId') empleadoId: number,
+    @Query('mes') mes?: number,
+    @Query('anio') anio?: number,
+  ): Promise<{ horarios: HorarioAsignado[]; conteo: Record<string, number> }> {
+    return this.horariosAsignadosService.obtenerHorariosPorEmpleado(
+      empleadoId,
+      mes,
+      anio,
+    );
+  }
+
   @Get('buscar')
   buscarHorarios(
     @Query('fecha') fecha?: string,
@@ -34,6 +47,7 @@ export class HorariosAsignadosController {
       servicioId,
     );
   }
+
   @Get('/all')
   findAll() {
     return this.horariosAsignadosService.findAll();

@@ -381,7 +381,7 @@ export class OrdenTrabajoService {
   async findOne(id: number): Promise<OrdenTrabajoConHoras> {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
       where: { Id: id },
-      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
+      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados', 'horariosAsignados.empleadoSuplente'],
     });
   
     if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');

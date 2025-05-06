@@ -308,6 +308,12 @@ table.table {
   color: white;
 }
 
+
+.card-container{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .container {

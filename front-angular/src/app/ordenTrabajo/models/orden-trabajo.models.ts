@@ -11,4 +11,13 @@ export interface OrdenTrabajo {
     mes: number;
     anio: number;
     eliminado: boolean;
+    horasProyectadas: number;
+    horasReales: number;
+    completado: boolean;
   }
+
+export interface OrdenGrupo {
+  mes: number;
+  anio: number;
+  ordenes: OrdenTrabajo[];
+}

@@ -27,7 +27,7 @@
           </mat-form-field>
         </div>
         
-        <!-- Reporte de horas por Empleado por Empresa -->
+        <!-- Seleccion Reporte de horas por Empleado por Empresa -->
         <div *ngIf="reporteSeleccionado === 'Reporte de horas por Empleado por Empresa'" class="div-reporte-mes-anio">
           <mat-form-field appearance="fill" class="mat-form-field">
             <mat-label class="mat-label">Mes:</mat-label>
@@ -46,7 +46,7 @@
           </mat-form-field>
         </div>
 
-        <!-- Reporte de horas por Dia -->
+        <!-- Seleccion Reporte de horas por Dia -->
         <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'" class="div-reporte-fecha-dia">
 
           <mat-form-field appearance="fill" class="mat-form-field">
@@ -107,7 +107,7 @@
         </div>
       </div>        
 
-    <!-- Listado de Órdenes de Trabajo -->
+    <!-- Tabla Reporte de horas por Empleado por Empresa -->
     <div *ngIf="reporteSeleccionado === 'Reporte de horas por Empleado por Empresa'">
 
       <div class="table-container mat-elevation-z8"> 
@@ -156,7 +156,7 @@
 
       </div>
     </div>
-
+    <!-- Tabla Reporte de horas por Dia -->
     <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'">
 
       <div class="table-container mat-elevation-z8"> 
