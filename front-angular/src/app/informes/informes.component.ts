@@ -120,6 +120,7 @@ export class InformesComponent  {
     'horasFinProyectado',
     'horaInicioReal',
     'horaFinReal',
+    'horasTotales',
     'estado' 
   ];
 
@@ -200,6 +201,7 @@ export class InformesComponent  {
             case 'horasFinProyectado': return item.horaFinProyectado;
             case 'horaInicioReal': return item.horaInicioReal;
             case 'horaFinReal': return item.horaFinReal;
+            case 'horasTotales': return item.duracionReal;
             case 'estado': return item.estado;
 
             default: return (item as any)[headerId]; 
@@ -243,25 +245,97 @@ export class InformesComponent  {
     }
 
     buscarHorarios(): void {
-    this.dataSource.data = [];
-    this.loading = true;
-    let fechaFormateada: string | null = null;
-    if (this.fecha) {
-      fechaFormateada = this.datePipe.transform(this.fecha, 'yyyy-MM-dd');
-    }
-
-    this.horariosAsignadosService.buscarHorarios(fechaFormateada || '', this.empleadoId, this.servicioId).subscribe(
-      (data: any[]) => {
-        console.log('Datos recibidos:', fechaFormateada, this.empleadoId, this.servicioId);
-        this.dataSource.data = data;
-        console.log('Resultado:', data);
-        this.loading = false; 
-      },
-      (error) => {
-        console.error('Error al buscar horarios:', error);
-        this.loading = false;
+      this.dataSource.data = [];
+      this.loading = true;
+      let fechaFormateada: string | null = null;
+      if (this.fecha) {
+        fechaFormateada = this.datePipe.transform(this.fecha, 'yyyy-MM-dd');
       }
-    );
+  
+      this.horariosAsignadosService.buscarHorarios(fechaFormateada || '', this.empleadoId, this.servicioId).subscribe(
+        (data: any[]) => {
+          console.log('Datos recibidos (antes de procesar):', data); // Log original
+  
+          // --- Lógica para calcular la duración ---
+  
+          const dataConDuracion = data.map(item => {
+            // Función auxiliar para convertir "HH:mm" a minutos desde la medianoche
+            const timeStringToMinutes = (timeString: string | null | undefined): number => {
+              if (!timeString) {
+                return 0; // Si la hora no está definida, retorna 0 minutos
+              }
+              const parts = timeString.split(':');
+              if (parts.length !== 2) {
+                   console.warn('Formato de hora inválido:', timeString);
+                   return 0; // Formato incorrecto
+              }
+              const hours = parseInt(parts[0], 10);
+              const minutes = parseInt(parts[1], 10);
+  
+              if (isNaN(hours) || isNaN(minutes)) {
+                   console.warn('Números en formato de hora inválidos:', timeString);
+                   return 0; // Partes no numéricas
+              }
+  
+              return (hours * 60) + minutes;
+            };
+  
+            const inicioMinutes = timeStringToMinutes(item.horaInicioReal);
+            const finMinutes = timeStringToMinutes(item.horaFinReal);
+  
+            let durationMinutes = 0;
+  
+            // Calcular la duración solo si ambas horas fueron parseadas correctamente
+            if (inicioMinutes >= 0 && finMinutes >= 0 && item.horaInicioReal && item.horaFinReal) {
+               // Cálculo simple de la diferencia en minutos
+               durationMinutes = finMinutes - inicioMinutes;
+  
+               // --- Manejo opcional para turnos que cruzan la medianoche ---
+               // Si un turno empieza a las 23:00 y termina a las 01:00 del día siguiente,
+               // la resta simple (60 - 1380) daría un resultado negativo.
+               // Si tus turnos pueden cruzar la medianoche, descomenta y usa esta lógica:
+               
+               if (durationMinutes < 0) {
+                  // Suma 24 horas en minutos para manejar el cruce de medianoche
+                  durationMinutes += (24 * 60);
+               }
+               // Si tus turnos siempre son dentro del mismo día, el cálculo simple es suficiente.
+               // Si durationMinutes es negativo aquí y no manejas cruce de medianoche,
+               // podría indicar datos erróneos o un caso no contemplado. Podrías setearlo a 0:
+               if (durationMinutes < 0) {
+                   console.warn(`Duración negativa calculada para el item (sin manejo de medianoche si aplica):`, item, `Minutos: ${durationMinutes}`);
+                   // Opcional: setear a 0 si no esperas negativos
+                   // durationMinutes = 0;
+                   // Opcional: manejar el cruce de medianoche si aplica (ver bloque comentado arriba)
+               }
+  
+            } else {
+                console.warn(`No se pudo calcular la duración para el item debido a horas no válidas:`, item);
+                // La duración permanece en 0
+            }
+  
+  
+            // Convertir minutos a horas (decimal)
+            const durationHours = durationMinutes / 60;
+  
+            // Retornar un nuevo objeto con la propiedad de duración añadida
+            return {
+              ...item, // Copia todas las propiedades existentes del item
+              duracionReal: durationHours // Añade la nueva propiedad con la duración en horas
+            };
+          });
+  
+          // --- Fin de la lógica de cálculo ---
+  
+          this.dataSource.data = dataConDuracion; // Asigna los datos procesados al dataSource
+          console.log('Resultado con duración calculada:', this.dataSource.data); // Log los datos procesados
+          this.loading = false;
+        },
+        (error) => {
+          console.error('Error al buscar horarios:', error);
+          this.loading = false;
+        }
+      );
     }
 
     obtenerOrdenesMesAnio() {
@@ -335,6 +409,7 @@ export class InformesComponent  {
                 case 'horasFinProyectado': return item.horaFinProyectado || '';
                 case 'horaInicioReal': return item.horaInicioReal || '';
                 case 'horaFinReal': return item.horaFinReal || '';
+                case 'horasTotales': return item.horasTotales || '';
                 case 'estado': return item.estado || '';
                 
                 default: return (item as any)[columnDefName] || '';

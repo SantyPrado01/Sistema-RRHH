@@ -124,7 +124,7 @@ export class HorarioAsignadoService {
   
     if (empleadoId) {
       query.andWhere(
-        '(empleado.Id = :empleadoId OR empleadoSuplente.Id = :empleadoId)',
+        '(empleado.Id = :empleadoId AND horario.suplente =false OR empleadoSuplente.Id = :empleadoId AND horario.suplente = true)',
         { empleadoId },
       );
     }
@@ -146,6 +146,7 @@ export class HorarioAsignadoService {
       .leftJoinAndSelect('horario.empleado', 'empleado')
       .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
       .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
+      .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
       .where(
         `(
           (empleado.Id = :empleadoId AND horario.suplente = false)

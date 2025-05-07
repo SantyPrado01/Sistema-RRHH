@@ -10,118 +10,143 @@
     <div class="main-content">
   
       <div class="form-container">
-        <div class="div-mat-reporte">
           
           <!-- Seleccion Reporte de horas por Dia -->
-          <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'" class="div-reporte-fecha-dia">
-            <mat-form-field appearance="fill" class="mat-form-field">
-              <mat-label class="mat-label">Buscar Empleado</mat-label>
-              <input
-                type="text"
-                matInput
-                [formControl]="empleadoControl"
-                [matAutocomplete]="autoEmpleado"
-              />
-              <mat-autocomplete #autoEmpleado="matAutocomplete" (optionSelected)="seleccionarEmpleado($event.option.value)" [displayWith]="displayEmployeeName">
-                <mat-option *ngFor="let empleado of empleadosFiltrados" [value]="empleado">
-                  {{ empleado.nombre }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
+        <div class="div-reporte-fecha-dia">
+          <mat-form-field appearance="outline" class="mat-form">
+            <mat-label class="mat-label">Empleado</mat-label>
+            <input
+              matInput
+              [value]="empleado?.nombre + ' ' + empleado?.apellido"
+              readonly
+            />
+          </mat-form-field>
 
-            <mat-form-field appearance="fill" class="mat-form-field">
-              <mat-label class="mat-label">Mes</mat-label>
-              <input matInput type="text" />
-            </mat-form-field>
-  
-            <mat-form-field appearance="fill" class="mat-form-field-ultimo">
-              <mat-label class="mat-label">Buscar Servicios</mat-label>
-              <input
-                type="text"
-                matInput
-                [formControl]="empresaControl"
-                [matAutocomplete]="autoServicio"
-              />
-              <mat-autocomplete #autoServicio="matAutocomplete" (optionSelected)="seleccionarEmpresa($event.option.value)" [displayWith]="displayEmpresaName">
-                <mat-option *ngFor="let empresa of empresasFiltradas" [value]="empresa">
-                  {{ empresa.nombre }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-  
+          <mat-form-field appearance="outline" class="mat-form">
+            <mat-label class="mat-label">Mes</mat-label>
+            <input matInput type="text" [value]="nombreMes" readonly/>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="mat-form">
+            <mat-label class="mat-label">Año</mat-label>
+            <input matInput type="text" [value]="anio" readonly/>
+          </mat-form-field>
         </div>
+  
+        
   
         <div class="form-row-footer">
 
+          <div class="group-left">
+            <mat-form-field appearance="outline" class="mat-form-field-horas">
+              <mat-label class="mat-label">Total Horas</mat-label>
+              <input matInput type="text" [value]="totalHorasRealizadas" readonly/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field">
+              <mat-label class="mat-label">A</mat-label>
+              <input matInput type="text" [value]="totalAsistencias" readonly/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field">
+              <mat-label class="mat-label">LT</mat-label>
+              <input matInput type="text" [value]="totalLT" readonly/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field">
+              <mat-label class="mat-label">FA</mat-label>
+              <input matInput type="text" [value]="totalFC" readonly/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field">
+              <mat-label class="mat-label">FS</mat-label>
+              <input matInput type="text" [value]="totalFS" readonly/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field">
+              <mat-label class="mat-label">E</mat-label>
+              <input matInput type="text" [value]="totalE" readonly/>
+            </mat-form-field>
+            <p class="p-informacion">* A = Asitio / LT = Llegada Tarde / FC = Falta con Aviso / FS = Falta sin Aviso / E = Enfermedad</p>
+          </div>
+
           <div class="group-right">
             <div class="form-group-footer">
-                <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
+                <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()" >
                 <mat-icon>get_app</mat-icon> PDF
                 </button>
             </div>
             <div class="form-group-footer">
-                <button mat-raised-button class="button-footer-excel" color="primary" (click)="descargarExcel()">
+                <button mat-raised-button class="button-footer-excel" color="primary" (click)="descargarExcel()" >
                 <mat-icon>get_app</mat-icon> Excel
                 </button>
             </div>
           </div>
-        </div>        
-  
+        </div>
+
+      </div>
       <!-- Tabla Reporte de horas por Dia -->
-      <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'">
+      <div class="div-mat-reporte">
   
         <div class="table-container mat-elevation-z8"> 
           <table mat-table [dataSource]="dataSource" matSort> 
             <ng-container matColumnDef="ordenTrabajo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Orden N°</th>
-                <td mat-cell *matCellDef="let orden"> {{ orden.ordenTrabajo.servicio.nombre }} </td>
+                <td mat-cell *matCellDef="let horario"> {{ horario.ordenTrabajo.Id }} </td>
             </ng-container>
             <ng-container matColumnDef="fecha">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-              <td mat-cell *matCellDef="let orden"> {{ orden.ordenTrabajo.servicio.nombre }} </td>
+              <td mat-cell *matCellDef="let horario"> {{ horario.fecha | date: 'dd/MM/yyyy' }} </td>
             </ng-container>
             <ng-container matColumnDef="empresa">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Empresa </th>
-              <td mat-cell *matCellDef="let orden"> {{ orden.ordenTrabajo.servicio.nombre }} </td>
+              <td mat-cell *matCellDef="let horario"> {{ horario.ordenTrabajo.servicio.nombre  }} </td>
             </ng-container>
     
             <ng-container matColumnDef="horasInicioProyectado">
               <th mat-header-cell *matHeaderCellDef> Horas Inicio </th>
-              <td mat-cell *matCellDef="let orden"> {{ orden.horaInicioProyectado }} </td>
+              <td mat-cell *matCellDef="let horario"> {{ horario.horaInicioProyectado }} </td>
             </ng-container>
     
             <ng-container matColumnDef="horasFinProyectado">
               <th mat-header-cell *matHeaderCellDef> Horas Fin </th>
-              <td mat-cell *matCellDef="let orden"> {{ orden.horaFinProyectado }} </td>
+              <td mat-cell *matCellDef="let horario"> {{ horario.horaFinProyectado }} </td>
             </ng-container>
     
             <ng-container matColumnDef="horaInicioReal">
               <th mat-header-cell *matHeaderCellDef> Hora Inicio R </th>
-              <td mat-cell *matCellDef="let orden"> {{ orden.horaInicioReal }} </td>
+              <td mat-cell *matCellDef="let horario"> {{ horario.horaInicioReal }} </td>
             </ng-container>
     
             <ng-container matColumnDef="horaFinReal">
               <th mat-header-cell *matHeaderCellDef> Hora Fin R </th>
-              <td mat-cell *matCellDef="let orden"> {{ orden.horaFinReal }} </td>
+              <td mat-cell *matCellDef="let horario"> {{ horario.horaFinReal }} </td>
             </ng-container>
+
+            <ng-container matColumnDef="totalHoras">
+              <th mat-header-cell *matHeaderCellDef> Total Horas </th>
+              <td mat-cell *matCellDef="let horario"> {{ horario.horasTotales }} </td> 
+            </ng-container> 
     
             <ng-container matColumnDef="estado">
               <th mat-header-cell *matHeaderCellDef> Estado </th>
-              <td mat-cell *matCellDef="let orden"> {{ orden.estado }} </td> 
+              <td mat-cell *matCellDef="let horario"> {{ horario.estado }} </td> 
             </ng-container> 
 
             <ng-container matColumnDef="observaciones">
-                <th mat-header-cell *matHeaderCellDef>observaciones</th>
-                <td mat-cell *matCellDef="let orden"> {{ orden.estado }} </td> 
-              </ng-container>
+              <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+              <td mat-cell *matCellDef="let horario">
+                <button mat-icon-button
+                        [matBadge]="horario.observaciones.length > 0 ? '!' : ''"
+                        matBadgeColor="warn"
+                        (click)="abrirDialogoObservaciones(horario.observaciones)">
+                  <mat-icon>note</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsBuscarHorarios"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsBuscarHorarios;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       
             <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" [colSpan]="displayedColumnsBuscarHorarios.length">
+              <td class="mat-cell" [colSpan]="displayedColumns.length">
                 No se encontraron informes con los filtros seleccionados.
               </td>
             </tr>
@@ -137,5 +162,4 @@
       </div>
   
     </div>
-  </div>
-  
+</div>

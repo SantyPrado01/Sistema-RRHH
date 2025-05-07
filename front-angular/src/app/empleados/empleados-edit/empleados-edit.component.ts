@@ -46,7 +46,6 @@ export class EditEmpleadoComponent implements OnInit {
 
   horariosRealizados: any[] = [];
   horariosAgrupados: any[] = [];
-  totalHorasCalculadasFormateadas: string = '00:00';
 
   seccionActual: string = 'datosPersonales';
   empleado: any = {};
@@ -136,6 +135,7 @@ export class EditEmpleadoComponent implements OnInit {
       this.cargarEmpleado(this.empleadoId)
       this.obtenerOrdenes(this.empleadoId)
       this.obtenerHorarios(Number(this.empleadoId));
+      this.getHorasTotales(this.horariosAgrupados)
     };
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
       next: (data) => {
@@ -191,6 +191,19 @@ export class EditEmpleadoComponent implements OnInit {
         dia.horaFin = '';
       });
     }
+  }
+
+  obtenerHorasPorMesAnio(mes: number, anio: number) {
+    this.ordenTrabajoService.getHorasPorMes(mes, anio).subscribe({
+      next: (data) => {
+        this.ordenes = data;
+        this.ordenes.forEach(orden => {
+          orden.horasProyectadas = this.truncateToTwoDecimals(orden.horasProyectadas);
+          orden.horasReales = this.truncateToTwoDecimals(orden.horasReales);
+        });
+        console.log('Total Horas:', this.ordenesMensualesFiltradas);
+      }
+    });
   }
 
   cargarEmpleado(empleadoId: string) {
@@ -388,18 +401,6 @@ export class EditEmpleadoComponent implements OnInit {
     });
   }
 
-  private convertirDecimalAHora(decimal: number): string {
-    const horas = Math.floor(decimal); // Obtener la parte entera (horas)
-    const minutos = Math.round((decimal - horas) * 60); // Obtener los minutos restantes
-  
-    // Aseguramos que las horas y minutos tengan siempre 2 dígitos
-    const horasFormato = horas < 10 ? `0${horas}` : `${horas}`;
-    const minutosFormato = minutos < 10 ? `0${minutos}` : `${minutos}`;
-  
-    return `${horasFormato}:${minutosFormato}`;
-  }
-  
-
   private convertirHoraAHoras(horaInicio: string, horaFin: string): number {
     if (!horaInicio || !horaFin) return 0; // Si no hay horas, retornamos 0.
   
@@ -411,20 +412,16 @@ export class EditEmpleadoComponent implements OnInit {
   
     const totalMinutos = finMinutos - inicioMinutos;
     const totalHoras = totalMinutos / 60;
-    this.totalHorasCalculadasFormateadas = this.convertirDecimalAHora(totalHoras);
     
     return totalHoras; // Retornamos el valor en formato numérico
   }
   
-  
-
   getHorasTotales(horarios: HorarioAsignado[]): number {
     return horarios.reduce((total, h) => {
       return total + this.convertirHoraAHoras(h.horaInicioReal || '', h.horaFinReal || '');
     }, 0);
   }
   
-
   mesesMap: { [key: string]: number } = {
     'Enero': 1,
     'Febrero': 2,

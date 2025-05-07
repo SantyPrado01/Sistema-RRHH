@@ -314,6 +314,10 @@ table.table {
   flex-wrap: wrap;
 }
 
+.card-meses-container{
+  display: flex;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .container {

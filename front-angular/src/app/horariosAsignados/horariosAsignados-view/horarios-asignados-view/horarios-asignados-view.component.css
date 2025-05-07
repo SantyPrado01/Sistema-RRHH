@@ -7,8 +7,74 @@
     text-align: center;
     height: 6.2em;
   }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+    padding: 2em;
+    margin-bottom: 1.5em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  }
   
   .title-item h1 {
     color: white;
     font-size: 2em;
+  }
+
+  .main-content{
+    width: 100%;
+  }
+
+  .content-container {
+    display: flex;
+    flex-direction: row;
+    margin-left: 16em;
+    margin-right: 2em;
+    margin-top: 1.5em;
+  }
+
+  .mat-form-field-horas{
+    width: 8em;
+    height: 1.5em;
+    margin-right: 1em;
+  }
+
+  .mat-form-field{
+    width: 3em;
+    height: 1.5em;
+    margin-right: 0.5em;
+  }
+
+  .mat-form{
+    margin-right: 1em;
+  }
+
+  .form-row-footer{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .group-right{
+    display: flex;
+  }
+
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #ffffff;
+  }
+
+  .p-informacion{
+    margin-top: 2em;
+    font-size: 0.9em;
+  }
+
+  .button-footer-pdf{
+    margin-right: 1em;
   }

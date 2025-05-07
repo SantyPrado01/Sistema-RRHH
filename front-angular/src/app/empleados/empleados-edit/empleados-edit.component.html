@@ -181,7 +181,7 @@
       </div>
 
       <div *ngIf="seccionActual === 'cierreMensual'">
-        <div class="form-row">
+        <div class="form-column-accordion">
           <mat-accordion>
             <mat-expansion-panel *ngFor="let grupo of horariosAgrupados">
               <mat-expansion-panel-header>
@@ -190,114 +190,24 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
           
-              <div class="meses-container">
-                <mat-card *ngFor="let mes of grupo.meses" class="mes-card">
-                  <mat-card-title>{{ getNombreMes(mes.mes) }}</mat-card-title>
+              <div class="card-meses-container">
+                <mat-card *ngFor="let mes of grupo.meses" class="mes-card" 
+                [routerLink]="['/horariosRealizados', empleadoId]" 
+                [queryParams]="{ mes: mes.mes, anio: grupo.anio }"
+                style="cursor: pointer;
+                margin: 0.5em;
+                padding: 0.5em;">
+                  <mat-card-title style="font-size: 1em; margin-left: 1em; margin-bottom: 1em;">{{ getNombreMes(mes.mes) }}</mat-card-title>
                   <mat-card-content>
-                    <p><strong>Total horas reales:</strong> {{ getHorasTotales(mes.horarios) }}</p>
-                    <!-- Puedes agregar más info aquí si querés -->
+                    <p><strong>Total horas realizadas:</strong> {{ getHorasTotales(mes.horarios) }}</p>
+                    
+                    <button mat-stroked-button>Ver Detalle</button>
                   </mat-card-content>
                 </mat-card>
               </div>
             </mat-expansion-panel>
           </mat-accordion>
-          
-        
-          <div class="form-group">
-            <label for="empresaInput">Buscar por Empresa:</label>
-            <input id="empresaInput" type="text" class="form-control" [(ngModel)]="filtroEmpresa" (change)="filtrarOrdenes()" placeholder="Nombre de la Empresa"/>
-          </div>
-      
-          <div class="form-group">
-            <label for="mesSelect">Mes:</label>
-            <select id="mesSelect" class="form-control" [(ngModel)]="mesSeleccionado" (change)="filtrarOrdenes()" >
-              <option value="" disabled selected>Seleccionar Mes</option>
-              <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="anioSelect">Año:</label>
-            <select id="anioSelect" class="form-control" [(ngModel)]="anioSeleccionado" (change)="filtrarOrdenes()" >
-              <option value="" disabled selected>Seleccionar Año</option>
-              <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
-            </select>
-          </div>
         </div>
-      
-        <div class="orden-mensual-container">
-          <table class="table" id="cierreMensualTable">
-            <thead>
-              <tr>
-                <th>Orden N°</th>
-                <th>Empresa</th>
-                <th>Mes</th>
-                <th>Horas Proyectadas</th>
-                <th>Horas Reales</th>
-                <th>A</th>
-                <th>LT</th>
-                <th>FC</th>
-                <th>FS</th>
-                <th>E</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let orden of ordenesFiltradas">
-                <td>{{ orden.Id }}</td>
-                <td>{{ orden.servicio.nombre }}</td>
-                <td>{{ orden.mes }}</td>
-                <td>{{ orden.horasProyectadas }}</td>
-                <td>{{ orden.horasReales }}</td>
-                <td>{{ orden.estadoContador.asistio }}</td>
-                <td>{{ orden.estadoContador.llegoTarde }}</td>
-                <td>{{ orden.estadoContador.faltoConAviso }}</td>
-                <td>{{ orden.estadoContador.faltoSinAviso }}</td>
-                <td>{{ orden.estadoContador.enfermedad }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="totales-container">
-            <h5>Totales</h5>
-            <table class="table" id="cierreMensualTable">
-              <thead>
-                <tr>
-                  <th>Horas Proyectadas</th>
-                  <th>Horas Reales</th>
-                  <th>A</th>
-                  <th>LT</th>
-                  <th>FC</th>
-                  <th>FS</th>
-                  <th>E</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{ totalHorasProyectadas }}</td>
-                  <td>{{ totalHorasReales }}</td>
-                  <td>{{ totalAsistencias }}</td>
-                  <td>{{ totalLT }} </td>
-                  <td>{{ totalFC }} </td>
-                  <td>{{ totalFS }}</td>
-                  <td>{{ totalE }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-           <p>* A = Asitio / LT = Llegada Tarde / FC = Falta con Aviso / FS = Falta sin Aviso / E = Enfermedad</p>
-        </div>
-
-        <div class="form-row-footer">
-          <div class="form-group-footer">
-            <button mat-raised-button class="button-footer-pdf" color="primary" (click)="descargarPdf()">
-              <mat-icon>picture_as_pdf</mat-icon> Descargar Resumen Mensual PDF
-            </button>
-          </div>
-          <div class="form-group-footer">
-            <button mat-raised-button class="button-footer-excel" color="accent" (click)="descargarExcel()">
-              <mat-icon>file_download</mat-icon> Descargar Resumen Mensual Excel
-            </button>
-          </div>
-        </div>
-      </div>         
+      </div>       
     </div>
 </div>

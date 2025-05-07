@@ -1,0 +1,14 @@
+.container-observaciones{
+    height: auto;
+}
+
+.mat-dialog-title{
+    font-size: 1.5em;
+    margin: 1em;
+}
+.mat-dialog-content{
+    margin: 2em;
+}
+.mat-dialog-actions{
+    margin: 2em;
+}
