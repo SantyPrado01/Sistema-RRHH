@@ -9,10 +9,10 @@ import { FacturaResponse } from '../models/factura.models';
 export class FacturaService {
 
   //Produccion
-  //private apiUrl = 'http://147.93.15.196:3000/facturas';
+  private apiUrl = 'http://147.93.15.196:3000/facturas';
 
   //Desarrollo
-  private apiUrl = 'http://localhost:3000/facturas'; 
+  //private apiUrl = 'http://localhost:3000/facturas'; 
 
   constructor(private http: HttpClient) { }
 

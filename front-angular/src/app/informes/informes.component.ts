@@ -254,7 +254,7 @@ export class InformesComponent  {
   
       this.horariosAsignadosService.buscarHorarios(fechaFormateada || '', this.empleadoId, this.servicioId).subscribe(
         (data: any[]) => {
-          console.log('Datos recibidos (antes de procesar):', data); // Log original
+          console.log('Datos recibidos (antes de procesar):', data); 
   
           // --- Lógica para calcular la duración ---
   
@@ -289,46 +289,31 @@ export class InformesComponent  {
             if (inicioMinutes >= 0 && finMinutes >= 0 && item.horaInicioReal && item.horaFinReal) {
                // Cálculo simple de la diferencia en minutos
                durationMinutes = finMinutes - inicioMinutes;
-  
-               // --- Manejo opcional para turnos que cruzan la medianoche ---
-               // Si un turno empieza a las 23:00 y termina a las 01:00 del día siguiente,
-               // la resta simple (60 - 1380) daría un resultado negativo.
-               // Si tus turnos pueden cruzar la medianoche, descomenta y usa esta lógica:
-               
+
                if (durationMinutes < 0) {
                   // Suma 24 horas en minutos para manejar el cruce de medianoche
                   durationMinutes += (24 * 60);
                }
-               // Si tus turnos siempre son dentro del mismo día, el cálculo simple es suficiente.
-               // Si durationMinutes es negativo aquí y no manejas cruce de medianoche,
-               // podría indicar datos erróneos o un caso no contemplado. Podrías setearlo a 0:
+
                if (durationMinutes < 0) {
                    console.warn(`Duración negativa calculada para el item (sin manejo de medianoche si aplica):`, item, `Minutos: ${durationMinutes}`);
-                   // Opcional: setear a 0 si no esperas negativos
-                   // durationMinutes = 0;
-                   // Opcional: manejar el cruce de medianoche si aplica (ver bloque comentado arriba)
                }
   
             } else {
                 console.warn(`No se pudo calcular la duración para el item debido a horas no válidas:`, item);
                 // La duración permanece en 0
             }
-  
-  
-            // Convertir minutos a horas (decimal)
+
             const durationHours = durationMinutes / 60;
-  
-            // Retornar un nuevo objeto con la propiedad de duración añadida
+
             return {
               ...item, // Copia todas las propiedades existentes del item
               duracionReal: durationHours // Añade la nueva propiedad con la duración en horas
             };
           });
   
-          // --- Fin de la lógica de cálculo ---
-  
           this.dataSource.data = dataConDuracion; // Asigna los datos procesados al dataSource
-          console.log('Resultado con duración calculada:', this.dataSource.data); // Log los datos procesados
+          console.log('Resultado con duración calculada:', this.dataSource.data); 
           this.loading = false;
         },
         (error) => {
