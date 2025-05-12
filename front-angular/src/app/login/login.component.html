@@ -1,24 +1,36 @@
 <div class="body">
     <div class="container">
-        <div class="inicio-sesion">
-            <div class="form-container">
-                <div class="titulo"><h1>Iniciar Sesión</h1></div>
-                <form class="form" (ngSubmit)="inicioSesion()">
-                    <span class="input-span">
-                        <label for="usuario" class="label">Usuario</label>
-                        <input type="text" [(ngModel)]="username" name="usuario" id="usuario"/>
-                    </span>
-                    <span class="input-span">
-                        <label for="password" class="label">Contraseña</label>
-                        <input type="password" [(ngModel)]="password" name="password" id="password"/>
-                    </span>
-                    <br>
-                    <button class="submit" type="submit">Iniciar Sesión</button> 
-                </form>
-            </div>
+      <div class="inicio-sesion">
+        <div class="form-container">
+          <div class="titulo">
+            <h1>Iniciar Sesión</h1>
+          </div>
+  
+          <form class="form" (ngSubmit)="inicioSesion()" #form="ngForm">
+            <mat-form-field appearance="outline" class="input-span" floatLabel="always">
+              <mat-label>Usuario</mat-label>
+              <input matInput type="text" [(ngModel)]="username" name="usuario" id="usuario" required />
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline" class="input-span" floatLabel="always">
+              <mat-label>Contraseña</mat-label>
+              <input matInput [type]="hide() ? 'password' : 'text'" [(ngModel)]="password" name="password" id="password" required />
+              <button mat-icon-button matSuffix (click)="clickEvent($event)" type="button" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide()">
+                <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+            </mat-form-field>
+  
+            <br>
+  
+            <button mat-raised-button color="primary" type="submit">Iniciar Sesión</button>
+          </form>
         </div>
-        <div class="imagen-logo">
-            <img class='img-fondo' src="assets/FondoCorsacor.jpg">
-        </div>
+      </div>
+  
+      <div class="imagen-logo">
+        <img class='img-fondo' src="assets/FondoCorsacor.jpg" />
+      </div>
     </div>
-</div>
+  </div>
+  

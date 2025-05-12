@@ -222,8 +222,21 @@
         <div *ngIf="loading" class="mat-spinner-container">
             <mat-spinner [diameter]="40"></mat-spinner>
         </div>
+        
       </div>
-      
+      <div *ngIf="!loading && dataSource.data && dataSource.data.length > 0" class="resumen-container">
+        <div class="title-container-resumen">
+          <h5> Resumen Total </h5>
+        </div>
+        <div class="resumen-horas">
+          <div class="resumen-item">
+            <strong>Horas Proyectadas:</strong> {{ totalHorasProyectadasGlobal | number:'1.2-2' }}
+          </div>
+          <div class="resumen-item">
+            <strong>Horas Reales:</strong> {{ totalHorasRealesGlobal | number:'1.2-2' }}
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>

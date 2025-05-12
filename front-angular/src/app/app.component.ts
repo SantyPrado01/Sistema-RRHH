@@ -13,5 +13,5 @@ import { UsuarioNewComponent } from './usuario/components/usuario-new/usuario-ne
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'front-angular';
+
 }

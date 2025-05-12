@@ -1,88 +1,114 @@
-<nav class="navbar">
-  <div class="navbar-header">
-    <img src="./assets/Corsacor-Logo.png" alt="Logo" class="navbar-logo">
+<div class="sidenav-container">
+  <div #sidenav class="navbar" [class.mat-sidenav-closed]="isCollapsed">
+    <div class="navbar-header">
+      <img src="./assets/Corsacor-Logo.png" alt="Logo" class="navbar-logo">
+    </div>
+    <mat-divider></mat-divider>
+    <ul class="navbar-nav">
+      <li class="nav-item router-link-active">
+        <a class="nav-link" routerLink="/home">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">home</mat-icon>
+          <span class="nav-text">Inicio</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed"></mat-icon>
+        </a>
+      </li>
+      <li class="nav-item" [class.open]="isEmployeesOpen">
+        <a class="nav-link" (click)="toggleDropdown('employees', $event)">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">group</mat-icon>
+          <span class="nav-text">Empleados</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
+            {{ isEmployeesOpen ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </a>
+        <div class="dropdown-menu" *ngIf="isEmployeesOpen" [class.collapsed]="isCollapsed">
+          <a class="dropdown-item router-link-active" routerLink="/employee/create">Nuevo Empleado</a>
+          <a class="dropdown-item router-link-active" routerLink="/employee">Visualizar Empleados</a>
+        </div>
+      </li>
+      <li class="nav-item" [class.open]="isCompaniesOpen">
+        <a class="nav-link" (click)="toggleDropdown('companies', $event)">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">business</mat-icon>
+          <span class="nav-text">Empresas</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
+            {{ isCompaniesOpen ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </a>
+        <div class="dropdown-menu" *ngIf="isCompaniesOpen" [class.collapsed]="isCollapsed">
+          <a class="dropdown-item router-link-active" routerLink="/service/create">Nueva Empresa</a>
+          <a class="dropdown-item router-link-active" routerLink="/service">Visualizar Empresas</a>
+        </div>
+      </li>
+      <li class="nav-item" [class.open]="isOrdersOpen">
+        <a class="nav-link" (click)="toggleDropdown('orders', $event)">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">assignment</mat-icon>
+          <span class="nav-text">Orden Trabajo</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
+            {{ isOrdersOpen ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </a>
+        <div class="dropdown-menu" *ngIf="isOrdersOpen" [class.collapsed]="isCollapsed">
+          <a class="dropdown-item router-link-active" routerLink="/ordentrabajo/create">Crear Orden de Trabajo</a>
+          <a class="dropdown-item router-link-active" routerLink="/ordentrabajo">Visualizar Ordenes de Trabajo</a>
+          <a class="dropdown-item router-link-active" routerLink="/cargarHorarios">Cargar Horarios</a>
+        </div>
+      </li>
+      <li class="nav-item" [class.open]="isBillingOpen">
+        <a class="nav-link" (click)="toggleDropdown('billing', $event)">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">receipt</mat-icon>
+          <span class="nav-text">Facturación</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
+            {{ isBillingOpen ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </a>
+        <div class="dropdown-menu" *ngIf="isBillingOpen" [class.collapsed]="isCollapsed">
+          <a class="dropdown-item router-link-active" routerLink="/factura/create">Nueva Factura</a>
+          <a class="dropdown-item router-link-active" routerLink="/facturas">Visualizar Facturas</a>
+        </div>
+      </li>
+      <li class="nav-item" [class.open]="isConfigOpen">
+        <a class="nav-link" (click)="toggleDropdown('config', $event)">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">settings</mat-icon>
+          <span class="nav-text">Configuracion</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
+            {{ isConfigOpen ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </a>
+        <div class="dropdown-menu" *ngIf="isConfigOpen" [class.collapsed]="isCollapsed">
+          <a class="dropdown-item router-link-active" routerLink="/user/create">Usuarios</a>
+          <a class="dropdown-item router-link-active" routerLink="/categorias">Categorias</a>
+        </div>
+      </li>
+      <li class="nav-item" [class.open]="isUserOpen">
+        <a class="nav-link" (click)="toggleDropdown('user', $event)">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">person</mat-icon>
+          <span class="nav-text">{{ username }}</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
+            {{ isUserOpen ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </a>
+        <div class="dropdown-menu" *ngIf="isUserOpen" [class.collapsed]="isCollapsed">
+          <button class="dropdown-item" (click)="onLogout()">Cerrar Sesión</button>
+        </div>
+      </li>
+      <li class="nav-item router-link-active">
+        <a class="nav-link" routerLink="/informes">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">bar_chart</mat-icon>
+          <span class="nav-text">Reportes</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed"></mat-icon>
+        </a>
+      </li>
+      <li class="nav-item router-link-active">
+        <a class="nav-link" routerLink="/manual-usuario">
+          <mat-icon class="mat-icon" role="img" aria-hidden="true">help</mat-icon>
+          <span class="nav-text">Ayuda</span>
+          <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed"></mat-icon>
+        </a>
+      </li>
+    </ul>
+    <button mat-icon-button (click)="toggleNavbar()" class="toggle-button-bottom">
+      <mat-icon *ngIf="!isCollapsed">chevron_left</mat-icon>
+      <mat-icon *ngIf="isCollapsed">chevron_right</mat-icon>
+    </button>
   </div>
-  <div class="line"></div>
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/home">
-        <i class="fas fa-home"></i> Inicio
-        <i class="fas dropdown-arrow"></i>
-      </a>
-    </li>
-    <li class="nav-item" [class.open]="isEmployeesOpen">
-      <a class="nav-link" (click)="toggleDropdown('employees', $event)">
-        <i class="fas fa-users"></i> Empleados
-        <i class="fas dropdown-arrow"></i>
-      </a>
-      <div class="dropdown-menu" *ngIf="isEmployeesOpen">
-        <a class="dropdown-item" routerLink="/employee/create">Nuevo Empleado</a>
-        <a class="dropdown-item" routerLink="/employee">Visualizar Empleados</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isCompaniesOpen">
-      <a class="nav-link" (click)="toggleDropdown('companies', $event)">
-        <i class="fas fa-building"></i> Empresas
-        <i class="fas dropdown-arrow"></i>
-      </a>
-      <div class="dropdown-menu" *ngIf="isCompaniesOpen">
-        <a class="dropdown-item" routerLink="/service/create">Nueva Empresa</a>
-        <a class="dropdown-item" routerLink="/service">Visualizar Empresas</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isOrdersOpen">
-      <a class="nav-link" (click)="toggleDropdown('orders', $event)">
-        <i class="fas fa-tasks"></i> Orden Trabajo
-        <i class="fas dropdown-arrow"></i>
-      </a>
-      <div class="dropdown-menu" *ngIf="isOrdersOpen">
-        <a class="dropdown-item" routerLink="/ordentrabajo/create">Crear Orden de Trabajo</a>
-        <a class="dropdown-item" routerLink="/ordentrabajo">Visualizar Ordenes de Trabajo</a>
-        <a class="dropdown-item" routerLink="/cargarHorarios">Cargar Horarios</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isBillingOpen">
-      <a class="nav-link" (click)="toggleDropdown('billing', $event)">
-        <i class="fas fa-file-invoice"></i> Facturación
-        <i class="fas dropdown-arrow"></i>
-      </a>
-      <div class="dropdown-menu" *ngIf="isBillingOpen">
-        <a class="dropdown-item" routerLink="/factura/create">Nueva Factura</a>
-        <a class="dropdown-item" routerLink="/facturas">Visualizar Facturas</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isConfigOpen">
-      <a class="nav-link" (click)="toggleDropdown('config', $event)">
-        <i class="fas fa-cog"></i> Configuracion
-        <i class="fas dropdown-arrow"></i>
-      </a>
-      <div class="dropdown-menu" *ngIf="isConfigOpen">
-        <a class="dropdown-item" routerLink="/user/create">Usuarios</a>
-        <a class="dropdown-item" routerLink="/categorias">Categorias</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isUserOpen">
-      <a class="nav-link" (click)="toggleDropdown('user', $event)">
-        <i class="fas fa-user"></i> Usuario
-        <i class="fas dropdown-arrow"></i>
-      </a>
-      <div class="dropdown-menu" *ngIf="isUserOpen">
-        <a class="dropdown-item">{{ username }}</a>
-        <a class="dropdown-item" (click)="onLogout()">Cerrar Sesión</a>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/informes">
-        <i class="fas fa-chart-bar"></i> Reportes
-        <i class="fas dropdown-arrow"></i>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/manual-usuario">
-        <i class="fas fa-question-circle"></i> Ayuda
-        <i class="fas dropdown-arrow"></i>
-      </a>
-    </li>
-  </ul>
-</nav>
+</div>
 <router-outlet></router-outlet>

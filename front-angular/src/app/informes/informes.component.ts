@@ -32,6 +32,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Empleado } from '../empleados/models/empleado.models';
 import { Empresa } from '../servicios/models/servicio.models';
 import { getSpanishPaginatorIntl } from '../spanish-paginator-intl';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -91,6 +92,9 @@ export class InformesComponent  {
   empleadosFiltrados: any[] = [];
   empresaControl = new FormControl('');
   empresasFiltradas: any[] = [];
+
+  totalHorasRealesGlobal: number = 0;
+  totalHorasProyectadasGlobal: number = 0;
 
 
   reportes:{ nombre: string, funcion: ()=> void }[] = [
@@ -256,8 +260,6 @@ export class InformesComponent  {
         (data: any[]) => {
           console.log('Datos recibidos (antes de procesar):', data); 
   
-          // --- Lógica para calcular la duración ---
-  
           const dataConDuracion = data.map(item => {
             // Función auxiliar para convertir "HH:mm" a minutos desde la medianoche
             const timeStringToMinutes = (timeString: string | null | undefined): number => {
@@ -276,53 +278,81 @@ export class InformesComponent  {
                    console.warn('Números en formato de hora inválidos:', timeString);
                    return 0; // Partes no numéricas
               }
-  
               return (hours * 60) + minutes;
             };
-  
-            const inicioMinutes = timeStringToMinutes(item.horaInicioReal);
-            const finMinutes = timeStringToMinutes(item.horaFinReal);
-  
-            let durationMinutes = 0;
-  
-            // Calcular la duración solo si ambas horas fueron parseadas correctamente
-            if (inicioMinutes >= 0 && finMinutes >= 0 && item.horaInicioReal && item.horaFinReal) {
-               // Cálculo simple de la diferencia en minutos
-               durationMinutes = finMinutes - inicioMinutes;
+            
+            //Calcular duracion real por cada fila
+            const dataConDuraciones = data.map(item => {
+              const inicioMinutes = timeStringToMinutes(item.horaInicioReal);
+              const finMinutes = timeStringToMinutes(item.horaFinReal);
 
-               if (durationMinutes < 0) {
-                  // Suma 24 horas en minutos para manejar el cruce de medianoche
-                  durationMinutes += (24 * 60);
-               }
+              let durationRealMinutes = 0;
 
-               if (durationMinutes < 0) {
-                   console.warn(`Duración negativa calculada para el item (sin manejo de medianoche si aplica):`, item, `Minutos: ${durationMinutes}`);
-               }
-  
-            } else {
-                console.warn(`No se pudo calcular la duración para el item debido a horas no válidas:`, item);
-                // La duración permanece en 0
-            }
+              if (inicioMinutes >= 0 && finMinutes >= 0 && item.horaInicioReal && item.horaFinReal) {
+                durationRealMinutes = finMinutes - inicioMinutes;
+ 
+                if (durationRealMinutes < 0) {
+                   // Suma 24 horas en minutos para manejar el cruce de medianoche
+                   durationRealMinutes += (24 * 60);
+                }
+ 
+                if (durationRealMinutes < 0) {
+                    console.warn(`Duración negativa calculada para el item (sin manejo de medianoche si aplica):`, item, `Minutos: ${durationRealMinutes}`);
+                }
+   
+             } else {
+                 console.warn(`No se pudo calcular la duración para el item debido a horas no válidas:`, item);
+             }
+ 
+             const durationRealHours = durationRealMinutes / 60;
 
-            const durationHours = durationMinutes / 60;
+             //Calcular horas proyectadas por cada fila
+             const inicioProyectadoMinutes = timeStringToMinutes(item.horaInicioProyectado);
+             const finProyectadoMinutes = timeStringToMinutes(item.horaFinProyectado);
+             let durationProyectadaMinutes = 0;
+             if (inicioProyectadoMinutes >= 0 && finProyectadoMinutes >= 0 && item.horaInicioProyectado && item.horaFinProyectado) {
+              durationProyectadaMinutes = finProyectadoMinutes - inicioProyectadoMinutes;
+ 
+              if (durationProyectadaMinutes < 0) {
+                   // Suma 24 horas en minutos para manejar el cruce de medianoche
+                   durationProyectadaMinutes += (24 * 60);
+                }
+ 
+              if (durationProyectadaMinutes < 0) {
+                  console.warn(`Duración negativa calculada para el item (sin manejo de medianoche si aplica):`, item, `Minutos: ${durationProyectadaMinutes}`);
+              }
+             }
+             const durationProyectadaHours = durationProyectadaMinutes / 60
 
-            return {
-              ...item, // Copia todas las propiedades existentes del item
-              duracionReal: durationHours // Añade la nueva propiedad con la duración en horas
+
+            return{
+              ...item,
+              duracionReal: durationRealHours,
+              horasProyectadas: durationProyectadaHours,
             };
           });
-  
-          this.dataSource.data = dataConDuracion; // Asigna los datos procesados al dataSource
-          console.log('Resultado con duración calculada:', this.dataSource.data); 
+
+          const totalRealesSum = dataConDuraciones.reduce((sum, item) => {
+            return sum +(typeof item.duracionReal === 'number' ? item.duracionReal : 0);
+          }, 0);
+          this.totalHorasRealesGlobal = totalRealesSum;
+          const totalProyectadasSum = dataConDuraciones.reduce((sum, item) => {
+            return sum +(typeof item.horasProyectadas === 'number' ? item.horasProyectadas : 0);
+          }, 0);
+          this.totalHorasProyectadasGlobal = totalProyectadasSum;
+          this.dataSource.data = dataConDuraciones;
+          console.log('Datos recibidos (después de procesar):', this.dataSource.data);
           this.loading = false;
         },
-        (error) => {
-          console.error('Error al buscar horarios:', error);
+        (error: HttpErrorResponse) => {
+          console.error('Hubo un error al obtener los horarios asignados', error);
           this.loading = false;
         }
-      );
-    }
-
+        );
+        }
+      )
+  }
+          
     obtenerOrdenesMesAnio() {
     this.dataSource.data = [];
     const mesNumero = this.convertirMesANumero(this.mesSeleccionado);

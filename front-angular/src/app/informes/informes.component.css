@@ -197,7 +197,6 @@
   }
 
   .mat-reportes{
-    display: flex;
     width: 50%;
     max-width: 100%;
   }
@@ -214,19 +213,7 @@
   }
 
   .mat-form-field{
-    display: flex;
-    height: 5em;
     margin-right: 5%;
-  }
-
-  .mat-form-field-ultimo{
-    display: flex;
-    height: 5em;
-  }
-
-  .mdc-text-field--filled{
-    height: 4em;
-    flex: none;
   }
 
   .mat-label{
@@ -235,6 +222,22 @@
 
   .mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
     color:grey
+  }
+
+  .resumen-container{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2em;
+  }
+  .title-container-resumen{
+    margin: 1em;
+  }
+  .resumen-horas{
+    display: flex;
+    margin: 1em;
+  }
+  .resumen-item{
+    margin-right: 1.5em;
   }
 
   @media(max-width:1360px){

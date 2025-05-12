@@ -26,8 +26,7 @@ h1 {
 
 /* Estilos del formulario */
 .form {
-  --bg-light: #ffffff; /* Fondo blanco */
-  --clr: #CC5600; /* Color principal para detalles y bordes */
+/* Color principal para detalles y bordes */
 
   display: flex;
   flex-direction: column;
@@ -48,15 +47,6 @@ h1 {
   gap: 0.5rem;
 }
 
-.form input[type="text"],
-.form input[type="password"] {
-  border-radius: 0.5rem; 
-  padding: 1rem 0.75rem;
-  width: 100%;
-  border: 1px solid var(--clr); 
-  background-color: #f9f9f9; 
-  outline: none; 
-}
 
 .form input[type="text"]:focus,
 .form input[type="password"]:focus {

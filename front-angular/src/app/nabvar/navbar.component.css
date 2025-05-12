@@ -1,23 +1,74 @@
-/* Barra de navegación */
+.sidenav-container{
+  position: absolute;
+}
+/* Style for the mat-sidenav (your navigation bar) */
 .navbar {
-  width: 220px;  
-  height: 100vh; 
-  position: fixed; 
-  top: 0;
-  left: 0;
+  width: 14em; /* Default width (expanded) */
   background-color: white;
   box-shadow: 4px 0px 6px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
   padding: 0;
+  overflow-x: hidden; /* Hide overflowing content when collapsed */
+  transition: width 0.3s ease-in-out; /* Añade transición al ancho */
+  height: 100vh;
 }
 
-.line {
-  width: 100%;
-  height: 2px;
+/* Style when the sidenav is closed */
+.mat-sidenav-closed {
+    width: 4em; /* Width when collapsed (solo iconos) */
+    height: 100vh;
+}
+
+.navbar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  position: relative;
+}
+
+.navbar-header .navbar-logo {
+  height: auto;
+  width: 150px; /* Logo width in expanded state */
+  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Oculta el logo cuando el sidenav está cerrado */
+.mat-sidenav-closed .navbar-header .navbar-logo {
+   width: 0;
+   opacity: 0;
+}
+
+/* Toggle button */
+.toggle-button-bottom {
+  position: absolute;
+  bottom: 10px; /* Ajusta la distancia desde la parte inferior */
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  z-index: 10;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Ajusta la posición del botón inferior cuando el sidenav está cerrado */
+.mat-sidenav-closed .toggle-button-bottom {
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+/* Adjust button position when the sidenav is closed */
+.mat-sidenav-closed .toggle-button {
+   right: 50%;
+   transform: translate(50%, -50%) rotate(180deg);
+}
+
+.mat-divider {
   background-color: #CC5600;
   margin: 10px 0 20px;
 }
@@ -31,11 +82,30 @@
 }
 
 .nav-item {
-  width: 100%;  
-  display: flex;
-  justify-content: space-between;  
-  padding: 10px 20px;
-  position: relative; 
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: padding 0.3s ease-in-out;
+  margin-bottom: 0.5em;
+}
+
+/* Ajusta el padding cuando el sidenav está cerrado para centrar el icono */
+.mat-sidenav-closed .nav-item {
+   padding: 8px 0; /* Reduce el padding horizontal */
+   display: flex;
+   justify-content: center; /* Centra el icono */
+}
+
+.nav-item.active {
+  background-color: #f0f0f0; /* Optional: Highlight active item */
+}
+
+.mat-list-item {
+  height: auto !important; /* Permite texto multilínea en el dropdown */
+}
+
+.mat-list-item-content {
+  padding: 0 !important; /* Elimina el padding por defecto */
 }
 
 .nav-link {
@@ -45,56 +115,53 @@
   color: black;
   text-decoration: none;
   font-weight: 500;
-  border-bottom: 2px solid transparent; 
+  border-bottom: 2px solid transparent;
   transition: all 0.3s ease-in-out;
-  width: 100%;  
-  justify-content: space-between;
-}
-.navbar-header{
-  display: flex;
-  justify-content: center;
-  padding: 10px;
-}
-.navbar-header img{
-  height: auto;
-  width: 150px;
+  width: 100%;
+  padding: 10px 20px; /* Padding en estado expandido */
+  justify-content: space-between; /* Espacia el icono del texto y la flecha */
 }
 
 .nav-link:hover {
-  color: #CC5600; 
-  border-bottom: 2px solid #CC5600; 
+  color: #CC5600;
+  border-bottom: 2px solid #CC5600;
 }
 
-.nav-item .dropdown-menu {
-  display: none; 
+/* Oculta el texto del enlace cuando el sidenav está cerrado */
+.mat-sidenav-closed .nav-link .nav-text {
+  display: none;
+}
+
+.mat-icon {
+  margin-right: 10px;
+  transition: margin-right 0.3s ease-in-out;
+}
+
+/* Elimina el margen del icono cuando el sidenav está cerrado */
+.mat-sidenav-closed .mat-icon {
+  margin-right: 0;
+}
+
+.mat-list-item .dropdown-menu {
+  display: none;
   background-color: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  position: absolute; 
-  left: 0;
-  width: 100%;
-  top: 100%;
-  z-index: 1050; 
+  position: absolute;
+  left: 100%;
+  top: 0;
+  z-index: 1050;
+  min-width: 180px;
 }
 
 .nav-item.open .dropdown-menu {
-  display: block; 
+  display: block;
 }
 
-.nav-item .dropdown-menu a {
-  padding: 10px 20px;
-  color: black;
-  text-decoration: none;
-  display: block; 
-}
-
-.nav-item .dropdown-menu a:hover {
-  background-color: #f1f1f1; 
-}
-
-
-.nav-link i {
-  margin-right: 10px;
+/* Ajusta la posición del dropdown cuando el sidenav está cerrado */
+.mat-sidenav-closed .nav-item .dropdown-menu {
+    left: 60px; /* Ancho del sidenav colapsado */
+    top: 0;
 }
 
 .nav-link .dropdown-arrow {
@@ -106,8 +173,46 @@
   transform: rotate(180deg);
 }
 
-.navbar .dropdown-item {
-  white-space: normal;  
-  word-wrap: break-word; 
-  word-break: break-word; 
+/* Oculta la flecha del dropdown cuando el sidenav está cerrado */
+.mat-sidenav-closed .nav-link .dropdown-arrow {
+  display: none;
+}
+
+.dropdown-item {
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  padding: 8px 20px;
+  text-decoration: none;
+  color: black;
+  display: block;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+  color: #CC5600;
+}
+
+.content-area {
+  padding: 20px;
+  /* Eliminamos el margin-left fijo */
+  /* transition: margin-left 0.3s ease-in-out; */
+  transition: padding-left 0.3s ease-in-out; /* Transición para el padding */
+  padding-left: 220px; /* Espacio inicial para el sidenav expandido */
+  min-height: 100vh; /* Asegura que ocupe al menos la altura de la pantalla */
+}
+
+/* Ajusta el padding-left cuando la navbar está contraída */
+.sidenav-container.mat-sidenav-closed .content-area {
+  padding-left: 60px;
+}
+
+/* Ajusta el margen del contenido cuando el sidenav está abierto */
+.sidenav-container.mat-sidenav-opened .content-area {
+  margin-left: 220px; /* Igual al ancho del sidenav expandido */
+}
+
+/* Ajusta el margen del contenido cuando el sidenav está cerrado */
+.sidenav-container.mat-sidenav-closed .content-area {
+  margin-left: 60px; /* Igual al ancho del sidenav colapsado */
 }
