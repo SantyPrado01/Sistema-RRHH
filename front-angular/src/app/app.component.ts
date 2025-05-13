@@ -14,4 +14,10 @@ import { UsuarioNewComponent } from './usuario/components/usuario-new/usuario-ne
 })
 export class AppComponent {
 
+  isNavbarCollapsed: boolean = false;
+
+  toggleNavbar(): void {
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
+  }
+
 }

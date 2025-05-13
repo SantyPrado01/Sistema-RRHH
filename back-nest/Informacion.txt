@@ -65,3 +65,6 @@ Ejecutar PM2 con el backend: pm2 start dist/main.js --name corsacor-api
 
 Preparar el frontend: ng build --configuration production
 Ejecutar PM2 con el frontend: pm2 serve /root/Sistema-RRHH/front-angular/dist/front-angular/browser --name corsacor-front --spa --port 4200
+
+
+#CC5600

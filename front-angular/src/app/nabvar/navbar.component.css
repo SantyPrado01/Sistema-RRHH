@@ -1,6 +1,4 @@
-.sidenav-container{
-  position: absolute;
-}
+
 /* Style for the mat-sidenav (your navigation bar) */
 .navbar {
   width: 14em; /* Default width (expanded) */
@@ -14,6 +12,12 @@
   overflow-x: hidden; /* Hide overflowing content when collapsed */
   transition: width 0.3s ease-in-out; /* Añade transición al ancho */
   height: 100vh;
+}
+
+.content-container {
+  flex-grow: 1; /* Para que ocupe el espacio restante */
+  padding: 20px;
+  overflow: auto; /* Permite el desplazamiento si el contenido excede */
 }
 
 /* Style when the sidenav is closed */

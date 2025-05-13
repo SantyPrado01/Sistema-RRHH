@@ -1,25 +1,44 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { EmpleadoService } from '../services/empleado.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @Component({
   selector: 'app-empleados-new',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, CommonModule, MatDialogModule],
+  imports: [FormsModule, CommonModule, MatDialogModule,MatInputModule,
+    MatSelectModule,
+    MatTabsModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule, 
+    MatAutocompleteModule
+  ],
   templateUrl: './empleados-new.component.html',
-  styleUrls: ['./empleados-new.component.css']
+  styleUrls: ['./empleados-new.component.css'],
+  providers: [DatePipe]
 })
 export class EmpleadosNewComponent implements OnInit{
 
   seccionActual: string = 'datosPersonales';
+
+  selectedTabIndex: number = 0;
   empleado: any = {};
   categorias: any[] = [];
   ciudades: any[] = [];
@@ -47,7 +66,8 @@ export class EmpleadosNewComponent implements OnInit{
     private empleadoService: EmpleadoService,
     private categoriaEmpleadoService: CategoriaEmpleadoService, 
     private router: Router, 
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private datePipe: DatePipe
   ) {}
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
@@ -124,8 +144,8 @@ export class EmpleadosNewComponent implements OnInit{
   }
 
   seleccionarCiudad(event: any) {
-    const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
-    console.log(selectedCity)
+    const selectedCityName = event.option.value
+    const selectedCity = this.ciudades.find(c => c.nombre === selectedCityName);
     this.empleado.ciudad = selectedCity.id; 
     this.ciudadNombre = selectedCity.nombre;
   }
@@ -139,8 +159,12 @@ export class EmpleadosNewComponent implements OnInit{
         horaFin: dia.horaFin,
       }));
       this.empleado.fulltime = this.fullTime
+    const fechaFormateada = this.datePipe.transform(this.empleado.fechaIngreso, 'yyyy/MM/dd');
+    
+    this.empleado.fechaIngreso = fechaFormateada!;
 
     this.empleadoService.createEmpleado(this.empleado).subscribe({
+      
       next: (response) => {
         console.log('Empleado guardado con éxito:', response);
         this.mostrarAlerta('Operación Exitosa', 'Empleado guardado con éxito.', 'success');

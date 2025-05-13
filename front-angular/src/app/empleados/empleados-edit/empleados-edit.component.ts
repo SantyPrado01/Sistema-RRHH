@@ -33,7 +33,7 @@ import { HorarioAsignado } from '../../horariosAsignados/models/horariosAsignado
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
     { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() }
   ],
-  imports:[NavbarComponent, FormsModule, CommonModule, RouterModule, MatIconModule, MatExpansionModule, MatCardModule, MatButtonModule, MatPaginator],
+  imports:[FormsModule, CommonModule, RouterModule, MatIconModule, MatExpansionModule, MatCardModule, MatButtonModule, MatPaginator],
   styleUrls: ['./empleados-edit.component.css']
 })
 export class EditEmpleadoComponent implements OnInit {

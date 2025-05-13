@@ -4,20 +4,33 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../login/auth/auth.service';
 import { OrdenTrabajoService } from '../ordenTrabajo/services/orden-trabajo.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButton, MatButtonModule } from '@angular/material/button';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { getSpanishPaginatorIntl } from '../spanish-paginator-intl';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NavbarComponent, CommonModule, RouterModule, FormsModule, MatIconModule, MatTableModule, MatButtonModule, MatPaginatorModule, MatProgressBarModule
+  imports: [
+    CommonModule, 
+    RouterModule, 
+    FormsModule, 
+    MatIconModule, 
+    MatTableModule, 
+    MatButtonModule, 
+    MatPaginatorModule, 
+    MatProgressBarModule,
+    ReactiveFormsModule
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
+  providers:[
+     { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() }
+  ]
 })
 
 export class HomeComponent {

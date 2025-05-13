@@ -1,144 +1,113 @@
-<app-navbar></app-navbar>
-
 <div class="title-container">
-  <div class="title-item">
-    <h1>Registrar Nuevo Empleado</h1>
+  <h1>Registrar Nuevo Empleado</h1>
+</div>
+
+<form #empleadoForm="ngForm" (ngSubmit)="guardarEmpleado()">
+
+  <!-- Contenedor con Grid -->
+  <div class="form-grid">
+    
+    <!-- Columna Izquierda: Datos Personales -->
+    <div class="container-columna-izq">
+      <h2>Datos Personales</h2>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput [(ngModel)]="empleado.nombre" name="nombre" required (input)="validarSoloLetras($event)">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellido</mat-label>
+          <input matInput [(ngModel)]="empleado.apellido" name="apellido" required (input)="validarSoloLetras($event)">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Número de Documento</mat-label>
+          <input matInput [(ngModel)]="empleado.nroDocumento" name="nroDocumento" required maxlength="8" pattern="^[0-9]{8}$">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input matInput [(ngModel)]="empleado.telefono" name="telefono" required maxlength="10" pattern="^[0-9]{10}$" (input)="validarTelefono($event)">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="empleado.email" name="email" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ciudad</mat-label>
+          <input matInput id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" (input)="buscarCiudad($event)" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="seleccionarCiudad($event)">
+            <mat-option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre">
+              {{ ciudad.nombre }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <h2>Datos Laborales</h2>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Legajo</mat-label>
+          <input matInput type="number" [(ngModel)]="empleado.legajo" name="legajo" required min="0">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de Contratación</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="empleado.fechaIngreso" name="fechaContratacion" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Categoría de Empleado</mat-label>
+          <mat-select [(ngModel)]="empleado.categoria" name="categoria" required>
+            <mat-option *ngFor="let categoria of categorias" [value]="categoria.id">
+              {{ categoria.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Observaciones</mat-label>
+        <textarea matInput [(ngModel)]="empleado.observaciones" name="observaciones" rows="3" maxlength="250"></textarea>
+        </mat-form-field>
+      </div>
+      
+      <mat-checkbox [(ngModel)]="fullTime" name="fullTime" (change)="toggleFullTime()">Full Time</mat-checkbox>
+    </div>
+
+    <!-- Columna Derecha: Datos Laborales -->
+    <div class="container-columna-der">
+      <h2>Disponibilidad Horaria</h2>
+      <div class="disponibilidad-lista"> 
+        <div class="fila-dia" *ngFor="let dia of disponibilidad">
+          
+          <mat-form-field appearance="outline" class="hora-input">
+            <mat-label>{{ dia.nombre }} Inicio</mat-label>
+            <input matInput type="time" [(ngModel)]="dia.horaInicio" name="{{ dia.nombre }}HoraInicio" [disabled]="fullTime">
+          </mat-form-field>
+    
+          <mat-form-field appearance="outline" class="hora-input">
+            <mat-label>{{ dia.nombre }} Fin</mat-label>
+            <input matInput type="time" [(ngModel)]="dia.horaFin" name="{{ dia.nombre }}HoraFin" [disabled]="fullTime">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    
   </div>
-</div>
 
-<div class="container">
-    <div class="sidebar"> 
-      <ul class="sidebar-menu">
-        <li (click)="mostrarSeccion('datosPersonales')" [class.active]="seccionActual === 'datosPersonales'">Datos Personales</li>
-        <li (click)="mostrarSeccion('datosLaborales')" [class.active]="seccionActual === 'datosLaborales'">Datos Laborales</li>
-      </ul>
-    </div>
-
-    <div class="form-container">
-      <form #empleadoForm="ngForm" (ngSubmit)="guardarEmpleado()">
-
-        <div *ngIf="seccionActual === 'datosPersonales'">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="nombre">Nombre:</label>
-              <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre" required #nombreEmpleado="ngModel" (input)="validarSoloLetras($event)"/>
-              <div *ngIf="nombreEmpleado.invalid && nombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El nombre es requerido.</div>
-            </div>
-
-            <div class="form-group">
-              <label for="apellido">Apellido:</label>
-              <input type="text" id="apellido" [(ngModel)]="empleado.apellido" name="apellido" class="form-control" placeholder="Ingrese el apellido" required #apellidoEmpleado="ngModel" (input)="validarSoloLetras($event)" />
-              <div *ngIf="apellidoEmpleado.invalid && apellidoEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El apellido es requerido.</div>
-            </div>
-
-            <div class="form-group">
-              <label for="nroDocumento">Número de Documento:</label>
-              <input type="text" id="nroDocumento" [(ngModel)]="empleado.nroDocumento" name="nroDocumento" class="form-control" placeholder="Ingrese el número de documento" required #nroDocumentoEmpleado="ngModel" pattern="^[0-9]{8}$" maxlength="8"/>
-              <div *ngIf="nroDocumentoEmpleado.invalid && nroDocumentoEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El número de documento es requerido.</div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="telefono">Teléfono:</label>
-              <input type="tel" id="telefono" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" placeholder="Ingrese el teléfono" required #telefonoEmpleado="ngModel" maxlength="10" pattern="^[0-9]{10}$" (input)="validarTelefono($event)" />
-              <div *ngIf="telefonoEmpleado.touched && telefonoEmpleado.invalid" class="error"><i class="fas fa-times-circle"></i> El teléfono es requerido.</div>
-            </div>
-
-            <div class="form-group">
-              <div class="form-group full-width">
-                <label for="email">Email:</label>
-                <input type="text" id="email" [(ngModel)]="empleado.email" name="email" class="form-control" placeholder="Ingrese el email" required #emailEmpleado="ngModel"/>
-                <div *ngIf="emailEmpleado.invalid && emailEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El email es requerido.</div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="ciudad">Ciudad:</label>
-              <input type="text" id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" class="form-control" placeholder="Ingrese la ciudad" (input)="buscarCiudad($event)" (change)="seleccionarCiudad($event)" list="ciudadesList" required #ciudadNombreEmpleado="ngModel"/>
-              <div *ngIf="ciudadNombreEmpleado.invalid && ciudadNombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La ciudad es requerida.</div>
-              <datalist id="ciudadesList">
-                <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
-              </datalist>
-            </div>
-          </div>
-          <div class="form-row-full-width">
-            <div class="form-group-full-width">
-              <label for="observaciones">Observaciones:</label>
-              <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" maxlength="250"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="seccionActual === 'datosLaborales'">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="legajo">Legajo:</label>
-              <input type="number" id="legajo" [(ngModel)]="empleado.legajo" name="legajo" class="form-control" placeholder="Ingrese el legajo" required #legajoEmpleado="ngModel" min="0"/>
-              <div *ngIf="legajoEmpleado.invalid && legajoEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El legajo es requerido.</div>
-            </div>
-
-            <div class="form-group">
-              <label for="fechaContratacion">Fecha de Contratación:</label>
-              <input type="date" id="fechaContratacion" [(ngModel)]="empleado.fechaIngreso" name="fechaContratacion" class="form-control" required />
-            </div>
-
-            <div class="form-group">
-              <label for="categoriaEmpleado">Categoría de Empleado:</label>
-              <select id="categoria" [(ngModel)]="empleado.categoria" name="categoria" class="form-control" required #categoriaEmpleado="ngModel">
-                <option value="" disabled selected>Seleccione una categoría</option>
-                <option *ngFor="let categoria of categorias" [value]="categoria.id">
-                  {{ categoria.nombre }}
-                </option>
-                <div *ngIf="categoriaEmpleado.invalid && categoriaEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La categoría de empleado es requerida.</div>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="disponibilidad-container">
-              <h5>Disponibilidad Horaria</h5>
-              
-              <div class="full-time-container">
-                <label>
-                  <input type="checkbox" [(ngModel)]="fullTime" name="fullTime" (change)="toggleFullTime()" />
-                  Full Time
-                </label>
-              </div>
-          
-              <div class="disponibilidad-grid">
-                <div class="grid-header">
-                  <div>Día</div>
-                  <div>Hora Inicio</div>
-                  <div>Hora Fin</div>
-                </div>
-          
-                <div *ngFor="let dia of disponibilidad" class="grid-row">
-                  <div>{{ dia.nombre }}</div>
-                  <div>
-                    <input type="time" [(ngModel)]="dia.horaInicio" name="{{ dia.nombre }}HoraInicio" [disabled]="fullTime" />
-                  </div>
-                  <div>
-                    <input type="time" [(ngModel)]="dia.horaFin" name="{{ dia.nombre }}HoraFin" [disabled]="fullTime" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>          
-        </div>
-
-        <div *ngIf="seccionActual === 'observaciones'">
-          <div class="form-row">
-            <div class="form-group full-width">
-              <label for="observaciones">Ordenes de trabajo</label>
-              <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" maxlength="250"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-save" [disabled]="empleadoForm.invalid">Guardar Empleado</button>
-          <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
-        </div>
-      </form>
-    </div>
-</div>
+  <!-- Botones debajo -->
+  <div class="button-row">
+    <button mat-raised-button color="primary" type="submit" [disabled]="empleadoForm.invalid">Guardar Empleado</button>
+    <button mat-button color="warn" type="button" (click)="cancelar()">Cancelar</button>
+  </div>
+</form>

@@ -13,7 +13,7 @@ import { ConfirmacionDialogComponent } from '../Modales/mensajes-confirmacion/me
 @Component({
   selector: 'app-categorias',
   standalone: true,
-  imports: [FormsModule, NavbarComponent, CommonModule, MatIconModule],
+  imports: [FormsModule, CommonModule, MatIconModule],
   templateUrl: './categorias.component.html',
   styleUrl: './categorias.component.css'
 })

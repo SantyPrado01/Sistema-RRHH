@@ -1,46 +1,59 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '../login/auth/auth.service';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { ConfirmacionDialogComponent } from '../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
+import { Component, Inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { AuthService } from '../login/auth/auth.service'; 
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmacionDialogComponent } from '../Modales/mensajes-confirmacion/mensajes-confirmacion.component'; 
 import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta.component';
-import { MatIconModule } from '@angular/material/icon'; // Mantén esta si usas <mat-icon>
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
-  imports: [
+  standalone:true,
+  imports:[
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
     CommonModule,
     MatIconModule,
-    MatDividerModule // Mantén esta si usas <mat-icon>
+    MatDividerModule
   ],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
+  username: string | null = '';
+  isCollapsed = false;
   isEmployeesOpen = false;
   isCompaniesOpen = false;
   isOrdersOpen = false;
   isBillingOpen = false;
   isUserOpen = false;
   isConfigOpen = false;
-  isCollapsed = false;
 
-  username: string | null = '';
-  private clickOutsideHandler: (event: MouseEvent) => void;
+  private clickOutsideHandler: any;
 
-  constructor(private authService: AuthService, private dialog: MatDialog) {
+  constructor(
+    private authService: AuthService,
+    private dialog: MatDialog,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.clickOutsideHandler = this.handleClickOutside.bind(this);
   }
 
   ngOnInit(): void {
     this.username = this.authService.getUsername();
-    document.addEventListener('click', this.clickOutsideHandler);
+
+    if (isPlatformBrowser(this.platformId)) {
+      document.addEventListener('click', this.clickOutsideHandler);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      document.removeEventListener('click', this.clickOutsideHandler);
+    }
   }
 
   toggleDropdown(menu: string, event: MouseEvent): void {
@@ -82,14 +95,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   handleClickOutside(event: MouseEvent): void {
-    const navbar = document.querySelector('.navbar');
-    if (navbar && !navbar.contains(event.target as Node)) {
-      this.closeAllDropdowns();
+    if (isPlatformBrowser(this.platformId)) {
+      const navbar = document.querySelector('.navbar');
+      if (navbar && !navbar.contains(event.target as Node)) {
+        this.closeAllDropdowns();
+      }
     }
-  }
-
-  ngOnDestroy(): void {
-    document.removeEventListener('click', this.clickOutsideHandler);
   }
 
   onLogout(): void {

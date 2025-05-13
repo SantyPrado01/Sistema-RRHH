@@ -9,10 +9,10 @@ import { Disponibilidad } from '../models/disponibilidad.models';
 export class DisponibilidadHorariaService {
 
   //Produccion
-  private apiUrl = 'http://147.93.15.196:3000/disponibilidad-horaria';
+  //private apiUrl = 'http://147.93.15.196:3000/disponibilidad-horaria';
 
   //Desarrollo
-  //private apiUrl = 'http://localhost:3000/disponibilidad-horaria'; 
+  private apiUrl = 'http://localhost:3000/disponibilidad-horaria'; 
 
   constructor(private http: HttpClient) { }
 

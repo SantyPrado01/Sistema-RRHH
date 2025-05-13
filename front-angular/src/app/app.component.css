@@ -1,0 +1,17 @@
+/* Estilo para el contenedor general */
+.container {
+    display: flex;
+    height: 100vh;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Estilo para el contenido */
+  .main-container {/* Deja espacio para la navbar */
+    transition: margin-left 0.3s ease; /* Transición suave para el cambio de margen */
+    padding-left: 1em;
+    flex: 1; /* El contenido ocupará el resto del espacio disponible */
+  }
+  
+  
