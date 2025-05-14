@@ -2,8 +2,6 @@
 .container {
   display: flex;
   flex-direction: row;
-  margin-left: 240px;
-  margin-right: 100px;
   margin-top: 1.5em;
 }
 
@@ -17,7 +15,7 @@
   height: 6.2em;
 }
 
-.title-item h1 {
+.title-container h1 {
   color: white;
   font-size: 2em;
 }
@@ -84,23 +82,6 @@ label {
   color: #333;
   font-weight: bold;
 }
-
-input[type="text"],
-input[type="tel"],
-input[type="date"],
-input[type="number"],
-select,
-textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-}
-
-textarea {
-  resize: none;
-}
-
 /* Error message styling */
 .error {
   color: red;

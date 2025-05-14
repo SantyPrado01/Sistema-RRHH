@@ -16,7 +16,6 @@
   .content-container {
     display: flex;
     flex-direction: column;
-    margin-left: 240px;
     margin-right: 1em;
     margin-top: 1.5em;
   }
@@ -238,6 +237,10 @@
   }
   .resumen-item{
     margin-right: 1.5em;
+  }
+
+  .div-reporte-fecha-dia mat-form-field{
+    flex: 1;
   }
 
   @media(max-width:1360px){

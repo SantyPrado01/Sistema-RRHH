@@ -131,6 +131,7 @@ export class EmpleadosListComponent implements OnInit {
     console.log('Empleado seleccionado:', empleado.Id);
     
     this.empleadoId = empleado.Id;  
+    this.router.navigate(['/employee/edit', empleado.Id]);
   }
 
   displayEmployeeName(empleado: Empleado): string {

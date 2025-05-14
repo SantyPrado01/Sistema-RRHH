@@ -17,7 +17,9 @@
         <!-- Datos Personales -->
         <div *ngIf="seccionActual === 'datosPersonales'">
           <div class="form-row">
+            
             <div class="form-group">
+              
               <label for="nombre">Nombre:</label>
               <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre" required #nombreEmpleado="ngModel" (input)="validarSoloLetras($event)"/>
               <div *ngIf="nombreEmpleado.invalid && nombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El nombre es requerido.</div>

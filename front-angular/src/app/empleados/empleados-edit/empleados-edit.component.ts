@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CategoriaEmpleadoService } from '../services/categoria-empleado.service'; 
 import { NavbarComponent } from '../../nabvar/navbar.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
@@ -20,10 +20,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { OrdenGrupo, OrdenTrabajo } from '../../ordenTrabajo/models/orden-trabajo.models';
 import { MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { getSpanishPaginatorIntl } from '../../spanish-paginator-intl';
 import { HorariosAsignadosService } from '../../horariosAsignados/services/horariosAsignados.service';
 import { HorarioAsignado } from '../../horariosAsignados/models/horariosAsignados.models';
+import { MatFormField, MatFormFieldControl, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-edit-empleado',
@@ -31,9 +37,29 @@ import { HorarioAsignado } from '../../horariosAsignados/models/horariosAsignado
   templateUrl: './empleados-edit.component.html',
   providers:[
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-    { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() }
+    { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-AR' }
   ],
-  imports:[FormsModule, CommonModule, RouterModule, MatIconModule, MatExpansionModule, MatCardModule, MatButtonModule, MatPaginator],
+  imports:[
+    FormsModule, 
+    CommonModule, 
+    RouterModule, 
+    MatIconModule, 
+    MatExpansionModule, 
+    MatCardModule, 
+    MatButtonModule, 
+    MatPaginator,
+    MatLabel,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOptionModule,
+    MatDatepickerModule,
+    MatAutocompleteModule,
+    MatNativeDateModule,
+    MatFormField,
+    MatCheckboxModule,
+    MatSelectModule
+  ],
   styleUrls: ['./empleados-edit.component.css']
 })
 export class EditEmpleadoComponent implements OnInit {
@@ -139,7 +165,6 @@ export class EditEmpleadoComponent implements OnInit {
     };
     this.categoriaEmpleadoService.getCategoriasEmpleados().subscribe({
       next: (data) => {
-        console.log('Categorías obtenidas:', data);
         this.categorias = data;
       },
       error: (err) => {
@@ -231,6 +256,7 @@ export class EditEmpleadoComponent implements OnInit {
           this.obtenerNombreCiudad(this.empleado.ciudad.toString()).subscribe({
             next: (response) => {
               this.ciudadNombre = response.localidades_censales?.[0]?.nombre ?? 'Desconocido';
+              console.log(this.ciudadNombre)
             },
             error: (err) => {
               console.error('Error al obtener el nombre de la ciudad', err);
