@@ -133,8 +133,8 @@
               <tr *ngFor="let orden of ordenesFiltradas">
                 <td>{{ orden.Id }}</td>
                 <td>{{ orden.empleadoAsignado.nombre }} {{ orden.empleadoAsignado.apellido }}</td>
-                <td>{{ truncateToTwoDecimals(orden.horasProyectadas) }}</td>
-                <td>{{ truncateToTwoDecimals(orden.horasReales) }}</td>
+                <td>{{ orden.horasProyectadas }}</td>
+                <td>{{ orden.horasReales }}</td>
                 <td>
                   <span *ngIf="orden.completado" class="status completed">Completada</span>
                   <span *ngIf="!orden.completado" class="status pending">En Curso</span>
