@@ -144,8 +144,8 @@ export class InformesComponent  {
     }
   }
 
-  private matSort!: MatSort;
-  @ViewChild(MatSort) set matSortSetter(ms: MatSort) {
+  private matSort: MatSort | null = null;
+  @ViewChild(MatSort) set matSortSetter(ms: MatSort | null) {
     this.matSort = ms;
     if (this.dataSource) {
       this.dataSource.sort = this.matSort;
@@ -250,6 +250,7 @@ export class InformesComponent  {
 
     buscarHorarios(): void {
       this.dataSource.data = [];
+      this.dataSource.sort = this.matSort;
       this.loading = true;
       let fechaFormateada: string | null = null;
       if (this.fecha) {
@@ -355,6 +356,7 @@ export class InformesComponent  {
           
     obtenerOrdenesMesAnio() {
     this.dataSource.data = [];
+    this.dataSource.sort = this.matSort;
     const mesNumero = this.convertirMesANumero(this.mesSeleccionado);
     this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioSeleccionado).subscribe(
       (data: any[]) => {
@@ -453,63 +455,89 @@ export class InformesComponent  {
     const doc = new jsPDF();
     const headers = this.getDisplayHeaders(); 
 
-    const rows = this.dataSource.data.map(item => {
-      
-      const currentColumnDefs = this.reporteSeleccionado === 'Reporte de horas por Dia'
-          ? this.displayedColumnsBuscarHorarios
-          : this.displayedColumnsObtenerOrdenes; 
+    const currentData = this.dataSource.filteredData.slice(); // Copia de datos filtrados
+    const sortedData = this.matSort
+      ? this.dataSource.sortData(currentData, this.matSort)
+      : currentData;
 
-      return currentColumnDefs.map(colDefName => {
-        return this.getCellValue(item, colDefName); 
-      });
+    const rows = sortedData.map(item => {
+      const currentColumnDefs = this.reporteSeleccionado === 'Reporte de horas por Dia'
+        ? this.displayedColumnsBuscarHorarios
+        : this.displayedColumnsObtenerOrdenes;
+
+      return currentColumnDefs.map(colDefName => this.getCellValue(item, colDefName));
     });
 
     (doc as any).autoTable({
-      head: [headers], 
-      body: rows,     
-      
-      startY: 10, 
+      head: [headers],
+      body: rows,
+      startY: 10,
       styles: { fontSize: 8 },
-      headStyles: { fillColor: [204, 86, 0], textColor: [255, 255, 255] }, 
-      
+      headStyles: { fillColor: [204, 86, 0], textColor: [255, 255, 255] },
     });
 
-    // Guarda el archivo PDF
-    doc.save('reporte_' + this.reporteSeleccionado.replace(/[^a-zA-Z0-9]/g, '_') + '_' + new Date().getTime() + '.pdf');
-    }
+    doc.text('Resumen Total', 14, (doc as any).lastAutoTable.finalY + 10);
+    doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 14, (doc as any).lastAutoTable.finalY + 20);
+    doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 14, (doc as any).lastAutoTable.finalY + 30);
+
+    doc.save(
+      'reporte_' +
+        this.reporteSeleccionado.replace(/[^a-zA-Z0-9]/g, '_') +
+        '_' +
+        new Date().getTime() +
+        '.pdf'
+    );
+  }
+
   
     descargarExcel(): void {
-      if (!this.dataSource.data || this.dataSource.data.length === 0) {
-         console.log('No hay datos para exportar a Excel.');  
-         return;
-       }
+  if (!this.dataSource.data || this.dataSource.data.length === 0) {
+    console.log('No hay datos para exportar a Excel.');
+    return;
+  }
 
-      const headers = this.getDisplayHeaders(); 
+  const headers = this.getDisplayHeaders();
 
-      const excelData = this.dataSource.data.map(item => {
-         const currentColumnDefs = this.reporteSeleccionado === 'Reporte de horas por Dia'
-             ? this.displayedColumnsBuscarHorarios
-             : this.displayedColumnsObtenerOrdenes; 
+  const currentData = this.dataSource.filteredData.slice(); // Copia segura
+  const sortedData = this.matSort
+    ? this.dataSource.sortData(currentData, this.matSort)
+    : currentData;
 
-         const row: any = {};
-         currentColumnDefs.forEach(colDefName => {
-            
-            const headerText = this.headerMap[colDefName] || colDefName;
-            row[headerText] = this.getCellValue(item, colDefName);
-         });
-         return row;
-       });
-      
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
+  const excelData = sortedData.map(item => {
+    const currentColumnDefs = this.reporteSeleccionado === 'Reporte de horas por Dia'
+      ? this.displayedColumnsBuscarHorarios
+      : this.displayedColumnsObtenerOrdenes;
 
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Reporte'); 
+    const row: any = {};
+    currentColumnDefs.forEach(colDefName => {
+      const headerText = this.headerMap[colDefName] || colDefName;
+      row[headerText] = this.getCellValue(item, colDefName);
+    });
+    return row;
+  });
 
-      const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
 
-      const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-      FileSaver.saveAs(data, 'reporte_' + this.reporteSeleccionado.replace(/[^a-zA-Z0-9]/g, '_') + '_' + new Date().getTime() + '.xlsx');
-    }
+  const resumenStartRow = excelData.length + 3;
+
+  XLSX.utils.sheet_add_aoa(ws, [
+    ['Resumen Total'],
+    ['Horas Proyectadas', this.totalHorasProyectadasGlobal.toFixed(2)],
+    ['Horas Reales', this.totalHorasRealesGlobal.toFixed(2)],
+  ], { origin: `A${resumenStartRow}` });
+
+  const wb: XLSX.WorkBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
+
+  const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+
+  const data: Blob = new Blob([excelBuffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+  });
+
+  FileSaver.saveAs(data, 'reporte_' + this.reporteSeleccionado.replace(/[^a-zA-Z0-9]/g, '_') + '_' + new Date().getTime() + '.xlsx');
+}
+
     
     truncateToTwoDecimals(value: number): string {
       return Math.floor(value * 100) / 100 + ''; 

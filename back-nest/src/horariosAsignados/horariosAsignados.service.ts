@@ -132,6 +132,8 @@ export class HorarioAsignadoService {
     if (servicioId) {
       query.andWhere('servicio.servicioId = :servicioId', { servicioId });
     }
+
+    query.orderBy('empleado.apellido', 'ASC');
   
     return query.getMany();
   }
@@ -181,6 +183,8 @@ export class HorarioAsignadoService {
         conteo[horario.estado]++;
       }
     }
+
+    query.orderBy('empleado.apellido', 'ASC');
   
     return {
       horarios,
