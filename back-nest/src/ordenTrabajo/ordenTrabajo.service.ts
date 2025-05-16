@@ -385,6 +385,14 @@ export class OrdenTrabajoService {
     });
   
     if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
+
+    ordenTrabajo.horariosAsignados.sort((a, b) => {
+      if (a.fecha && b.fecha) {
+        return a.fecha.getTime() - b.fecha.getTime();
+      }
+      // Si alguna de las fechas es null, mantener el orden original o definir un criterio
+      return 0;
+    })
   
     let horasProyectadas = 0;
     let horasReales = 0;

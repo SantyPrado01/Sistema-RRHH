@@ -64,7 +64,7 @@
         <tr *ngFor="let horario of horarios">
           <td>{{ horario.fecha | date: 'dd/MM/yyyy' }}</td>
           <td>
-            <span *ngIf="horario.empleadoSuplente">
+            <span *ngIf="horario.empleadoSuplente && horario.suplente">
               {{ horario.empleadoSuplente.apellido }}, {{ horario.empleadoSuplente.nombre }}
             </span>
             </td>

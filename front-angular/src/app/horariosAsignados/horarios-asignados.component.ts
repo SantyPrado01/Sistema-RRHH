@@ -107,6 +107,7 @@ export class HorariosAsignadosComponent implements OnInit {
     this.observaciones = '';
     this.empleadoSuplenteNombre = '';
     this.mostrarEmpleado = false;
+    this.empleadoSup = null
   }
 
   abrirModalEmpleado() {
