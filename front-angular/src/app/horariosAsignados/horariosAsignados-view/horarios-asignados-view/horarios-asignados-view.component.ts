@@ -223,29 +223,71 @@ export class HorariosAsignadosViewComponent {
   descargarPdf(): void {
     const doc = new jsPDF();
 
-    const columnas = ['N° Orden', 'Fecha', 'Empresa', 'Hora Inicio Proyectado', 'Hora Fin Proyectado', 'Hora Inicio Real', 'Hora Fin Real', 'Total Horas', 'Estado'];
+    // Puedes agregar un título al PDF si lo deseas
+    doc.text(`Reporte de Horarios - ${this.empleado.nombre} ${this.empleado.apellido} - ${this.nombreMes} ${this.anio}`, 14, 10);
+
+
+    const columnas = ['N° Orden', 'Fecha', 'Empresa', 'H. Inicio Proy.', 'H. Fin Proy.', 'H. Inicio Real', 'H. Fin Real', 'Total Horas', 'Estado'];
     const filas = this.dataSource.data.map((item: any) => [
       item.ordenTrabajo.Id,
-      item.fecha.split('T')[0],
-      item.ordenTrabajo.servicio.nombre,
-      item.horasInicioProyectado,
-      item.horasFinProyectado,
+      item.fecha ? item.fecha.split('T')[0] : '', // Asegúrate de que fecha exista
+      item.ordenTrabajo && item.ordenTrabajo.servicio ? item.ordenTrabajo.servicio.nombre : '', // Manejo de nulos
+      item.horaInicioProyectado,
+      item.horaFinProyectado,
       item.horaInicioReal,
       item.horaFinReal,
       item.horasTotales,
-      item.estado
+      item.estado 
     ]);
 
     (doc as any).autoTable({
-      head: [columnas], 
-      body: filas,     
-      
-      startY: 10, 
+      head: [columnas],
+      body: filas,
+      startY: 20, // Ajusta el inicio para dejar espacio al título si lo agregaste
       styles: { fontSize: 8 },
-      headStyles: { fillColor: [204, 86, 0], textColor: [255, 255, 255] }, 
-      
+      headStyles: { fillColor: [204, 86, 0], textColor: [255, 255, 255] },
     });
-    doc.save('reporte') + '_' + new Date().getTime() + '.pdf';
+    const finalY = (doc as any).autoTable.previous.finalY || 10; // Obtiene el Y final de la tabla, si no hay tabla usa 10
+
+    // 5. Agregar los totales al final del PDF
+    const margenIzquierdo = 14;
+    let currentY = finalY + 10; // Deja un espacio de 10 unidades debajo de la tabla
+
+    doc.setFontSize(10); // Tamaño de fuente para los totales
+
+    doc.text(`Resumen de Horarios:`, margenIzquierdo, currentY);
+    currentY += 7; // Espacio entre el título y el primer total
+
+    doc.text(`Total Horas Realizadas: ${this.totalHorasRealizadas.toFixed(2)}`, margenIzquierdo, currentY);
+    currentY += 7;
+
+    doc.text(`Total Asistencias: ${this.totalAsistencias}`, margenIzquierdo, currentY);
+    currentY += 7;
+
+    doc.text(`Total Llegadas Tarde (LT): ${this.totalLT}`, margenIzquierdo, currentY);
+    currentY += 7;
+
+    doc.text(`Total Faltas con Aviso (FC): ${this.totalFC}`, margenIzquierdo, currentY);
+    currentY += 7;
+
+    doc.text(`Total Faltas sin Aviso (FS): ${this.totalFS}`, margenIzquierdo, currentY);
+    currentY += 7;
+
+    doc.text(`Total por Enfermedad (E): ${this.totalE}`, margenIzquierdo, currentY);
+    currentY += 7;
+
+    if (this.empleado && this.empleado.nombre && this.empleado.apellido) {
+
+      const nombreLimpio = this.empleado.nombre.replace(/\s+/g, '_').toLowerCase();
+      const apellidoLimpio = this.empleado.apellido.replace(/\s+/g, '_').toLowerCase();
+
+      const nombreArchivo = `reporte_${this.nombreMes}_${nombreLimpio}_${apellidoLimpio}.pdf`;
+
+      doc.save(nombreArchivo);
+    } else {
+      doc.save(`reporte_${this.nombreMes}_${this.anio}.pdf`);
+      console.warn('No se pudo obtener el nombre/apellido del empleado para el nombre del archivo. Usando nombre genérico.');
+    }
   }
 
   descargarExcel(): void {

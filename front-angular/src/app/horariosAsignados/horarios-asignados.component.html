@@ -23,7 +23,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>Fecha:</label>
-          <input type="text" [value]="selectedHorario && selectedHorario.fecha ? (selectedHorario.fecha | date: 'dd/MM/yyyy') : 'N/A'" readonly required [disabled]="true"/>
+          <input type="date" [value]="selectedHorario && selectedHorario.fecha ? (selectedHorario.fecha | date: 'dd/MM/yyyy') : 'N/A'" required/>
         </div>
         <div class="form-group">
           <label>Horario Inicio:</label>
@@ -37,11 +37,11 @@
       <div class="form-row">
         <div class="form-group">
           <label>Hora Inicio Real:</label>
-          <input type="time" [(ngModel)]="horaInicioReal" name="inicioReal" />
+          <input type="time" [value]="selectedHorario?.horaInicioProyectado ?? 'N/A'" [(ngModel)]="horaInicioReal" name="inicioReal" />
         </div>
         <div class="form-group">
           <label>Hora Fin Real:</label>
-          <input type="time" [(ngModel)]="horaFinReal" name="finReal"/>
+          <input type="time" [value]="selectedHorario?.horaFinProyectado ?? 'N/A'" [(ngModel)]="horaFinReal" name="finReal"/>
         </div>
         <div class="form-group">
           <label>Estado:</label>

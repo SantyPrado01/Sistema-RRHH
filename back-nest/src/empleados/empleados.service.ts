@@ -61,11 +61,7 @@ export class EmpleadosService {
   
     
   get(){
-    return this.empleadoRepository.find({})
-  }
-
-  getEliminado(){
-    return this.empleadoRepository.find({where:{eliminado:false}})
+    return this.empleadoRepository.find()
   }
 
   async getId(id: number){
@@ -137,10 +133,16 @@ export class EmpleadosService {
 
   async buscarPorNombre(termino: string): Promise<Empleado[]> {
     return this.empleadoRepository.find({
-      where: {
-        nombre: ILike(`%${termino}%`), // <-- busca parcialmente sin importar mayúsculas/minúsculas
-        eliminado: false,              // <-- si estás manejando soft-delete
-      },
+      where: [ // Usamos un array para las condiciones OR
+        {
+          nombre: ILike(`%${termino}%`),
+          eliminado: false,
+        },
+        {
+          apellido: ILike(`%${termino}%`),
+          eliminado: false,
+        },
+      ],
       take: 6, // <-- opcional: limita la cantidad de resultados
     });
   }

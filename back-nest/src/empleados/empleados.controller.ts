@@ -38,11 +38,6 @@ export class EmpleadosController {
     return this.empleadosService.get();
   }
 
-  @Get('/true')
-  getEmpleadosEliminado(){
-    return this.empleadosService.getEliminado();
-  }
-
   @Get(':id')
   getEmpleado(@Param('id', ParseIntPipe) id: string) {
     return this.empleadosService.getId(+id);

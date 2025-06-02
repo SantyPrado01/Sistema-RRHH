@@ -39,8 +39,8 @@ export class HorariosAsignadosComponent implements OnInit {
       this.selectedHorario = null; 
     } else {
       this.selectedHorario = horario;
-      this.horaInicioReal = '';
-      this.horaFinReal = '';
+      this.horaInicioReal = horario.horaInicioProyectado || '';
+      this.horaFinReal = horario.horaFinProyectado || '';
       this.estado = '';
       this.observaciones = ''; 
       this.comprobado = true;  

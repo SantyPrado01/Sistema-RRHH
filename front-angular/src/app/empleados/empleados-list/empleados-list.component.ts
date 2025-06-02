@@ -125,7 +125,7 @@ export class EmpleadosListComponent implements OnInit {
 
   }
 
-  displayedColumns: string[] = ['legajo', 'nombre', 'apellido', 'telefono', 'email', 'acciones'];
+  displayedColumns: string[] = ['legajo', 'nombre', 'apellido', 'telefono', 'email', 'estado','acciones'];
 
   seleccionarEmpleado(empleado: any): void {
     console.log('Empleado seleccionado:', empleado.Id);
@@ -143,28 +143,7 @@ export class EmpleadosListComponent implements OnInit {
       console.log(data)
       this.dataSource.data = data;
       this.loading = false
-      this.filtrarEmpleados();
     });
-  }
-
-  buscarEmpleado() {
-    this.filtrarEmpleados();
-  }
-
-  filtrarEmpleados() {
-    this.empleadosFiltrados = this.empleados.filter(empleado => {
-      const coincideEstado = this.filtroVisualizar === 'activo' ? !empleado.eliminado : empleado.eliminado;
-      if(!coincideEstado) return false;
-      const coincideNombreApellido = empleado.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                                     empleado.apellido.toLowerCase().includes(this.searchTerm.toLowerCase());
-      return coincideEstado && coincideNombreApellido;
-    });
-
-    if (this.filtroOrdenar === 'nombre'){
-      this.empleadosFiltrados.sort((a,b) => a.nombre.localeCompare(b.nombre));
-    } else if (this.filtroOrdenar === 'apellido'){
-      this.empleadosFiltrados.sort((a,b) => a.apellido.localeCompare(b.apellido))
-    }
   }
 
   eliminarEmpleado(empleado: Empleado) {
@@ -185,8 +164,8 @@ export class EmpleadosListComponent implements OnInit {
             this.ngOnInit();
           },
           error:(err) => {
-            console.error('Error al eliminar la categoria:', err);
-            this.mostrarAlerta('Error', 'No se pudo eliminar la categoria.', 'error');
+            console.error('Error al eliminar el empleado:', err);
+            this.mostrarAlerta('Error', 'No se pudo eliminar el empleado.', 'error');
           },
         });
       } else {

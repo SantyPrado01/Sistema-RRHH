@@ -42,3 +42,12 @@ button{
     border: none;
     background: white;
 }
+
+.status.deleted {
+    background-color: #f44336; /* Rojo */
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
