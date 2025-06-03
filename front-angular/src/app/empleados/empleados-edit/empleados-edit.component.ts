@@ -348,9 +348,9 @@ export class EmpleadosEditComponent implements OnInit {
     return meses[numeroMes - 1];
   }
 
-  getHorasTotales(horarios: HorarioAsignado[]): string {
-    if (!Array.isArray(horarios)) return '0:00';
-    
+  getHorasTotales(horarios: HorarioAsignado[]): number {
+    if (!Array.isArray(horarios)) return 0;
+  
     const totalMinutos = horarios.reduce((total, horario) => {
       if (!horario.horaInicioReal || !horario.horaFinReal) return total;
       
@@ -358,11 +358,10 @@ export class EmpleadosEditComponent implements OnInit {
       const fin = this.convertirHoraAMinutos(horario.horaFinReal);
       return total + (fin - inicio);
     }, 0);
-    
-    const horas = Math.floor(totalMinutos / 60);
-    const minutos = totalMinutos % 60;
-    return `${horas}:${minutos.toString().padStart(2, '0')}`;
+  
+    return totalMinutos / 60; // devuelve decimal
   }
+  
 
   convertirHoraAMinutos(hora: string): number {
     if (!hora) return 0;
