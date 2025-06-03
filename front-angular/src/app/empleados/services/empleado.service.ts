@@ -23,7 +23,7 @@ export class EmpleadoService {
     return this.http.get<Empleado[]>(`${this.apiUrl}`);
   }
   getEmpleadosEliminado(): Observable<Empleado[]>{
-    return this.http.get<Empleado[]>(`${this.apiUrl}/true`);
+    return this.http.get<Empleado[]>(`${this.apiUrl}/activos`);
   }
   getEmpleadoById(id: number): Observable<Empleado> {
     return this.http.get<Empleado>(`${this.apiUrl}/${id}`);

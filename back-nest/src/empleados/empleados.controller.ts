@@ -38,7 +38,7 @@ export class EmpleadosController {
     return this.empleadosService.get();
   }
 
-  @Get('true')
+  @Get('activos')
   getEmpleadosSinEliminar() {
     return this.empleadosService.getEmpleadosSinEliminar();
   }
@@ -50,25 +50,25 @@ export class EmpleadosController {
 
   @Patch(':id')
   async updateEmpleado(
-  @Param('id', ParseIntPipe) id: number,
-  @Body() updateEmpleadoDto: UpdateEmpleadoDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateEmpleadoDto: UpdateEmpleadoDto,
   ): Promise<any> {
-  // Actualizar los datos del empleado
-  const empleadoActualizado = await this.empleadosService.update(id, updateEmpleadoDto);
+    // Actualizar los datos del empleado
+    const empleadoActualizado = await this.empleadosService.update(id, updateEmpleadoDto);
 
-  // Si hay disponibilidades, actualizarlas
-  if (updateEmpleadoDto.disponibilidades) {
-    await this.empleadosService.updateDisponibilidad(
-      id,
-      updateEmpleadoDto.disponibilidades,
-    );
+    // Si hay disponibilidades, actualizarlas
+    if (updateEmpleadoDto.disponibilidades) {
+      await this.empleadosService.updateDisponibilidad(
+        id,
+        updateEmpleadoDto.disponibilidades,
+      );
+    }
+
+    return {
+      message: 'Empleado y disponibilidades actualizados con éxito',
+      empleado: empleadoActualizado,
+    };
   }
-
-  return {
-    message: 'Empleado y disponibilidades actualizados con éxito',
-    empleado: empleadoActualizado,
-  };
-}
 
   @Delete(':id')
   deleteEmpleado(@Param('id') id: string) {
