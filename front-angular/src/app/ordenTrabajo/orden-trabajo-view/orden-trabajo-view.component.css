@@ -65,17 +65,19 @@ table {
   width: 100%; 
 }
 
+.form-row-footer {
+  display: flex;
+  justify-content: center; 
+  gap: 2em;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 1em;
+}
+
 .form-group {
   flex: 1; 
   display: flex;
   flex-direction: column;
-}
-
-.form-row-footer {
-  justify-content: center; 
-  gap: 1em; 
-  margin-left: 0;
-  margin-right: 0;
 }
 
 .form-group-footer {
@@ -87,6 +89,7 @@ table {
 
 .button-footer-pdf, .button-footer-excel {
   width: auto; 
+  min-width: 120px;
   padding: 8px 16px; 
   display: flex; 
   justify-content: center; 
@@ -172,4 +175,26 @@ th {
     width: 370px;
   }
 
+}
+
+.mat-mdc-card-content{
+  padding: 0;
+}
+.mat-mdc-card-content:last-child{
+  padding: 0;
+}
+
+.suplente-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.suplente-container mat-form-field {
+  width: 100%;
+}
+
+small {
+  color: #666;
+  font-size: 0.85em;
 }

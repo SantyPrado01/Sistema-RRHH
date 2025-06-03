@@ -6,6 +6,7 @@
     background-color:#333333;
     text-align: center;
     height: 6.2em;
+    margin-bottom: 1em;
   }
 
   .title-item h1 {
@@ -14,140 +15,155 @@
   }
 
 .content-container {
-    margin-right: 1em;
-    margin-top: 1.5em;
+  padding-right: 20px;
 }
 
-.search-filter-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
-.search-bar {
-    display: flex;
-    align-items: center;
+.search-field {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 0 !important;
 }
 
-.search-bar input {
-    padding: 10px;
-    border: 1px solid #D4D4D4;
-    border-radius: 0.5rem;
-    outline: none;
-    margin-right: 15px;
+.search-field .mat-mdc-form-field-wrapper {
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
-.search-btn {
-    margin-right: 5px;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    background-color: white;
+.search-field .mat-mdc-text-field-wrapper {
+  margin-bottom: 0;
 }
 
-.filters {
-    display: flex;
+.filters-panel {
+  margin-bottom: 1rem;
 }
 
-.filter {
-    margin-left: 20px;
+.filters-content {
+  padding: 1rem;
 }
 
-.filter label {
-    margin-right: 5px;
-    color: #333;
+.additional-filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.filter select {
-    padding: 5px;
-    border: 1px solid #CCC;
-    border-radius: 4px;
+.additional-filters .mat-mdc-form-field {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+/* Estilo del panel de expansión */
+.mat-expansion-panel {
+  background-color: #fff;
+}
+
+.mat-expansion-panel-header {
+  background-color: #f5f5f5;
+}
+
+.mat-expansion-panel-header.mat-expanded {
+  background-color: #f0f0f0;
+}
+
+/* Estilo del botón principal */
+.mat-mdc-raised-button.mat-primary {
+  background-color: #CC5600 !important;
+  color: white !important;
+}
+
+.mat-mdc-raised-button.mat-primary:hover {
+  background-color: #a54e00 !important;
 }
 
 .table-container {
-    max-height: 600px; 
-    overflow-y: auto;
-    margin-top: 20px;
+  margin-top: 1rem;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
 }
 
-.btn-edit, .btn-delete {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2em;
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
 }
 
-.btn-edit {
-    color: grey;
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: #f5f5f5;
 }
 
-.btn-delete {
-    color: #dc3545;
+.row-clickable {
+  cursor: pointer;
 }
 
-.btn-view {
-    color: white;
-    border: none;
-    background: white;
-}
-
-.btn-primary {
-    background-color: #CC5600;
-    color: #ffffff;
-    border: 2px solid #CC5600;
-    border-radius: 40%;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
-    text-align: center;
-    line-height: 1;
-}
-
-.btn-primary:hover {
-    background-color: #a54e00;
-    border-color: #a54e00;
-}
-
-.btn-primary:focus {
-    outline: none;
-}
 .status {
-    padding: 5px 10px;
-    border-radius: 3px;
-    font-size: 0.9em;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-  }
-  
-  .status.completed {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .status.pending {
-    background-color: #ffc107;
-    color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.delete {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td, th {
+  padding: 0 1rem !important;
+}
+
+.mat-column-acciones {
+  width: 120px;
+  text-align: center;
+}
+
+.mat-column-estado {
+  width: 150px;
+}
+
+.mat-column-id {
+  width: 100px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .actions-container {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .status.delete {
-    margin-left: 1em;
-    background-color: red;
-    color: white;
+  .search-filters {
+    margin-right: 0;
+    margin-bottom: 1rem;
   }
-  
-  @media (max-width:1360px){
-    .content-container {
-        margin-right: 1em;
-    }
+
+  .mat-column-acciones,
+  .mat-column-estado,
+  .mat-column-id {
+    width: auto;
+  }
 }

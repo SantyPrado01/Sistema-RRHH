@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavbarComponent } from '../../nabvar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -10,23 +10,51 @@ import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-ale
 import { MatIconModule } from '@angular/material/icon';
 import { OrdenTrabajo } from '../models/orden-trabajo.models';
 import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-listar-orden-trabajo',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, MatIconModule, CommonModule, RouterModule],
+  imports: [
+    NavbarComponent, 
+    FormsModule, 
+    MatIconModule, 
+    CommonModule, 
+    RouterModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatExpansionModule
+  ],
   templateUrl: './listar-orden-trabajo.component.html',
   styleUrl: './listar-orden-trabajo.component.css'
 })
 export class ListarOrdenTrabajoComponent implements OnInit {
-  filtroEmpresa: string = '';
-  ordenes: any[] = [];
-  ordenesFiltradas: any[] = [];
+  dataSource: MatTableDataSource<OrdenTrabajo>;
+  displayedColumns: string[] = ['id', 'empresa', 'mes', 'anio', 'estado', 'horasProyectadas', 'horasReales', 'acciones'];
+  
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
   meses: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-  anios: number[] = Array.from({ length: 11 }, (_, i) => 2024 + i);
-  anioSeleccionado: number = new Date().getFullYear(); 
-  mesSeleccionado: number = new Date().getMonth() + 1; 
-  estadoSeleccionado: boolean = false;
+  anios: number[] = Array.from({ length: 11 }, (_, i) => new Date().getFullYear() + i - 5); // 5 años atrás y 5 años adelante
+  
+  estadoSeleccionado: boolean | null = null;
+  mesSeleccionado: number | null = null;
+  anioSeleccionado: number | null = null;
+  ordenesOriginales: OrdenTrabajo[] = [];
 
   constructor(
     private http: HttpClient, 
@@ -34,28 +62,63 @@ export class ListarOrdenTrabajoComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private ordenTrabajoService: OrdenTrabajoService  
-  ) {}
-
-  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {
-    this.dialog.open(AlertDialogComponent, {
-      data: { title: titulo, message: mensaje, type: tipo },
-    });
+  ) {
+    this.dataSource = new MatTableDataSource<OrdenTrabajo>([]);
   }
 
   ngOnInit(): void {
-    this.obtenerOrdenes()
+    this.cargarOrdenes();
   }
 
-  obtenerOrdenes() {
-    this.ordenTrabajoService.getAll().subscribe({
-      next: (data) => {
-        this.ordenes = data;
-        this.ordenesFiltradas = data
-        console.log('Órdenes obtenidas:', this.ordenesFiltradas);
-      },
-      error: (err) => {
-        console.error('Hubo un error al obtener las órdenes de trabajo', err);
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    
+    // Configurar ordenamiento personalizado
+    this.dataSource.sortingDataAccessor = (item: OrdenTrabajo, property: string) => {
+      switch(property) {
+        case 'empresa': return item.servicio.nombre;
+        case 'mes': return item.mes;
+        case 'anio': return item.anio;
+        default: return (item as any)[property];
       }
+    };
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  cargarOrdenes() {
+    this.ordenTrabajoService.getAll().subscribe({
+      next: (ordenes) => {
+        this.ordenesOriginales = ordenes;
+        this.dataSource.data = ordenes;
+        this.filtrarOrdenes();
+      },
+      error: (error) => {
+        console.error('Error al cargar órdenes:', error);
+        this.mostrarAlerta('Error', 'No se pudieron cargar las órdenes de trabajo', 'error');
+      }
+    });
+  }
+
+  getMesNombre(mes: number): string {
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    return meses[mes - 1];
+  }
+
+  mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error' | 'warning'): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { title: titulo, message: mensaje, type: tipo }
     });
   }
 
@@ -84,94 +147,53 @@ export class ListarOrdenTrabajoComponent implements OnInit {
   };
 
   filtrarOrdenes() {
-    const anioSeleccionado = Number(this.anioSeleccionado);
-    const mesSeleccionadoNum = this.mesesMap[this.mesSeleccionado];
-    
-    this.ordenesFiltradas = this.ordenes.filter(orden => {
-      const coincideEmpresa = this.filtroEmpresa
-        ? orden.servicio.nombre && orden.servicio.nombre.toLowerCase().includes(this.filtroEmpresa.toLowerCase())
-        : true;
+    let ordenesFiltradas = [...this.ordenesOriginales];
 
-      const coincideMes = mesSeleccionadoNum
-      ? orden.mes === mesSeleccionadoNum
-      : true;
+    // Filtrar por estado
+    if (this.estadoSeleccionado !== null) {
+      ordenesFiltradas = ordenesFiltradas.filter(orden => orden.completado === this.estadoSeleccionado);
+    }
 
-      const coincideAnio = this.anioSeleccionado
-      ? orden.anio === anioSeleccionado
-      : true;
+    // Filtrar por mes
+    if (this.mesSeleccionado !== null) {
+      ordenesFiltradas = ordenesFiltradas.filter(orden => orden.mes === this.mesSeleccionado);
+    }
 
-      const coincideEstado = this.estadoSeleccionado !== undefined
-        ? (this.estadoSeleccionado === true ? orden.completado === true : orden.completado === false)
-        : true;
-      return coincideEmpresa && coincideMes && coincideAnio && coincideEstado;
-    });
-  
-    console.log('Órdenes filtradas:', this.ordenesFiltradas);
+    // Filtrar por año
+    if (this.anioSeleccionado !== null) {
+      ordenesFiltradas = ordenesFiltradas.filter(orden => orden.anio === this.anioSeleccionado);
+    }
+
+    this.dataSource.data = ordenesFiltradas;
   }
 
-  eliminarOrden(orden: OrdenTrabajo){
-    console.log(orden)
+  eliminarOrden(orden: OrdenTrabajo) {
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      data: {
+        title: 'Confirmar eliminación',
+        message: '¿Está seguro que desea eliminar esta orden de trabajo?',
+        type: 'warning',
+        showCancel: true
+      }
+    });
 
-    if (orden.eliminado===false){
-    const dialogRef = this.dialog.open(ConfirmacionDialogComponent,{
-          data:{
-            title: 'Confirmar Eliminación',
-            message: `¿Estás seguro de que deseas eliminar la Orden "${orden.Id}" y sus horarios asignados? Esta acción marca como eliminada la orden, podras seguir consultado la informacion.`,
-            type: 'confirm'
-          }
-        });
-        dialogRef.afterClosed().subscribe((result) =>{
-          if (result){
-            const ordenId = Number(orden.Id);
-            console.log(ordenId)
-            this.ordenTrabajoService.eliminarOrden(ordenId).subscribe({
-              next: (response) =>{
-                console.log('Orden de Trabajo eliminada con éxito', response);
-                this.mostrarAlerta('Operación Exitosa', 'Orden de Trabajo eliminada con éxito.', 'success');
-                this.ngOnInit();
-              },
-              error:(err) => {
-                console.error('Error al eliminar la Orden:', err);
-                this.mostrarAlerta('Error', 'No se pudo eliminar la Orden de Trabajo.', 'error');
-              },
-            });
-          } else {
-            console.log('Operacion de eliminacion cancelada.')
-          }
-        });
-      } else {
-        const dialogRef = this.dialog.open(ConfirmacionDialogComponent,{
-          data:{
-            title: 'Confirmar Eliminación',
-            message: `¿Estás seguro de que deseas eliminar la Orden "${orden.Id}" y sus horarios asignados de forma definitva? Esta accion no se puede deshacer.`,
-            type: 'confirm'
-          }
-        });
-        dialogRef.afterClosed().subscribe((result) =>{
-          if (result){
-            const ordenId = Number(orden.Id);
-            console.log(ordenId)
-            this.ordenTrabajoService.eliminarOrdenDef(ordenId).subscribe({
-              next: (response) =>{
-                console.log('Orden de Trabajo eliminada con éxito', response);
-                this.mostrarAlerta('Operación Exitosa', 'Orden de Trabajo y horarios asignados eliminados con éxito.', 'success');
-                this.ngOnInit();
-              },
-              error:(err) => {
-                console.error('Error al eliminar la Orden:', err);
-                this.mostrarAlerta('Error', 'No se pudo eliminar la Orden de Trabajo.', 'error');
-              },
-            });
-          } else {
-            console.log('Operacion de eliminacion cancelada.')
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.ordenTrabajoService.eliminarOrden(orden.Id).subscribe({
+          next: () => {
+            this.mostrarAlerta('Éxito', 'Orden eliminada correctamente', 'success');
+            this.cargarOrdenes();
+          },
+          error: (error) => {
+            console.error('Error al eliminar orden:', error);
+            this.mostrarAlerta('Error', 'No se pudo eliminar la orden', 'error');
           }
         });
       }
-    
+    });
   }
 
   truncateToTwoDecimals(value: number): string {
     return Math.floor(value * 100) / 100 + ''; 
   }
-
 }
