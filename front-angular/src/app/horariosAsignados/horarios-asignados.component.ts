@@ -76,7 +76,7 @@ export class HorariosAsignadosComponent implements OnInit {
   empleadosFiltrados: Empleado[] = [];
   empleadoSup: Empleado | null = null;
   empleadoSuplenteNombre: string = '';
-  fechaSeleccionada: string = '';
+  fechaSeleccionada: Date | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef, 
@@ -152,13 +152,13 @@ export class HorariosAsignadosComponent implements OnInit {
       this.selectedHorario = horario;
       this.horaInicioReal = horario.horaInicioProyectado || '';
       this.horaFinReal = horario.horaFinProyectado || '';
-      this.estado = '';
+      this.estado = horario.estado || '';
       this.estadoSuplente = horario.estadoSuplente || '';
-      this.observaciones = ''; 
-      this.comprobado = true;
+      this.observaciones = horario.observaciones || ''; 
+      this.comprobado = horario.comprobado || false;
       if (horario.fecha) {
-        const fechaStr = new Date(horario.fecha).toISOString();
-        this.fechaSeleccionada = fechaStr.split('T')[0];
+        const fecha = new Date(horario.fecha);
+        this.fechaSeleccionada = fecha;
       }  
     }
     console.log('Fila seleccionada:', this.selectedHorario);
@@ -181,7 +181,16 @@ export class HorariosAsignadosComponent implements OnInit {
   actualizarHorarios(){
     if (!this.selectedHorario) return;
 
-    const fecha = new Date(this.fechaSeleccionada + 'T03:00:00.000Z');
+    // Manejamos la fecha seleccionada
+    let fecha: Date;
+    if (this.fechaSeleccionada) {
+      fecha = this.fechaSeleccionada;
+      fecha.setHours(3, 0, 0, 0);
+    } else if (this.selectedHorario.fecha) {
+      fecha = new Date(this.selectedHorario.fecha);
+    } else {
+      return;
+    }
 
     const updatedHorario: HorarioAsignado = {
       ...this.selectedHorario,
@@ -223,7 +232,7 @@ export class HorariosAsignadosComponent implements OnInit {
     this.empleadoSuplenteNombre = '';
     this.mostrarEmpleado = false;
     this.empleadoSup = null;
-    this.fechaSeleccionada = '';
+    this.fechaSeleccionada = null;
   }
 
   abrirModalEmpleado() {
