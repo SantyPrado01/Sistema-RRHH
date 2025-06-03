@@ -64,7 +64,7 @@ export class EmpleadosService {
     return this.empleadoRepository.find()
   }
 
-  getEmpleados(){
+  getEmpleadosSinEliminar(){
     return this.empleadoRepository.find({where:{eliminado:false}})
   }
 

@@ -38,7 +38,7 @@ export class EmpleadosController {
     return this.empleadosService.get();
   }
 
-  @Get('/true')
+  @Get('true')
   getEmpleadosSinEliminar() {
     return this.empleadosService.getEmpleadosSinEliminar();
   }
