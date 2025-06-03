@@ -157,10 +157,10 @@ export class HorariosAsignadosComponent implements OnInit {
       this.observaciones = ''; 
       this.comprobado = true;
       if (horario.fecha) {
-        // Convertimos la fecha UTC a fecha local
-        const fechaUTC = new Date(horario.fecha);
-        const fechaLocal = new Date(fechaUTC.getTime() + (fechaUTC.getTimezoneOffset() * 60000));
-        this.fechaSeleccionada = fechaLocal.toISOString().split('T')[0];
+        const fecha = new Date(horario.fecha);
+        // Ajustamos a UTC-3
+        fecha.setHours(fecha.getHours() + 3);
+        this.fechaSeleccionada = fecha.toISOString().split('T')[0];
       }  
     }
     console.log('Fila seleccionada:', this.selectedHorario);
@@ -183,10 +183,9 @@ export class HorariosAsignadosComponent implements OnInit {
   actualizarHorarios(){
     if (!this.selectedHorario) return;
 
-    // Convertimos la fecha local a UTC
-    const fechaLocal = new Date(this.fechaSeleccionada);
-    const fechaUTC = new Date(fechaLocal.getTime() - (fechaLocal.getTimezoneOffset() * 60000));
-    fechaUTC.setUTCHours(3, 0, 0, 0);
+    const fecha = new Date(this.fechaSeleccionada);
+    // Establecemos UTC-3
+    fecha.setHours(3, 0, 0, 0);
 
     const updatedHorario: HorarioAsignado = {
       ...this.selectedHorario,
@@ -198,7 +197,7 @@ export class HorariosAsignadosComponent implements OnInit {
       comprobado: this.comprobado,
       empleadoSuplente: this.empleadoSup!,
       suplente: this.mostrarEmpleado,
-      fecha: fechaUTC
+      fecha: fecha
     };
     console.log('Datos enviados para actualización:', updatedHorario);
 
