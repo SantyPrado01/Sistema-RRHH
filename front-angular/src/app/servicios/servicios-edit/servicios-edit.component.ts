@@ -6,17 +6,45 @@ import { HttpClient } from '@angular/common/http';
 import { CategoriaServicioService } from '../services/categoria-servicios.service'; 
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { OrdenTrabajoService } from '../../ordenTrabajo/services/orden-trabajo.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 import { MatIconModule } from '@angular/material/icon';
 import { FacturaService } from '../../facturas/services/factura.service';
 import { ServicioService } from '../services/servicio.service';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { OrdenGrupo, OrdenTrabajo } from '../../ordenTrabajo/models/orden-trabajo.models';
 
 @Component({
   selector: 'app-empresas-edit',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, CommonModule, RouterModule, MatIconModule],
+  imports: [
+    NavbarComponent, 
+    FormsModule, 
+    CommonModule, 
+    RouterModule, 
+    MatIconModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatAutocompleteModule,
+    MatTableModule,
+    MatExpansionModule,
+    MatCardModule,
+    MatPaginatorModule
+  ],
   templateUrl: './servicios-edit.component.html',
   styleUrls: ['./servicios-edit.component.css']
 })
@@ -41,6 +69,13 @@ export class ServiciosEditComponent implements OnInit {
   estadoSeleccionado: boolean = false;
   filtroEmpleado: string = '';
 
+  ordenesAgrupadas: OrdenGrupo[] = [];
+  ordenesAgrupadasPaginadas: OrdenGrupo[] = [];
+  pageSize = 5;
+  pageIndex = 0;
+
+  selectedIndex: number = 0;
+
   constructor(
     private http: HttpClient,
     private empresaService: ServicioService,
@@ -62,8 +97,8 @@ export class ServiciosEditComponent implements OnInit {
     this.servicioId = this.route.snapshot.paramMap.get('id');
     if (this.servicioId) {
       this.cargarServicio(this.servicioId);
-      this.obtenerOrdenes(this.servicioId)
-      this.obtenerFacturas(this.servicioId)
+      this.obtenerOrdenes(this.servicioId);
+      this.obtenerFacturas(this.servicioId);
     }
     this.categoriaEmpresaService.getCategoriasServicio().subscribe({
       next: (data) => {
@@ -82,37 +117,39 @@ export class ServiciosEditComponent implements OnInit {
 
   cargarServicio(id: string) {
     this.empresaService.getServicioById(Number(id)).subscribe({
-      next:(data)=>{
+      next: (data) => {
         this.servicio = data;
         if (this.servicio.categoria && typeof this.servicio.categoria === 'object') {
-          this.servicio.categoria = this.servicio.categoria.id; 
+          this.servicio.categoria = this.servicio.categoria.id;
         }
-        console.log('Informacion de Servicio:', this.servicio.ciudad)
-        if (this.servicio.ciudad){
+        console.log('Información de Servicio:', this.servicio);
+        
+        // Cargar el nombre de la ciudad si existe el ID
+        if (this.servicio.ciudad) {
           this.obtenerNombreCiudad(this.servicio.ciudad.toString()).subscribe({
             next: (response) => {
               if (response.localidades_censales && response.localidades_censales.length > 0) {
-                this.ciudadNombre = response.localidades_censales[0].nombre;
-                console.log('Nombre de la ciudad encontrado:', this.ciudadNombre);
-              } else {
-                console.log('localidades_censales está vacío o no existe', response.localidades_censales);
-                this.ciudadNombre = 'Desconocido'; 
+                const ciudad = response.localidades_censales[0];
+                const ciudadObj = {
+                  id: this.servicio.ciudad,
+                  nombre: ciudad.nombre
+                };
+                this.ciudadNombre = ciudad.nombre;
+                this.ciudades = [ciudadObj];
+                console.log('Ciudad cargada:', ciudadObj);
               }
             },
             error: (err) => {
               console.error('Error al obtener el nombre de la ciudad', err);
-              this.ciudadNombre = 'Error';
+              this.ciudadNombre = '';
             }
           });
-        } else {
-          console.log('ID de ciudad no encontrado:', this.servicio.ciudad);
-          this.ciudadNombre = 'Desconocido'; 
         }
       },
       error: (err) => {
-        console.error('Error al cargar los datos del empleado', err);
+        console.error('Error al cargar los datos del servicio', err);
       }
-    })
+    });
   }
 
   obtenerNombreCiudad(idCiudad: string) {
@@ -120,20 +157,17 @@ export class ServiciosEditComponent implements OnInit {
     return this.http.get<any>(url);
   }
 
-  buscarCiudad(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const query = input.value;
+  buscarCiudad(event: any) {
+    const query = event.target.value;
     if (query.length > 2) {
       const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
       this.http.get<any>(url).subscribe({
         next: (response) => {
           console.log('Respuesta de la API:', response);
-          this.ciudades = response.localidades.map((localidad: any) => {
-            return {
-              id: localidad.id,
-              nombre: localidad.nombre,
-            };
-          });
+          this.ciudades = response.localidades.map((localidad: any) => ({
+            id: localidad.id,
+            nombre: localidad.nombre
+          }));
         },
         error: (err) => {
           console.error('Error al obtener las ciudades', err);
@@ -145,15 +179,17 @@ export class ServiciosEditComponent implements OnInit {
     }
   }
 
+  displayCiudad(ciudad: any): string {
+    if (!ciudad) return '';
+    if (typeof ciudad === 'string') return ciudad;
+    return ciudad.nombre || '';
+  }
+
   seleccionarCiudad(event: any) {
-    const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
-    console.log(selectedCity)
-    if (selectedCity.nombre == 'Córdoba'){
-      this.servicio.ciudad = 14014010; 
-      this.ciudadNombre = selectedCity.nombre;
-    } 
-    else {
-      this.servicio.ciudad = selectedCity.id; 
+    const selectedCity = event.option.value;
+    console.log('Ciudad seleccionada:', selectedCity);
+    if (selectedCity && selectedCity.id) {
+      this.servicio.ciudad = selectedCity.id;
       this.ciudadNombre = selectedCity.nombre;
     }
   }
@@ -197,7 +233,9 @@ export class ServiciosEditComponent implements OnInit {
     this.ordenTrabajoService.getOrdenesForServicio(servicioId).subscribe({
       next: (data) => {
         this.ordenes = data;
-        this.ordenesFiltradas = data
+        this.ordenesFiltradas = data;
+        this.ordenesAgrupadas = this.agruparOrdenes(this.ordenes);
+        this.actualizarPagina();
         console.log('Órdenes obtenidas:', this.ordenesFiltradas);
       },
       error: (err) => {
@@ -206,46 +244,45 @@ export class ServiciosEditComponent implements OnInit {
     });
   }
 
-  mesesMap: { [key: string]: number } = {
-    'Enero': 1,
-    'Febrero': 2,
-    'Marzo': 3,
-    'Abril': 4,
-    'Mayo': 5,
-    'Junio': 6,
-    'Julio': 7,
-    'Agosto': 8,
-    'Septiembre': 9,
-    'Octubre': 10,
-    'Noviembre': 11,
-    'Diciembre': 12
-  };
-
-  filtrarOrdenes() {
-    const anioSeleccionado = Number(this.anioSeleccionado);
-    const mesSeleccionadoNum = this.mesesMap[this.mesSeleccionado];
-    
-    this.ordenesFiltradas = this.ordenes.filter(orden => {
-
-      const coincideEmpleado = this.filtroEmpleado
-        ? orden.empleado.nombre && orden.empleado.nombre.toLowerCase().includes(this.filtroEmpleado.toLowerCase())
-        : true;
-
-      const coincideMes = mesSeleccionadoNum
-      ? orden.mes === mesSeleccionadoNum
-      : true;
-
-      const coincideAnio = this.anioSeleccionado
-      ? orden.anio === anioSeleccionado
-      : true;
-
-      const coincideEstado = this.estadoSeleccionado !== undefined
-        ? (this.estadoSeleccionado === true ? orden.completado === true : orden.completado === false)
-        : true;
-      return coincideEmpleado && coincideMes && coincideAnio && coincideEstado;
-    });
+  agruparOrdenes(ordenes: OrdenTrabajo[]): OrdenGrupo[] {
+    const mapa = new Map<string, OrdenGrupo>();
   
-    console.log('Órdenes filtradas:', this.ordenesFiltradas);
+    for (const orden of ordenes) {
+      const clave = `${orden.anio}-${orden.mes}`;
+      if (!mapa.has(clave)) {
+        mapa.set(clave, {
+          anio: orden.anio,
+          mes: orden.mes,
+          ordenes: []
+        });
+      }
+      mapa.get(clave)?.ordenes.push(orden);
+    }
+  
+    return Array.from(mapa.values()).sort((a, b) => {
+      if (a.anio !== b.anio) {
+        return b.anio - a.anio; 
+      } else {
+        return b.mes - a.mes;   
+      }
+    });
+  }
+
+  actualizarPagina() {
+    const inicio = this.pageIndex * this.pageSize;
+    const fin = inicio + this.pageSize;
+    this.ordenesAgrupadasPaginadas = this.ordenesAgrupadas.slice(inicio, fin);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.actualizarPagina();
+  }
+
+  getNombreMes(numeroMes: number): string {
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    return meses[numeroMes - 1];
   }
 
   obtenerDias(necesidades: any[]): string {
@@ -261,7 +298,7 @@ export class ServiciosEditComponent implements OnInit {
     this.facturaService.findByServicio(Number(servicioId)).subscribe({
       next: (data) => {
         this.facturas = data;
-        this.facturasFiltradas = data
+        this.facturasFiltradas = data;
         console.log('Órdenes obtenidas:', this.facturasFiltradas);
       },
       error: (err) => {

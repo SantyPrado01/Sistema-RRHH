@@ -8,17 +8,35 @@ import { Router } from '@angular/router';
 import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-alerta.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ServicioService } from '../services/servicio.service';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-empresas-new',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, CommonModule, MatDialogModule],
+  imports: [
+    NavbarComponent, 
+    FormsModule, 
+    CommonModule, 
+    MatDialogModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatAutocompleteModule
+  ],
   templateUrl: './servicios-new.component.html',
   styleUrls: ['./servicios-new.component.css']
 })
 export class ServiciosNewComponent implements OnInit {
-
-  seccionActual: string = 'datosEmpresa';
+  selectedIndex = 0;
   servicio: any = {};
   categorias: any[] = [];
   ciudades: any[] = [];
@@ -62,12 +80,11 @@ export class ServiciosNewComponent implements OnInit {
   }
   
   mostrarSeccion(seccion: string): void {
-    this.seccionActual = seccion;
+    this.selectedIndex = seccion === 'datosEmpresa' ? 0 : 1;
   }
 
-  buscarCiudad(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const query = input.value;
+  buscarCiudad(event: any) {
+    const query = event.target.value;
 
     if (query.length > 2) {
       const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
@@ -93,16 +110,18 @@ export class ServiciosNewComponent implements OnInit {
   }
 
   seleccionarCiudad(event: any) {
-    const selectedCity = this.ciudades.find(c => c.nombre === event.target.value);
-    console.log(selectedCity)
-    if (selectedCity.nombre == 'Córdoba'){
-      this.servicio.ciudad = 14014010; 
+    const selectedCity = event.option.value;
+    if (selectedCity.nombre === 'Córdoba') {
+      this.servicio.ciudad = 14014010;
       this.ciudadNombre = selectedCity.nombre;
-    } 
-    else {
-      this.servicio.ciudad = selectedCity.id; 
+    } else {
+      this.servicio.ciudad = selectedCity.id;
       this.ciudadNombre = selectedCity.nombre;
     }
+  }
+
+  displayCiudad(ciudad: any): string {
+    return ciudad ? ciudad.nombre : '';
   }
   
   guardarEmpresa() {

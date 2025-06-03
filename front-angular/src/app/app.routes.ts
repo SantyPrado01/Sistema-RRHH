@@ -4,7 +4,7 @@ import { UsuarioNewComponent } from './usuario/components/usuario-new/usuario-ne
 
 import { EmpleadosListComponent } from './empleados/empleados-list/empleados-list.component';
 import { EmpleadosNewComponent } from './empleados/empleados-new/empleados-new.component';
-import { EditEmpleadoComponent } from './empleados/empleados-edit/empleados-edit.component';
+import { EmpleadosEditComponent } from './empleados/empleados-edit/empleados-edit.component';
 
 import { HomeComponent } from './home-user/home.component';
 import { ServiciosNewComponent } from './servicios/servicios-new/servicios-new.component';
@@ -79,7 +79,7 @@ export const routes: Routes = [
     },
     {
         path: 'employee/edit/:id', 
-        component: EditEmpleadoComponent,
+        component: EmpleadosEditComponent,
         canActivate:[AuthGuard],
         data:{expectedRole:'Administrador'}
     },

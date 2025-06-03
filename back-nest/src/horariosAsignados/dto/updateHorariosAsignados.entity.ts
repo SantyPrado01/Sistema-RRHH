@@ -22,7 +22,9 @@ export class UpdateHorariosAsignadoDto extends PartialType(CreateHorariosAsignad
 
     horaFinReal?: string; 
 
-    estado?: string; 
+    estado?: string;
+    
+    estadoSuplente?: string;
 
     suplente?: boolean;
 

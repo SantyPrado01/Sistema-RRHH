@@ -10,15 +10,15 @@ export class UsuarioService {
 
   //Produccion
 
-  //private baseUrl = 'http://147.93.15.196:3000/users';
-  //private authUrl = 'http://147.93.15.196:3000/auth';
-  //private categoriaUrl = 'http://147.93.15.196:3000/categoria-usuario';
+  private baseUrl = 'http://147.93.15.196:3000/users';
+  private authUrl = 'http://147.93.15.196:3000/auth';
+  private categoriaUrl = 'http://147.93.15.196:3000/categoria-usuario';
 
   //Desarrollo
 
-  private baseUrl = 'http://localhost:3000/users';
-  private authUrl = 'http://localhost:3000/auth';
-  private categoriaUrl = 'http://localhost:3000/categoria-usuario';
+  //private baseUrl = 'http://localhost:3000/users';
+  //private authUrl = 'http://localhost:3000/auth';
+  //private categoriaUrl = 'http://localhost:3000/categoria-usuario';
 
   constructor(private http: HttpClient) { }
 

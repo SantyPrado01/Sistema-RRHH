@@ -19,7 +19,9 @@ export class CreateHorariosAsignadoDto {
 
     horaFinReal?: string; // Hora de fin real (opcional)
 
-    estado?: string; // Estado del horario asignado (opcional)
+    estado?: string;
+    
+    estadoSuplente?: string;// Estado del horario asignado (opcional)
 
     suplente?: boolean;
 

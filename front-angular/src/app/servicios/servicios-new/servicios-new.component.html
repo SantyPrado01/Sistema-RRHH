@@ -2,99 +2,143 @@
   <div class="title-item">
     <h1>Registrar Nueva Empresa</h1>
   </div>
-
 </div>
+
 <div class="container">
-  <div class="sidebar">
-    <ul class="sidebar-menu">
-      <li (click)="mostrarSeccion('datosEmpresa')" [class.active]="seccionActual === 'datosEmpresa'">Datos Empresa</li>
-    </ul>
-  </div>
+  <mat-tab-group [(selectedIndex)]="selectedIndex" animationDuration="0ms">
+    <mat-tab label="Datos Empresa">
+      <div class="form-container">
+        <form (ngSubmit)="guardarEmpresa()" #form="ngForm">
+          <!-- Fila 1 -->
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre de la Empresa</mat-label>
+              <input matInput
+                     [(ngModel)]="servicio.nombre"
+                     name="nombreEmpresa"
+                     placeholder="Ingrese el nombre"
+                     required
+                     #nombreEmpresa="ngModel">
+              <mat-error *ngIf="nombreEmpresa.invalid && nombreEmpresa.touched">
+                El nombre es requerido
+              </mat-error>
+            </mat-form-field>
 
-  <div class="form-container">
+            <mat-form-field appearance="outline">
+              <mat-label>CUIT</mat-label>
+              <input matInput
+                     type="number"
+                     [(ngModel)]="servicio.cuit"
+                     name="cuitEmpresa"
+                     placeholder="Ingrese el CUIT"
+                     pattern="^[0-9]+$"
+                     #nroCuit="ngModel">
+              <mat-error *ngIf="nroCuit.invalid && nroCuit.touched">
+                El número de CUIT es requerido
+              </mat-error>
+            </mat-form-field>
 
-    <div *ngIf="seccionActual === 'datosEmpresa'">
-
-      <form (ngSubmit)="guardarEmpresa()" class="form-container" #form="ngForm">
-        <!-- Fila 1 -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nombreEmpresa">Nombre de la Empresa:</label>
-            <input type="text" id="nombreEmpresa" [(ngModel)]="servicio.nombre" name="nombreEmpresa" class="form-control" placeholder="Ingrese el nombre" #nombreEmpresa="ngModel" required />
-            <div *ngIf="nombreEmpresa.invalid && nombreEmpresa.touched" class="error"><i class="fas fa-times-circle"></i> El nombre es requerido.</div>
+            <mat-form-field appearance="outline">
+              <mat-label>Categoría de Empresa</mat-label>
+              <mat-select [(ngModel)]="servicio.categoria"
+                         name="categoriaEmpresa"
+                         required
+                         #categoriaEmpresa="ngModel">
+                <mat-option [value]="">Seleccione una categoría</mat-option>
+                <mat-option *ngFor="let categoria of categorias"
+                           [value]="categoria.id">
+                  {{ categoria.nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="categoriaEmpresa.invalid && categoriaEmpresa.touched">
+                La categoría de la empresa es requerida
+              </mat-error>
+            </mat-form-field>
           </div>
 
-          <div class="form-group">
-            <label for="cuitEmpresa">CUIT:</label>
-            <input type="number" id="cuitEmpresa" [(ngModel)]="servicio.cuit" name="cuitEmpresa" class="form-control" placeholder="Ingrese el CUIT" pattern="^[0-9]+$" #nroCuit="ngModel"/>
-            <div *ngIf="nroCuit.invalid && nroCuit.touched" class="error"><i class="fas fa-times-circle"></i> El número de cuit es requerido.</div>
+          <!-- Fila 2 -->
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Dirección</mat-label>
+              <input matInput
+                     [(ngModel)]="servicio.direccion"
+                     name="direccionEmpresa"
+                     placeholder="Ingrese la dirección"
+                     #direccionEmpresa="ngModel">
+              <mat-error *ngIf="direccionEmpresa.invalid && direccionEmpresa.touched">
+                La dirección de la empresa es requerida
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+              <input matInput
+                     type="tel"
+                     [(ngModel)]="servicio.telefono"
+                     name="telefonoEmpresa"
+                     placeholder="Ingrese el teléfono"
+                     maxlength="10"
+                     pattern="^[0-9]{10}$"
+                     #telefonoEmpresa="ngModel">
+              <mat-error *ngIf="telefonoEmpresa.touched && telefonoEmpresa.invalid">
+                El teléfono es requerido y debe tener 10 dígitos
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Ciudad</mat-label>
+              <input matInput
+                     [(ngModel)]="servicio.ciudad"
+                     name="ciudadNombre"
+                     placeholder="Ingrese la ciudad"
+                     (input)="buscarCiudad($event)"
+                     [matAutocomplete]="auto"
+                     required
+                     #ciudadNombre="ngModel">
+              <mat-autocomplete #auto="matAutocomplete" 
+                              [displayWith]="displayCiudad"
+                              (optionSelected)="seleccionarCiudad($event)">
+                <mat-option *ngFor="let ciudad of ciudades"
+                           [value]="ciudad">
+                  {{ciudad.nombre}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="ciudadNombre.invalid && ciudadNombre.touched">
+                La ciudad es requerida
+              </mat-error>
+            </mat-form-field>
           </div>
 
-          <div class="form-group">
-            <label for="categoriaEmpresa">Categoría de Empresa:</label>
-            <select id="categoriaEmpresa" [(ngModel)]="servicio.categoria" name="categoriaEmpresa" class="form-control" required #categoriaEmpresa="ngModel">
-              <option value="" disabled selected>Seleccione una categoría</option>
-              <option *ngFor="let categoria of categorias" [value]="categoria.id">
-                {{ categoria.nombre }}
-              </option>
-              <div *ngIf="categoriaEmpresa.invalid && categoriaEmpresa.touched" class="error"><i class="fas fa-times-circle"></i> La categoría de la empresa es requerida.</div>
-            </select>
-          </div>
-        </div>
-
-        <!-- Fila 2 -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="direccionEmpresa">Dirección:</label>
-            <input type="text" id="direccionEmpresa" [(ngModel)]="servicio.direccion" name="direccionEmpresa" class="form-control" placeholder="Ingrese la dirección" #direccionEmpresa="ngModel"/>
-            <div *ngIf="direccionEmpresa.invalid && direccionEmpresa.touched" class="error"><i class="fas fa-times-circle"></i> La direccion de la empresa es requerida.</div>
+          <!-- Fila 3: Descripción -->
+          <div class="form-row-full-width">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput
+                        [(ngModel)]="servicio.descripcion"
+                        name="descripcionEmpresa"
+                        rows="3"
+                        placeholder="Ingrese una descripción"></textarea>
+            </mat-form-field>
           </div>
 
-          <div class="form-group">
-            <label for="telefonoEmpresa">Teléfono:</label>
-            <input type="tel" id="telefonoEmpresa" [(ngModel)]="servicio.telefono" name="telefonoEmpresa" class="form-control" placeholder="Ingrese el teléfono" maxlength="10" pattern="^[0-9]{10}$" #telefonoEmpresa="ngModel"/>
-            <div *ngIf="telefonoEmpresa.touched && telefonoEmpresa.invalid" class="error"><i class="fas fa-times-circle"></i> El teléfono es requerido.</div>
+          <!-- Botones -->
+          <div class="button-row">
+            <button mat-raised-button
+                    color="primary"
+                    type="submit"
+                    [disabled]="!form.valid">
+              <mat-icon>save</mat-icon>
+              Guardar Empresa
+            </button>
+            <button mat-button
+                    type="button"
+                    (click)="cancelar()">
+              <mat-icon>cancel</mat-icon>
+              Cancelar
+            </button>
           </div>
-
-          <div class="form-group autocomplete-group">
-            <label for="ciudadEmpresa">Ciudad:</label>
-            <input
-              type="text"
-              id="ciudadEmpresa"
-              [(ngModel)]="servicio.ciudad"
-              name="ciudadNombre"
-              class="form-control"
-              placeholder="Ingrese la ciudad"
-              (input)="buscarCiudad($event)"
-              (change)="seleccionarCiudad($event)"
-              list="ciudadesList"
-              required
-              #ciudadNombre="ngModel"
-            />
-            <div *ngIf="ciudadNombre.invalid && ciudadNombre.touched" class="error"><i class="fas fa-times-circle"></i> La ciudad es requerida.</div>
-            <datalist id="ciudadesList">
-              <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
-            </datalist>
-          </div>
-        </div>
-
-        <!-- Fila 3: Descripción -->
-        <div class="form-row-full-width">
-          <div class="form-group-full-width">
-            <label for="descripcionEmpresa">Descripción:</label>
-            <textarea id="descripcionEmpresa" [(ngModel)]="servicio.descripcion" name="descripcionEmpresa" class="form-control" rows="3" placeholder="Ingrese una descripción"></textarea>
-          </div>
-        </div>
-
-        <!-- Botones -->
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-save" [disabled]="!form.valid">Guardar Empresa</button>
-          <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
-        </div>
-      </form>
-    </div>
-    <div *ngIf="seccionActual === 'ordenesTrabajo'">
- 
-    </div>  
-  </div>
+        </form>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

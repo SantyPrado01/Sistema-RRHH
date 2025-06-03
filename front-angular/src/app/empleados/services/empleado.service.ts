@@ -9,10 +9,10 @@ import { Empleado } from '../models/empleado.models';
 export class EmpleadoService {
 
   //Produccion
-  //private apiUrl = 'http://147.93.15.196:3000/empleados';
+  private apiUrl = 'http://147.93.15.196:3000/empleados';
 
   //Desarrollo
-  private apiUrl = 'http://localhost:3000/empleados'; 
+  //private apiUrl = 'http://localhost:3000/empleados'; 
 
   constructor(private http: HttpClient) {}
 
@@ -36,5 +36,8 @@ export class EmpleadoService {
   }
   deleteEmpleado(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+  getHorariosEmpleado(empleadoId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${empleadoId}/horarios`);
   }
 }

@@ -34,6 +34,9 @@ export class HorarioAsignado {
     @Column()
     estado: string; 
 
+    @Column()
+    estadoSuplente: string;
+
     @Column({default: false})
     suplente: boolean
 

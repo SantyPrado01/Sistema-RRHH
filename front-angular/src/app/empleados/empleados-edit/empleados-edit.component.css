@@ -1,8 +1,7 @@
 /* General container styling */
 .container {
-  display: flex;
-  flex-direction: row;
-  margin-top: 1.5em;
+  padding: 20px;
+  margin: 0 auto;
 }
 
 .title-container {
@@ -10,308 +9,283 @@
   justify-content: center;
   align-items: flex-end;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
-  background-color:#333333;
+  background-color: #333333;
   text-align: center;
   height: 6.2em;
 }
 
-.title-container h1 {
-  color: white;
+.title-item h1 {
+  color: #fff;
   font-size: 2em;
 }
 
-/* Sidebar styling */
-.sidebar {
-  width: 200px;
-  max-height: 50vh;
-  background-color: #f8f9fa;
-  border-right: 1px solid #ddd;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); 
+/* Tabs styling */
+::ng-deep .mat-mdc-tab-group {
+  --mdc-tab-indicator-active-indicator-color: #CC5600;
+  --mat-tab-header-active-ripple-color: #CC5600;
+  --mat-tab-header-inactive-ripple-color: #CC5600;
 }
 
-.sidebar-menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+::ng-deep .mdc-tab-indicator__content {
+  border-color: #CC5600 !important;
 }
 
-.sidebar-menu li {
-  padding: 10px;
-  cursor: pointer;
-  color: #333;
-  font-weight: 600;
-  transition: background-color 0.3s, color 0.3s;
-  margin-bottom: 0.5rem;
+::ng-deep .mat-mdc-tab .mdc-tab-indicator__content--underline {
+  border-color: #CC5600 !important;
 }
 
-.sidebar-menu li:hover,
-.sidebar-menu li.active {
-  color: #CC5600; 
-  border-bottom: 2px solid #CC5600; 
+/* Remove all text color overrides */
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: inherit;
 }
 
-/* Form container styling */
+::ng-deep .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label {
+  color: inherit;
+}
+
+/* Form styling */
 .form-container {
-  flex: 1;
-  padding: 20px;
-  max-width: 100vh;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
+  padding: 24px;
 }
 
 .form-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
-.form-group {
+.form-row mat-form-field {
   flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 
-.form-grup-full-width{
+.form-row-full-width {
+  margin-bottom: 20px;
+}
+
+.form-row-full-width mat-form-field {
   width: 100%;
 }
 
-label {
-  color: #333;
-  font-weight: bold;
-}
-/* Error message styling */
-.error {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-}
-
-.error i {
-  margin-right: 5px;
-}
-
 /* Button styling */
-.btn {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.button-row {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
 }
 
-.btn-save {
+.button-row button.mat-mdc-raised-button.mat-primary {
   background-color: #28a745;
   color: white;
 }
 
-.btn-save:hover {
+.button-row button.mat-mdc-raised-button.mat-primary:hover {
   background-color: #218838;
 }
 
-.btn-save-two {
-  margin: 20px;
-  background-color: #CC5600;
+.button-row button[type="button"] {
+  background-color: #D32F2F;
   color: white;
 }
 
-.btn-cancel {
-  background-color: #ccc;
-  color: #333;
+.button-row button[type="button"]:hover {
+  background-color: #B71C1C;
 }
 
-.btn-cancel:hover {
-  background-color: #aaa;
+.button-row button[type="button"] mat-icon {
+  color: white;
 }
 
-/* Footer buttons */
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+/* Accordion styling */
+::ng-deep .mat-expansion-panel-header.mat-expanded {
+  background-color: rgba(0, 0, 0, 0.04) !important;
 }
 
-.disponibilidad-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%; 
-  padding: 20px; 
-  border: 1px solid #ccc; 
-  border-radius: 8px; 
-  background-color: #f9f9f9;
+::ng-deep .mat-expansion-panel-header:hover {
+  background-color: rgba(0, 0, 0, 0.02) !important;
 }
 
-.full-time-container {
-  margin-bottom: 20px;
-  margin-top: 20px; 
+::ng-deep .mat-expansion-indicator::after {
+  color: #666;
 }
 
-.disponibilidad-grid {
-  display: grid; 
-  grid-template-columns: 1fr 1fr 1fr; 
-  gap: 10px; 
-}
-
-.grid-header {
-  font-weight: bold; 
-  display: contents; 
-}
-
-.grid-row {
-  display: contents; 
-}
-
-.dia {
-  font-weight: bold; 
-}
-
-.hora {
-  display: flex; 
-  justify-content: flex-start; 
-}
-
-input[type="time"] {
-  width: 100%; 
-  padding: 5px; 
-  box-sizing: border-box; 
-}
-/* Contenedor principal */
-.orden-trabajo-container {
+/* Card styling */
+.form-column-accordion {
   padding: 20px;
 }
 
-h3 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
 }
 
+.orden-card {
+  flex: 1;
+  min-width: 300px;
+  max-width: calc(33.333% - 16px);
+  margin-bottom: 16px;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.orden-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.orden-card mat-card-title {
+  font-size: 1.1em;
+  margin-bottom: 12px;
+  color: #333;
+  margin-left: 1em;
+}
+
+.orden-card mat-card-content {
+  color: #666;
+  padding: 0 1em;
+}
+
+.orden-card mat-card-content p {
+  margin: 8px 0;
+}
+
+/* Status indicators */
 .status {
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
-  color: #fff;
+  font-size: 0.9em;
+  font-weight: 500;
 }
 
 .status.completed {
-  background-color: #28a745; /* Verde para completada */
-}
-
-.status.pending {
-  background-color: #ffc107; /* Amarillo para pendiente */
-}
-
-.btn-info{
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2em;
-}
-.form-row-footer {
-  display: flex;
-  justify-content: center; 
-  gap: 1em; 
-  margin-left: 0;
-  margin-right: 0;
-  padding-top: 1em;
-  padding-bottom: 1em;
-}
-
-.form-group-footer {
-  margin-right: 0; 
-  margin-left: 0; 
-  margin-bottom: 0; 
-}
-
-.button-footer-pdf {
-  width: 100%; 
-  padding: 8px 16px; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  background-color: #e64a19; 
-  color: white; 
-  border: none; 
-  border-radius: 4px; 
-  font-size: 14px; 
-}
-
-.button-footer-excel {
-  width: 100%; 
-  padding: 8px 16px; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  background-color: #17a34a; 
-  color: white; 
-  border: none; 
-  border-radius: 4px; 
-  font-size: 14px; 
-}
-
-.button-footer-pdf, .button-footer-excel {
-  width: auto; 
-  padding: 8px 16px; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-}
-.button-footer-pdf:hover {
-  background-color: #d43f00; 
-}
-
-.button-footer-excel:hover {
-  background-color: #14892c; 
-}
-
-.orden-trabajo-container, .orden-mensual-container {
-  max-width: 100%; /* Asegura que el contenedor no sobrepase el tamaño de la pantalla */
-  overflow-x: auto; /* Habilita el scroll horizontal si la tabla excede el ancho */
-  overflow-y: auto; /* Habilita el scroll vertical si la tabla excede el alto */
-  max-height: 60vh; /* Ajusta la altura máxima del contenedor según sea necesario */
-}
-
-/* Estilo para las tablas */
-table.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.status.delete {
-  margin-left: 1em;
-  background-color: red;
+  background-color: #28a745;
   color: white;
 }
 
-
-.card-container{
-  display: flex;
-  flex-wrap: wrap;
+.status.pending {
+  background-color: #ffc107;
+  color: #333;
 }
 
-.card-meses-container{
-  display: flex;
+.status.delete {
+  background-color: #dc3545;
+  color: white;
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .container {
+@media (max-width: 1360px) {
+  .form-container {
+    max-width: 100%;
+  }
+  
+  .form-row {
     flex-direction: column;
   }
-
-  .sidebar {
+  
+  .form-row mat-form-field {
     width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
   }
 
-  .form-container {
-    padding: 10px;
+  .orden-card {
+    max-width: calc(50% - 16px);
+  }
+}
+
+@media (max-width: 768px) {
+  .orden-card {
+    max-width: 100%;
+  }
+}
+
+/* Disponibilidad Horaria styling */
+.disponibilidad-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.disponibilidad-container h3 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.disponibilidad-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.grid-row {
+  display: flex;
+  gap: 15px;
+  width: calc(33.333% - 10px); /* Tres columnas por fila con gap de 15px */
+  min-width: 300px;
+}
+
+.grid-row mat-form-field {
+  flex: 1;
+}
+
+@media (max-width: 1200px) {
+  .grid-row {
+    width: calc(50% - 7.5px); /* Dos columnas por fila */
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-row {
+    width: 100%; /* Una columna en móviles */
+  }
+}
+
+/* Estilos para las tarjetas de meses */
+.card-meses-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+}
+
+.mes-card {
+  flex: 1;
+  min-width: 250px;
+  max-width: calc(33.333% - 16px);
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-bottom: 16px;
+}
+
+.mes-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mes-card mat-card-title {
+  font-size: 1.1em;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  color: #333;
+}
+
+.mes-card mat-card-content {
+  padding: 0 1em;
+  color: #666;
+}
+
+.mes-card button {
+  margin-top: 1em;
+}
+
+@media (max-width: 1200px) {
+  .mes-card {
+    max-width: calc(50% - 16px);
+  }
+}
+
+@media (max-width: 768px) {
+  .mes-card {
+    max-width: 100%;
   }
 }

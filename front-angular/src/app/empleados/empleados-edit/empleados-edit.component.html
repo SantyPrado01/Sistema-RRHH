@@ -1,211 +1,210 @@
 <div class="title-container">
-  <h1>Perfil Empleado</h1>
+  <div class="title-item">
+    <h1>Perfil Empleado</h1>
+  </div>
 </div>
 
 <div class="container">
-    <div class="sidebar">
-      <ul class="sidebar-menu">
-        <li (click)="mostrarSeccion('datosPersonales')" [class.active]="seccionActual === 'datosPersonales'">Datos Personales</li>
-        <li (click)="mostrarSeccion('datosLaborales')" [class.active]="seccionActual === 'datosLaborales'">Datos Laborales</li>
-        <li (click)="mostrarSeccion('ordenesTrabajo')" [class.active]="seccionActual === 'ordenesTrabajo'">Ordenes de Trabajo</li>
-        <li (click)="mostrarSeccion('cierreMensual'); filtrarMensual()" [class.active]="seccionActual === 'cierreMensual'">Informacion Mensual</li>
-      </ul>
-    </div>
-
-    <div class="form-container">
-      <form #empleadoForm="ngForm" (ngSubmit)="actualizarEmpleado()">
-        <!-- Datos Personales -->
-        <div *ngIf="seccionActual === 'datosPersonales'">
+  <mat-tab-group [(selectedIndex)]="selectedIndex" animationDuration="0ms">
+    <mat-tab label="Datos Personales">
+      <div class="form-container">
+        <form #empleadoForm="ngForm" (ngSubmit)="actualizarEmpleado()">
           <div class="form-row">
-            
-            <div class="form-group">
-              
-              <label for="nombre">Nombre:</label>
-              <input type="text" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre" required #nombreEmpleado="ngModel" (input)="validarSoloLetras($event)"/>
-              <div *ngIf="nombreEmpleado.invalid && nombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El nombre es requerido.</div>
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input matInput [(ngModel)]="empleado.nombre" name="nombre" required #nombreEmpleado="ngModel" (input)="validarSoloLetras($event)">
+              <mat-error *ngIf="nombreEmpleado.invalid && nombreEmpleado.touched">El nombre es requerido</mat-error>
+            </mat-form-field>
 
-            <div class="form-group">
-              <label for="apellido">Apellido:</label>
-              <input type="text" id="apellido" [(ngModel)]="empleado.apellido" name="apellido" class="form-control" placeholder="Ingrese el apellido" required #apellidoEmpleado="ngModel" (input)="validarSoloLetras($event)" />
-              <div *ngIf="apellidoEmpleado.invalid && apellidoEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El apellido es requerido.</div>
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Apellido</mat-label>
+              <input matInput [(ngModel)]="empleado.apellido" name="apellido" required #apellidoEmpleado="ngModel" (input)="validarSoloLetras($event)">
+              <mat-error *ngIf="apellidoEmpleado.invalid && apellidoEmpleado.touched">El apellido es requerido</mat-error>
+            </mat-form-field>
 
-            <div class="form-group">
-              <label for="nroDocumento">Número de Documento:</label>
-              <input type="text" id="nroDocumento" [(ngModel)]="empleado.nroDocumento" name="nroDocumento" class="form-control" placeholder="Ingrese el número de documento" required #nroDocumentoEmpleado="ngModel" pattern="^[0-9]{8}$" maxlength="8"/>
-              <div *ngIf="nroDocumentoEmpleado.invalid && nroDocumentoEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El número de documento es requerido.</div>
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Número de Documento</mat-label>
+              <input matInput [(ngModel)]="empleado.nroDocumento" name="nroDocumento" required #nroDocumentoEmpleado="ngModel" pattern="^[0-9]{8}$" maxlength="8">
+              <mat-error *ngIf="nroDocumentoEmpleado.invalid && nroDocumentoEmpleado.touched">El número de documento es requerido</mat-error>
+            </mat-form-field>
           </div>
 
           <div class="form-row">
-            <div class="form-group">
-              <label for="telefono">Teléfono:</label>
-              <input type="tel" id="telefono" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" placeholder="Ingrese el teléfono" required #telefonoEmpleado="ngModel" maxlength="10" pattern="^[0-9]{10}$" (input)="validarTelefono($event)" />
-              <div *ngIf="telefonoEmpleado.touched && telefonoEmpleado.invalid" class="error"><i class="fas fa-times-circle"></i> El teléfono es requerido.</div>
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+              <input matInput [(ngModel)]="empleado.telefono" name="telefono" required #telefonoEmpleado="ngModel" maxlength="10" pattern="^[0-9]{10}$" (input)="validarTelefono($event)">
+              <mat-error *ngIf="telefonoEmpleado.touched && telefonoEmpleado.invalid">El teléfono es requerido</mat-error>
+            </mat-form-field>
 
-            <div class="form-group">
-              <div class="form-group full-width">
-                <label for="email">Email:</label>
-                <input type="text" id="email" [(ngModel)]="empleado.email" name="email" class="form-control" placeholder="Ingrese el email" required #emailEmpleado="ngModel"/>
-                <div *ngIf="emailEmpleado.invalid && emailEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El email es requerido.</div>
-              </div>
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput [(ngModel)]="empleado.email" name="email" required #emailEmpleado="ngModel" type="email">
+              <mat-error *ngIf="emailEmpleado.invalid && emailEmpleado.touched">El email es requerido</mat-error>
+            </mat-form-field>
 
-            <div class="form-group">
-              <label for="ciudad">Ciudad:</label>
-              <input type="text" id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" class="form-control" placeholder="Ingrese la ciudad" (input)="buscarCiudad($event)" (change)="seleccionarCiudad($event)" list="ciudadesList" required #ciudadNombreEmpleado="ngModel"/>
-              <div *ngIf="ciudadNombreEmpleado.invalid && ciudadNombreEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La ciudad es requerida.</div>
-              <datalist id="ciudadesList">
-                <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
-              </datalist>
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Ciudad</mat-label>
+              <input matInput [(ngModel)]="ciudadNombre" name="ciudadNombre" required #ciudadNombreEmpleado="ngModel" 
+                     [matAutocomplete]="auto" (input)="buscarCiudad($event)">
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCiudad">
+                <mat-option *ngFor="let ciudad of ciudades" [value]="ciudad">
+                  {{ciudad.nombre}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="ciudadNombreEmpleado.invalid && ciudadNombreEmpleado.touched">La ciudad es requerida</mat-error>
+            </mat-form-field>
           </div>
+
           <div class="form-row-full-width">
-            <div class="form-group-full-width">
-              <label for="observaciones">Observaciones:</label>
-              <textarea id="observaciones" [(ngModel)]="empleado.observaciones" name="observaciones" class="form-control" rows="3" maxlength="250"></textarea>
-            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Observaciones</mat-label>
+              <textarea matInput [(ngModel)]="empleado.observaciones" name="observaciones" rows="3" maxlength="250"></textarea>
+            </mat-form-field>
           </div>
-        </div>
 
-        <!-- Datos Laborales -->
-        <div *ngIf="seccionActual === 'datosLaborales'">
+          <div class="button-row">
+            <button mat-raised-button color="primary" type="submit" [disabled]="empleadoForm.invalid">
+              <mat-icon>save</mat-icon>
+              Guardar Empleado
+            </button>
+            <button mat-button type="button" (click)="cancelar()">
+              <mat-icon>cancel</mat-icon>
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Datos Laborales">
+      <div class="form-container">
+        <form #empleadoForm="ngForm" (ngSubmit)="actualizarEmpleado()">
           <div class="form-row">
-            <div class="form-group">
-              <label for="legajo">Legajo:</label>
-              <input type="number" id="legajo" [(ngModel)]="empleado.legajo" name="legajo" class="form-control" placeholder="Ingrese el legajo" required #legajoEmpleado="ngModel" min="0"/>
-              <div *ngIf="legajoEmpleado.invalid && legajoEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> El legajo es requerido.</div>
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Legajo</mat-label>
+              <input matInput type="number" [(ngModel)]="empleado.legajo" name="legajo" required #legajoEmpleado="ngModel" min="0">
+              <mat-error *ngIf="legajoEmpleado.invalid && legajoEmpleado.touched">El legajo es requerido</mat-error>
+            </mat-form-field>
 
-            <div class="form-group">
-              <label for="fechaContratacion">Fecha de Contratación:</label>
-              <input type="date" id="fechaContratacion" [(ngModel)]="empleado.fechaIngreso" name="fechaContratacion" class="form-control" required />
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Contratación</mat-label>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="empleado.fechaIngreso" name="fechaContratacion" required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
 
-            <div class="form-group">
-              <label for="categoriaEmpleado">Categoría de Empleado:</label>
-              <select id="categoriaEmpleado" [(ngModel)]="empleado.categoria" name="categoriaEmpleado" class="form-control" required #categoriaEmpleado="ngModel">
-                <option value="" disabled selected>Seleccione una categoría</option>
-                <option *ngFor="let categoria of categorias" [value]="categoria.id">
-                  {{ categoria.nombre }}
-                </option>
-                <div *ngIf="categoriaEmpleado.invalid && categoriaEmpleado.touched" class="error"><i class="fas fa-times-circle"></i> La categoría de empleado es requerida.</div>
-              </select>
-            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Categoría de Empleado</mat-label>
+              <mat-select [(ngModel)]="empleado.categoria" name="categoriaEmpleado" required #categoriaEmpleado="ngModel" [compareWith]="compareCategorias">
+                <mat-option [value]="null">Seleccione una categoría</mat-option>
+                <mat-option *ngFor="let categoria of categorias" [value]="categoria">
+                  {{categoria.nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="categoriaEmpleado.invalid && categoriaEmpleado.touched">La categoría es requerida</mat-error>
+            </mat-form-field>
           </div>
+
           <div class="form-row">
             <div class="disponibilidad-container">
-              <h5>Disponibilidad Horaria</h5>
-              <div class="full-time-container">
-                <label>
-                  <input type="checkbox" [(ngModel)]="fullTime" name="fullTime" (change)="toggleFullTime()" />
-                  Full Time
-                </label>
-              </div>
-            
+              <h3>Disponibilidad Horaria</h3>
+              <mat-checkbox [(ngModel)]="fullTime" name="fullTime" (change)="toggleFullTime()">
+                Full Time
+              </mat-checkbox>
+
               <div class="disponibilidad-grid">
-                <div class="grid-header">
-                  <div>Día</div>
-                  <div>Hora Inicio</div>
-                  <div>Hora Fin</div>
-                </div>
-            
                 <div *ngFor="let dia of disponibilidad" class="grid-row">
-                  <div>{{ dia.nombre }}</div>
-                  <div>
-                    <input type="time" [(ngModel)]="dia.horaInicio" name="horaInicio_{{ dia.diaSemana }}" [disabled]="fullTime" [ngModelOptions]="{standalone: true}"/>
-                  </div>
-                  <div>
-                    <input type="time" [(ngModel)]="dia.horaFin" name="horaFin_{{ dia.diaSemana }}" [disabled]="fullTime" [ngModelOptions]="{standalone: true}"/>
-                  </div>
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{getNombreDia(dia.diaSemana)}} Hora Inicio</mat-label>
+                    <input matInput type="time" [(ngModel)]="dia.horaInicio" [name]="'horaInicio_' + dia.diaSemana" [disabled]="fullTime">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{getNombreDia(dia.diaSemana)}} Hora Fin</mat-label>
+                    <input matInput type="time" [(ngModel)]="dia.horaFin" [name]="'horaFin_' + dia.diaSemana" [disabled]="fullTime">
+                  </mat-form-field>
                 </div>
               </div>
-    
-            </div>           
-          </div>          
-        </div>
-        <div class="modal-footer" *ngIf="seccionActual === 'datosPersonales' || seccionActual === 'datosLaborales'">
-          <button type="submit" class="btn btn-save" [disabled]="empleadoForm.invalid">Actualizar Empleado</button>
-          <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
-        </div>
-      </form>
+            </div>
+          </div>
 
-      <!-- Ordenes de Trabajo -->
-      <div *ngIf="seccionActual === 'ordenesTrabajo'">
-
-        <div class="form-column-accordion">
-          <mat-accordion>
-            <mat-expansion-panel *ngFor="let grupo of ordenesAgrupadasPaginadas">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  {{ getNombreMes(grupo.mes) }} {{ grupo.anio }}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              
-              <div class="card-container">
-                <mat-card
-                  *ngFor="let orden of grupo.ordenes"
-                  class="orden-card"
-                  [routerLink]="['/ordentrabajo/view', orden.Id]"
-                  style="cursor: pointer;
-                  margin: 0.5em;
-                  padding: 0.5em;
-                  "
-                >
-                  <mat-card-title style="font-size: 1em; margin-left: 1em; margin-bottom: 1em;">N°{{ orden.Id }}/{{ orden.servicio.nombre }}</mat-card-title>
-                  <mat-card-content>
-                    <p><strong>Horas proyectadas:</strong> {{ orden.horasProyectadas }}</p>
-                    <p><strong>Horas reales:</strong> {{ orden.horasReales }}</p>
-                    <p><strong>Estado:</strong> 
-                      <span *ngIf="orden.completado" class="status completed">Completado</span>
-                      <span *ngIf="!orden.completado" class="status pending">En Curso</span>
-                    </p>
-                  </mat-card-content>
-                </mat-card>
-              </div>
-            </mat-expansion-panel>
-          </mat-accordion>
-          
-          <mat-paginator
-            [length]="ordenesAgrupadas.length"
-            [pageSize]="pageSize"
-            [pageIndex]="pageIndex"
-            [pageSizeOptions]="[5, 10, 20]"
-            (page)="onPageChange($event)">
-          </mat-paginator>
-        </div>
+          <div class="button-row">
+            <button mat-raised-button color="primary" type="submit" [disabled]="empleadoForm.invalid">
+              <mat-icon>save</mat-icon>
+              Guardar Empleado
+            </button>
+            <button mat-button type="button" (click)="cancelar()">
+              <mat-icon>cancel</mat-icon>
+              Cancelar
+            </button>
+          </div>
+        </form>
       </div>
+    </mat-tab>
 
-      <div *ngIf="seccionActual === 'cierreMensual'">
-        <div class="form-column-accordion">
-          <mat-accordion>
-            <mat-expansion-panel *ngFor="let grupo of horariosAgrupados">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Año {{ grupo.anio }}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-          
-              <div class="card-meses-container">
-                <mat-card *ngFor="let mes of grupo.meses" class="mes-card" 
-                [routerLink]="['/horariosRealizados', empleadoId]" 
-                [queryParams]="{ mes: mes.mes, anio: grupo.anio }"
-                style="cursor: pointer;
-                margin: 0.5em;
-                padding: 0.5em;">
-                  <mat-card-title style="font-size: 1em; margin-left: 1em; margin-bottom: 1em;">{{ getNombreMes(mes.mes) }}</mat-card-title>
-                  <mat-card-content>
-                    <p><strong>Total horas realizadas:</strong> {{ getHorasTotales(mes.horarios) }}</p>
-                    
-                    <button mat-stroked-button>Ver Detalle</button>
-                  </mat-card-content>
-                </mat-card>
-              </div>
-            </mat-expansion-panel>
-          </mat-accordion>
-        </div>
-      </div>       
-    </div>
+    <mat-tab label="Ordenes de Trabajo">
+      <div class="form-column-accordion">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let grupo of ordenesAgrupadasPaginadas">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ getNombreMes(grupo.mes) }} {{ grupo.anio }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            
+            <div class="card-container">
+              <mat-card *ngFor="let orden of grupo.ordenes" class="orden-card" [routerLink]="['/ordentrabajo/view', orden.Id]" style="cursor: pointer; margin: 0.5em; padding: 0.5em;">
+                <mat-card-title style="font-size: 1em; margin-left: 1em; margin-bottom: 1em;">N°{{ orden.Id }}/{{ orden.servicio.nombre }}</mat-card-title>
+                <mat-card-content>
+                  <p><strong>Horas proyectadas:</strong> {{ orden.horasProyectadas }}</p>
+                  <p><strong>Horas reales:</strong> {{ orden.horasReales }}</p>
+                  <p><strong>Estado:</strong> 
+                    <span *ngIf="orden.completado" class="status completed">Completado</span>
+                    <span *ngIf="!orden.completado" class="status pending">En Curso</span>
+                  </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+        
+        <mat-paginator [length]="ordenesAgrupadas.length"
+                      [pageSize]="pageSize"
+                      [pageIndex]="pageIndex"
+                      [pageSizeOptions]="[5, 10, 20]"
+                      (page)="onPageChange($event)">
+        </mat-paginator>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Información Mensual">
+      <div class="form-column-accordion">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let grupo of horariosAgrupados">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Año {{ grupo.anio }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+        
+            <div class="card-meses-container">
+              <mat-card *ngFor="let mes of grupo.meses" 
+                        class="mes-card" 
+                        [routerLink]="['/horariosRealizados', empleadoId]" 
+                        [queryParams]="{ mes: mes.mes, anio: grupo.anio }"
+                        style="cursor: pointer; margin: 0.5em; padding: 0.5em;"
+                        >
+                <mat-card-title style="font-size: 1em; margin-left: 1em; margin-bottom: 1em;">
+                  {{ getNombreMes(mes.mes) }}
+                </mat-card-title>
+                <mat-card-content>
+                  <p><strong>Total horas realizadas:</strong> {{ getHorasTotales(mes.horarios) | number:'1.2-2' }}</p>
+                  <button mat-stroked-button>Ver Detalle</button>
+                </mat-card-content>                
+              </mat-card>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

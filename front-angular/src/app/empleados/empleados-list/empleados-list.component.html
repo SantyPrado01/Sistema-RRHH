@@ -1,90 +1,85 @@
-<!-- Título -->
 <div class="title-container">
-  <h1>Listado Empleados</h1>
+  <div class="title-item">
+    <h1>Listado Empleados</h1>
+  </div>
 </div>
 
-<!-- Contenedor de búsqueda y filtros -->
-<div class="search-filter-container">
-    <mat-form-field appearance="outline" class="mat-form-field">
-      <mat-label class="mat-label">Buscar Empleado</mat-label>
-      <input
-        type="text"
-        matInput
-        [formControl]="empleadoControl"
-        [matAutocomplete]="autoEmpleado"
-      />
-      <mat-autocomplete #autoEmpleado="matAutocomplete" (optionSelected)="seleccionarEmpleado($event.option.value)" [displayWith]="displayEmployeeName">
-        <mat-option *ngFor="let empleado of empleadosFiltrados" [value]="empleado">
-          {{ empleado.apellido }} {{ empleado.nombre }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+<div class="content-container">
+  <div class="actions-container">
+    <div class="search-filters">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar Empleado</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese el nombre del empleado">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
 
-    <button mat-fab color="primary" [routerLink]="'/employee/create'" aria-label="Agregar empleado">
+    <button mat-raised-button color="primary" routerLink='/employee/create'>
       <mat-icon>add</mat-icon>
+      Nuevo Empleado
     </button>
-</div>
+  </div>
 
-<!-- Tabla de empleados -->
-<div class="table-container mat-elevation-z8" style="margin-right: 1em;">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      
+      <!-- Nombre Column -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+        <td mat-cell *matCellDef="let empleado"> {{empleado.nombre}} </td>
+      </ng-container>
 
-    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
-    <!-- Legajo -->
-    <ng-container matColumnDef="legajo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Legajo</th>
-      <td mat-cell *matCellDef="let empleado">{{ empleado.legajo }}</td>
-    </ng-container>
+      <!-- Apellido Column -->
+      <ng-container matColumnDef="apellido">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellido </th>
+        <td mat-cell *matCellDef="let empleado"> {{empleado.apellido}} </td>
+      </ng-container>
 
-    <!-- Nombre -->
-    <ng-container matColumnDef="nombre">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-      <td mat-cell *matCellDef="let empleado">{{ empleado.nombre }}</td>
-    </ng-container>
+      <!-- Teléfono Column -->
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Teléfono </th>
+        <td mat-cell *matCellDef="let empleado"> {{empleado.telefono}} </td>
+      </ng-container>
 
-    <!-- Apellido -->
-    <ng-container matColumnDef="apellido">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
-      <td mat-cell *matCellDef="let empleado">{{ empleado.apellido }}</td>
-    </ng-container>
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+        <td mat-cell *matCellDef="let empleado"> {{empleado.email}} </td>
+      </ng-container>
 
-    <!-- Teléfono -->
-    <ng-container matColumnDef="telefono">
-      <th mat-header-cell *matHeaderCellDef>Teléfono</th>
-      <td mat-cell *matCellDef="let empleado">{{ empleado.telefono }}</td>
-    </ng-container>
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let empleado">
+          <span *ngIf="empleado.eliminado" class="status deleted">Eliminado</span>
+        </td>
+      </ng-container>
 
-    <!-- Email -->
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let empleado">{{ empleado.email }}</td>
-    </ng-container>
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let empleado">
+          <button mat-icon-button color="primary" [routerLink]="['/employee/edit', empleado.Id]">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="eliminarEmpleado(empleado)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="estado">
-      <th mat-header-cell *matHeaderCellDef>Estado</th>
-      <td mat-cell *matCellDef="let empleado">
-        <span *ngIf="empleado.eliminado" class="status deleted">Eliminado</span>
-      </td>
-    </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [routerLink]="['/employee/edit', row.empleadoId]"
+          class="row-clickable"></tr>
 
-    <!-- Acciones -->
-    <ng-container matColumnDef="acciones">
-      <th mat-header-cell *matHeaderCellDef>Acciones</th>
-      <td mat-cell *matCellDef="let empleado">
-        <button mat-icon-button color="primary" [routerLink]="['/employee/edit', empleado.Id]">
-          <mat-icon>visibility</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="eliminarEmpleado(empleado)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="6">No se encontraron empleados que coincidan con el filtro</td>
+      </tr>
+    </table>
 
-    <!-- Encabezados y filas -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-  </table>
-
-  <mat-paginator [pageSizeOptions]="[5,10,25,100]" [pageSize]="25" aria-label="Seleccionar Pagina de Empleados"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                   aria-label="Seleccionar página de empleados">
+    </mat-paginator>
+  </div>
 </div>

@@ -1,129 +1,171 @@
 .title-container {
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
-    background-color:#333333;
+    background-color: #333333;
     text-align: center;
     height: 6.2em;
-  }
-
-  .title-item h1 {
-    color: white;
-    font-size: 2em;
-  }
-
-.content-container {
-    margin-right: 1em;
-    margin-top: 1.5em;
+    margin-bottom: 1em;
 }
 
-.search-filter-container {
+.title-item h1 {
+    color: white;
+    font-size: 2em;
+    margin: 0;
+}
+
+.content-container {
+    padding: 20px;
+}
+
+.actions-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-.search-bar {
-    display: flex;
-    align-items: center;
+.search-field {
+    flex: 1;
+    max-width: 500px;
 }
 
-.search-bar input {
-    padding: 10px;
-    border: 1px solid #D4D4D4;
-    border-radius: 0.5rem;
-    outline: none;
-    margin-right: 15px;
+/* Estilos para el campo de búsqueda */
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
+    color: var(--color-primary) !important;
 }
 
-.search-btn {
-    margin-right: 5px;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    background-color: white;
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
+    color: var(--color-primary) !important;
 }
 
-.filters {
-    display: flex;
+::ng-deep .mat-mdc-form-field:hover .mat-mdc-form-field-outline {
+    opacity: 1;
+    color: var(--color-primary-light);
 }
 
-.filter {
-    margin-left: 20px;
-}
-
-.filter label {
-    margin-right: 5px;
-    color: #333;
-}
-
-.filter select {
-    padding: 5px;
-    border: 1px solid #CCC;
-    border-radius: 4px;
-}
-
+/* Estilos para la tabla */
 .table-container {
-    max-height: 400px; 
-    overflow-y: auto;
-    margin-top: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
 }
 
-table {
+.mat-elevation-z8 {
     width: 100%;
-    border-collapse: collapse;
 }
 
-.btn-edit, .btn-delete {
-    background-color: transparent;
-    border: none;
+/* Estilos para las filas de la tabla */
+.row-clickable {
     cursor: pointer;
-    font-size: 1.2em;
+    transition: background-color 0.2s ease;
 }
 
-.btn-edit {
-    color: grey;
+.row-clickable:hover {
+    background-color: rgba(0, 0, 0, 0.04) !important;
 }
 
-.btn-delete {
-    color: #dc3545;
+/* Efecto al hacer click */
+.row-clickable:active {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+    color: inherit;
 }
 
-.btn-view {
-    color: white;
-    border: none;
-    background: white;
+/* Estilos para las celdas de la tabla */
+.mat-mdc-cell, .mat-mdc-header-cell {
+    padding: 12px 16px;
 }
 
-.btn-primary {
-    background-color: #CC5600;
-    color: #ffffff;
-    border: 2px solid #CC5600;
-    border-radius: 40%;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
+/* Estilos para los botones de acción */
+.mat-mdc-icon-button {
+    margin: 0 4px;
+}
+
+/* Estilos específicos para el botón de Nueva Empresa */
+.actions-container button[mat-raised-button] {
+    background-color: var(--color-primary) !important;
+    color: white !important;
+}
+
+.actions-container button[mat-raised-button]:hover {
+    background-color: var(--color-primary-dark) !important;
+}
+
+/* Reforzar estilos para todos los botones primarios */
+::ng-deep .mat-mdc-raised-button.mat-primary,
+::ng-deep .mat-mdc-raised-button.mat-primary .mat-mdc-button-persistent-ripple {
+    background-color: var(--color-primary) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary:hover {
+    background-color: var(--color-primary-dark) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary .mdc-button__label {
+    color: white !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary .mat-icon {
+    color: white !important;
+}
+
+/* Color para los íconos */
+.mat-icon-button[color="primary"] {
+    color: var(--color-primary) !important;
+}
+
+/* Estilos para el ordenamiento */
+::ng-deep .mat-sort-header-arrow {
+    color: var(--color-primary) !important;
+}
+
+/* Estilos para el paginador */
+::ng-deep .mat-mdc-paginator {
+    border-top: 1px solid rgba(0,0,0,0.12);
+}
+
+::ng-deep .mat-mdc-paginator-icon {
+    fill: var(--color-primary) !important;
+}
+
+::ng-deep .mat-mdc-paginator-navigation-button:hover {
+    background-color: var(--color-hover) !important;
+}
+
+/* Mensaje cuando no hay datos */
+.mat-mdc-row.mat-no-data-row {
+    height: 56px;
+}
+
+.mat-mdc-cell.mat-no-data-cell {
     text-align: center;
-    line-height: 1;
+    color: rgba(0,0,0,0.54);
 }
 
-.btn-primary:hover {
-    background-color: #a54e00;
-    border-color: #a54e00;
+/* Ajustes para el campo de búsqueda */
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
 }
 
-.btn-primary:focus {
-    outline: none;
+/* Estilos para los botones */
+button[mat-raised-button] {
+    height: 48px;
 }
-@media (max-width:1360px){
-    .content-container {
-        margin-right: 1em;
+
+/* Ajustes para el responsive */
+@media (max-width: 768px) {
+    .actions-container {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .search-field {
+        max-width: 100%;
+    }
+
+    .mat-mdc-cell {
+        padding: 8px;
     }
 }

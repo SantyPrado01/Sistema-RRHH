@@ -2,19 +2,20 @@ import { Empleado } from "../../empleados/models/empleado.models";
 import { OrdenTrabajo } from "../../ordenTrabajo/models/orden-trabajo.models";
 
 export interface HorarioAsignado {
-    horarioAsignadoId: number;
+    horarioAsignadoId?: number;
     ordenTrabajo: OrdenTrabajo;
     empleado: Empleado;
     empleadoSuplente?: Empleado;
-    fecha: Date; 
+    fecha: Date;
     horaInicioProyectado: string;
     horaFinProyectado: string;
-    horaInicioReal?: string; 
-    horaFinReal?: string;    
-    estado: string; 
-    suplente: boolean;
-    comprobado: boolean;
+    horaInicioReal?: string;
+    horaFinReal?: string;
+    estado?: string;
+    estadoSuplente?: string;
     observaciones?: string;
+    comprobado?: boolean;
+    suplente?: boolean;
 }
 
 interface HorarioPorMes {

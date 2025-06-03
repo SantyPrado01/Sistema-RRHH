@@ -1,5 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Variables de color corporativo */
+:root {
+    --color-primary: #CC5600;
+    --color-primary-light: #ff6b00;
+    --color-primary-lighter: #ff8533;
+    --color-primary-dark: #a54400;
+    --color-hover: #fff1e6;
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

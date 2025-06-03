@@ -5,202 +5,191 @@
 </div>
 
 <div class="container">
-  <div class="sidebar">
-    <ul class="sidebar-menu">
-      <li (click)="mostrarSeccion('datosEmpresa')" [class.active]="seccionActual === 'datosEmpresa'">Datos Empresa</li>
-      <li (click)="mostrarSeccion('ordenesTrabajo')" [class.active]="seccionActual === 'ordenesTrabajo'">Ordenes de Trabajo</li>
-      <li (click)="mostrarSeccion('facturas')" [class.active]="seccionActual === 'facturas'">Facturas</li>
-    </ul>
-  </div>
-  <div class="form-container">
-    <div *ngIf="seccionActual === 'datosEmpresa'">
-      <form (ngSubmit)="actualizarEmpresa()" class="form-container">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nombreEmpresa">Nombre de la Empresa:</label>
-            <input type="text" id="nombreEmpresa" [(ngModel)]="servicio.nombre" name="nombreEmpresa" class="form-control" placeholder="Ingrese el nombre" required />
+  <mat-tab-group [(selectedIndex)]="selectedIndex" animationDuration="0ms">
+    <mat-tab label="Datos Empresa">
+      <div class="form-container">
+        <form (ngSubmit)="actualizarEmpresa()" class="form-container">
+          <!-- Fila 1 -->
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre de la Empresa</mat-label>
+              <input matInput
+                     [(ngModel)]="servicio.nombre"
+                     name="nombreEmpresa"
+                     placeholder="Ingrese el nombre"
+                     required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>CUIT</mat-label>
+              <input matInput
+                     type="number"
+                     [(ngModel)]="servicio.cuit"
+                     name="cuitEmpresa"
+                     placeholder="Ingrese el CUIT"
+                     required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Categoría de Empresa</mat-label>
+              <mat-select [(ngModel)]="servicio.categoria"
+                         name="categoriaEmpresa"
+                         required>
+                <mat-option [value]="">Seleccione una categoría</mat-option>
+                <mat-option *ngFor="let categoria of categorias"
+                           [value]="categoria.id">
+                  {{ categoria.nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
 
-          <div class="form-group">
-            <label for="cuitEmpresa">CUIT:</label>
-            <input type="number" id="cuitEmpresa" [(ngModel)]="servicio.cuit" name="cuitEmpresa" class="form-control" placeholder="Ingrese el CUIT" required />
+          <!-- Fila 2 -->
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Dirección</mat-label>
+              <input matInput
+                     [(ngModel)]="servicio.direccion"
+                     name="direccionEmpresa"
+                     placeholder="Ingrese la dirección"
+                     required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+              <input matInput
+                     type="tel"
+                     [(ngModel)]="servicio.telefono"
+                     name="telefonoEmpresa"
+                     placeholder="Ingrese el teléfono"
+                     required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Ciudad</mat-label>
+              <input matInput
+                     [(ngModel)]="ciudadNombre"
+                     [ngModelOptions]="{standalone: true}"
+                     name="ciudadNombre"
+                     placeholder="Ingrese la ciudad"
+                     (input)="buscarCiudad($event)"
+                     [matAutocomplete]="auto"
+                     required>
+              <mat-autocomplete #auto="matAutocomplete"
+                              [displayWith]="displayCiudad.bind(this)"
+                              (optionSelected)="seleccionarCiudad($event)">
+                <mat-option *ngFor="let ciudad of ciudades"
+                           [value]="ciudad">
+                  {{ciudad.nombre}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           </div>
 
-          <div class="form-group">
-            <label for="categoriaEmpresa">Categoría de Empresa:</label>
-            <select id="categoriaEmpresa" [(ngModel)]="servicio.categoria" name="categoriaEmpresa" class="form-control" required>
-              <option value="" disabled selected>Seleccione una categoría</option>
-              <option *ngFor="let categoria of categorias" [value]="categoria.id">
-                {{ categoria.nombre }}
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="direccionEmpresa">Dirección:</label>
-            <input type="text" id="direccionEmpresa" [(ngModel)]="servicio.direccion" name="direccionEmpresa" class="form-control" placeholder="Ingrese la dirección" required />
+          <!-- Fila 3: Descripción -->
+          <div class="form-row-full-width">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput
+                        [(ngModel)]="servicio.descripcion"
+                        name="descripcionEmpresa"
+                        rows="3"
+                        placeholder="Ingrese una descripción"></textarea>
+            </mat-form-field>
           </div>
 
-          <div class="form-group">
-            <label for="telefonoEmpresa">Teléfono:</label>
-            <input type="tel" id="telefonoEmpresa" [(ngModel)]="servicio.telefono" name="telefonoEmpresa" class="form-control" placeholder="Ingrese el teléfono" required />
+          <!-- Botones -->
+          <div class="button-row">
+            <button mat-raised-button
+                    color="primary"
+                    type="submit">
+              <mat-icon>save</mat-icon>
+              Guardar Empresa
+            </button>
+            <button mat-button
+                    type="button"
+                    (click)="cancelar()">
+              <mat-icon>cancel</mat-icon>
+              Cancelar
+            </button>
           </div>
-
-          <div class="form-group autocomplete-group">
-            <label for="ciudadEmpresa">Ciudad:</label>
-            <input
-              type="text"
-              id="ciudadEmpresa"
-              [(ngModel)]="ciudadNombre"
-              name="ciudadNombre"
-              class="form-control"
-              placeholder="Ingrese la ciudad"
-              (input)="buscarCiudad($event)"
-              (change)="seleccionarCiudad($event)"
-              list="ciudadesList"
-              required
-            />
-            <datalist id="ciudadesList">
-              <option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre"></option>
-            </datalist>
-          </div>
-        </div>
-
-        <div class="form-row-full-width">
-          <div class="form-group-full-width">
-            <label for="descripcionEmpresa">Descripción:</label>
-            <textarea id="descripcionEmpresa" [(ngModel)]="servicio.descripcion" name="descripcionEmpresa" class="form-control" rows="3" placeholder="Ingrese una descripción"></textarea>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-save">Guardar Empresa</button>
-          <button type="button" class="btn btn-cancel" (click)="cancelar()">Cancelar</button>
-        </div>
-      </form>
-    </div>
-
-    <div *ngIf="seccionActual === 'ordenesTrabajo'">
-      <div class="form-row">
-      
-        <div class="form-group">
-          <label for="empresaInput">Buscar por Empleado:</label>
-          <input id="empresaInput" type="text" class="form-control" [(ngModel)]="filtroEmpleado" (ngModelChange)="filtrarOrdenes()" placeholder="Nombre del Empleado"/>
-        </div>
-    
-        <div class="form-group">
-          <label for="mesSelect">Mes:</label>
-          <select id="mesSelect" class="form-control" [(ngModel)]="mesSeleccionado" (ngModelChange)="filtrarOrdenes()" >
-            <option value="" disabled selected>Seleccionar Mes</option>
-            <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="anioSelect">Año:</label>
-          <select id="anioSelect" class="form-control" [(ngModel)]="anioSeleccionado" (ngModelChange)="filtrarOrdenes()" >
-            <option value="" disabled selected>Seleccionar Año</option>
-            <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="estadoSelect">Estado:</label>
-          <select id="estadoSelect" class="form-control" [(ngModel)]="estadoSeleccionado" (ngModelChange)="filtrarOrdenes()" >
-            <option value="" disabled selected>Seleccionar Estado</option>
-            <option [ngValue]="true">Completado</option>
-            <option [ngValue]="false">En Curso</option>
-          </select>
-        </div>
+        </form>
       </div>
-    
-      <div class="orden-trabajo-container">
-        <h3>Listado de Órdenes de Trabajo</h3>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Orden N°</th>
-                <th>Empleado</th>
-                <th>Horas Proyectadas</th>
-                <th>Horas Reales</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let orden of ordenesFiltradas">
-                <td>{{ orden.Id }}</td>
-                <td>{{ orden.empleadoAsignado.nombre }} {{ orden.empleadoAsignado.apellido }}</td>
-                <td>{{ orden.horasProyectadas }}</td>
-                <td>{{ orden.horasReales }}</td>
-                <td>
-                  <span *ngIf="orden.completado" class="status completed">Completada</span>
-                  <span *ngIf="!orden.completado" class="status pending">En Curso</span>
-                  <span *ngIf="orden.eliminado" class="status delete">Eliminado</span>
-                </td>
-                <td>
-                  <button [routerLink]="['/ordentrabajo/view', orden.Id]" class="btn btn-info"><mat-icon>visibility</mat-icon></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-      </div>
-    </div>
+    </mat-tab>
 
-    <div *ngIf="seccionActual === 'facturas'">
-      <div class="form-row">
-    
-        <div class="form-group">
-          <label for="mesSelect">Mes:</label>
-          <select id="mesSelect" class="form-control" [(ngModel)]="mesSeleccionado" (ngModelChange)="filtrarOrdenes()" >
-            <option value="" disabled selected>Seleccionar Mes</option>
-            <option *ngFor="let mes of meses" [value]="mes">{{ mes }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="anioSelect">Año:</label>
-          <select id="anioSelect" class="form-control" [(ngModel)]="anioSeleccionado" (ngModelChange)="filtrarOrdenes()" >
-            <option value="" disabled selected>Seleccionar Año</option>
-            <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="estadoSelect">Estado:</label>
-          <select id="estadoSelect" class="form-control" [(ngModel)]="estadoSeleccionado" (ngModelChange)="filtrarOrdenes()" >
-            <option value="" disabled selected>Seleccionar Estado</option>
-            <option [ngValue]="true">Activo</option>
-            <option [ngValue]="false">Eliminado</option>
-          </select>
-        </div>
+    <mat-tab label="Ordenes de Trabajo">
+      <div class="form-column-accordion">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let grupo of ordenesAgrupadasPaginadas">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ getNombreMes(grupo.mes) }} {{ grupo.anio }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            
+            <div class="card-container">
+              <mat-card
+                *ngFor="let orden of grupo.ordenes"
+                class="orden-card"
+                [routerLink]="['/ordentrabajo/view', orden.Id]"
+                style="cursor: pointer; margin: 0.5em; padding: 0.5em;"
+              >
+                <mat-card-title style="font-size: 1em; margin-left: 1em; margin-bottom: 1em;">
+                  N°{{ orden.Id }} - {{ orden.empleadoAsignado.apellido }}, {{ orden.empleadoAsignado.nombre }}
+                </mat-card-title>
+                <mat-card-content>
+                  <p><strong>Horas proyectadas:</strong> {{ orden.horasProyectadas }}</p>
+                  <p><strong>Horas reales:</strong> {{ orden.horasReales }}</p>
+                  <p><strong>Estado:</strong> 
+                    <span *ngIf="orden.completado" class="status completed">Completado</span>
+                    <span *ngIf="!orden.completado" class="status pending">En Curso</span>
+                  </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+        
+        <mat-paginator
+          [length]="ordenesAgrupadas.length"
+          [pageSize]="pageSize"
+          [pageIndex]="pageIndex"
+          [pageSizeOptions]="[5, 10, 20]"
+          (page)="onPageChange($event)">
+        </mat-paginator>
       </div>
-    
-      <div class="orden-trabajo-container">
-        <h3>Listado de Facturas</h3>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>N°</th>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let factura of facturasFiltradas">
-                <td>{{ factura.numero }}</td>
-                <td>{{ factura.fecha }}</td>
-                <td>{{ factura.total }}</td>
-                <td>
-                  <button [routerLink]="['/factura/view', factura.facturaId]" class="btn btn-info"><mat-icon>visibility</mat-icon></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    </mat-tab>
+
+    <mat-tab label="Facturas">
+      <div class="table-container">
+        <table mat-table [dataSource]="facturasFiltradas" class="mat-elevation-z8">
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef> Fecha </th>
+            <td mat-cell *matCellDef="let factura"> {{factura.fecha | date:'dd/MM/yyyy'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="monto">
+            <th mat-header-cell *matHeaderCellDef> Monto </th>
+            <td mat-cell *matCellDef="let factura"> {{factura.monto | currency}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef> Estado </th>
+            <td mat-cell *matCellDef="let factura">
+              <span class="status" [ngClass]="{
+                'completed': factura.estado === 'Pagada',
+                'pending': factura.estado === 'Pendiente',
+                'delete': factura.estado === 'Anulada'
+              }">
+                {{factura.estado}}
+              </span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['fecha', 'monto', 'estado']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['fecha', 'monto', 'estado'];"></tr>
+        </table>
       </div>
-    </div>
-  </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

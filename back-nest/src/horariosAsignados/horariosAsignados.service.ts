@@ -46,6 +46,7 @@ export class HorarioAsignadoService {
                   estado: 'Pendiente',
                   suplente: false,
                   empleadoSuplente: null,
+                  estadoSuplente: null,
               });
               horariosAsignados.push(horarioAsignado);
           }

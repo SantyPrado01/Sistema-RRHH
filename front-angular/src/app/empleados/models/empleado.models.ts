@@ -1,4 +1,12 @@
 import { CategoriaEmpleado } from "./categoria.models";
+import { Disponibilidad } from "./disponibilidad.models";
+
+export interface DisponibilidadHoraria {
+  diaSemana: number;
+  horaInicio: string;
+  horaFin: string;
+  nombre?: string;
+}
 
 export class Empleado {
     Id: number;
@@ -10,10 +18,12 @@ export class Empleado {
     email: string;
     fechaIngreso?: Date;
     eliminado: boolean;
-    ciudad:number;
-    observaciones:string;
+    ciudad: number;
+    observaciones: string;
     categoria: CategoriaEmpleado;
     disponibilidadID: number;
+    disponibilidades?: Disponibilidad[];
+    fulltime?: boolean;
   
     constructor(
       Id: number,
@@ -29,6 +39,8 @@ export class Empleado {
       observaciones: string,
       disponibilidadID: number,
       fechaIngreso?: Date,
+      disponibilidades?: Disponibilidad[],
+      fulltime?: boolean
     ) {
       this.Id = Id;
       this.legajo = legajo;
@@ -40,9 +52,10 @@ export class Empleado {
       this.fechaIngreso = fechaIngreso;
       this.eliminado = eliminado;
       this.categoria = categoria;
-      this.observaciones = observaciones
+      this.observaciones = observaciones;
       this.disponibilidadID = disponibilidadID;
       this.ciudad = ciudad;
-    
+      this.disponibilidades = disponibilidades;
+      this.fulltime = fulltime;
     }
-  }
+}
