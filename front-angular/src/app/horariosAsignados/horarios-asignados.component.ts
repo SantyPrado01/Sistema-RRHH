@@ -158,6 +158,7 @@ export class HorariosAsignadosComponent implements OnInit {
       this.comprobado = true;
       if (horario.fecha) {
         const fecha = new Date(horario.fecha);
+        fecha.setMinutes(fecha.getMinutes() + fecha.getTimezoneOffset());
         this.fechaSeleccionada = fecha.toISOString().split('T')[0];
       }  
     }
