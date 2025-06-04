@@ -155,7 +155,6 @@ export class HorariosAsignadosComponent implements OnInit {
       this.estado = horario.estado || '';
       this.estadoSuplente = horario.estadoSuplente || '';
       this.observaciones = horario.observaciones || ''; 
-      this.comprobado = horario.comprobado || false;
       if (horario.fecha) {
         const fecha = new Date(horario.fecha);
         this.fechaSeleccionada = fecha;
@@ -199,7 +198,7 @@ export class HorariosAsignadosComponent implements OnInit {
       estado: this.estado,
       estadoSuplente: this.estadoSuplente,
       observaciones: this.observaciones,
-      comprobado: this.comprobado,
+      comprobado: true,
       empleadoSuplente: this.empleadoSup!,
       suplente: this.mostrarEmpleado,
       fecha: fecha

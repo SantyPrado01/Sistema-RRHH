@@ -165,6 +165,7 @@ export class OrdenTrabajoViewComponent implements OnInit{
           horaInicioReal: horario.horaInicioReal,
           horaFinReal: horario.horaFinReal,
           estado: horario.estado,
+          comprobado: true,
           observaciones: horario.observaciones,
           empleadoSuplente: horario.empleadoSuplente,
           suplente: Boolean(horario.empleadoSuplente),

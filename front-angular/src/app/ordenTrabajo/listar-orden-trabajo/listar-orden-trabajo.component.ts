@@ -43,7 +43,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 })
 export class ListarOrdenTrabajoComponent implements OnInit {
   dataSource: MatTableDataSource<OrdenTrabajo>;
-  displayedColumns: string[] = ['id', 'empresa', 'mes', 'anio', 'estado', 'horasProyectadas', 'horasReales', 'acciones'];
+  displayedColumns: string[] = ['id', 'empresa', 'mes', 'anio', 'estado', 'horasProyectadas', 'horasReales', 'eliminado', 'acciones'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -168,29 +168,67 @@ export class ListarOrdenTrabajoComponent implements OnInit {
   }
 
   eliminarOrden(orden: OrdenTrabajo) {
-    const dialogRef = this.dialog.open(AlertDialogComponent, {
-      data: {
-        title: 'Confirmar eliminación',
-        message: '¿Está seguro que desea eliminar esta orden de trabajo?',
-        type: 'warning',
-        showCancel: true
-      }
-    });
+    console.log('Estado de eliminación de la orden:', orden.eliminado);
+    
+    if (orden.eliminado) {
+      console.log('Intentando eliminación definitiva');
+      const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
+        data: {
+          title: 'Confirmar eliminación definitiva',
+          message: 'Esta orden ya está marcada como eliminada. ¿Desea eliminarla definitivamente del sistema? Esta acción no se puede deshacer.',
+          type: 'warning',
+          showCancel: true
+        },
+        disableClose: true
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.ordenTrabajoService.eliminarOrden(orden.Id).subscribe({
-          next: () => {
-            this.mostrarAlerta('Éxito', 'Orden eliminada correctamente', 'success');
-            this.cargarOrdenes();
-          },
-          error: (error) => {
-            console.error('Error al eliminar orden:', error);
-            this.mostrarAlerta('Error', 'No se pudo eliminar la orden', 'error');
-          }
-        });
-      }
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('Resultado del diálogo (eliminación definitiva):', result);
+        if (result) {
+          console.log('Iniciando eliminación definitiva de la orden:', orden.Id);
+          this.ordenTrabajoService.eliminarOrdenDef(orden.Id).subscribe({
+            next: (response) => {
+              console.log('Respuesta de eliminación definitiva:', response);
+              this.mostrarAlerta('Éxito', 'Orden eliminada definitivamente del sistema', 'success');
+              this.cargarOrdenes();
+            },
+            error: (error) => {
+              console.error('Error al eliminar orden definitivamente:', error);
+              this.mostrarAlerta('Error', 'No se pudo eliminar la orden', 'error');
+            }
+          });
+        }
+      });
+    } else {
+      console.log('Intentando eliminación lógica');
+      const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
+        data: {
+          title: 'Confirmar eliminación',
+          message: '¿Está seguro que desea marcar esta orden como eliminada?',
+          type: 'warning',
+          showCancel: true
+        },
+        disableClose: true
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('Resultado del diálogo (eliminación lógica):', result);
+        if (result) {
+          console.log('Iniciando eliminación lógica de la orden:', orden.Id);
+          this.ordenTrabajoService.eliminarOrden(orden.Id).subscribe({
+            next: (response) => {
+              console.log('Respuesta de eliminación lógica:', response);
+              this.mostrarAlerta('Éxito', 'Orden marcada como eliminada', 'success');
+              this.cargarOrdenes();
+            },
+            error: (error) => {
+              console.error('Error al marcar orden como eliminada:', error);
+              this.mostrarAlerta('Error', 'No se pudo marcar la orden como eliminada', 'error');
+            }
+          });
+        }
+      });
+    }
   }
 
   truncateToTwoDecimals(value: number): string {

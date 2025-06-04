@@ -26,6 +26,14 @@ mat-dialog-content {
     width: auto;
   }
   
+  .warning-icon {
+    color: #ff9800;
+    font-size: 36px;
+    margin-right: 10px;
+    height: auto;
+    width: auto;
+  }
+  
   h2 {
     margin: 0;
     font-size: 20px;
