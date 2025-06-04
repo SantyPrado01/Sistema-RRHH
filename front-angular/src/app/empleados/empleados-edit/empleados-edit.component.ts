@@ -140,6 +140,14 @@ export class EmpleadosEditComponent implements OnInit {
         next: (data) => {
           console.log('Datos del empleado recibidos:', data);
           this.empleado = data;
+          
+          // Ajustar la fecha para compensar la zona horaria
+          if (this.empleado.fechaIngreso) {
+            const fecha = new Date(this.empleado.fechaIngreso);
+            fecha.setHours(fecha.getHours() + 3); // Ajustar a zona horaria de Argentina
+            this.empleado.fechaIngreso = fecha;
+          }
+
           if (this.empleado.ciudad) {
             console.log('ID de ciudad encontrado:', this.empleado.ciudad);
             this.obtenerNombreCiudad(this.empleado.ciudad.toString());
