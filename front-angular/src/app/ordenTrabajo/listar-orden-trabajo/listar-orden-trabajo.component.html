@@ -7,8 +7,8 @@
 <div class="content-container">
   <div class="actions-container">
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Buscar Orden</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por empresa..." #input>
+      <mat-label>Buscar por empresa</mat-label>
+      <input matInput id="empresaFilter" (input)="onEmpresaFilterChange()" placeholder="Ingrese nombre de empresa">
     </mat-form-field>
 
     <button mat-raised-button color="primary" routerLink="/ordentrabajo/create">
@@ -27,6 +27,12 @@
     <div class="filters-content">
       <!-- Filtros adicionales -->
       <div class="additional-filters">
+
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Numero</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por numero..." #input>
+        </mat-form-field>
+
         <mat-form-field appearance="outline">
           <mat-label>Estado</mat-label>
           <mat-select [(ngModel)]="estadoSeleccionado" (selectionChange)="filtrarOrdenes()">
@@ -55,6 +61,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+
       </div>
     </div>
   </mat-expansion-panel>

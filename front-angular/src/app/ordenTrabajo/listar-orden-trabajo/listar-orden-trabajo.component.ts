@@ -164,7 +164,20 @@ export class ListarOrdenTrabajoComponent implements OnInit {
       ordenesFiltradas = ordenesFiltradas.filter(orden => orden.anio === this.anioSeleccionado);
     }
 
+    // Filtrar por nombre de empresa
+    const filterValue = (document.getElementById('empresaFilter') as HTMLInputElement)?.value?.toLowerCase() || '';
+    if (filterValue) {
+      ordenesFiltradas = ordenesFiltradas.filter(orden => 
+        orden.servicio.nombre.toLowerCase().includes(filterValue)
+      );
+    }
+
     this.dataSource.data = ordenesFiltradas;
+  }
+
+  // Método para manejar el cambio en el filtro de empresa
+  onEmpresaFilterChange() {
+    this.filtrarOrdenes();
   }
 
   eliminarOrden(orden: OrdenTrabajo) {

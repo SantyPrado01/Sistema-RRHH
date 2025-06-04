@@ -44,14 +44,18 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Ciudad</mat-label>
-              <input matInput [(ngModel)]="ciudadNombre" name="ciudadNombre" required #ciudadNombreEmpleado="ngModel" 
-                     [matAutocomplete]="auto" (input)="buscarCiudad($event)">
+              <input type="text"
+                     matInput
+                     [(ngModel)]="ciudadNombre"
+                     [matAutocomplete]="auto"
+                     (input)="buscarCiudad($event)"
+                     placeholder="Buscar ciudad"
+                     name="ciudad">
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCiudad">
                 <mat-option *ngFor="let ciudad of ciudades" [value]="ciudad">
                   {{ciudad.nombre}}
                 </mat-option>
               </mat-autocomplete>
-              <mat-error *ngIf="ciudadNombreEmpleado.invalid && ciudadNombreEmpleado.touched">La ciudad es requerida</mat-error>
             </mat-form-field>
           </div>
 

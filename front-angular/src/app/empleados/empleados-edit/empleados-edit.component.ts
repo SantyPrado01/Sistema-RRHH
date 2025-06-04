@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -24,7 +24,8 @@ import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-ale
 import { Empleado } from '../models/empleado.models';
 import { CategoriaEmpleado } from '../models/categoria.models';
 import { Disponibilidad } from '../models/disponibilidad.models';
-import { HorariosAsignadosService } from '../../horariosAsignados/services/horariosAsignados.service'; 
+import { HorariosAsignadosService } from '../../horariosAsignados/services/horariosAsignados.service';
+import { FormControl } from '@angular/forms';
 
 interface Ciudad {
   id: number;
@@ -60,7 +61,8 @@ interface HorarioAsignado {
     AlertDialogComponent
   ],
   templateUrl: './empleados-edit.component.html',
-  styleUrls: ['./empleados-edit.component.css']
+  styleUrls: ['./empleados-edit.component.css'],
+  providers: [DatePipe]
 })
 export class EmpleadosEditComponent implements OnInit {
   selectedIndex: number = 0;
@@ -70,7 +72,7 @@ export class EmpleadosEditComponent implements OnInit {
   empleadoId: string | null = null;
   categorias: CategoriaEmpleado[] = [];
   ciudades: Ciudad[] = [];
-  ciudadNombre: string = '';
+  ciudadNombre: any = '';
   provinciaCórdobaId = 14;
   fullTime: boolean = false;
   disponibilidad: Disponibilidad[] = [];
@@ -79,6 +81,7 @@ export class EmpleadosEditComponent implements OnInit {
   horariosAgrupados: any[] = [];
   pageSize = 5;
   pageIndex = 0;
+  ciudadControl = new FormControl('');
 
   constructor(
     private empleadoService: EmpleadoService,
@@ -88,7 +91,8 @@ export class EmpleadosEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private datePipe: DatePipe
   ) {
     this.inicializarDisponibilidad();
   }
@@ -131,11 +135,16 @@ export class EmpleadosEditComponent implements OnInit {
 
   cargarEmpleado() {
     if (this.empleadoId) {
+      console.log('Cargando empleado con ID:', this.empleadoId);
       this.empleadoService.getEmpleadoById(Number(this.empleadoId)).subscribe({
         next: (data) => {
+          console.log('Datos del empleado recibidos:', data);
           this.empleado = data;
           if (this.empleado.ciudad) {
+            console.log('ID de ciudad encontrado:', this.empleado.ciudad);
             this.obtenerNombreCiudad(this.empleado.ciudad.toString());
+          } else {
+            console.log('No se encontró ID de ciudad');
           }
           if (this.empleado.disponibilidades) {
             this.disponibilidad = this.empleado.disponibilidades;
@@ -163,23 +172,11 @@ export class EmpleadosEditComponent implements OnInit {
     });
   }
 
-  obtenerNombreCiudad(idCiudad: string) {
-    const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}`;
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
-        if (response.localidades_censales && response.localidades_censales.length > 0) {
-          const ciudad = response.localidades_censales[0];
-          this.ciudadNombre = ciudad.nombre;
-          this.ciudades = [{
-            id: Number(this.empleado.ciudad),
-            nombre: ciudad.nombre
-          }];
-        }
-      },
-      error: (err) => {
-        console.error('Error al obtener el nombre de la ciudad', err);
-      }
-    });
+  displayCiudad(ciudad: any): string {
+    console.log('Display ciudad llamado con:', ciudad);
+    if (!ciudad) return '';
+    if (typeof ciudad === 'string') return ciudad;
+    return ciudad.nombre || '';
   }
 
   buscarCiudad(event: any) {
@@ -192,6 +189,7 @@ export class EmpleadosEditComponent implements OnInit {
             id: localidad.id,
             nombre: localidad.nombre
           }));
+          console.log('Ciudades encontradas:', this.ciudades);
         },
         error: (err) => {
           console.error('Error al obtener las ciudades', err);
@@ -201,18 +199,47 @@ export class EmpleadosEditComponent implements OnInit {
     }
   }
 
-  displayCiudad(ciudad: any): string {
-    if (!ciudad) return '';
-    if (typeof ciudad === 'string') return ciudad;
-    return ciudad.nombre || '';
-  }
-
   seleccionarCiudad(event: any) {
     const selectedCity = event.option.value;
+    console.log('Ciudad seleccionada (antes):', selectedCity);
+    
     if (selectedCity && selectedCity.id) {
       this.empleado.ciudad = selectedCity.id;
-      this.ciudadNombre = selectedCity.nombre;
+      this.ciudadNombre = selectedCity;
+      console.log('Ciudad seleccionada (después):', {
+        id: this.empleado.ciudad,
+        nombre: this.ciudadNombre.nombre
+      });
     }
+  }
+
+  obtenerNombreCiudad(idCiudad: string) {
+    console.log('Obteniendo nombre de ciudad para ID:', idCiudad);
+    const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}`;
+    this.http.get<any>(url).subscribe({
+      next: (response) => {
+        console.log('Respuesta de la API de ciudades:', response);
+        if (response.localidades_censales && response.localidades_censales.length > 0) {
+          const ciudad = response.localidades_censales[0];
+          console.log('Datos de la ciudad encontrada:', ciudad);
+          const ciudadObj = {
+            id: ciudad.id,
+            nombre: ciudad.nombre
+          };
+          this.ciudades = [ciudadObj];
+          this.ciudadNombre = ciudadObj;
+          console.log('Ciudad cargada en el componente:', {
+            ciudades: this.ciudades,
+            ciudadNombre: this.ciudadNombre
+          });
+        } else {
+          console.log('No se encontraron datos de la ciudad');
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener el nombre de la ciudad', err);
+      }
+    });
   }
 
   toggleFullTime() {
@@ -258,8 +285,19 @@ export class EmpleadosEditComponent implements OnInit {
     if (this.empleadoId) {
       this.empleado.disponibilidades = this.disponibilidad;
       this.empleado.fulltime = this.fullTime;
+      this.empleado.legajo = Number(this.empleado.legajo);
+      
+      if (this.empleado.ciudad) {
+        this.empleado.ciudad = Number(this.empleado.ciudad);
+      }
+      const fechaFormateada = this.datePipe.transform(this.empleado.fechaIngreso, 'yyyy/MM/dd');
+    
+      this.empleado.fechaIngreso = fechaFormateada!;
+      console.log('Datos a enviar:', this.empleado);
+
       this.empleadoService.updateEmpleado(Number(this.empleadoId), this.empleado).subscribe({
-        next: () => {
+        next: (response) => {
+          console.log('Respuesta del servidor:', response);
           this.mostrarAlerta('Éxito', 'Empleado actualizado correctamente', 'success');
           this.router.navigate(['/empleados']);
         },

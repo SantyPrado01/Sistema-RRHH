@@ -16,7 +16,7 @@ export class Empleado {
     nroDocumento: number;
     telefono: number;
     email: string;
-    fechaIngreso?: Date;
+    fechaIngreso?: string | Date;
     eliminado: boolean;
     ciudad: number;
     observaciones: string;
@@ -38,7 +38,7 @@ export class Empleado {
       categoria: CategoriaEmpleado,
       observaciones: string,
       disponibilidadID: number,
-      fechaIngreso?: Date,
+      fechaIngreso?: string | Date,
       disponibilidades?: Disponibilidad[],
       fulltime?: boolean
     ) {
