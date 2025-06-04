@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    //origin: ['http://147.93.15.196:4200','http://sistemacorsacor.cloud'],
-    origin: 'http://localhost:4200',  // Cambiar Frontend
+    origin: ['http://147.93.15.196:4200','http://sistemacorsacor.cloud'],
+    //origin: 'http://localhost:4200',  // Cambiar Frontend
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true
   });
