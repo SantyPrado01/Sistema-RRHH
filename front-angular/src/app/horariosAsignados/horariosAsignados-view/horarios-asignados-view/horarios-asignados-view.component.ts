@@ -132,6 +132,7 @@ export class HorariosAsignadosViewComponent {
 
     this.horariosAsignadosService.buscarHorariosPorEmpleado(parseInt(empleadoId), this.mes, this.anio).subscribe((data: any) => {
       this.horariosRealizados = data
+      console.log(this.horariosRealizados)
       this.horasRealizadas = data.horarios.map((item: any) => {
         if (item.horaInicioReal && item.horaFinReal) {
           item.horasTotales = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
