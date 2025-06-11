@@ -143,7 +143,7 @@ export class HorariosAsignadosViewComponent {
       });
   
       this.dataSource.data = data.horarios;
-
+      console.log(this.dataSource.data)
       this.totalAsistencias = data.conteo.Asistió;
       this.totalLT = data.conteo.llegoTarde;
       this.totalFC = data.conteo.faltoConAviso;
