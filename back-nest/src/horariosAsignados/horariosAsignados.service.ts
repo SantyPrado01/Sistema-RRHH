@@ -152,8 +152,8 @@ export class HorarioAsignadoService {
       .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
       .where(
         `(
-          (empleado.Id = :empleadoId AND horario.suplente = false)
-          OR (empleadoSuplente.Id = :empleadoId AND horario.suplente = true)
+          empleado.Id = :empleadoId
+          OR empleadoSuplente.Id = :empleadoId
         )`
       )
       .andWhere('horario.eliminado = false')
@@ -170,7 +170,7 @@ export class HorarioAsignadoService {
   
     const horarios = await query.getMany();
   
-    // Conteo de estados
+    // Conteo de estados por rol
     const conteo: Record<string, number> = {
       Asistió: 0,
       llegoTarde: 0,
@@ -180,18 +180,32 @@ export class HorarioAsignadoService {
     };
   
     for (const horario of horarios) {
-      if (conteo.hasOwnProperty(horario.estado)) {
-        conteo[horario.estado]++;
+      let estadoFinal: string | undefined;
+  
+      // Si el empleado es el titular
+      if (horario.empleado?.Id === empleadoId) {
+        estadoFinal = horario.estado;
+      }
+  
+      // Si el empleado es el suplente y efectivamente fue suplente
+      if (horario.empleadoSuplente?.Id === empleadoId && horario.suplente) {
+        estadoFinal = horario.estadoSuplente;
+      }
+  
+      if (estadoFinal && conteo.hasOwnProperty(estadoFinal)) {
+        conteo[estadoFinal]++;
       }
     }
-
-    query.orderBy('empleado.apellido', 'ASC');
+  
+    // Ordenar por apellido (opcional, ya que acá estás trayendo de un solo empleado)
+    query.orderBy('horario.fecha', 'ASC');
   
     return {
       horarios,
       conteo,
     };
   }
+  
 
 
   async update(id: number, updateData: Partial<CreateHorariosAsignadoDto>): Promise<HorarioAsignado> {
