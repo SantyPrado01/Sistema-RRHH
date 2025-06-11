@@ -172,11 +172,11 @@ export class HorarioAsignadoService {
   
     // Conteo de estados por rol
     const conteo: Record<string, number> = {
-      Asistió: 0,
-      llegoTarde: 0,
-      faltoConAviso: 0,
-      faltoSinAviso: 0,
-      enfermedad: 0,
+      'Asistió': 0,
+      'Llegó Tarde': 0,
+      'Faltó Con Aviso': 0,
+      'Faltó Sin Aviso': 0,
+      'Enfermedad': 0,
     };
   
     for (const horario of horarios) {
@@ -196,7 +196,6 @@ export class HorarioAsignadoService {
         conteo[estadoFinal]++;
       }
     }
-  
     // Ordenar por apellido (opcional, ya que acá estás trayendo de un solo empleado)
     query.orderBy('horario.fecha', 'ASC');
   
