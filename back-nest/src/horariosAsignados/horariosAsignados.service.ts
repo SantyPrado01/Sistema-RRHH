@@ -152,8 +152,8 @@ export class HorarioAsignadoService {
       .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
       .where(
         `(
-          empleado.Id = :empleadoId
-          OR empleadoSuplente.Id = :empleadoId
+          (empleado.Id = :empleadoId)
+          OR (empleadoSuplente.Id = :empleadoId)
         )`
       )
       .andWhere('horario.eliminado = false')
@@ -167,10 +167,13 @@ export class HorarioAsignadoService {
         .andWhere('horario.fecha BETWEEN :inicio AND :fin')
         .setParameters({ inicio, fin });
     }
+
+    // Ordenar por fecha antes de obtener los resultados
+    query.orderBy('horario.fecha', 'ASC');
   
     const horarios = await query.getMany();
   
-    // Conteo de estados por rol
+    // Inicializar el conteo con todos los estados posibles
     const conteo: Record<string, number> = {
       'Asistió': 0,
       'Llegó Tarde': 0,
@@ -179,25 +182,25 @@ export class HorarioAsignadoService {
       'Enfermedad': 0,
     };
   
-    for (const horario of horarios) {
+    // Realizar el conteo
+    for (const horario of horarios) { 
       let estadoFinal: string | undefined;
   
-      // Si el empleado es el titular
-      if (horario.empleado?.Id === empleadoId) {
-        estadoFinal = horario.estado;
+      if (horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId)) {
+        // Si es suplente, usar estadoSuplente
+        estadoFinal = horario.estadoSuplente
+        console.log('estado suplente',estadoFinal)
+      } else {
+        // Si es titular, usar estado normal
+        estadoFinal = horario.estado 
+        console.log('estado titular',estadoFinal)
       }
   
-      // Si el empleado es el suplente y efectivamente fue suplente
-      if (horario.empleadoSuplente?.Id === empleadoId && horario.suplente) {
-        estadoFinal = horario.estadoSuplente;
-      }
-  
+      // Incrementar el contador para el estado correspondiente
       if (estadoFinal && conteo.hasOwnProperty(estadoFinal)) {
         conteo[estadoFinal]++;
       }
     }
-    // Ordenar por apellido (opcional, ya que acá estás trayendo de un solo empleado)
-    query.orderBy('horario.fecha', 'ASC');
   
     return {
       horarios,

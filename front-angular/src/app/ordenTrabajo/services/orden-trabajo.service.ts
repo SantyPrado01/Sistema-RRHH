@@ -9,10 +9,10 @@ import { Observable } from 'rxjs';
 export class OrdenTrabajoService {
 
   //Produccion
-  private apiUrl = 'http://147.93.15.196:3000/ordenTrabajo';
+  //private apiUrl = 'http://147.93.15.196:3000/ordenTrabajo';
 
   //Desarrollo
-  //private apiUrl = 'http://localhost:3000/ordenTrabajo'; 
+  private apiUrl = 'http://localhost:3000/ordenTrabajo'; 
 
   constructor(private http: HttpClient) {}
 

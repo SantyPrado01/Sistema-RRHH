@@ -66,4 +66,8 @@ export class HorariosAsignadosService {
     return this.http.get<any>(`${this.apiUrl}/buscarPorEmpleado/${empleadoId}`, { params });
   }
 
+  deleteHorario(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
 }

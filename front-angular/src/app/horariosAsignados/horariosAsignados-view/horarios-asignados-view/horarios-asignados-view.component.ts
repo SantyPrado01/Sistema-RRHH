@@ -66,6 +66,7 @@ export class HorariosAsignadosViewComponent {
   empresasFiltradas: any[] = [];
   servicioId?: number;
   empleado: any;
+  empleadoId: string = '';
 
   mes: number = 0;
   anio: number = 0;
@@ -121,40 +122,71 @@ export class HorariosAsignadosViewComponent {
     }
 
   ngOnInit() {
-    const empleadoId = this.route.snapshot.paramMap.get('id')!;
+    this.empleadoId = this.route.snapshot.paramMap.get('id')!;
     this.mes = Number(this.route.snapshot.queryParamMap.get('mes'));
     this.anio = Number(this.route.snapshot.queryParamMap.get('anio')!);
 
-    this.empleadoService.getEmpleadoById(parseInt(empleadoId)).subscribe((data: any) => {
+    this.empleadoService.getEmpleadoById(parseInt(this.empleadoId)).subscribe((data: any) => {
       this.empleado = data;
     })
 
 
-    this.horariosAsignadosService.buscarHorariosPorEmpleado(parseInt(empleadoId), this.mes, this.anio).subscribe((data: any) => {
+    this.horariosAsignadosService.buscarHorariosPorEmpleado(parseInt(this.empleadoId), this.mes, this.anio).subscribe((data: any) => {
       this.horariosRealizados = data
-      console.log(this.horariosRealizados)
+      console.log('horariosRealizados',this.horariosRealizados)
+
       this.horasRealizadas = data.horarios.map((item: any) => {
-        if (item.horaInicioReal && item.horaFinReal) {
-          item.horasTotales = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
-        } else {
-          item.horasTotales = 0;
+        let horasCalculadas = 0; // Inicializamos a 0 por defecto
+    
+        // Si el empleado que estamos buscando (empleadoId) es el TITULAR de este horario
+        if (item.empleado?.Id && Number(item.empleado.Id) === Number(this.empleadoId)) {
+            if (item.horaInicioReal && item.horaFinReal) {
+                horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
+            }
         }
+        // O si el empleado que estamos buscando (empleadoId) es el SUPLENTE de este horario
+        else if (item.empleadoSuplente?.Id && Number(item.empleadoSuplente.Id) === Number(this.empleadoId)) {
+            if (item.horaInicioReal && item.horaFinReal) {
+                horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
+            }
+        }
+    
+        item.horasTotales = horasCalculadas; // Asignamos las horas calculadas (o 0 si no cumple ninguna condición)
         return item;
-      });
+    });
   
       this.dataSource.data = data.horarios;
-      console.log(this.dataSource.data)
-      this.totalAsistencias = data.conteo.Asistió;
-      this.totalLT = data.conteo.llegoTarde;
-      this.totalFC = data.conteo.faltoConAviso;
-      this.totalFS = data.conteo.faltoSinAviso;
-      this.totalE = data.conteo.enfermedad;
+      
+      console.log('Conteo',this.dataSource.data)
+
+      this.totalAsistencias = data.conteo.Asistió; 
+      this.totalLT = data.conteo['Llegó Tarde']; 
+      this.totalFC = data.conteo['Faltó Con Aviso']; 
+      this.totalFS = data.conteo['Faltó Sin Aviso']; 
+      this.totalE = data.conteo['Enfermedad'];
 
       this.totalHorasRealizadas = data.horarios
-      .filter((item: any) => item.horaInicioReal && item.horaFinReal)
-      .reduce((sum: number, item: any) => {
+      .filter((item: any) => {
+        // Primero, asegurar que las horas reales existan para calcular
+        if (!item.horaInicioReal || !item.horaFinReal) {
+            return false; // Excluir si no hay horas reales
+        }
+
+        const currentEmpleadoId = Number(this.empleadoId); // ID del empleado que estamos viendo/filtrando
+
+        // Condición para incluir el item en la suma:
+        // El empleado del item es el titular Y su ID coincide con el que estamos viendo Y NO es un horario de suplencia
+        const esTitularRelevante = Number(item.empleado?.Id) === currentEmpleadoId && item.suplente === false;
+
+        // O el empleado del item es el suplente Y su ID coincide con el que estamos viendo Y SÍ es un horario de suplencia
+        const esSuplenteRelevante = Number(item.empleadoSuplente?.Id) === currentEmpleadoId && item.suplente === true;
+
+        // Incluir el item si el empleado que estamos viendo es el titular relevante O el suplente relevante
+        return esTitularRelevante || esSuplenteRelevante;
+    })
+    .reduce((sum: number, item: any) => {
         return sum + this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
-      }, 0);
+    }, 0);
 
       this.loading = false;
     });

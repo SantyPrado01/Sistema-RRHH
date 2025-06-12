@@ -289,4 +289,13 @@ export class OrdenTrabajoViewComponent implements OnInit{
     XLSX.writeFile(wb, 'listado_horarios.xlsx');
   }
 
+  eliminarHorario(id: number): void {
+    this.horarioService.deleteHorario(id).subscribe({
+      next: () => {
+        this.mostrarAlerta('Operación Exitosa', 'Horario eliminado con éxito.', 'success');
+        this.cargarOrden(this.ordenIdNumeber);
+      },
+    });
+  }
+
 }

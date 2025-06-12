@@ -123,8 +123,16 @@
     
             <ng-container matColumnDef="estado">
               <th mat-header-cell *matHeaderCellDef> Estado </th>
-              <td mat-cell *matCellDef="let horario"> {{ horario.estado }} </td> 
-            </ng-container> 
+              <td mat-cell *matCellDef="let horario">
+                <ng-container *ngIf="horario.empleadoSuplente?.Id && horario.empleado.Id === horario.empleadoSuplente.Id; else estadoTitular">
+                  {{ horario.estadoSuplente }}
+                </ng-container>
+                
+                <ng-template #estadoTitular>
+                  {{ horario.estado }}
+                </ng-template>
+              </td>
+            </ng-container>
 
             <ng-container matColumnDef="observaciones">
               <th mat-header-cell *matHeaderCellDef>Observaciones</th>

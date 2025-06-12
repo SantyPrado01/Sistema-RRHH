@@ -168,6 +168,9 @@
             <button mat-icon-button color="primary" *ngIf="horario.editMode" (click)="saveChanges(horario)">
               <mat-icon>check</mat-icon>
             </button>
+            <button mat-icon-button color="primary" *ngIf="horario.editMode" (click)="eliminarHorario(horario.horarioAsignadoId)">
+              <mat-icon>delete</mat-icon>
+            </button>
             <button mat-icon-button color="warn" *ngIf="horario.editMode" (click)="cancelEdit(horario)">
               <mat-icon>close</mat-icon>
             </button>
