@@ -2,7 +2,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { provideRouter, withRouterConfig } from '@angular/router';
 import { routes } from './app/app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { ExtraOptions } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -13,6 +13,7 @@ registerLocaleData(localeEs);
 
 // 👇 Importar y proveer el locale para Angular Material
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { JwtInterceptor } from './app/interceptors/jwt.interceptor';
 
 const routerOptions: ExtraOptions = {
   scrollPositionRestoration: 'enabled',
@@ -24,6 +25,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes, withRouterConfig(routerOptions)),
     provideHttpClient(),
     provideAnimationsAsync('noop'),
-    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' } // 👈 esto es clave
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
 }).catch(err => console.error(err));
