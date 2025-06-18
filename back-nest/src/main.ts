@@ -8,7 +8,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.enableCors({
-    origin: ['https://147.93.15.196:4200','https://sistemacorsacor.cloud'], // Cambiar Frontend
+    origin: ['https://147.93.15.196:4200','https://sistemacorsacor.cloud', 'http://localhost:4200'], // Cambiar Frontend
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true
   });
