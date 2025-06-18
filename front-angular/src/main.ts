@@ -13,7 +13,6 @@ registerLocaleData(localeEs);
 
 // 👇 Importar y proveer el locale para Angular Material
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { JwtInterceptor } from './app/interceptors/jwt.interceptor';
 
 const routerOptions: ExtraOptions = {
   scrollPositionRestoration: 'enabled',
@@ -26,6 +25,5 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     provideAnimationsAsync('noop'),
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
 }).catch(err => console.error(err));
