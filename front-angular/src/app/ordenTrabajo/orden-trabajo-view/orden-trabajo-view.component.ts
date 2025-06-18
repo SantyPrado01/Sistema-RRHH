@@ -135,8 +135,6 @@ export class OrdenTrabajoViewComponent implements OnInit{
   }
 
   seleccionarEmpleadoSuplente(horario: any, empleado: any): void {
-    console.log('Empleado seleccionado:', empleado); // Para debug
-    // Asignamos el objeto empleado completo
     horario.empleadoSuplente = empleado;
     horario.suplente = true;
     horario.empleadoSuplenteControl.setValue(empleado, { emitEvent: false });
@@ -167,7 +165,7 @@ export class OrdenTrabajoViewComponent implements OnInit{
           estado: horario.estado,
           comprobado: true,
           observaciones: horario.observaciones,
-          empleadoSuplente: horario.empleadoSuplente,
+          empleadoSuplente: horario.empleadoSuplente? horario.empleadoSuplente.empleadoId : null,
           suplente: Boolean(horario.empleadoSuplente),
           estadoSuplente: horario.empleadoSuplente ? horario.estadoSuplente || 'Asistió' : null
         };

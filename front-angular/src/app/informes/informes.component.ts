@@ -73,7 +73,8 @@ export class InformesComponent  {
   ordenes: any[] = [];
   dataSource = new MatTableDataSource<any>([]);
 
-  fecha: string = '';
+  fechaInicio: string = '';
+  fechaFin: string = '';
   empleadoId?: number;
   servicioId?: number;
   loading: boolean = false;
@@ -100,6 +101,7 @@ export class InformesComponent  {
   reportes:{ nombre: string, funcion: ()=> void }[] = [
     {nombre:'Reporte de horas por Empleado por Empresa', funcion: this.obtenerOrdenesMesAnio.bind(this)},
     {nombre:'Reporte de horas por Dia', funcion: this.buscarHorarios.bind(this)},
+    {nombre:'Reporte Resumen por Empresa', funcion: this.obtenerResumenPorEmpresa.bind(this)},
   ];
 
   headerMap: { [key: string]: string } = {
@@ -135,6 +137,13 @@ export class InformesComponent  {
     'horasProyectadas',
     'horasReales'
   ]
+
+  displayedColumnsObtenerResumenPorEmpresa: string[] = [
+    'empresa',
+    'horasProyectadas',
+    'horasReales'
+  ]
+
   private matPaginator!: MatPaginator;
   @ViewChild(MatPaginator) set matPaginatorSetter(mp: MatPaginator) {
     this.matPaginator = mp;
@@ -248,16 +257,44 @@ export class InformesComponent  {
       return empresa ? empresa.nombre: '';
     }
 
+    obtenerResumenPorEmpresa(): void {
+      this.dataSource.data = [];
+      this.dataSource.sort = this.matSort;
+      this.loading = true;
+      let fechaFormateadaInicio: string | null = null;
+      let fechaFormateadaFin: string | null = null;
+
+      if (this.fechaInicio && this.fechaFin) {
+        fechaFormateadaInicio = this.datePipe.transform(this.fechaInicio, 'yyyy-MM-dd');
+        fechaFormateadaFin = this.datePipe.transform(this.fechaFin, 'yyyy-MM-dd');
+      }
+  
+      this.horariosAsignadosService.obtenerResumenPorEmpresa(fechaFormateadaInicio || '', fechaFormateadaFin || '').subscribe(
+        (data: any[]) => {
+          console.log('Datos recibidos Resumen Empresa:', data);
+          this.dataSource.data = data;
+          this.loading = false;
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Hubo un error al obtener los horarios asignados', error);
+          this.loading = false;
+        }
+      );
+    }
+
     buscarHorarios(): void {
       this.dataSource.data = [];
       this.dataSource.sort = this.matSort;
       this.loading = true;
-      let fechaFormateada: string | null = null;
-      if (this.fecha) {
-        fechaFormateada = this.datePipe.transform(this.fecha, 'yyyy-MM-dd');
+      let fechaFormateadaInicio: string | null = null;
+      let fechaFormateadaFin: string | null = null;
+
+      if (this.fechaInicio && this.fechaFin) {
+        fechaFormateadaInicio = this.datePipe.transform(this.fechaInicio, 'yyyy-MM-dd');
+        fechaFormateadaFin = this.datePipe.transform(this.fechaFin, 'yyyy-MM-dd');
       }
   
-      this.horariosAsignadosService.buscarHorarios(fechaFormateada || '', this.empleadoId, this.servicioId).subscribe(
+      this.horariosAsignadosService.buscarHorarios(fechaFormateadaInicio || '', fechaFormateadaFin || '', this.empleadoId, this.servicioId).subscribe(
         (data: any[]) => {
           console.log('Datos recibidos (antes de procesar):', data); 
   
@@ -352,7 +389,7 @@ export class InformesComponent  {
         );
         }
       )
-  }
+    }
           
     obtenerOrdenesMesAnio() {
     this.dataSource.data = [];
@@ -442,6 +479,13 @@ export class InformesComponent  {
 
                 default: return (item as any)[columnDefName] || '';
             }
+        case 'Reporte Resumen por Empresa':
+          switch (columnDefName) {
+            case 'empresa': return item.nombreServicio || '';
+            case 'horasProyectadas': return item.horasProyectadas || '';
+            case 'horasReales': return item.horasReales || '';
+            default: return (item as any)[columnDefName] || '';
+          }
         default: return ''; 
     }
     }

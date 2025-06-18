@@ -270,7 +270,7 @@ export class HorariosAsignadosViewComponent {
       item.horaInicioReal,
       item.horaFinReal,
       item.horasTotales,
-      item.estado 
+      item.estadoDeterminado
     ]);
 
     (doc as any).autoTable({

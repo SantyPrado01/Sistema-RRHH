@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import jwt_decode from 'jwt-decode';
+import { environment } from "../../environments/environment";
 
 @Injectable({
     providedIn: 'root'
@@ -9,11 +10,7 @@ import jwt_decode from 'jwt-decode';
 
 export class LoginService{
 
-    //Produccion
-    private baseUrl = 'http://147.93.15.196:3000/auth';
-
-    //Desarrollo
-    //private baseUrl = 'http://localhost:3000/auth';
+    private baseUrl = environment.apiUrl + '/auth';
 
     constructor(private http: HttpClient){}
 

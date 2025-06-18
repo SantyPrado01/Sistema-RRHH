@@ -2,17 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HorarioAsignado } from '../models/horariosAsignados.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HorariosAsignadosService {
 
-  //Produccion
-  private apiUrl = 'http://147.93.15.196:3000/horariosasignados';
-
-  //Desarrollo
-  //private apiUrl = 'http://localhost:3000/horariosasignados'; 
+  private apiUrl = environment.apiUrl + '/horariosasignados';
 
   constructor(private http: HttpClient) {}
 
@@ -28,8 +25,10 @@ export class HorariosAsignadosService {
     return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/all`);
   }
 
-  buscarHorarios(fecha: string, empleadoId?: number, servicioId?: number): Observable<any> {
-    let params = new HttpParams().set('fecha', fecha);
+  buscarHorarios(fechaInicio: string, fechaFin: string ,empleadoId?: number, servicioId?: number): Observable<any> {
+    let params = new HttpParams()
+    .set('fechaInicio', fechaInicio)
+    .set('fechaFin', fechaFin);
 
     if (empleadoId) {
       params = params.set('empleadoId', empleadoId.toString());
@@ -41,6 +40,21 @@ export class HorariosAsignadosService {
 
     return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/buscar?`, { params });
   }
+
+  obtenerResumenPorEmpresa(fechaInicio?: string, fechaFin?: string): Observable<any> {
+  let params = new HttpParams();
+
+  if (fechaInicio) {
+    params = params.set('fechaInicio', fechaInicio);
+  }
+
+  if (fechaFin) {
+    params = params.set('fechaFin', fechaFin);
+  }
+
+  return this.http.get<any>(`${this.apiUrl}/buscarPorFecha`, { params });
+}
+
 
   getHorariosAsignados(): Observable<HorarioAsignado[]> {
       const today = new Date();

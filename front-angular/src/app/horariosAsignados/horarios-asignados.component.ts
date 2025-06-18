@@ -176,6 +176,13 @@ export class HorariosAsignadosComponent implements OnInit {
       this.dataSource.data = data;
     });
   }
+
+  cambiarEstado(nuevoEstado: string){
+    if (nuevoEstado === 'Sin Servicio') {
+      this.horaInicioReal = '';
+      this.horaFinReal = '';
+    }
+  }
   
   actualizarHorarios(){
     if (!this.selectedHorario) return;

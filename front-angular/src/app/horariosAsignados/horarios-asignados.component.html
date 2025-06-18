@@ -53,7 +53,7 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Estado</mat-label>
-          <mat-select [(ngModel)]="estado" name="estado" required>
+          <mat-select [(ngModel)]="estado" name="estado" required (ngModelChange)="cambiarEstado($event)">
             <mat-option value="Asistió">Asistió</mat-option>
             <mat-option value="Accidente">Accidente</mat-option>
             <mat-option value="Llegada Tarde">Llegada Tarde</mat-option>

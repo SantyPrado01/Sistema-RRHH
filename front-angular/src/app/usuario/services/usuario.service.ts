@@ -2,23 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario } from '../models/ususario.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
 
-  //Produccion
-
-  private baseUrl = 'http://147.93.15.196:3000/users';
-  private authUrl = 'http://147.93.15.196:3000/auth';
-  private categoriaUrl = 'http://147.93.15.196:3000/categoria-usuario';
-
-  //Desarrollo
-
-  //private baseUrl = 'http://localhost:3000/users';
-  //private authUrl = 'http://localhost:3000/auth';
-  //private categoriaUrl = 'http://localhost:3000/categoria-usuario';
+  private baseUrl = environment.apiUrl + '/users';
+  private authUrl = environment.apiUrl + '/auth';
+  private categoriaUrl = environment.apiUrl + '/categoria-usuario';
 
   constructor(private http: HttpClient) { }
 

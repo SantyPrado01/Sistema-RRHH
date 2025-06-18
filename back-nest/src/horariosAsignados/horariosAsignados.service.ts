@@ -104,8 +104,9 @@ export class HorarioAsignadoService {
       return horarioAsignado;
   }
 
-  async buscarHorariosAsignados(
-    fecha?: string,
+    async buscarHorariosAsignados(
+    fechaInicio?: string,
+    fechaFin?: string,
     empleadoId?: number,
     servicioId?: number,
   ): Promise<HorarioAsignado[]> {
@@ -116,26 +117,30 @@ export class HorarioAsignadoService {
       .leftJoinAndSelect('horario.empleado', 'empleado')
       .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
       .where('horario.eliminado = false');
-  
-    if (fecha) {
-      const fechaObj = new Date(fecha);
-      const inicio = fechaObj.toISOString().split('T')[0]; // Solo la fecha en formato YYYY-MM-DD
-      query.andWhere('horario.fecha = :inicio', { inicio });
+
+    // 📆 Filtro por rango de fechas
+    if (fechaInicio && fechaFin) {
+      query.andWhere('horario.fecha BETWEEN :fechaInicio AND :fechaFin', {
+        fechaInicio,
+        fechaFin,
+      });
     }
-  
+
+    // 👤 Filtro por empleado (titular o suplente)
     if (empleadoId) {
       query.andWhere(
-        '(empleado.Id = :empleadoId AND horario.suplente =false OR empleadoSuplente.Id = :empleadoId AND horario.suplente = true)',
+        '(empleado.Id = :empleadoId AND horario.suplente = false OR empleadoSuplente.Id = :empleadoId AND horario.suplente = true)',
         { empleadoId },
       );
     }
-  
+
+    // 🛠 Filtro por servicio
     if (servicioId) {
       query.andWhere('servicio.servicioId = :servicioId', { servicioId });
     }
 
-    query.orderBy('empleado.apellido', 'ASC');
-  
+    query.orderBy('horario.fecha', 'ASC');
+
     return query.getMany();
   }
 
@@ -195,7 +200,8 @@ export class HorarioAsignadoService {
         estadoFinal = horario.estado 
         console.log('estado titular',estadoFinal)
       }
-  
+
+      (horario as any).estadoDeterminado = estadoFinal;
       // Incrementar el contador para el estado correspondiente
       if (estadoFinal && conteo.hasOwnProperty(estadoFinal)) {
         conteo[estadoFinal]++;
@@ -208,6 +214,165 @@ export class HorarioAsignadoService {
     };
   }
   
+  async obtenerHorariosPorEmpresa(
+    empresaId: number,
+    fechaInicio: string,
+    fechaFin: string,
+  ): Promise<{ horarios: HorarioAsignado[]; conteo: Record<string, number> }> {
+    let query = this.horarioAsignadoRepository
+      .createQueryBuilder('horario')
+      .leftJoinAndSelect('horario.empleado', 'empleado')
+      .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
+      .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
+      .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
+      .where(
+        `(
+          (servicio.servicioId = :empresaId)
+        )`
+      )
+      .andWhere('horario.eliminado = false')
+      .setParameter('empresaId', empresaId);
+  
+    // Filtro por mes y año si están presentes
+    if (fechaInicio && fechaFin) {
+      const inicio = new Date(fechaInicio);
+      const fin = new Date(fechaFin);
+      query = query
+        .andWhere('horario.fecha BETWEEN :inicio AND :fin')
+        .setParameters({ inicio, fin });
+    }
+
+    // Ordenar por fecha antes de obtener los resultados
+    query.orderBy('horario.fecha', 'ASC');
+  
+    const horarios = await query.getMany();
+  
+
+    function calcularHoras(inicio: string, fin: string): number {
+      const [hInicio, mInicio] = inicio.split(':').map(Number);
+      const [hFin, mFin] = fin.split(':').map(Number);
+      
+      const inicioMin = hInicio * 60 + mInicio;
+      const finMin = hFin * 60 + mFin;
+    
+      return (finMin - inicioMin) / 60; // retorna en horas
+    }
+    // Inicializar el conteo con todos los estados posibles
+    const conteo: Record<string, number> = {
+      'Horas Proyectadas': 0,
+      'Horas Reales': 0,
+    };
+  
+    // Realizar el conteo
+    for (const horario of horarios) { 
+      
+        // 🟢 Sumar horas proyectadas si existen ambas
+      if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+        const horas = calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
+        conteo['Horas Proyectadas'] += horas;
+      }
+
+      // 🟡 (Opcional) Sumar horas reales si existen ambas
+      if (horario.horaInicioReal && horario.horaFinReal) {
+        const horas = calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+        conteo['Horas Reales'] += horas;
+      }
+    }
+  
+    return {
+      horarios,
+      conteo,
+    };
+  }
+
+  async obtenerResumenPorEmpresa(
+    fechaInicio: string,
+    fechaFin: string,
+  ): Promise<
+    {
+      servicioId: number;
+      nombreServicio: string;
+      horasProyectadas: number;
+      horasReales: number;
+    }[]
+  > {
+    const query = this.horarioAsignadoRepository
+      .createQueryBuilder('horario')
+      .leftJoinAndSelect('horario.empleado', 'empleado')
+      .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
+      .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
+      .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
+      .where('horario.eliminado = false');
+
+    if (fechaInicio && fechaFin) {
+      query.andWhere('horario.fecha BETWEEN :inicio AND :fin', {
+        inicio: fechaInicio,
+        fin: fechaFin,
+      });
+    }
+
+    const horarios = await query.getMany();
+
+    // Función para calcular horas entre dos strings HH:mm (con cruce nocturno)
+    function calcularHoras(inicio: string, fin: string): number {
+      const [hInicio, mInicio] = inicio.split(':').map(Number);
+      const [hFin, mFin] = fin.split(':').map(Number);
+
+      const inicioMin = hInicio * 60 + mInicio;
+      const finMin = hFin * 60 + mFin;
+
+      const duracionMin = finMin >= inicioMin
+        ? finMin - inicioMin
+        : (24 * 60 - inicioMin) + finMin;
+
+      return duracionMin / 60;
+    }
+
+    // Agrupador por empresa (servicioId)
+    const resumenMap = new Map<number, {
+      servicioId: number;
+      nombreServicio: string;
+      horasProyectadas: number;
+      horasReales: number;
+    }>();
+
+    for (const horario of horarios) {
+      const servicio = horario.ordenTrabajo?.servicio;
+      if (!servicio) continue;
+
+      const id = servicio.servicioId;
+
+      if (!resumenMap.has(id)) {
+        resumenMap.set(id, {
+          servicioId: id,
+          nombreServicio: servicio.nombre,
+          horasProyectadas: 0,
+          horasReales: 0,
+        });
+      }
+
+      const empresaResumen = resumenMap.get(id)!;
+
+      // Sumar horas proyectadas
+      if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+        empresaResumen.horasProyectadas += calcularHoras(
+          horario.horaInicioProyectado,
+          horario.horaFinProyectado
+        );
+      }
+
+      // Sumar horas reales
+      if (horario.horaInicioReal && horario.horaFinReal) {
+        empresaResumen.horasReales += calcularHoras(
+          horario.horaInicioReal,
+          horario.horaFinReal
+        );
+      }
+    }
+
+    return Array.from(resumenMap.values());
+  }
+
 
 
   async update(id: number, updateData: Partial<CreateHorariosAsignadoDto>): Promise<HorarioAsignado> {

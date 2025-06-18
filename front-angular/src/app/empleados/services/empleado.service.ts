@@ -2,42 +2,39 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Empleado } from '../models/empleado.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpleadoService {
 
-  //Produccion
-  private apiUrl = 'http://147.93.15.196:3000/empleados';
-
-  //Desarrollo
-  //private apiUrl = 'http://localhost:3000/empleados'; 
+  private baseUrl = environment.apiUrl + '/empleados';
 
   constructor(private http: HttpClient) {}
 
   buscarEmpleados(termino: string): Observable<any[]> {
-    return this.http.get<Empleado[]>(`${this.apiUrl}/buscar?nombre=${termino}`);
+    return this.http.get<Empleado[]>(`${this.baseUrl}/buscar?nombre=${termino}`);
   }
   getEmpleados(): Observable<Empleado[]> {
-    return this.http.get<Empleado[]>(`${this.apiUrl}`);
+    return this.http.get<Empleado[]>(`${this.baseUrl}`);
   }
   getEmpleadosEliminado(): Observable<Empleado[]>{
-    return this.http.get<Empleado[]>(`${this.apiUrl}/activos`);
+    return this.http.get<Empleado[]>(`${this.baseUrl}/activos`);
   }
   getEmpleadoById(id: number): Observable<Empleado> {
-    return this.http.get<Empleado>(`${this.apiUrl}/${id}`);
+    return this.http.get<Empleado>(`${this.baseUrl}/${id}`);
   }
   createEmpleado(empleado: Empleado): Observable<Empleado> {
-    return this.http.post<Empleado>(this.apiUrl, empleado);
+    return this.http.post<Empleado>(this.baseUrl, empleado);
   }
   updateEmpleado(id: number, empleado: Empleado): Observable<Empleado> {
-    return this.http.patch<Empleado>(`${this.apiUrl}/${id}`, empleado);
+    return this.http.patch<Empleado>(`${this.baseUrl}/${id}`, empleado);
   }
   deleteEmpleado(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
   getHorariosEmpleado(empleadoId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${empleadoId}/horarios`);
+    return this.http.get(`${this.baseUrl}/${empleadoId}/horarios`);
   }
 }

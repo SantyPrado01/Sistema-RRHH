@@ -30,21 +30,46 @@ export class HorariosAsignadosController {
       anio,
     );
   }
+  @Get('buscarPorEmpresa/:empresaId')
+  async obtenerHorariosPorEmpresa(
+    @Param('empresaId') empresaId: number,
+    @Query('fechaInicio') fechaInicio?: string,
+    @Query('fechaFin') fechaFin?: string,
+  ): Promise<{ horarios: HorarioAsignado[]; conteo: Record<string, number> }> {
+    return this.horariosAsignadosService.obtenerHorariosPorEmpresa(
+      empresaId,
+      fechaInicio,
+      fechaFin,
+    );
+  }
 
   @Get('buscar')
   buscarHorarios(
-    @Query('fecha') fecha?: string,
+    @Query('fechaInicio') fechaInicio?: string,
+    @Query('fechaFin') fechaFin?: string,
     @Query('empleadoId') empleadoIdStr?: string,
     @Query('servicioId') servicioIdStr?: string,
   ) {
-    console.log('Query:', { fecha, empleadoIdStr, servicioIdStr });
     const empleadoId = empleadoIdStr ? Number(empleadoIdStr) : undefined;
     const servicioId = servicioIdStr ? Number(servicioIdStr) : undefined;
   
     return this.horariosAsignadosService.buscarHorariosAsignados(
-      fecha,
+      fechaInicio,
+      fechaFin,
       empleadoId,
       servicioId,
+    );
+  }
+
+  @Get('buscarPorFecha')
+  obtenerResumenPorEmpresa(
+    @Query('fechaInicio') fechaInicio?: string,
+    @Query('fechaFin') fechaFin?: string,
+  ) {
+  
+    return this.horariosAsignadosService.obtenerResumenPorEmpresa(
+      fechaInicio,
+      fechaFin,
     );
   }
 
