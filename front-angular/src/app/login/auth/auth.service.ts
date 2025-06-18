@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class AuthService {
 
-  private LOGIN_URL = environment.apiUrl + '/auth/login';
+  private LOGIN_URL = environment.apiUrl + '/api/auth/login';
 
   private tokenKey = 'authToken';
 
