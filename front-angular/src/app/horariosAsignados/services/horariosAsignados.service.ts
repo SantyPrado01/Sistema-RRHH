@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class HorariosAsignadosService {
 
-  private apiUrl = environment.apiUrl + '/horariosasignados';
+  private apiUrl = environment.apiUrl + '/api/horariosasignados';
 
   constructor(private http: HttpClient) {}
 

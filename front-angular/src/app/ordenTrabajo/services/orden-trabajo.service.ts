@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class OrdenTrabajoService {
 
-  private apiUrl = environment.apiUrl + '/ordenTrabajo';
+  private apiUrl = environment.apiUrl + '/api/ordenTrabajo';
 
   constructor(private http: HttpClient) {}
 

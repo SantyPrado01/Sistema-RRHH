@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class FacturaService {
 
-  private baseUrl = environment.apiUrl + '/facturas';
+  private baseUrl = environment.apiUrl + '/api/facturas';
 
   constructor(private http: HttpClient) { }
 
