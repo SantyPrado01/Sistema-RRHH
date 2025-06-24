@@ -126,7 +126,7 @@
                        [formControl]="horario.empleadoSuplenteControl"
                        [matAutocomplete]="autoEmpleado"
                        placeholder="Buscar empleado suplente"
-                       [(ngModel)]="horario.empleadoSuplente">
+                       >
                 <mat-autocomplete #autoEmpleado="matAutocomplete"
                                 (optionSelected)="seleccionarEmpleadoSuplente(horario, $event.option.value)"
                                 [displayWith]="displayEmployeeName">
