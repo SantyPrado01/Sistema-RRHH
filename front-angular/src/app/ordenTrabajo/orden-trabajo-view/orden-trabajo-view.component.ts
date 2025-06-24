@@ -157,9 +157,10 @@ export class OrdenTrabajoViewComponent implements OnInit{
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Horario a actualizar:', horario); // Para debug
-        console.log('Empleado suplente:', horario.empleadoSuplente); // Para debug
+        console.log('Empleado suplente:', horario.empleadoSuplente);
+        console.log('Empleado suplente control:', horario.empleadoSuplenteControl); // Para debug
 
-       const empleadoSuplenteDef = horario.empleadoSuplente
+       const empleadoSuplenteDef = horario.empleadoSuplenteControl
         
         const updatedHorario = {
           horaInicioReal: horario.horaInicioReal,
