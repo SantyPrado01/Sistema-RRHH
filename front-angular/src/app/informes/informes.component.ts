@@ -121,15 +121,15 @@ export class InformesComponent  {
   displayedColumnsBuscarHorarios: string[] = [
     'empresa',
     'empleado',
+    'estado',
     'empleadoSuplente',
+    'estadoSuplente',
     'fecha',
     'horasInicioProyectado',
     'horasFinProyectado',
     'horaInicioReal',
     'horaFinReal',
     'horasTotales',
-    'estado',
-    'estadoSuplente' 
   ];
 
   displayedColumnsObtenerOrdenes: string[] = [
