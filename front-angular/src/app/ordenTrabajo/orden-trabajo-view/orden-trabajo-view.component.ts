@@ -99,7 +99,7 @@ export class OrdenTrabajoViewComponent implements OnInit{
         this.ordenAsignada = data;
         this.horarios = data.horariosAsignados.map((horario: any) => ({
           ...horario,
-          empleadoSuplenteControl: new FormControl('')
+          empleadoSuplenteControl: new FormControl(horario.empleadoSuplente || null),
         }));
         this.empresa = data.servicio.nombre
         this.empleado = data.empleadoAsignado
@@ -135,8 +135,15 @@ export class OrdenTrabajoViewComponent implements OnInit{
   }
 
   seleccionarEmpleadoSuplente(horario: any, empleado: any): void {
-    horario.empleadoSuplente = empleado;
-    horario.suplente = true;
+
+    if(empleado){
+      horario.empleadoSuplente = empleado;
+      horario.suplente = true;
+    }
+    else {
+      horario.empleadoSuplente = null;
+      horario.suplente = false;
+    }
     horario.empleadoSuplenteControl.setValue(empleado, { emitEvent: false });
     console.log('Horario actualizado:', horario); // Para debug
   }
@@ -160,7 +167,7 @@ export class OrdenTrabajoViewComponent implements OnInit{
         console.log('Empleado suplente:', horario.empleadoSuplente);
         console.log('Empleado suplente control:', horario.empleadoSuplenteControl); // Para debug
 
-       const empleadoSuplenteDef = horario.empleadoSuplente
+       const empleadoSuplenteDef = horario.empleadoSuplenteControl.value || null;
         
         const updatedHorario = {
           horaInicioReal: horario.horaInicioReal,
