@@ -158,6 +158,8 @@ export class OrdenTrabajoViewComponent implements OnInit{
       if (result) {
         console.log('Horario a actualizar:', horario); // Para debug
         console.log('Empleado suplente:', horario.empleadoSuplente); // Para debug
+
+       const empleadoSuplenteDef = horario.empleadoSuplente
         
         const updatedHorario = {
           horaInicioReal: horario.horaInicioReal,
@@ -165,7 +167,7 @@ export class OrdenTrabajoViewComponent implements OnInit{
           estado: horario.estado,
           comprobado: true,
           observaciones: horario.observaciones,
-          empleadoSuplente: horario.empleadoSuplente,
+          empleadoSuplente: empleadoSuplenteDef,
           suplente: Boolean(horario.empleadoSuplente),
           estadoSuplente: horario.empleadoSuplente ? horario.estadoSuplente || 'Asistió' : null
         };
