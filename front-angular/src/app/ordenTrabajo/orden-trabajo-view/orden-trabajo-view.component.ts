@@ -160,7 +160,7 @@ export class OrdenTrabajoViewComponent implements OnInit{
         console.log('Empleado suplente:', horario.empleadoSuplente);
         console.log('Empleado suplente control:', horario.empleadoSuplenteControl); // Para debug
 
-       const empleadoSuplenteDef = horario.empleadoSuplenteControl
+       const empleadoSuplenteDef = horario.empleadoSuplente
         
         const updatedHorario = {
           horaInicioReal: horario.horaInicioReal,
