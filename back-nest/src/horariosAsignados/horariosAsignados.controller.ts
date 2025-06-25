@@ -65,11 +65,15 @@ export class HorariosAsignadosController {
   obtenerResumenPorEmpresa(
     @Query('fechaInicio') fechaInicio?: string,
     @Query('fechaFin') fechaFin?: string,
+    @Query('servicioId') servicioIdStr?: string,
   ) {
+
+    const empresaId = servicioIdStr ? Number(servicioIdStr) : undefined;
   
     return this.horariosAsignadosService.obtenerResumenPorEmpresa(
       fechaInicio,
       fechaFin,
+      empresaId
     );
   }
 

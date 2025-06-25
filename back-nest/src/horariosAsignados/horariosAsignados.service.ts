@@ -104,7 +104,7 @@ export class HorarioAsignadoService {
       return horarioAsignado;
   }
 
-    async buscarHorariosAsignados(
+  async buscarHorariosAsignados(
     fechaInicio?: string,
     fechaFin?: string,
     empleadoId?: number,
@@ -190,6 +190,7 @@ export class HorarioAsignadoService {
     // Realizar el conteo
     for (const horario of horarios) { 
       let estadoFinal: string | undefined;
+      let horaFinal: number | undefined;
   
       if (horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId)) {
         // Si es suplente, usar estadoSuplente
@@ -288,27 +289,35 @@ export class HorarioAsignadoService {
   async obtenerResumenPorEmpresa(
     fechaInicio: string,
     fechaFin: string,
-  ): Promise<
-    {
+    empresaId?: number,
+  ): Promise<{
+    resumenPorEmpresa: {
       servicioId: number;
       nombreServicio: string;
       horasProyectadas: number;
       horasReales: number;
-    }[]
-  > {
+    }[];
+    totalHorasProyectadas: number;
+    totalHorasReales: number;
+  }> {
     const query = this.horarioAsignadoRepository
       .createQueryBuilder('horario')
       .leftJoinAndSelect('horario.empleado', 'empleado')
       .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
       .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
       .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
-      .where('horario.eliminado = false');
+      .where('horario.eliminado = false')
+      .andWhere('horario.eliminado = false')
 
     if (fechaInicio && fechaFin) {
       query.andWhere('horario.fecha BETWEEN :inicio AND :fin', {
         inicio: fechaInicio,
         fin: fechaFin,
       });
+    }
+
+    if (empresaId) {
+      query.andWhere('servicio.servicioId = :empresaId', { empresaId });
     }
 
     const horarios = await query.getMany();
@@ -336,6 +345,9 @@ export class HorarioAsignadoService {
       horasReales: number;
     }>();
 
+    let totalHorasProyectadas = 0;
+    let totalHorasReales = 0;
+
     for (const horario of horarios) {
       const servicio = horario.ordenTrabajo?.servicio;
       if (!servicio) continue;
@@ -352,28 +364,26 @@ export class HorarioAsignadoService {
       }
 
       const empresaResumen = resumenMap.get(id)!;
-
       // Sumar horas proyectadas
       if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-        empresaResumen.horasProyectadas += calcularHoras(
-          horario.horaInicioProyectado,
-          horario.horaFinProyectado
-        );
+        const horas = calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
+        empresaResumen.horasProyectadas += horas;
+        totalHorasProyectadas += horas;
       }
-
       // Sumar horas reales
       if (horario.horaInicioReal && horario.horaFinReal) {
-        empresaResumen.horasReales += calcularHoras(
-          horario.horaInicioReal,
-          horario.horaFinReal
-        );
+        const horas = calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+        empresaResumen.horasReales += horas;
+        totalHorasReales += horas;
       }
     }
 
-    return Array.from(resumenMap.values());
+    return {
+      resumenPorEmpresa: Array.from(resumenMap.values()),
+      totalHorasProyectadas,
+      totalHorasReales,
+    };
   }
-
-
 
   async update(id: number, updateData: Partial<CreateHorariosAsignadoDto>): Promise<HorarioAsignado> {
       await this.horarioAsignadoRepository.update(id, updateData);
@@ -386,4 +396,18 @@ export class HorarioAsignadoService {
           throw new NotFoundException('Horario asignado no encontrado');
       }
   }
+
+  calcularHorasDecimal(horaInicio: string, horaFin: string): number {
+    const [hInicio, mInicio] = horaInicio.split(':').map(Number);
+    const [hFin, mFin] = horaFin.split(':').map(Number);
+  
+    const inicioEnMinutos = hInicio * 60 + mInicio;
+    const finEnMinutos = hFin * 60 + mFin;
+  
+    const diferenciaMinutos = finEnMinutos - inicioEnMinutos;
+    const horasDecimales = diferenciaMinutos / 60;
+  
+    return parseFloat(horasDecimales.toFixed(2)); 
+  }
+
 }

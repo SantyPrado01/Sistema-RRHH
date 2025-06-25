@@ -41,7 +41,7 @@ export class HorariosAsignadosService {
     return this.http.get<HorarioAsignado[]>(`${this.apiUrl}/buscar?`, { params });
   }
 
-  obtenerResumenPorEmpresa(fechaInicio?: string, fechaFin?: string): Observable<any> {
+  obtenerResumenPorEmpresa(fechaInicio?: string, fechaFin?: string, servicioId?: number): Observable<any> {
   let params = new HttpParams();
 
   if (fechaInicio) {
@@ -50,6 +50,10 @@ export class HorariosAsignadosService {
 
   if (fechaFin) {
     params = params.set('fechaFin', fechaFin);
+  }
+
+  if (servicioId) {
+    params = params.set('servicioId', servicioId.toString());
   }
 
   return this.http.get<any>(`${this.apiUrl}/buscarPorFecha`, { params });

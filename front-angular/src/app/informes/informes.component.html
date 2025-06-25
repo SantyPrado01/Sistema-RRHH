@@ -41,6 +41,21 @@
             <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
             <mat-datepicker #pickerFin></mat-datepicker>
           </mat-form-field>
+
+          <mat-form-field appearance="outline" class="mat-form-field-ultimo">
+            <mat-label class="mat-label">Buscar Servicios</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="empresaControl"
+              [matAutocomplete]="autoServicio"
+            />
+            <mat-autocomplete #autoServicio="matAutocomplete" (optionSelected)="seleccionarEmpresa($event.option.value)" [displayWith]="displayEmpresaName">
+              <mat-option *ngFor="let empresa of empresasFiltradas" [value]="empresa">
+                {{ empresa.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
         
         <!-- Seleccion Reporte de horas por Empleado por Empresa -->
@@ -285,12 +300,12 @@
   
           <ng-container matColumnDef="horasProyectadas">
             <th mat-header-cell *matHeaderCellDef> Horas Proyectadas </th>
-            <td mat-cell *matCellDef="let orden"> {{ orden.horasProyectadas }} </td>
+            <td mat-cell *matCellDef="let orden"> {{ orden.horasProyectadas | number:'1.2-2'}} </td>
           </ng-container>
   
           <ng-container matColumnDef="horasReales">
             <th mat-header-cell *matHeaderCellDef> Horas Realizadas </th>
-            <td mat-cell *matCellDef="let orden"> {{ orden.horasReales }} </td>
+            <td mat-cell *matCellDef="let orden"> {{ orden.horasReales | number:'1.2-2' }} </td>
           </ng-container>
   
           <tr mat-header-row *matHeaderRowDef="displayedColumnsObtenerResumenPorEmpresa"></tr>
@@ -310,6 +325,19 @@
             <mat-spinner [diameter]="40"></mat-spinner>
         </div>
         
+      </div>
+      <div *ngIf="!loading && dataSource.data && dataSource.data.length > 0" class="resumen-container">
+        <div class="title-container-resumen">
+          <h5> Resumen Total </h5>
+        </div>
+        <div class="resumen-horas">
+          <div class="resumen-item">
+            <strong>Horas Proyectadas:</strong> {{ totalHorasProyectadasGlobal | number:'1.2-2' }}
+          </div>
+          <div class="resumen-item">
+            <strong>Horas Reales:</strong> {{ totalHorasRealesGlobal | number:'1.2-2' }}
+          </div>
+        </div>
       </div>
     </div>
 

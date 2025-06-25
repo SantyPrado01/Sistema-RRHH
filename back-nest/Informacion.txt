@@ -64,8 +64,11 @@ Preparar el backend: npm run build
 Ejecutar PM2 con el backend: pm2 start dist/main.js --name corsacor-api
 
 Preparar el frontend: ng build --configuration production
-Luego de cada produccion debo mover la caperta a: sudo mv /root/Sistema-RRHH/front-angular/dist /var/www/sistemacorsacor
-para que lo lea PM2 y lo pueda ejecutar.
+Luego de cada produccion debo mover la caperta a: 
+
+sudo cp -r /root/Sistema-RRHH/front-angular/dist/front-angular/browser/* /var/www/sistemacorsacor/front-angular/browser/
+
+
 
 Esto es en caso de tener problmeas de permisos en esa carpeta
 sudo chown -R www-data:www-data /var/www/sistemacorsacor/front-angular

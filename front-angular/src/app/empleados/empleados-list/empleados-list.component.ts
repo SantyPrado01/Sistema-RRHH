@@ -37,7 +37,7 @@ import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion
   styleUrls: ['./empleados-list.component.css']
 })
 export class EmpleadosListComponent implements OnInit {
-  displayedColumns: string[] = ['nombre', 'apellido', 'telefono', 'email', 'estado', 'acciones'];
+  displayedColumns: string[] = ['legajo','nombre', 'apellido', 'telefono', 'email', 'estado', 'acciones'];
   dataSource: MatTableDataSource<any>;
   empleadosOriginales: any[] = [];
   estadoSeleccionado: 'todos' | 'activos' | 'eliminados' = 'activos';

@@ -136,24 +136,31 @@ export class HorariosAsignadosViewComponent {
       console.log('horariosRealizados',this.horariosRealizados)
 
       this.horasRealizadas = data.horarios.map((item: any) => {
-        let horasCalculadas = 0; // Inicializamos a 0 por defecto
-    
-        // Si el empleado que estamos buscando (empleadoId) es el TITULAR de este horario
-        if (item.empleado?.Id && Number(item.empleado.Id) === Number(this.empleadoId)) {
-            if (item.horaInicioReal && item.horaFinReal) {
-                horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
-            }
+      let horasCalculadas = 0;
+
+      const esTitular = item.empleado?.Id && Number(item.empleado.Id) === Number(this.empleadoId);
+      const esSuplente = item.empleadoSuplente?.Id && Number(item.empleadoSuplente.Id) === Number(this.empleadoId);
+
+      // Caso: es suplente
+      if (esSuplente) {
+        if (item.horaInicioReal && item.horaFinReal) {
+          horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
         }
-        // O si el empleado que estamos buscando (empleadoId) es el SUPLENTE de este horario
-        else if (item.empleadoSuplente?.Id && Number(item.empleadoSuplente.Id) === Number(this.empleadoId)) {
-            if (item.horaInicioReal && item.horaFinReal) {
-                horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
-            }
+      }
+
+      // Caso: es titular y NO tiene suplente
+      else if (esTitular && !item.empleadoSuplente?.Id) {
+        if (item.horaInicioReal && item.horaFinReal) {
+          horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
         }
-    
-        item.horasTotales = horasCalculadas; // Asignamos las horas calculadas (o 0 si no cumple ninguna condición)
-        return item;
+      }
+
+      // Caso: es titular y TIENE suplente → horas = 0 (ya está seteado por defecto)
+
+      item.horasTotales = horasCalculadas;
+      return item;
     });
+
   
       this.dataSource.data = data.horarios;
       

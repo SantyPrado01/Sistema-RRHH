@@ -97,6 +97,9 @@ export class InformesComponent  {
   totalHorasRealesGlobal: number = 0;
   totalHorasProyectadasGlobal: number = 0;
 
+  horasTotalesProyectadasEmpresa: number = 0;
+  horasTotalesRealesEmpresa: number = 0;
+
 
   reportes:{ nombre: string, funcion: ()=> void }[] = [
     {nombre:'Reporte de horas por Empleado por Empresa', funcion: this.obtenerOrdenesMesAnio.bind(this)},
@@ -107,11 +110,13 @@ export class InformesComponent  {
   headerMap: { [key: string]: string } = {
     'empresa': 'Empresa', // Común
     'empleado': 'Empleado', // Común
+    'empleadoSuplente': 'Empleado Suplente',
+    'estadoSuplente': 'Estado Suplente',
     'fecha': 'Fecha', // Solo en BuscarHorarios
-    'horasInicioProyectado': 'Horas Inicio Proyectado', // Solo en BuscarHorarios
-    'horasFinProyectado': 'Horas Fin Proyectado',       // Solo en BuscarHorarios
-    'horaInicioReal': 'Horas Inicio Real',             // Solo en BuscarHorarios
-    'horaFinReal': 'Horas Fin Real',                   // Solo en BuscarHorarias
+    'horasInicioProyectado': 'Ingreso Proy.', // Solo en BuscarHorarios
+    'horasFinProyectado': 'Salida Proy.',       // Solo en BuscarHorarios
+    'horaInicioReal': 'Ingreso Real',             // Solo en BuscarHorarios
+    'horaFinReal': 'Salida Real',                   // Solo en BuscarHorarias
     'estado': 'Estado', 
     'horasReales': 'Horas Reales', 
     'dias': 'Dias', // Solo en ObtenerOrdenesMesAnio
@@ -271,10 +276,15 @@ export class InformesComponent  {
         fechaFormateadaFin = this.datePipe.transform(this.fechaFin, 'yyyy-MM-dd');
       }
   
-      this.horariosAsignadosService.obtenerResumenPorEmpresa(fechaFormateadaInicio || '', fechaFormateadaFin || '').subscribe(
-        (data: any[]) => {
-          console.log('Datos recibidos Resumen Empresa:', data);
-          this.dataSource.data = data;
+      this.horariosAsignadosService.obtenerResumenPorEmpresa(fechaFormateadaInicio || '', fechaFormateadaFin || '', this.servicioId).subscribe(
+        (data) => {
+
+          console.log('Datos recibidos Resumen:', data);
+          this.dataSource.data = data.resumenPorEmpresa;
+          
+          this.totalHorasProyectadasGlobal = data.totalHorasProyectadas;
+          this.totalHorasRealesGlobal = data.totalHorasReales;
+
           this.loading = false;
         },
         (error: HttpErrorResponse) => {
@@ -410,48 +420,36 @@ export class InformesComponent  {
     }
 
     convertirMesANumero(mes: string): number {
-    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    return meses.indexOf(mes) + 1;
+      const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      return meses.indexOf(mes) + 1;
     }
 
     obtenerDias(necesidades: any[]): string {
-    const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
-    const diasConHorario = necesidades
-      .filter(n => n.horaInicio !== "00:00:00" && n.horaFin !== "00:00:00")
-      .map(n => diasSemana[parseInt(n.diaSemana, 10) - 1]) 
-      .filter((dia, index, self) => dia && self.indexOf(dia) === index);
-    return diasConHorario.join(', ') || 'No hay días con horarios definidos';
+      const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
+      const diasConHorario = necesidades
+        .filter(n => n.horaInicio !== "00:00:00" && n.horaFin !== "00:00:00")
+        .map(n => diasSemana[parseInt(n.diaSemana, 10) - 1]) 
+        .filter((dia, index, self) => dia && self.indexOf(dia) === index);
+      return diasConHorario.join(', ') || 'No hay días con horarios definidos';
     }
 
     ejecutarReporte(): void {
-    this.dataSource.data = [];
-    const reporteSeleccionado = this.reportes.find(reporte => reporte.nombre === this.reporteSeleccionado);
-    if (reporteSeleccionado) {
-      reporteSeleccionado.funcion();
-    }
+      this.dataSource.data = [];
+      const reporteSeleccionado = this.reportes.find(reporte => reporte.nombre === this.reporteSeleccionado);
+      if (reporteSeleccionado) {
+        reporteSeleccionado.funcion();
+      }
     }
 
     getDisplayHeaders(): string[] {
-    
-    const currentColumnDefs = this.reporteSeleccionado === 'Reporte de horas por Dia'
-        ? this.displayedColumnsBuscarHorarios 
-        : this.displayedColumnsObtenerOrdenes; 
+      const currentColumnDefs =
+        this.reporteSeleccionado === 'Reporte de horas por Dia'
+          ? this.displayedColumnsBuscarHorarios
+          : this.reporteSeleccionado === 'Reporte Resumen por Empresa'
+          ? this.displayedColumnsObtenerResumenPorEmpresa
+          : this.displayedColumnsObtenerOrdenes;
 
-    return currentColumnDefs.map(colDefName => {
-        
-        if (colDefName === 'horasReales') {
-            
-            if (this.reporteSeleccionado === 'Reporte de horas por Dia') {
-                return 'Estado';
-            }
-           
-             else if (this.reporteSeleccionado === 'Reporte de horas por Empleado por Empresa') {
-                return 'Horas Reales'; 
-             }
-        }
-        
-        return this.headerMap[colDefName] || colDefName; 
-    });
+      return currentColumnDefs.map(colDefName => this.headerMap[colDefName] || colDefName);
     }
 
     getCellValue(item: any, columnDefName: string): any {
@@ -460,13 +458,15 @@ export class InformesComponent  {
             switch (columnDefName) {
                 case 'empresa': return item.ordenTrabajo?.servicio?.nombre || '';
                 case 'empleado': return `${item.empleado?.nombre || ''} ${item.empleado?.apellido || ''}`.trim();
+                case 'estado': return item.estado || '';
+                case 'empleadoSuplente': return `${item.empleadoSuplente?.nombre || ''} ${item.empleadoSuplente?.apellido || ''}`.trim();
+                case 'estadoSulente': return item.estadoSuplente || '';
                 case 'fecha': return this.datePipe.transform(item.fecha, 'yyyy-MM-dd') || '';
                 case 'horasInicioProyectado': return item.horaInicioProyectado || '';
                 case 'horasFinProyectado': return item.horaFinProyectado || '';
                 case 'horaInicioReal': return item.horaInicioReal || '';
                 case 'horaFinReal': return item.horaFinReal || '';
                 case 'horasTotales': return item.horasTotales || '';
-                case 'estado': return item.estado || '';
                 
                 default: return (item as any)[columnDefName] || '';
             }
@@ -508,7 +508,9 @@ export class InformesComponent  {
 
     const rows = sortedData.map(item => {
       const currentColumnDefs = this.reporteSeleccionado === 'Reporte de horas por Dia'
-        ? this.displayedColumnsBuscarHorarios
+      ? this.displayedColumnsBuscarHorarios
+      : this.reporteSeleccionado === 'Reporte Resumen por Empresa'
+        ? this.displayedColumnsObtenerResumenPorEmpresa
         : this.displayedColumnsObtenerOrdenes;
 
       return currentColumnDefs.map(colDefName => this.getCellValue(item, colDefName));
@@ -518,13 +520,24 @@ export class InformesComponent  {
       head: [headers],
       body: rows,
       startY: 10,
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: [204, 86, 0], textColor: [255, 255, 255] },
+      styles: {
+        fontSize: 9,
+        cellPadding: 3,
+      },
+      headStyles: {
+        fontSize: 10,
+        fillColor: [204, 86, 0],
+        textColor: [255, 255, 255],
+      },
     });
 
-    doc.text('Resumen Total', 14, (doc as any).lastAutoTable.finalY + 10);
-    doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 14, (doc as any).lastAutoTable.finalY + 20);
-    doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 14, (doc as any).lastAutoTable.finalY + 30);
+    doc.setFontSize(13);
+    doc.text('Resumen Total', 12, (doc as any).lastAutoTable.finalY + 10);
+
+    doc.setFontSize(10);
+    doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, (doc as any).lastAutoTable.finalY + 20);
+    doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, (doc as any).lastAutoTable.finalY + 30);
+
 
     doc.save(
       'reporte_' +
@@ -536,7 +549,7 @@ export class InformesComponent  {
   }
 
   
-    descargarExcel(): void {
+  descargarExcel(): void {
   if (!this.dataSource.data || this.dataSource.data.length === 0) {
     console.log('No hay datos para exportar a Excel.');
     return;
@@ -552,7 +565,9 @@ export class InformesComponent  {
   const excelData = sortedData.map(item => {
     const currentColumnDefs = this.reporteSeleccionado === 'Reporte de horas por Dia'
       ? this.displayedColumnsBuscarHorarios
-      : this.displayedColumnsObtenerOrdenes;
+      : this.reporteSeleccionado === 'Reporte Resumen por Empresa'
+        ? this.displayedColumnsObtenerResumenPorEmpresa
+        : this.displayedColumnsObtenerOrdenes;
 
     const row: any = {};
     currentColumnDefs.forEach(colDefName => {
