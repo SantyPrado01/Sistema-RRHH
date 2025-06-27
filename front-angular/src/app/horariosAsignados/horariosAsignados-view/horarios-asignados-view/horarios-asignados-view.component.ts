@@ -159,8 +159,7 @@ export class HorariosAsignadosViewComponent {
 
       item.horasTotales = horasCalculadas;
       return item;
-    });
-
+      });
   
       this.dataSource.data = data.horarios;
       
@@ -211,17 +210,25 @@ export class HorariosAsignadosViewComponent {
   }
 
   calcularHorasDecimal(horaInicio: string, horaFin: string): number {
-    const [hInicio, mInicio] = horaInicio.split(':').map(Number);
-    const [hFin, mFin] = horaFin.split(':').map(Number);
-  
-    const inicioEnMinutos = hInicio * 60 + mInicio;
-    const finEnMinutos = hFin * 60 + mFin;
-  
-    const diferenciaMinutos = finEnMinutos - inicioEnMinutos;
-    const horasDecimales = diferenciaMinutos / 60;
-  
-    return parseFloat(horasDecimales.toFixed(2)); 
+  const [hInicio, mInicio] = horaInicio.split(':').map(Number);
+  const [hFin, mFin] = horaFin.split(':').map(Number);
+
+  const inicioEnMinutos = hInicio * 60 + mInicio;
+  const finEnMinutos = hFin * 60 + mFin;
+
+  let diferenciaMinutos: number;
+
+  if (finEnMinutos >= inicioEnMinutos) {
+    // Caso normal, mismo día
+    diferenciaMinutos = finEnMinutos - inicioEnMinutos;
+  } else {
+    // Caso nocturno, cruza medianoche
+    diferenciaMinutos = (24 * 60 - inicioEnMinutos) + finEnMinutos;
   }
+
+  const horasDecimales = diferenciaMinutos / 60;
+  return parseFloat(horasDecimales.toFixed(2));
+}
   
 
   seleccionarEmpresa(empresa: any): void {
