@@ -120,7 +120,8 @@ export class InformesComponent  {
     'estado': 'Estado', 
     'horasReales': 'Horas Reales', 
     'dias': 'Dias', // Solo en ObtenerOrdenesMesAnio
-    'horasProyectadas': 'Horas Proyectadas', // Solo en ObtenerOrdenesMesAnio
+    'horasProyectadas': 'Horas Proyectadas',
+    'horasTotales': 'Total', // Solo en ObtenerOrdenesMesAnio
   };
 
   displayedColumnsBuscarHorarios: string[] = [
@@ -521,20 +522,21 @@ export class InformesComponent  {
       body: rows,
       startY: 10,
       styles: {
-        fontSize: 9,
+        fontSize: 8,
         cellPadding: 3,
       },
       headStyles: {
-        fontSize: 10,
+        fontSize: 8,
         fillColor: [204, 86, 0],
         textColor: [255, 255, 255],
       },
+      margin: { left: 0, right: 0 },
     });
 
-    doc.setFontSize(13);
+    doc.setFontSize(8);
     doc.text('Resumen Total', 12, (doc as any).lastAutoTable.finalY + 10);
 
-    doc.setFontSize(10);
+    doc.setFontSize(8);
     doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, (doc as any).lastAutoTable.finalY + 20);
     doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, (doc as any).lastAutoTable.finalY + 30);
 
