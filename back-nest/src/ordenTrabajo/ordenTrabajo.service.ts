@@ -121,7 +121,7 @@ export class OrdenTrabajoService {
       if (disponibilidadEmpleado) {
           if (!esValida(horaInicio, horaFin, disponibilidadEmpleado.horaInicio, disponibilidadEmpleado.horaFin)) {
               await this.deleteOrdenTrabajo(ordenTrabajoId);
-              throw new BadRequestException(`La Necesidad Horaria para el dia ${diaSemana} no esta completamente dentro de la disponibilidad del empleado.`);
+              throw new BadRequestException(`La necesidad horaria para el dia ${diaSemana} no esta completamente dentro de la disponibilidad del empleado.`);
           }
       } else {
           console.log(`No hay disponibilidad para el día ${diaSemana}, pero no se valida.`);
@@ -321,62 +321,85 @@ export class OrdenTrabajoService {
     return `${horas}:${minutos < 10 ? '0' + minutos : minutos}`; // formatear a HH:mm
   }
   
-  async findAll(): Promise<any[]> {
-    const ordenes = await this.ordenTrabajoRepository.find({
-      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
-    });
+ async findAll(): Promise<any[]> {
+  const ordenes = await this.ordenTrabajoRepository.find({
+    relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
+  });
 
-    const result = await Promise.all(
-      ordenes.map(async (orden) => {
-        let horasProyectadas = 0;
-        let horasReales = 0;
+  const result = await Promise.all(
+    ordenes.map(async (orden) => {
+      let horasProyectadas = 0;
+      let horasReales = 0;
 
-        if (orden.diaEspecifico === null) {
-          const todosComprobados = orden.horariosAsignados.every(
-            (horario) => horario.comprobado === true,
-          );
+      // Calcular fechaInicio y fechaFin
+      let fechaInicio: Date | null = null;
+      let fechaFin: Date | null = null;
 
-          if (todosComprobados) {
+      if (orden.horariosAsignados && orden.horariosAsignados.length > 0) {
+        const fechas = orden.horariosAsignados
+          .map((h) => h.fecha) // asumimos que hay un campo "fecha"
+          .filter((f) => f !== undefined && f !== null)
+          .map((f) => new Date(f));
+
+        if (fechas.length > 0) {
+          fechaInicio = new Date(Math.min(...fechas.map((f) => f.getTime())));
+          fechaFin = new Date(Math.max(...fechas.map((f) => f.getTime())));
+        }
+      }
+
+      if (orden.diaEspecifico === null) {
+        const todosComprobados = orden.horariosAsignados.every(
+          (horario) => horario.comprobado === true,
+        );
+
+        if (todosComprobados) {
+          orden.completado = true;
+          await this.ordenTrabajoRepository.save(orden);
+        }
+
+        orden.horariosAsignados.forEach((horario) => {
+          if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+            horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
+          }
+
+          if (horario.horaInicioReal && horario.horaFinReal) {
+            horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+          }
+        });
+      } else {
+        if (orden.horaInicio && orden.horaFin) {
+          const horarioAsignado = orden.horariosAsignados[0];
+          const comprobado = horarioAsignado ? horarioAsignado.comprobado : false;
+
+          if (comprobado === true) {
             orden.completado = true;
             await this.ordenTrabajoRepository.save(orden);
           }
 
-          orden.horariosAsignados.forEach((horario) => {
-            if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-              horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
-            }
-
-            if (horario.horaInicioReal && horario.horaFinReal) {
-              horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
-            }
-          });
-        } else {
-          if (orden.horaInicio && orden.horaFin) {
-            const horarioAsignado = orden.horariosAsignados[0];
-            const comprobado = horarioAsignado ? horarioAsignado.comprobado : false;
-
-            if (comprobado === true) {
-              orden.completado = true;
-              await this.ordenTrabajoRepository.save(orden);
-            }
-
-            horasProyectadas = this.calcularHoras(orden.horaInicio, orden.horaFin);
-            horasReales = horasProyectadas;
-          }
+          horasProyectadas = this.calcularHoras(orden.horaInicio, orden.horaFin);
+          horasReales = horasProyectadas;
         }
-        const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
-        const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
 
-        return {
-          ...orden,
-          horasProyectadas: horasProyectadasFormateadas,
+        // En caso de día específico, usar esa fecha como inicio y fin
+        fechaInicio = fechaFin = orden.diaEspecifico;
+      }
+
+      const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+      const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
+
+      return {
+        ...orden,
+        horasProyectadas: horasProyectadasFormateadas,
         horasReales: horasRealesFormateadas,
-        };
-      }),
-    );
+        fechaInicio,
+        fechaFin,
+      };
+    }),
+  );
 
-    return result;
-  }
+  return result;
+}
+
 
   async findOne(id: number): Promise<OrdenTrabajoConHoras> {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({

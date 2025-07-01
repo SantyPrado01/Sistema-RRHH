@@ -36,6 +36,9 @@ export class Servicio {
     @Column({default:false})
     eliminado: boolean
 
+    @Column({default:'0'})
+    horasFijas: string;
+
     @OneToMany(() => Factura, factura => factura.servicio)
     facturas: Factura[];
 

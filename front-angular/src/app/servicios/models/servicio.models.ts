@@ -8,6 +8,7 @@ export class Empresa {
     telefono: number;
     categoria: CategoriaServicio;
     email: string;
+    horasFijas: string;
     eliminado: boolean;
     ciudad: number;
     observaciones: string;
@@ -20,6 +21,7 @@ export class Empresa {
         telefono: number,
         categoria: CategoriaServicio,
         email: string,
+        horasFijas: string,
         eliminado: boolean,
         ciudad: number,
         observaciones: string
@@ -31,6 +33,7 @@ export class Empresa {
         this.telefono = telefono;
         this.categoria = categoria;
         this.email = email;
+        this.horasFijas = horasFijas;
         this.eliminado = eliminado;
         this.ciudad = ciudad;
         this.observaciones = observaciones;

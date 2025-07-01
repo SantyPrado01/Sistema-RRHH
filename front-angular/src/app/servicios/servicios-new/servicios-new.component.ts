@@ -87,7 +87,8 @@ export class ServiciosNewComponent implements OnInit {
     const query = event.target.value;
 
     if (query.length > 2) {
-      const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
+      //const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
+      const url = `https://apis.datos.gob.ar/georef/api/localidades?&nombre=${query}&max=10`;
 
       this.http.get<any>(url).subscribe({
         next: (response) => {

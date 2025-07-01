@@ -43,7 +43,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 })
 export class ListarOrdenTrabajoComponent implements OnInit {
   dataSource: MatTableDataSource<OrdenTrabajo>;
-  displayedColumns: string[] = ['id', 'empresa', 'mes', 'anio', 'estado', 'horasProyectadas', 'horasReales', 'eliminado', 'acciones'];
+  displayedColumns: string[] = ['id', 'empresa','fechaInicio', 'fechaFin' ,'mes', 'anio', 'estado', 'horasProyectadas', 'horasReales', 'eliminado', 'acciones'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -99,6 +99,7 @@ export class ListarOrdenTrabajoComponent implements OnInit {
       next: (ordenes) => {
         this.ordenesOriginales = ordenes;
         this.dataSource.data = ordenes;
+        console.log('Órdenes cargadas:', this.dataSource.data);
         this.filtrarOrdenes();
       },
       error: (error) => {

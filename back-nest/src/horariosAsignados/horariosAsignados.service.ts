@@ -341,6 +341,7 @@ export class HorarioAsignadoService {
     const resumenMap = new Map<number, {
       servicioId: number;
       nombreServicio: string;
+      horasFijas: string;
       horasProyectadas: number;
       horasReales: number;
     }>();
@@ -358,6 +359,7 @@ export class HorarioAsignadoService {
         resumenMap.set(id, {
           servicioId: id,
           nombreServicio: servicio.nombre,
+          horasFijas: servicio.horasFijas || "0",
           horasProyectadas: 0,
           horasReales: 0,
         });

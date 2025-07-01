@@ -140,7 +140,6 @@ export class EmpleadosEditComponent implements OnInit {
         next: (data) => {
           console.log('Datos del empleado recibidos:', data);
           this.empleado = data;
-          
           // Ajustar la fecha para compensar la zona horaria
           if (this.empleado.fechaIngreso) {
             const fecha = new Date(this.empleado.fechaIngreso);
@@ -149,15 +148,13 @@ export class EmpleadosEditComponent implements OnInit {
           }
 
           if (this.empleado.ciudad) {
-            console.log('ID de ciudad encontrado:', this.empleado.ciudad);
             this.obtenerNombreCiudad(this.empleado.ciudad.toString());
           } else {
             console.log('No se encontró ID de ciudad');
           }
           if (this.empleado.disponibilidades) {
             this.disponibilidad = this.empleado.disponibilidades;
-            this.fullTime = this.empleado.fulltime || false;
-            this.checkFullTime();
+            this.fullTime = this.empleado.fulltime ?? false;
           }
         },
         error: (err) => {
@@ -197,7 +194,6 @@ export class EmpleadosEditComponent implements OnInit {
             id: localidad.id,
             nombre: localidad.nombre
           }));
-          console.log('Ciudades encontradas:', this.ciudades);
         },
         error: (err) => {
           console.error('Error al obtener las ciudades', err);
@@ -209,26 +205,21 @@ export class EmpleadosEditComponent implements OnInit {
 
   seleccionarCiudad(event: any) {
     const selectedCity = event.option.value;
-    console.log('Ciudad seleccionada (antes):', selectedCity);
     
     if (selectedCity && selectedCity.id) {
       this.empleado.ciudad = selectedCity.id;
       this.ciudadNombre = selectedCity;
-      console.log('Ciudad seleccionada (después):', {
-        id: this.empleado.ciudad,
-        nombre: this.ciudadNombre.nombre
-      });
     }
   }
 
   obtenerNombreCiudad(idCiudad: string) {
     console.log('Obteniendo nombre de ciudad para ID:', idCiudad);
-    const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}`;
+    const url = `https://apis.datos.gob.ar/georef/api/localidades?id=${idCiudad}`;
     this.http.get<any>(url).subscribe({
       next: (response) => {
         console.log('Respuesta de la API de ciudades:', response);
-        if (response.localidades_censales && response.localidades_censales.length > 0) {
-          const ciudad = response.localidades_censales[0];
+        if (response.localidades && response.localidades.length > 0) {
+          const ciudad = response.localidades[0];
           console.log('Datos de la ciudad encontrada:', ciudad);
           const ciudadObj = {
             id: ciudad.id,
@@ -305,12 +296,10 @@ export class EmpleadosEditComponent implements OnInit {
 
       this.empleadoService.updateEmpleado(Number(this.empleadoId), this.empleado).subscribe({
         next: (response) => {
-          console.log('Respuesta del servidor:', response);
           this.mostrarAlerta('Éxito', 'Empleado actualizado correctamente', 'success');
           this.router.navigate(['/empleados']);
         },
         error: (err) => {
-          console.error('Error al actualizar el empleado', err);
           this.mostrarAlerta('Error', 'No se pudo actualizar el empleado', 'error');
         }
       });
@@ -320,12 +309,9 @@ export class EmpleadosEditComponent implements OnInit {
   obtenerOrdenes() {
     if (this.empleadoId) {
       this.ordenTrabajoService.getOrdenesForEmpleado(this.empleadoId).subscribe({
-        next: (data) => {
-          console.log('Órdenes recibidas:', data);
+        next: (data) => {  
           this.ordenesAgrupadas = this.agruparOrdenes(data);
-          console.log('Órdenes agrupadas:', this.ordenesAgrupadas);
           this.actualizarPagina();
-          console.log('Órdenes paginadas:', this.ordenesAgrupadasPaginadas);
         },
         error: (err) => {
           console.error('Error al obtener las órdenes', err);

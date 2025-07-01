@@ -112,6 +112,20 @@
           <!-- Fila 3: Descripción -->
           <div class="form-row-full-width">
             <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Horas Fijas</mat-label>
+              <input matInput
+                     type="text"
+                     [(ngModel)]="servicio.horasFijas"
+                     name="horasFijas"
+                     placeholder="Ingrese las horas fijas"
+                     maxlength="10"
+                     #horasFijas="ngModel">
+            </mat-form-field>
+          </div>
+
+          <!-- Fila 4: Descripción -->
+          <div class="form-row-full-width">
+            <mat-form-field appearance="outline" class="full-width">
               <mat-label>Descripción</mat-label>
               <textarea matInput
                         [(ngModel)]="servicio.descripcion"

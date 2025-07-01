@@ -128,8 +128,8 @@ export class ServiciosEditComponent implements OnInit {
         if (this.servicio.ciudad) {
           this.obtenerNombreCiudad(this.servicio.ciudad.toString()).subscribe({
             next: (response) => {
-              if (response.localidades_censales && response.localidades_censales.length > 0) {
-                const ciudad = response.localidades_censales[0];
+              if (response.localidades && response.localidades.length > 0) {
+                const ciudad = response.localidades[0];
                 const ciudadObj = {
                   id: this.servicio.ciudad,
                   nombre: ciudad.nombre
@@ -153,14 +153,15 @@ export class ServiciosEditComponent implements OnInit {
   }
 
   obtenerNombreCiudad(idCiudad: string) {
-    const url = `https://apis.datos.gob.ar/georef/api/localidades-censales?id=${idCiudad}`
+    const url = `https://apis.datos.gob.ar/georef/api/localidades?id=${idCiudad}`
     return this.http.get<any>(url);
   }
 
   buscarCiudad(event: any) {
     const query = event.target.value;
     if (query.length > 2) {
-      const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
+      //const url = `https://apis.datos.gob.ar/georef/api/localidades?provincia=${this.provinciaCórdobaId}&nombre=${query}&max=10`;
+      const url = `https://apis.datos.gob.ar/georef/api/localidades?&nombre=${query}&max=10`;
       this.http.get<any>(url).subscribe({
         next: (response) => {
           console.log('Respuesta de la API:', response);

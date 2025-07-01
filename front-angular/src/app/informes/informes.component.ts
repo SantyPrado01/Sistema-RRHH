@@ -148,6 +148,7 @@ export class InformesComponent  {
 
   displayedColumnsObtenerResumenPorEmpresa: string[] = [
     'empresa',
+    'horasFijas',
     'horasProyectadas',
     'horasReales'
   ]
@@ -485,6 +486,7 @@ export class InformesComponent  {
         case 'Reporte Resumen por Empresa':
           switch (columnDefName) {
             case 'empresa': return item.nombreServicio || '';
+            case 'horasFijas': return item.horasFijas || '';
             case 'horasProyectadas': return item.horasProyectadas || '';
             case 'horasReales': return item.horasReales || '';
             default: return (item as any)[columnDefName] || '';

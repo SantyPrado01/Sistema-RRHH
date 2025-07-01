@@ -8,6 +8,7 @@ export class UpdateServicioDto extends PartialType(CreateServicioDto) {
     direccion?: string;
     ciudadID?: number;
     telefono?: string;
+    horasFijas?: string;
     categoria?: number;
     descripcion?: string;
     eliminado?: boolean;

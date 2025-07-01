@@ -77,3 +77,11 @@
   .button-footer-pdf{
     margin-right: 1em;
   }
+
+.check-icon {
+  color: green;
+}
+
+.close-icon {
+  color: red;
+}

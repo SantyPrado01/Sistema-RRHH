@@ -91,6 +91,7 @@ export class HorariosAsignadosViewComponent {
     'horaFinReal',
     'totalHoras',
     'estado',
+    'suplente',
     'observaciones'
   ];
   
@@ -228,7 +229,7 @@ export class HorariosAsignadosViewComponent {
 
   const horasDecimales = diferenciaMinutos / 60;
   return parseFloat(horasDecimales.toFixed(2));
-}
+  }
   
 
   seleccionarEmpresa(empresa: any): void {

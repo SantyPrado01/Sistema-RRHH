@@ -81,6 +81,15 @@
         <td mat-cell *matCellDef="let orden"> {{orden.servicio.nombre}} </td>
       </ng-container>
 
+      <ng-container matColumnDef="fechaInicio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Inicio </th>
+        <td mat-cell *matCellDef="let orden"> {{ orden.fechaInicio | date: 'dd/MM/yyyy' }} </td>
+      </ng-container>
+      <ng-container matColumnDef="fechaFin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Fin </th>
+        <td mat-cell *matCellDef="let orden"> {{ orden.fechaFin | date: 'dd/MM/yyyy' }} </td>
+      </ng-container>
+
       <!-- Mes Column -->
       <ng-container matColumnDef="mes">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Mes </th>

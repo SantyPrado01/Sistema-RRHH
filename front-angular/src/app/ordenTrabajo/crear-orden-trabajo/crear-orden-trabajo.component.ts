@@ -119,7 +119,7 @@ export class CrearOrdenTrabajoComponent {
         error: (error) => {
           this.mostrarAlerta(
             'Error Operación',
-            'Error al crear la Orden.',
+            `${error.error.message || 'Error al crear la orden de trabajo.'}`,
             'error'
           );
           console.error('Error al crear la orden de trabajo:', error);
