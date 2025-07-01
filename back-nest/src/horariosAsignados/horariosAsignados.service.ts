@@ -311,15 +311,14 @@ export class HorarioAsignadoService {
 
     if (fechaInicio && fechaFin) {
       query.andWhere('horario.fecha BETWEEN :inicio AND :fin', {
-        inicio: fechaInicio,
-        fin: fechaFin,
+          inicio: `${fechaInicio} 00:00:00`,
+          fin: `${fechaFin} 23:59:59`,
       });
     }
 
     if (empresaId) {
       query.andWhere('servicio.servicioId = :empresaId', { empresaId });
     }
-
     const horarios = await query.getMany();
 
     // Función para calcular horas entre dos strings HH:mm (con cruce nocturno)
