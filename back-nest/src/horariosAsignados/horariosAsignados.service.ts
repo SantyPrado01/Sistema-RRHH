@@ -120,7 +120,7 @@ export class HorarioAsignadoService {
 
     // 📆 Filtro por rango de fechas
     if (fechaInicio && fechaFin) {
-      query.andWhere('horario.fecha BETWEEN :fechaInicio AND :fechaFin', {
+      query.andWhere('horario.fecha BETWEEN :inicio AND :fin', {
         inicio: `${fechaInicio} 00:00:00`,
         fin: `${fechaFin} 23:59:59`,
       });
