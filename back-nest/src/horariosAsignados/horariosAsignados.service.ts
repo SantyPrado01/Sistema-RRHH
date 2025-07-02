@@ -121,8 +121,8 @@ export class HorarioAsignadoService {
     // 📆 Filtro por rango de fechas
     if (fechaInicio && fechaFin) {
       query.andWhere('horario.fecha BETWEEN :fechaInicio AND :fechaFin', {
-        fechaInicio,
-        fechaFin,
+        inicio: `${fechaInicio} 00:00:00`,
+        fin: `${fechaFin} 23:59:59`,
       });
     }
 
@@ -236,11 +236,10 @@ export class HorarioAsignadoService {
   
     // Filtro por mes y año si están presentes
     if (fechaInicio && fechaFin) {
-      const inicio = new Date(fechaInicio);
-      const fin = new Date(fechaFin);
-      query = query
-        .andWhere('horario.fecha BETWEEN :inicio AND :fin')
-        .setParameters({ inicio, fin });
+      query.andWhere('horario.fecha BETWEEN :inicio AND :fin', {
+          inicio: `${fechaInicio} 00:00:00`,
+          fin: `${fechaFin} 23:59:59`,
+      });
     }
 
     // Ordenar por fecha antes de obtener los resultados
