@@ -400,22 +400,35 @@ export class EmpleadosEditComponent implements OnInit {
 
     // 👉 Solo cuenta si es suplente, o si es titular y no hubo suplente
     if (esSuplente || (esTitular && !horario.empleadoSuplente)) {
-      const inicio = this.convertirHoraAMinutos(horario.horaInicioReal);
-      const fin = this.convertirHoraAMinutos(horario.horaFinReal);
-      return total + (fin - inicio);
+    
+      return total + (this.calcularHorasDecimal(horario.horaInicioReal, horario.horaFinReal));
     }
 
     return total;
   }, 0);
-
-  return totalMinutos / 60;
+  return totalMinutos;
 }
   
 
-  convertirHoraAMinutos(hora: string): number {
-    if (!hora) return 0;
-    const [horas, minutos] = hora.split(':').map(Number);
-    return (horas * 60) + minutos;
+  calcularHorasDecimal(horaInicio: string, horaFin: string): number {
+  const [hInicio, mInicio] = horaInicio.split(':').map(Number);
+  const [hFin, mFin] = horaFin.split(':').map(Number);
+
+  const inicioEnMinutos = hInicio * 60 + mInicio;
+  const finEnMinutos = hFin * 60 + mFin;
+
+  let diferenciaMinutos: number;
+
+  if (finEnMinutos >= inicioEnMinutos) {
+    // Caso normal, mismo día
+    diferenciaMinutos = finEnMinutos - inicioEnMinutos;
+  } else {
+    // Caso nocturno, cruza medianoche
+    diferenciaMinutos = (24 * 60 - inicioEnMinutos) + finEnMinutos;
+  }
+
+  const horasDecimales = diferenciaMinutos / 60;
+  return parseFloat(horasDecimales.toFixed(2));
   }
 
   mostrarAlerta(titulo: string, mensaje: string, tipo: 'success' | 'error'): void {

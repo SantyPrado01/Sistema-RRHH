@@ -190,7 +190,7 @@ export class HorarioAsignadoService {
     // Realizar el conteo
     for (const horario of horarios) { 
       let estadoFinal: string | undefined;
-      let horaFinal: number | undefined;
+      let horasReales: number | undefined;
   
       if (horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId)) {
         // Si es suplente, usar estadoSuplente
@@ -207,6 +207,7 @@ export class HorarioAsignadoService {
       if (estadoFinal && conteo.hasOwnProperty(estadoFinal)) {
         conteo[estadoFinal]++;
       }
+
     }
   
     return {

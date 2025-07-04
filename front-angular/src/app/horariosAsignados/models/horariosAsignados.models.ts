@@ -23,7 +23,8 @@ interface HorarioPorMes {
     horarios: HorarioAsignado[];
   }
   
-  interface HorarioPorAnio {
-    anio: number;
-    meses: HorarioPorMes[];
+export interface HorarioPorEmpleado {
+    empleadoId: number;
+    empleadoNombre: string;
+    horariosPorMes: HorarioPorMes[];
   }

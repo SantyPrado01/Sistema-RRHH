@@ -142,8 +142,15 @@ export class HorariosAsignadosViewComponent {
       const esTitular = item.empleado?.Id && Number(item.empleado.Id) === Number(this.empleadoId);
       const esSuplente = item.empleadoSuplente?.Id && Number(item.empleadoSuplente.Id) === Number(this.empleadoId);
 
-     // 👉 Solo cuenta si es suplente, o si es titular y no hubo suplente
+      // Caso: es suplente
       if (esSuplente || (esTitular && !item.empleadoSuplente)) {
+        if (item.horaInicioReal && item.horaFinReal) {
+          horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
+        }
+      }
+
+      // Caso: es titular y NO tiene suplente
+      else if (esTitular && !item.empleadoSuplente?.Id) {
         if (item.horaInicioReal && item.horaFinReal) {
           horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
         }
@@ -152,6 +159,7 @@ export class HorariosAsignadosViewComponent {
       // Caso: es titular y TIENE suplente → horas = 0 (ya está seteado por defecto)
 
       item.horasTotales = horasCalculadas;
+      console.log('Horas totales calculadas:', horasCalculadas);
       return item;
       });
   
@@ -222,7 +230,6 @@ export class HorariosAsignadosViewComponent {
   const horasDecimales = diferenciaMinutos / 60;
   return parseFloat(horasDecimales.toFixed(2));
   }
-  
 
   seleccionarEmpresa(empresa: any): void {
     console.log('Empresa seleccionada:', empresa);
@@ -350,5 +357,4 @@ export class HorariosAsignadosViewComponent {
   }
 
   
-
 }
