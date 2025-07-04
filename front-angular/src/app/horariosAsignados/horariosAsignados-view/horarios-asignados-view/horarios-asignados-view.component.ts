@@ -142,15 +142,8 @@ export class HorariosAsignadosViewComponent {
       const esTitular = item.empleado?.Id && Number(item.empleado.Id) === Number(this.empleadoId);
       const esSuplente = item.empleadoSuplente?.Id && Number(item.empleadoSuplente.Id) === Number(this.empleadoId);
 
-      // Caso: es suplente
-      if (esSuplente) {
-        if (item.horaInicioReal && item.horaFinReal) {
-          horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
-        }
-      }
-
-      // Caso: es titular y NO tiene suplente
-      else if (esTitular && !item.empleadoSuplente?.Id) {
+     // 👉 Solo cuenta si es suplente, o si es titular y no hubo suplente
+      if (esSuplente || (esTitular && !item.empleadoSuplente)) {
         if (item.horaInicioReal && item.horaFinReal) {
           horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
         }
@@ -181,7 +174,6 @@ export class HorariosAsignadosViewComponent {
 
         const currentEmpleadoId = Number(this.empleadoId); // ID del empleado que estamos viendo/filtrando
 
-        // Condición para incluir el item en la suma:
         // El empleado del item es el titular Y su ID coincide con el que estamos viendo Y NO es un horario de suplencia
         const esTitularRelevante = Number(item.empleado?.Id) === currentEmpleadoId && item.suplente === false;
 
