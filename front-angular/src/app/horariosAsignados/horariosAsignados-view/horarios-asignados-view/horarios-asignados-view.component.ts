@@ -155,7 +155,6 @@ export class HorariosAsignadosViewComponent {
           horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
         }
       }
-
       // Caso: es titular y TIENE suplente → horas = 0 (ya está seteado por defecto)
 
       item.horasTotales = horasCalculadas;
@@ -183,7 +182,7 @@ export class HorariosAsignadosViewComponent {
         const currentEmpleadoId = Number(this.empleadoId); // ID del empleado que estamos viendo/filtrando
 
         // El empleado del item es el titular Y su ID coincide con el que estamos viendo Y NO es un horario de suplencia
-        const esTitularRelevante = Number(item.empleado?.Id) === currentEmpleadoId && item.suplente === false;
+        const esTitularRelevante = Number(item.empleado?.Id) === currentEmpleadoId && item.empleadoSuplente === null;
 
         // O el empleado del item es el suplente Y su ID coincide con el que estamos viendo Y SÍ es un horario de suplencia
         const esSuplenteRelevante = Number(item.empleadoSuplente?.Id) === currentEmpleadoId && item.suplente === true;

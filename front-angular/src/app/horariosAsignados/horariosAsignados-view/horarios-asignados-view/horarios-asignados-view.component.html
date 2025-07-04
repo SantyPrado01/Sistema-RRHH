@@ -135,7 +135,7 @@
               <td mat-cell *matCellDef="let horario">
                 <ng-container>
                   <mat-icon [ngClass]="horario.empleadoSuplente ? 'check-icon' : 'close-icon'">
-                    {{ horario.suplente ? 'check_circle' : 'cancel' }}
+                    {{ horario.empleadoSuplente ? 'check_circle' : 'cancel' }}
                   </mat-icon>
                 </ng-container>
               </td>

@@ -209,7 +209,6 @@ export class HorarioAsignadoService {
       }
 
     }
-  
     return {
       horarios,
       conteo,
