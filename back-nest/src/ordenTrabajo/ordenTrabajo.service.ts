@@ -207,8 +207,6 @@ export class OrdenTrabajoService {
     }
 }
 
-
-  
   /**
  * Verifica si un horario solicitado está dentro del rango de disponibilidad del empleado.
  */
@@ -472,10 +470,12 @@ export class OrdenTrabajoService {
 
   }
 
-  async findForEmpleado(empleadoId: number): Promise<any> {
+  async findForEmpleado(
+    empleadoId: number
+  ): Promise<any> {
     const ordenes = await this.ordenTrabajoRepository.find({
       where: {empleadoAsignado: { Id: empleadoId }},
-      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
+      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados', 'horariosAsignados.empleadoSuplente', 'horariosAsignados.empleado'],
     });
     const result = ordenes.map(orden => {
       let horasProyectadas = 0;
@@ -490,12 +490,22 @@ export class OrdenTrabajoService {
       };
 
       orden.horariosAsignados.forEach(horario => {
-        if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
-        }
 
-        if (horario.horaInicioReal && horario.horaFinReal) {
+        const esTitular = horario.empleado?.Id && Number(horario.empleado.Id) === Number(empleadoId);
+        const esSuplente = horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId);
+
+        if (esSuplente) {
+          if(horario.horaInicioReal && horario.horaFinReal) {
           horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+        }}
+
+        if (esTitular && !horario.empleadoSuplente) {
+          if (horario.horaInicioReal && horario.horaFinReal) {
+            horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+          }
+        }
+        if(horario.horaInicioProyectado && horario.horaFinProyectado) {
+          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);  
         }
 
         switch (horario.estado) {

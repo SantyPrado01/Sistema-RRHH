@@ -159,8 +159,8 @@
               <mat-card *ngFor="let orden of grupo.ordenes" class="orden-card" [routerLink]="['/ordentrabajo/view', orden.Id]" style="cursor: pointer; margin: 0.5em; padding: 0.5em;">
                 <mat-card-title style="font-size: 1em; margin-left: 1em; margin-bottom: 1em;">N°{{ orden.Id }}/{{ orden.servicio.nombre }}</mat-card-title>
                 <mat-card-content>
-                  <p><strong>Horas proyectadas:</strong> {{ orden.horasProyectadas }}</p>
-                  <p><strong>Horas reales:</strong> {{ orden.horasReales }}</p>
+                  <p><strong>Horas Proyectadas:</strong> {{ orden.horasProyectadas }}</p>
+                  <p><strong>Horas Reales:</strong> {{ orden.horasReales }}</p>
                   <p><strong>Estado:</strong> 
                     <span *ngIf="orden.completado" class="status completed">Completado</span>
                     <span *ngIf="!orden.completado" class="status pending">En Curso</span>

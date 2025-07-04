@@ -36,6 +36,14 @@ interface HorarioAsignado {
   fecha: string;
   horaInicioReal: string;
   horaFinReal: string;
+  empleado?: {
+    Id: number;
+    [key: string]: any;
+  };
+  empleadoSuplente?: {
+    Id: number;
+    [key: string]: any;
+  };
 }
 
 @Component({
@@ -381,18 +389,27 @@ export class EmpleadosEditComponent implements OnInit {
   }
 
   getHorasTotales(horarios: HorarioAsignado[]): number {
-    if (!Array.isArray(horarios)) return 0;
-  
-    const totalMinutos = horarios.reduce((total, horario) => {
-      if (!horario.horaInicioReal || !horario.horaFinReal) return total;
-      
+  if (!Array.isArray(horarios)) return 0;
+
+  const empleadoId = Number(this.empleadoId);
+  const totalMinutos = horarios.reduce((total, horario) => {
+    if (!horario.horaInicioReal || !horario.horaFinReal) return total;
+
+    const esTitular = horario.empleado?.Id === empleadoId;
+    const esSuplente = horario.empleadoSuplente?.Id === empleadoId;
+
+    // 👉 Solo cuenta si es suplente, o si es titular y no hubo suplente
+    if (esSuplente || (esTitular && !horario.empleadoSuplente)) {
       const inicio = this.convertirHoraAMinutos(horario.horaInicioReal);
       const fin = this.convertirHoraAMinutos(horario.horaFinReal);
       return total + (fin - inicio);
-    }, 0);
-  
-    return totalMinutos / 60; // devuelve decimal
-  }
+    }
+
+    return total;
+  }, 0);
+
+  return totalMinutos / 60;
+}
   
 
   convertirHoraAMinutos(hora: string): number {
@@ -421,6 +438,7 @@ export class EmpleadosEditComponent implements OnInit {
       this.horariosAsignadosService.buscarHorariosPorEmpleado(Number(this.empleadoId)).subscribe({
         next: (res: any) => {
           const horarios: HorarioAsignado[] = res.horarios;
+          console.log('📦 Horarios recibidos del backend:', horarios);
           
           const agrupadosPorAnio: Record<number, Record<number, HorarioAsignado[]>> = horarios.reduce(
             (acc: Record<number, Record<number, HorarioAsignado[]>>, horario: HorarioAsignado) => {
