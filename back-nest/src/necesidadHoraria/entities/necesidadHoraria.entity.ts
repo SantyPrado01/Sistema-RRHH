@@ -22,4 +22,7 @@ export class NecesidadHoraria {
     @Column({type: 'time'})
     horaFin:string
 
+    @Column({type:'time'})
+    fechaModificacion: string
+
 }

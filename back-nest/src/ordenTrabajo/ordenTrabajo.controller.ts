@@ -1,8 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, HttpException, HttpStatus } from '@nestjs/common';
 import { OrdenTrabajoService } from './ordenTrabajo.service'; 
 import { CreateOrdenTrabajoDto } from './dto/createOrdenTrabajo.dto'; 
 import { UpdateOrdenTrabajoDto } from './dto/updateOrdenTrabajo.dto'; 
 import { OrdenTrabajo } from './entities/ordenTrabajo.entity'; 
+
+export class EditarEmpleadoOrdenTrabajoDto {
+    nuevoEmpleadoId?: number;
+    fechaCambio: Date;
+    renovacionAutomatica: boolean;
+}
 
 @Controller('ordenTrabajo')
 export class OrdenTrabajoController {
@@ -25,7 +31,12 @@ export class OrdenTrabajoController {
     catch(error){
       throw new NotFoundException(error.message);
     }
-}
+  }
+
+  @Post('renovarOrdenesManualmente')
+  async ejecutarRenovacionManual(): Promise<OrdenTrabajo[]> {
+    return this.ordenTrabajoService.ejecutarRenovacionManual();
+  }
 
   @Get()
   findAll() {
@@ -119,6 +130,62 @@ export class OrdenTrabajoController {
   update(@Param('id') id: string, @Body() updateOrdenTrabajoDto: UpdateOrdenTrabajoDto) {
     return this.ordenTrabajoService.update(+id, updateOrdenTrabajoDto);
   }
+
+  @Patch(':id/editar')
+  async editarOrdenTrabajo(
+    @Param('id') ordenTrabajoId: string,
+    @Body() editarDto: EditarEmpleadoOrdenTrabajoDto
+  ) {
+    try {
+      const idOrden = parseInt(ordenTrabajoId);
+      if (isNaN(idOrden) || idOrden <= 0) {
+        throw new HttpException('El ID de la orden de trabajo debe ser un número válido', HttpStatus.BAD_REQUEST);
+      }
+
+      const empleadoId = editarDto.nuevoEmpleadoId;
+      if (!empleadoId || isNaN(empleadoId) || empleadoId <= 0) {
+        throw new HttpException('El ID del nuevo empleado debe ser válido', HttpStatus.BAD_REQUEST);
+      }
+
+      const renovacionAutomatica = editarDto.renovacionAutomatica ?? false;
+
+      const fechaCambio = new Date();
+      fechaCambio.setHours(0, 0, 0, 0);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+
+      if (fechaCambio < hoy) {
+        throw new HttpException('La fecha de cambio no puede ser en el pasado', HttpStatus.BAD_REQUEST);
+      }
+
+      const resultado = await this.ordenTrabajoService.editarOrdenTrabajo(
+        idOrden,
+        fechaCambio,
+        renovacionAutomatica,
+        empleadoId
+      );
+
+      return {
+        success: true,
+        message: 'Empleado de orden de trabajo actualizado exitosamente',
+        data: {
+          ordenTrabajoId: resultado.ordenActualizada.Id,
+          nuevoEmpleadoId: resultado.ordenActualizada.empleadoAsignado.Id,
+          nuevoEmpleadoNombre: resultado.ordenActualizada.empleadoAsignado.nombre,
+          renovacionAutomatica: resultado.ordenActualizada.renovacionAutomatica,
+          fechaCambio: fechaCambio.toISOString().split('T')[0],
+          horariosActualizados: resultado.horariosActualizados
+        }
+      };
+
+    } catch (error) {
+      console.error('Error en editarEmpleadoOrdenTrabajo:', error);
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(error.message || 'Error interno del servidor', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
 
   @Delete('deletedef/:id')
   remove(@Param('id') id: string) {

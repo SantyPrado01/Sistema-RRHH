@@ -257,14 +257,20 @@ export class HorariosAsignadosViewComponent {
     return `${meses[this.mes - 1]}`;
   }
 
-  abrirDialogoObservaciones(observacion: string): void {
+  abrirDialogoObservaciones(observacion: string, horarioAsignadoId: number): void {
     if (!observacion) return;
   
     this.dialog.open(DialogObservacionesComponent, {
-      width: '400px',
-      data: { observacion },
+      data: { observacion, idHorario: horarioAsignadoId },
     });
+
+    this.dialog.afterAllClosed.subscribe(() => {
+      // Recargar la orden para reflejar los cambios en las observaciones
+      this.obtenerHorariosRealizados(parseInt(this.empleadoId), this.mes, this.anio);
+    });
+
   }
+
 
   descargarPdf(): void {
     const doc = new jsPDF();

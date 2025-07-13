@@ -14,6 +14,11 @@ export interface OrdenTrabajo {
     horasProyectadas: number;
     horasReales: number;
     completado: boolean;
+    renovacionAutomatica: boolean;
+    fechaInicio?: Date;
+    fechaFin?: Date;
+    fechaEliminado?: Date;
+    estado?: string;
   }
 
 export interface OrdenGrupo {

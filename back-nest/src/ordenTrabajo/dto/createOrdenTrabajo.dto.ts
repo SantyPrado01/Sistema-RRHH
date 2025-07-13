@@ -23,5 +23,11 @@ export class CreateOrdenTrabajoDto {
     @Type(() => CreateNecesidadHorariaDto)
     necesidadHoraria?: CreateNecesidadHorariaDto[];
 
+    renovacionAutomatica?: boolean;
+    
+    fechaInicio?: Date;
+    fechaFin?: Date;
+    
+
 
 }

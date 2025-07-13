@@ -11,3 +11,31 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* 🟠 BUSCADOR PRINCIPAL */
+.search-field .mat-mdc-form-field {
+  --mdc-typography-body1-font-size: 16px !important;
+  --mat-mdc-form-field-label-text-size: 16px !important;
+}
+
+.search-field input.mat-mdc-input-element {
+  font-size: 16px !important;
+}
+
+/* 🟠 BOTÓN NUEVA ORDEN */
+.actions-container button.mat-mdc-raised-button {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  height: auto !important;
+  padding: 8px 16px !important;
+}
+
+/* 🟠 FILTROS EXPANSION PANEL */
+.additional-filters .mat-mdc-form-field {
+  --mdc-typography-body1-font-size: 16px !important;
+  --mat-mdc-form-field-label-text-size: 16px !important;
+}
+
+.additional-filters input.mat-mdc-input-element,
+.additional-filters .mat-mdc-select-value {
+  font-size: 16px !important;
+}

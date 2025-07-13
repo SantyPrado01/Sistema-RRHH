@@ -27,15 +27,12 @@ export class OrdenTrabajo {
 
     @Column()
     anio?: number;
-    
-    @Column({ nullable: true })
-    diaEspecifico?: Date;
 
-    @Column({ nullable: true })
-    horaInicio?:string;
+    @Column({type: 'date', nullable: true})
+    fechaInicio?: Date;
 
-    @Column({ nullable: true })
-    horaFin?:string;
+    @Column({type: 'date', nullable: true})
+    fechaFin?: Date;
 
     @Column({default:false})
     completado: boolean;
@@ -45,5 +42,8 @@ export class OrdenTrabajo {
 
     @Column({ nullable: true })
     fechaEliminado?: Date;
+
+    @Column({ default: false })
+    renovacionAutomatica: boolean;
 
 }

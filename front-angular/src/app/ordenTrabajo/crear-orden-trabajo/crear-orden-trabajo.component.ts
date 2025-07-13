@@ -98,6 +98,7 @@ export class CrearOrdenTrabajoComponent {
         servicio: this.empresa,
         empleadoAsignado: this.empleado,
         horariosAsignados: [],
+        renovacionAutomatica: true,
         necesidadHoraria: this.necesidad.map((dia) => ({
           diaSemana: dia.diaSemana,
           horaInicio: dia.horaInicio,

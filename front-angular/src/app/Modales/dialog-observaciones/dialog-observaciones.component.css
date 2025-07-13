@@ -1,14 +1,230 @@
-.container-observaciones{
-    height: auto;
+/* Container principal del dialog */
+.container-observaciones {
+  padding: 0;
+  max-width: 600px;
+  min-width: 500px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 }
 
-.mat-dialog-title{
-    font-size: 1.5em;
-    margin: 1em;
+/* Título del dialog */
+.dialog-title {
+  background: #ffffff;
+  color: #333333;
+  margin: 0;
+  padding: 20px 24px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  position: relative;
 }
-.mat-dialog-content{
-    margin: 2em;
+
+.dialog-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
 }
-.mat-dialog-actions{
-    margin: 2em;
+
+/* Contenido del dialog */
+.dialog-content {
+  padding: 24px;
+  background: #fafafa;
+  position: relative;
+}
+
+.dialog-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+}
+
+/* Campo de observación */
+.observacion-field {
+  width: 100% !important;
+  margin-bottom: 16px;
+}
+
+/* Estilos para el textarea */
+.observacion-field ::ng-deep .mat-mdc-form-field-infix {
+  width: 100% !important;
+  min-height: 120px;
+  padding: 16px 0;
+}
+
+.observacion-field ::ng-deep textarea {
+  width: 100% !important;
+  min-height: 120px !important;
+  resize: vertical;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #333;
+}
+
+.observacion-field ::ng-deep .mat-mdc-floating-label {
+  font-size: 14px !important;
+  color: #666 !important;
+  font-weight: 500;
+}
+
+.observacion-field ::ng-deep .mdc-floating-label--float-above {
+  font-size: 12px !important;
+  color: #333 !important;
+  font-weight: 600;
+}
+
+/* Personalizar el fill appearance */
+.observacion-field ::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.observacion-field ::ng-deep .mat-mdc-text-field-wrapper:hover {
+  border-color: #4caf50;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+}
+
+.observacion-field ::ng-deep .mat-focused .mat-mdc-text-field-wrapper {
+  border-color: #4caf50 !important;
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.2) !important;
+}
+
+/* Acciones del dialog */
+.dialog-actions {
+  padding: 16px 24px 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  background: #ffffff;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Botón primario */
+.dialog-actions button[color="primary"] {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3) !important;
+}
+
+.dialog-actions button[color="primary"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4) !important;
+}
+
+.dialog-actions button[color="primary"]:active {
+  transform: translateY(0) !important;
+}
+
+/* Botón secundario */
+.dialog-actions button[color="warn"] {
+  background: transparent !important;
+  color: #f44336 !important;
+  border: 2px solid #f44336 !important;
+  padding: 10px 22px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.dialog-actions button[color="warn"]:hover {
+  background: #f44336 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.3);
+}
+
+/* Iconos en los botones */
+.dialog-actions button mat-icon {
+  margin-right: 8px !important;
+  font-size: 18px !important;
+}
+
+/* Animaciones */
+.container-observaciones {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container-observaciones {
+    min-width: 300px;
+    max-width: 95vw;
+  }
+  
+  .dialog-title {
+    font-size: 18px;
+    padding: 16px 20px;
+  }
+  
+  .dialog-content {
+    padding: 20px;
+  }
+  
+  .dialog-actions {
+    padding: 12px 20px 20px;
+    flex-direction: column;
+  }
+  
+  .dialog-actions button {
+    width: 100%;
+  }
+}
+
+/* Placeholder personalizado */
+.observacion-field ::ng-deep textarea::placeholder {
+  color: #999 !important;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Scroll personalizado para el textarea */
+.observacion-field ::ng-deep textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.observacion-field ::ng-deep textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.observacion-field ::ng-deep textarea::-webkit-scrollbar-thumb {
+  background: #4caf50;
+  border-radius: 3px;
+}
+
+.observacion-field ::ng-deep textarea::-webkit-scrollbar-thumb:hover {
+  background: #45a049;
 }

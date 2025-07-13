@@ -1,171 +1,178 @@
 .title-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
-    background-color: #333333;
-    text-align: center;
-    height: 6.2em;
-    margin-bottom: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+  background-color: #333333;
+  text-align: center;
+  height: 6em;
+  margin-bottom: 1em;
 }
 
 .title-item h1 {
-    color: white;
-    font-size: 2em;
-    margin: 0;
+  color: white;
+  font-size: 1.5em;
 }
 
 .content-container {
-    padding: 20px;
+  padding-right: 20px;
 }
 
+/* Para TODOS los mat-form-field dentro del contenido */
+.content-container mat-form-field {
+  width: 100%;
+  max-width: 300px;
+  font-size: 14px;
+  position: relative;
+}
+
+/* Ajuste altura y padding del input / select */
+.content-container mat-form-field ::ng-deep .mat-mdc-form-field-infix {
+  min-height: 50px !important;
+  padding: 10px 0 !important;
+}
+
+/* Tamaño y centrado vertical de mat-label */
+.content-container mat-form-field ::ng-deep .mat-mdc-floating-label {
+  font-size: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* Cuando la etiqueta está flotando */
+.content-container mat-form-field ::ng-deep .mdc-floating-label--float-above {
+  font-size: 16px !important;
+  top: 0 !important;
+  transform: translateY(-50%) scale(0.85) !important;
+}
+
+/* Texto dentro del input */
+.content-container mat-form-field ::ng-deep input.mat-mdc-input-element,
+.content-container mat-form-field ::ng-deep .mat-mdc-select-value {
+  font-size: 14px !important;
+  height: 24px !important;
+}
+
+/* Contenedor de filtros adicionales: asegurar que ocupen espacio correcto */
+.additional-filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Botón "Nueva Orden" igual altura y tamaño */
+.actions-container button.mat-raised-button.mat-primary {
+  font-size: 16px !important;
+  height: 60px !important;
+  line-height: 60px !important;
+  padding: 0 16px !important;
+}
+
+/* Flexbox para actions-container para que input y botón se alineen */
 .actions-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
-.search-field {
-    flex: 1;
-    max-width: 500px;
+.menu-filters {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* Estilos para el campo de búsqueda */
-::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
-    color: var(--color-primary) !important;
+/* Tamaño de inputs y selects */
+.menu-filters ::ng-deep .mat-mdc-form-field-infix {
+  min-height: 40px;
+  padding: 6px 0;
 }
 
-::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
-    color: var(--color-primary) !important;
+.menu-filters ::ng-deep .mat-mdc-floating-label {
+  font-size: 13px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
 }
 
-::ng-deep .mat-mdc-form-field:hover .mat-mdc-form-field-outline {
-    opacity: 1;
-    color: var(--color-primary-light);
+.menu-filters ::ng-deep .mdc-floating-label--float-above {
+  font-size: 12px !important;
+  top: 0 !important;
+  transform: translateY(-50%) scale(0.85) !important;
 }
 
-/* Estilos para la tabla */
+.menu-filters ::ng-deep .mat-mdc-form-field {
+  font-size: 13px;
+}
+
+.actions-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .table-container {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow: hidden;
+  margin-top: 1rem;
 }
 
-.mat-elevation-z8 {
-    width: 100%;
+table {
+  width: 100%;
 }
 
-/* Estilos para las filas de la tabla */
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: #f5f5f5;
+}
+
 .row-clickable {
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
-.row-clickable:hover {
-    background-color: rgba(0, 0, 0, 0.04) !important;
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
-/* Efecto al hacer click */
-.row-clickable:active {
-    background-color: rgba(0, 0, 0, 0.08) !important;
-    color: inherit;
+.completed {
+  background-color: #d4edda;
+  color: #155724;
 }
 
-/* Estilos para las celdas de la tabla */
-.mat-mdc-cell, .mat-mdc-header-cell {
-    padding: 12px 16px;
+.pending {
+  background-color: #fff3cd;
+  color: #856404;
 }
 
-/* Estilos para los botones de acción */
-.mat-mdc-icon-button {
-    margin: 0 4px;
+.delete {
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
-/* Estilos específicos para el botón de Nueva Empresa */
-.actions-container button[mat-raised-button] {
-    background-color: var(--color-primary) !important;
-    color: white !important;
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
 }
 
-.actions-container button[mat-raised-button]:hover {
-    background-color: var(--color-primary-dark) !important;
+td, th {
+  padding: 0 1rem !important;
 }
 
-/* Reforzar estilos para todos los botones primarios */
-::ng-deep .mat-mdc-raised-button.mat-primary,
-::ng-deep .mat-mdc-raised-button.mat-primary .mat-mdc-button-persistent-ripple {
-    background-color: var(--color-primary) !important;
+.mat-column-acciones {
+  width: 120px;
+  text-align: center;
 }
 
-::ng-deep .mat-mdc-raised-button.mat-primary:hover {
-    background-color: var(--color-primary-dark) !important;
+.mat-column-estado {
+  width: 150px;
 }
 
-::ng-deep .mat-mdc-raised-button.mat-primary .mdc-button__label {
-    color: white !important;
-}
-
-::ng-deep .mat-mdc-raised-button.mat-primary .mat-icon {
-    color: white !important;
-}
-
-/* Color para los íconos */
-.mat-icon-button[color="primary"] {
-    color: var(--color-primary) !important;
-}
-
-/* Estilos para el ordenamiento */
-::ng-deep .mat-sort-header-arrow {
-    color: var(--color-primary) !important;
-}
-
-/* Estilos para el paginador */
-::ng-deep .mat-mdc-paginator {
-    border-top: 1px solid rgba(0,0,0,0.12);
-}
-
-::ng-deep .mat-mdc-paginator-icon {
-    fill: var(--color-primary) !important;
-}
-
-::ng-deep .mat-mdc-paginator-navigation-button:hover {
-    background-color: var(--color-hover) !important;
-}
-
-/* Mensaje cuando no hay datos */
-.mat-mdc-row.mat-no-data-row {
-    height: 56px;
-}
-
-.mat-mdc-cell.mat-no-data-cell {
-    text-align: center;
-    color: rgba(0,0,0,0.54);
-}
-
-/* Ajustes para el campo de búsqueda */
-::ng-deep .mat-mdc-form-field-subscript-wrapper {
-    display: none;
-}
-
-/* Estilos para los botones */
-button[mat-raised-button] {
-    height: 48px;
-}
-
-/* Ajustes para el responsive */
-@media (max-width: 768px) {
-    .actions-container {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .search-field {
-        max-width: 100%;
-    }
-
-    .mat-mdc-cell {
-        padding: 8px;
-    }
+.mat-column-id {
+  width: 100px;
 }

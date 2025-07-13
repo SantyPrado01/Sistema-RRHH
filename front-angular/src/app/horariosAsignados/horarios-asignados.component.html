@@ -10,48 +10,48 @@
     <form #form="ngForm">
       
       <div class="form-row">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Empresa</mat-label>
           <input matInput [value]="selectedHorario?.ordenTrabajo?.servicio?.nombre ?? 'N/A'" readonly required/>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Empleado</mat-label>
           <input matInput [value]="(selectedHorario?.empleado?.apellido ?? '') + ', ' + (selectedHorario?.empleado?.nombre ?? '')" readonly required/>
         </mat-form-field>
       </div>
 
       <div class="form-row">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Fecha</mat-label>
           <input matInput [matDatepicker]="picker" [(ngModel)]="fechaSeleccionada" name="fecha" required>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Horario Inicio</mat-label>
           <input matInput [value]="selectedHorario?.horaInicioProyectado ?? 'N/A'" readonly required/>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Horario Fin</mat-label>
           <input matInput [value]="selectedHorario?.horaFinProyectado ?? 'N/A'" readonly required/>
         </mat-form-field>
       </div>
 
       <div class="form-row">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Hora Inicio Real</mat-label>
           <input matInput type="time" [(ngModel)]="horaInicioReal" name="inicioReal"/>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Hora Fin Real</mat-label>
           <input matInput type="time" [(ngModel)]="horaFinReal" name="finReal"/>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Estado</mat-label>
           <mat-select [(ngModel)]="estado" name="estado" required (ngModelChange)="cambiarEstado($event)">
             <mat-option value="Asistió">Asistió</mat-option>
@@ -74,7 +74,7 @@
       </div>
 
       <div class="form-row-suplente" *ngIf="mostrarEmpleado">
-        <mat-form-field appearance="outline" class="suplente-field">
+        <mat-form-field appearance="outline" class="suplente-field" class="input-medium">
           <mat-label>Empleado Suplente</mat-label>
           <input
             type="text"
@@ -90,7 +90,7 @@
           </mat-autocomplete>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Estado Suplente</mat-label>
           <mat-select [(ngModel)]="estadoSuplente" name="estadoSuplente" required>
             <mat-option value="Asistió">Asistió</mat-option>
@@ -124,7 +124,7 @@
   </div>
 
   <div class="table-container">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="input-medium">
       <mat-label >Buscar por empleado</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese nombre o apellido del empleado" #input>
       <mat-icon matSuffix>search</mat-icon>

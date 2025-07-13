@@ -1,10 +1,24 @@
+<div class="container-observaciones">
+  <h2 class="dialog-title">Observaciones</h2>
 
-<div class ="container-observaciones">
-    <h1 class="mat-dialog-title">Observaciones</h1>
-        <div class="mat-dialog-content">
-            <p>{{ data.observacion }}</p>
-        </div>
-        <div class="mat-dialog-actions" align="end">
-            <button mat-button mat-dialog-close cdkFocusInitial (click)="cerrarDialogo()">Cerrar</button>
-        </div>
+  <div class="dialog-content">
+    <mat-form-field appearance="fill" class="observacion-field">
+      <mat-label>Editar observación</mat-label>
+      <textarea
+        matInput
+        [(ngModel)]="observacion"
+        rows="5"
+        placeholder="Ingrese sus observaciones aquí...">
+      </textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-flat-button color="primary" (click)="actualizarObservacion()">
+      <mat-icon>save</mat-icon> Actualizar
+    </button>
+    <button mat-stroked-button color="warn" mat-dialog-close (click)="cerrarDialogo()">
+      <mat-icon>close</mat-icon> Cerrar
+    </button>
+  </div>
 </div>

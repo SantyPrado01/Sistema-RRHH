@@ -7,13 +7,13 @@
 <div class="content-container">
   <div class="actions-container">
     <div class="search-filters">
-      <mat-form-field appearance="outline" class="search-field">
+      <mat-form-field appearance="outline" class="input-medium">
         <mat-label>Buscar Empleado</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese el nombre del empleado">
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" style="margin-left: 0.5em;">
+      <mat-form-field appearance="outline" class="input-medium" style="margin-left: 10px;">
         <mat-label>Estado</mat-label>
         <mat-select [(ngModel)]="estadoSeleccionado" (selectionChange)="onEstadoChange()">
           <mat-option value="activos">Activos</mat-option>
@@ -25,7 +25,7 @@
 
     <button mat-raised-button color="primary" routerLink='/employee/create'>
       <mat-icon>add</mat-icon>
-      Nuevo Empleado
+        Nuevo Empleado
     </button>
   </div>
 

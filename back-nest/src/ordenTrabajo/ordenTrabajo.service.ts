@@ -10,6 +10,7 @@ import { CreateNecesidadHorariaDto } from 'src/necesidadHoraria/dto/createNecesi
 import { NecesidadHoraria } from 'src/necesidadHoraria/entities/necesidadHoraria.entity'; 
 import { HorarioAsignado } from 'src/horariosAsignados/entities/horariosAsignados.entity'; 
 import { OrdenTrabajoConHoras } from './interface/orden-trabajo-con-horas.interface';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class OrdenTrabajoService {
@@ -25,6 +26,233 @@ export class OrdenTrabajoService {
     @InjectRepository(HorarioAsignado)
     private readonly horarioAsignadoRepository: Repository<HorarioAsignado>,
   ) {}
+
+  /*Renovacion automaticas de las ordenes de trabajo*/
+  /*@Cron('0 25 23 * * 6') 
+  async ejecutarRenovacionProgramada(): Promise<void> {
+    try {
+      console.log('🕐 Verificando si es el antepenúltimo viernes del mes...');
+      
+      if (this.esAntepenultimoViernes()) {
+        console.log('✅ Es el antepenúltimo viernes del mes. Ejecutando renovación automática...');
+        
+        const ordenesRenovadas = await this.renovacionAutomatica();
+        
+        console.log(`🎉 Renovación automática completada. ${ordenesRenovadas.length} órdenes renovadas.`);
+  
+        
+      } else {
+        console.log('ℹ️ No es el antepenúltimo viernes del mes. No se ejecuta renovación.');
+      }
+    } catch (error) {
+      console.error('❌ Error en la ejecución programada de renovación automática:', error);
+    }
+  }
+  */
+
+    /*Determina si la fecha actual es el antepenúltimo viernes del mes*/
+  private esAntepenultimoViernes(): boolean {
+    const hoy = new Date();
+    
+    // Verificar que sea viernes (día 5)
+    if (hoy.getDay() !== 5) {
+      return false;
+    }
+    
+    // Obtener todos los viernes del mes actual
+    const viernesDelMes = this.obtenerViernesDelMes(hoy.getFullYear(), hoy.getMonth());
+    
+    // Verificar que haya al menos 3 viernes en el mes
+    if (viernesDelMes.length < 3) {
+      return false;
+    }
+    
+    // El antepenúltimo viernes es el tercero desde el final
+    const antepenultimoViernes = viernesDelMes[viernesDelMes.length - 3];
+    
+    // Comparar fechas (solo día, mes y año)
+    return hoy.getDate() === antepenultimoViernes.getDate() &&
+           hoy.getMonth() === antepenultimoViernes.getMonth() &&
+           hoy.getFullYear() === antepenultimoViernes.getFullYear();
+  }
+
+    /*Obtiene todos los viernes de un mes específico*/
+  private obtenerViernesDelMes(anio: number, mes: number): Date[] {
+    const viernes: Date[] = [];
+    const fecha = new Date(anio, mes, 1);
+    
+    // Encontrar el primer viernes del mes
+    while (fecha.getDay() !== 5) {
+      fecha.setDate(fecha.getDate() + 1);
+    }
+    
+    // Agregar todos los viernes del mes
+    while (fecha.getMonth() === mes) {
+      viernes.push(new Date(fecha));
+      fecha.setDate(fecha.getDate() + 7); // Siguiente viernes
+    }
+    
+    return viernes;
+  }
+
+    /*Función auxiliar para ejecutar manualmente la renovación (para testing)*/
+  async ejecutarRenovacionManual(): Promise<OrdenTrabajo[]> {
+    console.log('🔧 Ejecutando renovación manual...');
+    return await this.renovacionAutomatica();
+  }
+
+    /*Función auxiliar para verificar cuándo será el próximo antepenúltimo viernes*/
+  obtenerProximoAntepenultimoViernes(): Date | null {
+    const hoy = new Date();
+    let mesActual = hoy.getMonth();
+    let anioActual = hoy.getFullYear();
+    
+    // Verificar el mes actual
+    const viernesEsteMes = this.obtenerViernesDelMes(anioActual, mesActual);
+    if (viernesEsteMes.length >= 3) {
+      const antepenultimoEsteMes = viernesEsteMes[viernesEsteMes.length - 3];
+      if (antepenultimoEsteMes >= hoy) {
+        return antepenultimoEsteMes;
+      }
+    }
+    
+    // Si no hay en el mes actual, buscar en el siguiente
+    mesActual++;
+    if (mesActual > 11) {
+      mesActual = 0;
+      anioActual++;
+    }
+    
+    const viernesSiguienteMes = this.obtenerViernesDelMes(anioActual, mesActual);
+    if (viernesSiguienteMes.length >= 3) {
+      return viernesSiguienteMes[viernesSiguienteMes.length - 3];
+    }
+    
+    return null;
+  }
+
+  async renovacionAutomatica(): Promise<OrdenTrabajo[]> {
+  // Buscar todas las órdenes con renovación automática activada
+  const ordenesConRenovacion = await this.ordenTrabajoRepository.find({
+    where: { renovacionAutomatica: true },
+    relations: ['servicio', 'empleadoAsignado', 'necesidadHoraria', 'empleadoAsignado.disponibilidades']
+  });
+
+  if (ordenesConRenovacion.length === 0) {
+    console.log('No hay órdenes con renovación automática activada');
+    return [];
+  }
+
+  const ordenesRenovadas: OrdenTrabajo[] = [];
+
+  for (const ordenOriginal of ordenesConRenovacion) {
+    try {
+      // Calcular el mes siguiente
+      const mesActual = ordenOriginal.mes;
+      const anioActual = ordenOriginal.anio;
+      
+      let mesSiguiente = mesActual + 1;
+      let anioSiguiente = anioActual;
+      
+      // Si pasamos de diciembre, ir a enero del siguiente año
+      if (mesSiguiente > 12) {
+        mesSiguiente = 1;
+        anioSiguiente = anioActual + 1;
+      }
+
+      // Verificar si ya existe una orden para ese mes y año
+      const ordenExistente = await this.ordenTrabajoRepository.findOne({
+        where: {
+          mes: mesSiguiente,
+          anio: anioSiguiente,
+          servicio: { servicioId: ordenOriginal.servicio.servicioId },
+          empleadoAsignado: { Id: ordenOriginal.empleadoAsignado.Id }
+        }
+      });
+
+      if (ordenExistente) {
+        console.log(`Ya existe una orden para el mes ${mesSiguiente}/${anioSiguiente} - Orden ID: ${ordenExistente.Id}`);
+        continue;
+      }
+
+      // Calcular las fechas del mes siguiente
+      const fechaInicioMesSiguiente = new Date(anioSiguiente, mesSiguiente - 1, 1);
+      const fechaFinMesSiguiente = new Date(anioSiguiente, mesSiguiente, 0); // Último día del mes
+
+      console.log(`Creando orden renovada para ${mesSiguiente}/${anioSiguiente}`);
+      console.log(`Fecha inicio: ${fechaInicioMesSiguiente}, Fecha fin: ${fechaFinMesSiguiente}`);
+
+      // Crear la nueva orden de trabajo
+      const nuevaOrdenTrabajo = this.ordenTrabajoRepository.create({
+        servicio: ordenOriginal.servicio,
+        empleadoAsignado: ordenOriginal.empleadoAsignado,
+        mes: mesSiguiente,
+        anio: anioSiguiente,
+        fechaInicio: fechaInicioMesSiguiente,
+        fechaFin: fechaFinMesSiguiente,
+        renovacionAutomatica: ordenOriginal.renovacionAutomatica, // Mantener el estado
+        completado: false,
+        eliminado: false
+      });
+
+      const ordenGuardada = await this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
+      ordenesRenovadas.push(ordenGuardada);
+
+      // Obtener las necesidades horarias de la orden original
+      const necesidadesOriginales = ordenOriginal.necesidadHoraria;
+
+      if (necesidadesOriginales && necesidadesOriginales.length > 0) {
+        // Filtrar solo las necesidades horarias que tienen horarios válidos (no 00:00:00)
+        const necesidadesValidas = necesidadesOriginales.filter(necesidad => 
+          necesidad.horaInicio && 
+          necesidad.horaFin && 
+          necesidad.horaInicio !== '00:00:00' && 
+          necesidad.horaFin !== '00:00:00'
+        );
+
+        if (necesidadesValidas.length > 0) {
+          // Crear objetos de necesidades horarias sin la relación a la orden anterior
+          const necesidadesParaNuevaOrden = necesidadesValidas.map(necesidad => ({
+            diaSemana: necesidad.diaSemana,
+            horaInicio: necesidad.horaInicio,
+            horaFin: necesidad.horaFin
+          }));
+
+          // Crear las necesidades horarias para la nueva orden
+          await this.createNecesidadHoraria(ordenGuardada.Id, necesidadesParaNuevaOrden);
+
+          // Crear los horarios asignados para la nueva orden
+          await this.createHorariosParaOrden(
+            ordenGuardada,
+            necesidadesParaNuevaOrden,
+            fechaInicioMesSiguiente,
+            fechaFinMesSiguiente
+          );
+
+          // Desactivar renovación automática en la orden original
+          ordenOriginal.renovacionAutomatica = false;
+          await this.ordenTrabajoRepository.save(ordenOriginal);
+
+          console.log(`✅ Orden renovada creada exitosamente - ID: ${ordenGuardada.Id}`);
+          console.log(`🔄 Renovación automática desactivada en orden original - ID: ${ordenOriginal.Id}`);
+          console.log(`📅 Se crearon horarios para ${necesidadesParaNuevaOrden.length} días de la semana`);
+        } else {
+          console.log(`⚠️ No se encontraron necesidades horarias válidas para la orden ${ordenOriginal.Id}`);
+        }
+      } else {
+        console.log(`⚠️ No se encontraron necesidades horarias para la orden ${ordenOriginal.Id}`);
+      }
+
+    } catch (error) {
+      console.error(`Error al renovar la orden ${ordenOriginal.Id}:`, error);
+      // Continuar con las siguientes órdenes
+    }
+  }
+
+  return ordenesRenovadas;
+  }
+
+  /*Crear ordenes de trabajo*/
 
   async createOrdenesTrabajo(
     createOrdenTrabajoDto: CreateOrdenTrabajoDto, 
@@ -63,6 +291,8 @@ export class OrdenTrabajoService {
             empleadoAsignado: empleadoExistente,
             mes,
             anio,
+            fechaInicio: inicio,
+            fechaFin: fin,
         });
 
         const ordenGuardada = await this.ordenTrabajoRepository.save(nuevaOrdenTrabajo);
@@ -205,11 +435,9 @@ export class OrdenTrabajoService {
     } else {
         console.log('No se asignaron horarios dentro del rango especificado.');
     }
-}
+  }
 
-  /**
- * Verifica si un horario solicitado está dentro del rango de disponibilidad del empleado.
- */
+  /*Verifica si un horario solicitado está dentro del rango de disponibilidad del empleado*/
 
   private validarDisponibilidad=(
     horaInicioNecesidad: string, 
@@ -225,53 +453,6 @@ export class OrdenTrabajoService {
     const esValida = inicioNecesidad >= inicioDisponibilidad && finNecesidad <= finDisponibilidad;
     console.log(`Validación horario (${horaInicioNecesidad}-${horaFinNecesidad}): ${esValida}`);
     return esValida;
-  }
-
-
-  async createAsignarHorarioUnico(ordenTrabajoId: number, diaEspecifico: Date, horaInicio: string, horaFin: string) {
-    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
-      where: { Id: ordenTrabajoId },
-      relations: ['empleadoAsignado'],
-    });
-    if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
-    const horarioAsignado = this.horarioAsignadoRepository.create({
-      ordenTrabajo,
-      empleado: ordenTrabajo.empleadoAsignado,
-      fecha: diaEspecifico,
-      horaInicioProyectado: horaInicio,
-      horaFinProyectado: horaFin,
-      estado: 'pendiente',
-      suplente: false,
-      empleadoSuplente: null,
-    });
-    return this.horarioAsignadoRepository.save(horarioAsignado);
-  }
-  
-  async createAsignarHorarios(ordenTrabajoId: number) {
-    const ordenTrabajo = await this.ordenTrabajoRepository.findOne({where: { Id: ordenTrabajoId }, relations: ['necesidadHoraria', 'empleadoAsignado']});
-    if (!ordenTrabajo) throw new NotFoundException('Orden de trabajo no encontrada');
-    const horariosAsignados = [];
-    const necesidadesValidas = ordenTrabajo.necesidadHoraria.filter(
-      (necesidad) => necesidad.horaInicio && necesidad.horaFin && necesidad.horaInicio !== '00:00:00' && necesidad.horaFin !== '00:00:00'
-    );
-    for (const necesidad of necesidadesValidas) {
-      const fechas = this.obtenerFechasDelMes(ordenTrabajo.anio, ordenTrabajo.mes, necesidad.diaSemana.toString());
-      for (const fecha of fechas) {
-        const horarioAsignado = this.horarioAsignadoRepository.create({
-          ordenTrabajo,
-          empleado: ordenTrabajo.empleadoAsignado,
-          fecha,
-          horaInicioProyectado: necesidad.horaInicio,
-          horaFinProyectado: necesidad.horaFin,
-          estado: 'Pendiente',
-          suplente: false,
-          empleadoSuplente: null,
-        });
-        horariosAsignados.push(horarioAsignado);
-      }
-    }
-    const resultadoGuardado = await this.horarioAsignadoRepository.save(horariosAsignados);
-    return resultadoGuardado;
   }
   
   private obtenerFechasDelMes(anio: number, mes: number, diaSemana: string): Date[] {
@@ -318,8 +499,10 @@ export class OrdenTrabajoService {
     const minutos = Math.round((Math.abs(decimales) - horas) * 60); // obtener los minutos restantes
     return `${horas}:${minutos < 10 ? '0' + minutos : minutos}`; // formatear a HH:mm
   }
-  
- async findAll(): Promise<any[]> {
+
+  /*Funciones para buscar ordenes de trabajo*/ 
+
+  async findAll(): Promise<any[]> {
   const ordenes = await this.ordenTrabajoRepository.find({
     relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
   });
@@ -335,7 +518,7 @@ export class OrdenTrabajoService {
 
       if (orden.horariosAsignados && orden.horariosAsignados.length > 0) {
         const fechas = orden.horariosAsignados
-          .map((h) => h.fecha) // asumimos que hay un campo "fecha"
+          .map((h) => h.fecha)
           .filter((f) => f !== undefined && f !== null)
           .map((f) => new Date(f));
 
@@ -343,9 +526,8 @@ export class OrdenTrabajoService {
           fechaInicio = new Date(Math.min(...fechas.map((f) => f.getTime())));
           fechaFin = new Date(Math.max(...fechas.map((f) => f.getTime())));
         }
-      }
 
-      if (orden.diaEspecifico === null) {
+        // Verificar si todos los horarios están comprobados
         const todosComprobados = orden.horariosAsignados.every(
           (horario) => horario.comprobado === true,
         );
@@ -355,31 +537,22 @@ export class OrdenTrabajoService {
           await this.ordenTrabajoRepository.save(orden);
         }
 
+        // Calcular horas proyectadas y reales
         orden.horariosAsignados.forEach((horario) => {
           if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-            horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
+            horasProyectadas += this.calcularHoras(
+              horario.horaInicioProyectado,
+              horario.horaFinProyectado
+            );
           }
 
           if (horario.horaInicioReal && horario.horaFinReal) {
-            horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+            horasReales += this.calcularHoras(
+              horario.horaInicioReal,
+              horario.horaFinReal
+            );
           }
         });
-      } else {
-        if (orden.horaInicio && orden.horaFin) {
-          const horarioAsignado = orden.horariosAsignados[0];
-          const comprobado = horarioAsignado ? horarioAsignado.comprobado : false;
-
-          if (comprobado === true) {
-            orden.completado = true;
-            await this.ordenTrabajoRepository.save(orden);
-          }
-
-          horasProyectadas = this.calcularHoras(orden.horaInicio, orden.horaFin);
-          horasReales = horasProyectadas;
-        }
-
-        // En caso de día específico, usar esa fecha como inicio y fin
-        fechaInicio = fechaFin = orden.diaEspecifico;
       }
 
       const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
@@ -396,8 +569,7 @@ export class OrdenTrabajoService {
   );
 
   return result;
-}
-
+  }
 
   async findOne(id: number): Promise<OrdenTrabajoConHoras> {
     const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
@@ -735,6 +907,8 @@ export class OrdenTrabajoService {
       horasReales: horasRealesFormateadas,
     };
   }
+
+  /*Actualizar ordenes de trabajo */
   
   async update(id: number, updateOrdenTrabajoDto: UpdateOrdenTrabajoDto): Promise<OrdenTrabajo> {
     const ordenTrabajo = await this.findOne(id);
@@ -755,6 +929,154 @@ export class OrdenTrabajoService {
     Object.assign(ordenTrabajo, updateOrdenTrabajoDto);
     return this.ordenTrabajoRepository.save(ordenTrabajo);
   }
+
+  async editarOrdenTrabajo(
+    ordenTrabajoId: number, 
+    fechaCambio: Date,
+    renovacionAutomatica: boolean,
+    nuevoEmpleadoId?: number, 
+    ): Promise<{ ordenActualizada: OrdenTrabajo, horariosActualizados: number }> {
+    console.log('=== INICIO editarEmpleadoOrdenTrabajo ===');
+    console.log(`OrdenTrabajo ID: ${ordenTrabajoId}`);
+    console.log(`Nuevo Empleado ID: ${nuevoEmpleadoId}`);
+    console.log(`Fecha de cambio: ${fechaCambio.toDateString()}`);
+
+    try {
+        // 1. Buscar la orden de trabajo
+        const ordenTrabajo = await this.ordenTrabajoRepository.findOne({
+            where: { Id: ordenTrabajoId },
+            relations: ['empleadoAsignado', 'servicio']
+        });
+
+        if (!ordenTrabajo) {
+            throw new Error(`Orden de trabajo con ID ${ordenTrabajoId} no encontrada`);
+        }
+
+        console.log(`✅ Orden encontrada - Empleado actual: ${ordenTrabajo.empleadoAsignado.Id}`);
+
+        // 2. Buscar el nuevo empleado
+        const nuevoEmpleado = await this.empleadoRepository.findOne({
+            where: { Id: nuevoEmpleadoId },
+            relations: ['disponibilidades']
+        });
+
+        if (!nuevoEmpleado) {
+            throw new Error(`Empleado con ID ${nuevoEmpleadoId} no encontrado`);
+        }
+
+        console.log(`✅ Nuevo empleado encontrado: ${nuevoEmpleado.nombre || 'Sin nombre'}`);
+
+        // 3. Actualizar el empleado en la orden de trabajo
+        const empleadoAnterior = ordenTrabajo.empleadoAsignado;
+        ordenTrabajo.empleadoAsignado = nuevoEmpleado;
+        ordenTrabajo.renovacionAutomatica = renovacionAutomatica;
+
+        // Guardar la orden actualizada
+        const ordenActualizada = await this.ordenTrabajoRepository.save(ordenTrabajo);
+        console.log(`✅ Orden de trabajo actualizada con nuevo empleado`);
+
+        // 4. Buscar horarios asignados posteriores a la fecha de cambio
+        const fechaCambioTime = new Date(fechaCambio);
+        fechaCambioTime.setHours(0, 0, 0, 0); // Establecer a inicio del día
+
+        console.log(`🔍 Buscando horarios asignados posteriores a: ${fechaCambioTime.toDateString()}`);
+
+        const horariosAsignados = await this.horarioAsignadoRepository.find({
+            where: {
+                ordenTrabajo: { Id: ordenTrabajoId },
+                empleado: { Id: empleadoAnterior.Id } // Buscar por el empleado anterior
+            },
+            relations: ['empleado', 'ordenTrabajo']
+        });
+
+        console.log(`📅 Total horarios encontrados: ${horariosAsignados.length}`);
+
+        // 5. Filtrar horarios posteriores a la fecha de cambio
+        const horariosAActualizar = horariosAsignados.filter(horario => {
+            const fechaHorario = new Date(horario.fecha);
+            fechaHorario.setHours(0, 0, 0, 0); // Establecer a inicio del día
+            return fechaHorario >= fechaCambioTime;
+        });
+
+        console.log(`📅 Horarios a actualizar: ${horariosAActualizar.length}`);
+
+        // 6. Validar disponibilidad del nuevo empleado (si no es fulltime)
+        let horariosValidados = horariosAActualizar;
+        
+        if (!nuevoEmpleado.fulltime) {
+            console.log(`⚠️ Validando disponibilidad del nuevo empleado (no es fulltime)`);
+            
+            horariosValidados = horariosAActualizar.filter(horario => {
+                const fechaHorario = new Date(horario.fecha);
+                const diaSemana = fechaHorario.getDay();
+                
+                const disponibilidad = nuevoEmpleado.disponibilidades.find(d => d.diaSemana === diaSemana);
+                
+                if (!disponibilidad) {
+                    console.log(`❌ Empleado no disponible el día ${diaSemana} para horario ${horario.fecha}`);
+                    return false;
+                }
+                
+                const disponible = this.validarDisponibilidad(
+                    horario.horaInicioProyectado,
+                    horario.horaFinProyectado,
+                    disponibilidad.horaInicio,
+                    disponibilidad.horaFin
+                );
+                
+                if (!disponible) {
+                    console.log(`❌ Horario ${horario.horaInicioProyectado}-${horario.horaFinProyectado} no disponible para empleado en ${horario.fecha}`);
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            console.log(`📅 Horarios validados: ${horariosValidados.length} de ${horariosAActualizar.length}`);
+        }
+
+        // 7. Actualizar los horarios asignados con el nuevo empleado
+        let horariosActualizados = 0;
+        
+        if (horariosValidados.length > 0) {
+            for (const horario of horariosValidados) {
+                horario.empleado = nuevoEmpleado;
+                
+                // Si había un empleado suplente y el horario estaba asignado al empleado original,
+                // mantener el suplente pero actualizar el empleado principal
+                if (horario.empleadoSuplente && horario.suplente) {
+                    console.log(`🔄 Manteniendo suplente en horario ${horario.fecha}`);
+                }
+                
+                console.log(`🔄 Actualizando horario: ${horario.fecha} ${horario.horaInicioProyectado}-${horario.horaFinProyectado}`);
+            }
+            
+            await this.horarioAsignadoRepository.save(horariosValidados);
+            horariosActualizados = horariosValidados.length;
+            
+            console.log(`✅ ${horariosActualizados} horarios actualizados exitosamente`);
+        }
+
+        // 8. Log de horarios no actualizados (si los hay)
+        const horariosNoActualizados = horariosAActualizar.length - horariosValidados.length;
+        if (horariosNoActualizados > 0) {
+            console.log(`⚠️ ${horariosNoActualizados} horarios no pudieron ser actualizados debido a falta de disponibilidad del nuevo empleado`);
+        }
+
+        console.log('=== FIN editarEmpleadoOrdenTrabajo ===');
+        
+        return {
+            ordenActualizada,
+            horariosActualizados
+        };
+
+    } catch (error) {
+        console.error('❌ Error al editar empleado de orden de trabajo:', error);
+        throw error;
+    }
+  }
+
+  /*Eliminar ordenes de trabajo*/ 
 
   async deleteOrdenTrabajo(id: number): Promise<void> {
 
@@ -812,5 +1134,4 @@ export class OrdenTrabajoService {
     }
   }
 
-  
 }

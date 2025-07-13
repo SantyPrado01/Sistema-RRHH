@@ -1,10 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan, Repository } from 'typeorm';
+import { Between, LessThan, Repository } from 'typeorm';
 import { HorarioAsignado } from './entities/horariosAsignados.entity'; 
 import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto'; 
 import { OrdenTrabajo } from 'src/ordenTrabajo/entities/ordenTrabajo.entity'; 
 import { Empleado } from 'src/empleados/entities/empleado.entity';
+
+interface EmpleadoConHoras {
+  empleado: Empleado;
+  totalHoras: number;
+}
 
 @Injectable()
 export class HorarioAsignadoService {
@@ -18,6 +23,7 @@ export class HorarioAsignadoService {
       @InjectRepository(Empleado)
       private readonly empleadoRepository: Repository<Empleado>,
   ) {}
+
 
   async create(createHorariosDto: CreateHorariosAsignadoDto) {
       const { ordenTrabajoId } = createHorariosDto;
@@ -397,13 +403,77 @@ export class HorarioAsignadoService {
       }
   }
 
+  async obtenerEmpleadosOrdenadosPorDiaActual(): Promise<{ empleado: Empleado; totalHoras: number }[]> {
+    const ahora = new Date();
+    const fechaInicio = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 0, 0, 0);
+    const fechaFin = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate(), 23, 59, 59);
+
+    // 1. Obtener TODOS los empleados
+    const empleados = await this.empleadoRepository.find();
+
+    // 2. Obtener horarios del día
+    const horarios = await this.horarioAsignadoRepository.find({
+      where: {
+        eliminado: false,
+        suplente: false,
+        fecha: Between(fechaInicio, fechaFin),
+      },
+      relations: ['empleado'],
+    });
+
+    // 3. Calcular horas por empleado
+    const mapa = new Map<number, { empleado: Empleado; totalHoras: number }>();
+
+    for (const h of horarios) {
+      const horas = this.calcularHoras(h.horaInicioProyectado, h.horaFinProyectado);
+      const id = h.empleado.Id;
+
+      if (!mapa.has(id)) {
+        mapa.set(id, { empleado: h.empleado, totalHoras: horas });
+      } else {
+        mapa.get(id)!.totalHoras += horas;
+      }
+    }
+
+    // 4. Agregar empleados sin horarios con 0 horas
+    for (const emp of empleados) {
+      if (!mapa.has(emp.Id)) {
+        mapa.set(emp.Id, {
+          empleado: emp,
+          totalHoras: 0,
+        });
+      }
+    }
+
+    return Array.from(mapa.values()).sort((a, b) => a.totalHoras - b.totalHoras);
+  }
+
+
+
+  calcularHoras(horaInicio: string, horaFin: string): number {
+  const [h1, m1] = horaInicio.split(':').map(Number);
+  const [h2, m2] = horaFin.split(':').map(Number);
+
+  const minutosInicio = h1 * 60 + m1;
+  const minutosFin = h2 * 60 + m2;
+
+  if (minutosFin >= minutosInicio) {
+    // Caso normal, mismo día
+    return (minutosFin - minutosInicio) / 60;
+  } else {
+    // Caso nocturno, pasa medianoche
+    const minutosHastaMedianoche = 24 * 60 - minutosInicio;
+    return (minutosHastaMedianoche + minutosFin) / 60;
+  }
+}
+
   calcularHorasDecimal(horaInicio: string, horaFin: string): number {
     const [hInicio, mInicio] = horaInicio.split(':').map(Number);
     const [hFin, mFin] = horaFin.split(':').map(Number);
   
     const inicioEnMinutos = hInicio * 60 + mInicio;
     const finEnMinutos = hFin * 60 + mFin;
-  
+
     const diferenciaMinutos = finEnMinutos - inicioEnMinutos;
     const horasDecimales = diferenciaMinutos / 60;
   

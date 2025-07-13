@@ -1,112 +1,157 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    [mode]="'side'"
+    [opened]="!isCollapsed"
+    (openedChange)="isCollapsed = ! $event"
+    [fixedInViewport]="true"
+  >
+    <!-- Header / Logo -->
+    <div class="sidenav-header">
+      <img src="./assets/Corsacor-Logo.png" alt="Logo" class="logo" />
+    </div>
 
-<div #sidenav class="navbar" [class.mat-sidenav-closed]="isCollapsed">
-  <div class="navbar-header">
-    <img src="./assets/Corsacor-Logo.png" alt="Logo" class="navbar-logo">
-  </div>
-  <mat-divider></mat-divider>
-  <ul class="navbar-nav">
-    <li class="nav-item router-link-active">
-      <a class="nav-link" routerLink="/home">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">home</mat-icon>
-        <span class="nav-text">Inicio</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed"></mat-icon>
+    <!-- Menú -->
+    <mat-nav-list>
+
+      <!-- Inicio -->
+      <a mat-list-item routerLink="/home" class="menu-link">
+        <span class="left-content">
+          <mat-icon class="menu-icon">home</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">Inicio</span>
+        </span>
       </a>
-    </li>
-    <li class="nav-item" [class.open]="isEmployeesOpen">
-      <a class="nav-link" (click)="toggleDropdown('employees', $event)">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">group</mat-icon>
-        <span class="nav-text">Empleados</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
-          {{ isEmployeesOpen ? 'expand_less' : 'expand_more' }}
-        </mat-icon>
+
+      <!-- Empleados -->
+      <button
+        mat-button
+        class="menu-button"
+        [matMenuTriggerFor]="employeesMenu"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="left-content">
+          <mat-icon class="menu-icon">group</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">Empleados</span>
+        </span>
+        <mat-icon class="menu-arrow">expand_more</mat-icon>
+      </button>
+      <mat-menu #employeesMenu="matMenu" yPosition="below" xPosition="after">
+        <button mat-menu-item routerLink="/employee/create">Nuevo Empleado</button>
+        <button mat-menu-item routerLink="/employee">Visualizar Empleados</button>
+      </mat-menu>
+
+      <!-- Empresas -->
+      <button
+        mat-button
+        class="menu-button"
+        [matMenuTriggerFor]="companiesMenu"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="left-content">
+          <mat-icon class="menu-icon">business</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">Empresas</span>
+        </span>
+        <mat-icon class="menu-arrow">expand_more</mat-icon>
+      </button>
+      <mat-menu #companiesMenu="matMenu" yPosition="below" xPosition="after">
+        <button mat-menu-item routerLink="/service/create">Nueva Empresa</button>
+        <button mat-menu-item routerLink="/service">Visualizar Empresas</button>
+      </mat-menu>
+
+      <!-- Orden de Trabajo -->
+      <button
+        mat-button
+        class="menu-button"
+        [matMenuTriggerFor]="ordersMenu"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="left-content">
+          <mat-icon class="menu-icon">assignment</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">Orden Trabajo</span>
+        </span>
+        <mat-icon class="menu-arrow">expand_more</mat-icon>
+      </button>
+      <mat-menu #ordersMenu="matMenu" yPosition="below" xPosition="after">
+        <button mat-menu-item routerLink="/ordentrabajo/create">Crear Orden de Trabajo</button>
+        <button mat-menu-item routerLink="/ordentrabajo">Visualizar Ordenes de Trabajo</button>
+        <button mat-menu-item routerLink="/cargarHorarios">Cargar Horarios</button>
+      </mat-menu>
+
+      <!-- Facturación -->
+      <button
+        mat-button
+        class="menu-button"
+        [matMenuTriggerFor]="billingMenu"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="left-content">
+          <mat-icon class="menu-icon">receipt</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">Facturación</span>
+        </span>
+        <mat-icon class="menu-arrow">expand_more</mat-icon>
+      </button>
+      <mat-menu #billingMenu="matMenu" yPosition="below" xPosition="after">
+        <button mat-menu-item routerLink="/factura/create">Nueva Factura</button>
+        <button mat-menu-item routerLink="/facturas">Visualizar Facturas</button>
+      </mat-menu>
+
+      <!-- Configuración -->
+      <button
+        mat-button
+        class="menu-button"
+        [matMenuTriggerFor]="configMenu"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="left-content">
+          <mat-icon class="menu-icon">settings</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">Configuración</span>
+        </span>
+        <mat-icon class="menu-arrow">expand_more</mat-icon>
+      </button>
+      <mat-menu #configMenu="matMenu" yPosition="below" xPosition="after">
+        <button mat-menu-item routerLink="/user/create">Usuarios</button>
+        <button mat-menu-item routerLink="/categorias">Categorías</button>
+      </mat-menu>
+
+      <!-- Reportes -->
+      <a mat-list-item routerLink="/informes" class="menu-link">
+        <span class="left-content">
+          <mat-icon class="menu-icon">bar_chart</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">Reportes</span>
+        </span>
       </a>
-      <div class="dropdown-menu" *ngIf="isEmployeesOpen" [class.collapsed]="isCollapsed">
-        <a class="dropdown-item router-link-active" routerLink="/employee/create">Nuevo Empleado</a>
-        <a class="dropdown-item router-link-active" routerLink="/employee">Visualizar Empleados</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isCompaniesOpen">
-      <a class="nav-link" (click)="toggleDropdown('companies', $event)">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">business</mat-icon>
-        <span class="nav-text">Empresas</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
-          {{ isCompaniesOpen ? 'expand_less' : 'expand_more' }}
-        </mat-icon>
+
+      <!-- Ayuda -->
+      <a mat-list-item routerLink="/manual-usuario" class="menu-link">
+        <span class="left-content">
+          <mat-icon class="menu-icon">help</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">Ayuda</span>
+        </span>
       </a>
-      <div class="dropdown-menu" *ngIf="isCompaniesOpen" [class.collapsed]="isCollapsed">
-        <a class="dropdown-item router-link-active" routerLink="/service/create">Nueva Empresa</a>
-        <a class="dropdown-item router-link-active" routerLink="/service">Visualizar Empresas</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isOrdersOpen">
-      <a class="nav-link" (click)="toggleDropdown('orders', $event)">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">assignment</mat-icon>
-        <span class="nav-text">Orden Trabajo</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
-          {{ isOrdersOpen ? 'expand_less' : 'expand_more' }}
-        </mat-icon>
-      </a>
-      <div class="dropdown-menu" *ngIf="isOrdersOpen" [class.collapsed]="isCollapsed">
-        <a class="dropdown-item router-link-active" routerLink="/ordentrabajo/create">Crear Orden de Trabajo</a>
-        <a class="dropdown-item router-link-active" routerLink="/ordentrabajo">Visualizar Ordenes de Trabajo</a>
-        <a class="dropdown-item router-link-active" routerLink="/cargarHorarios">Cargar Horarios</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isBillingOpen">
-      <a class="nav-link" (click)="toggleDropdown('billing', $event)">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">receipt</mat-icon>
-        <span class="nav-text">Facturación</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
-          {{ isBillingOpen ? 'expand_less' : 'expand_more' }}
-        </mat-icon>
-      </a>
-      <div class="dropdown-menu" *ngIf="isBillingOpen" [class.collapsed]="isCollapsed">
-        <a class="dropdown-item router-link-active" routerLink="/factura/create">Nueva Factura</a>
-        <a class="dropdown-item router-link-active" routerLink="/facturas">Visualizar Facturas</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isConfigOpen">
-      <a class="nav-link" (click)="toggleDropdown('config', $event)">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">settings</mat-icon>
-        <span class="nav-text">Configuracion</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
-          {{ isConfigOpen ? 'expand_less' : 'expand_more' }}
-        </mat-icon>
-      </a>
-      <div class="dropdown-menu" *ngIf="isConfigOpen" [class.collapsed]="isCollapsed">
-        <a class="dropdown-item router-link-active" routerLink="/user/create">Usuarios</a>
-        <a class="dropdown-item router-link-active" routerLink="/categorias">Categorias</a>
-      </div>
-    </li>
-    <li class="nav-item" [class.open]="isUserOpen">
-      <a class="nav-link" (click)="toggleDropdown('user', $event)">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">person</mat-icon>
-        <span class="nav-text">{{ username }}</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed">
-          {{ isUserOpen ? 'expand_less' : 'expand_more' }}
-        </mat-icon>
-      </a>
-      <div class="dropdown-menu" *ngIf="isUserOpen" [class.collapsed]="isCollapsed">
-        <button class="dropdown-item" (click)="onLogout()">Cerrar Sesión</button>
-      </div>
-    </li>
-    <li class="nav-item router-link-active">
-      <a class="nav-link" routerLink="/informes">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">bar_chart</mat-icon>
-        <span class="nav-text">Reportes</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed"></mat-icon>
-      </a>
-    </li>
-    <li class="nav-item router-link-active">
-      <a class="nav-link" routerLink="/manual-usuario">
-        <mat-icon class="mat-icon" role="img" aria-hidden="true">help</mat-icon>
-        <span class="nav-text">Ayuda</span>
-        <mat-icon class="mat-icon dropdown-arrow" role="img" aria-hidden="true" *ngIf="!isCollapsed"></mat-icon>
-      </a>
-    </li>
-  </ul>
-  <button mat-icon-button (click)="toggleNavbar()" class="toggle-button-bottom">
-    <mat-icon *ngIf="!isCollapsed">chevron_left</mat-icon>
-    <mat-icon *ngIf="isCollapsed">chevron_right</mat-icon>
-  </button>
-</div>
+
+      <!-- Usuario -->
+      <button
+        mat-button
+        class="menu-button"
+        [matMenuTriggerFor]="userMenu"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="left-content">
+          <mat-icon class="menu-icon">person</mat-icon>
+          <span class="menu-text" *ngIf="!isCollapsed">{{ username }}</span>
+        </span>
+        <mat-icon class="menu-arrow">expand_more</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu" yPosition="below" xPosition="after">
+        <button mat-menu-item (click)="onLogout()">Cerrar sesión</button>
+      </mat-menu>
+    </mat-nav-list>
+  </mat-sidenav>
+</mat-sidenav-container>

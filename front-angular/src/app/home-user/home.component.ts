@@ -11,6 +11,8 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { getSpanishPaginatorIntl } from '../spanish-paginator-intl';
+import { ConfirmacionDialogComponent } from '../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -54,7 +56,7 @@ export class HomeComponent {
       }
     }
 
-  constructor(private authService: AuthService, private ordenTrabajoService: OrdenTrabajoService) {}
+  constructor(private authService: AuthService, private ordenTrabajoService: OrdenTrabajoService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.username = this.authService.getUsername();
@@ -63,6 +65,39 @@ export class HomeComponent {
 
   }
   displayedColumns: string[] = ['Id', 'empresa', 'empleado', 'horasProyectadas', 'horasReales', 'estado', 'acciones'];
+
+  ejecutarRenovacionManual() {
+  this.loading = true;
+
+  const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
+    data: {
+      title: 'Confirmar Renovación',
+      message: '¿Estás seguro de que deseas ejecutar la renovación de órdenes de trabajo?',
+      type: 'warning',
+      showCancel: true
+    },
+    disableClose: true
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result) {
+      this.ordenTrabajoService.ejecutarRenovacionManual().subscribe({
+        next: (data) => {
+          this.loading = false;
+          this.completado = true;
+          console.log('Renovación manual ejecutada correctamente:', data);
+          this.obtenerOrdenes();
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Error al ejecutar la renovación manual:', error);
+        }
+      });
+    } else {
+      this.loading = false; // canceló, por lo tanto detenemos el loading
+    }
+  });
+}
 
 
   obtenerOrdenes() {

@@ -23,6 +23,10 @@ import { AlertDialogComponent } from '../../Modales/mensajes-alerta/mensajes-ale
 import { ConfirmacionDialogComponent } from '../../Modales/mensajes-confirmacion/mensajes-confirmacion.component';
 import { EmpleadoService } from '../../empleados/services/empleado.service';
 import { debounceTime, filter, switchMap } from 'rxjs/operators';
+import { Empleado } from '../../empleados/models/empleado.models';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatBadgeModule } from '@angular/material/badge';
+import { DialogObservacionesComponent } from '../../Modales/dialog-observaciones/dialog-observaciones.component';
 
 @Component({
   selector: 'app-orden-trabajo-view',
@@ -41,7 +45,9 @@ import { debounceTime, filter, switchMap } from 'rxjs/operators';
     MatSelectModule,
     MatButtonModule,
     MatTableModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    MatBadgeModule
   ],
   templateUrl: './orden-trabajo-view.component.html',
   styleUrl: './orden-trabajo-view.component.css'
@@ -59,12 +65,17 @@ export class OrdenTrabajoViewComponent implements OnInit{
   horasProyectadas: number = 0;
   horasReales: number = 0;
   necesidad: any[]= []
+  renovacionAutomatica: boolean = false;
+
+  editModeOrden: boolean = false;
 
   selectedHorario: HorarioAsignado | null = null; 
 
+  empleadoId: number = 0;
   empleadoNombre: string = '';
   empleadosFiltrados: any[] = [];
-
+  empleadoControl = new FormControl('');
+  
   constructor(
     private ordenTrabajoService: OrdenTrabajoService,
     private horarioService: HorariosAsignadosService,
@@ -80,11 +91,25 @@ export class OrdenTrabajoViewComponent implements OnInit{
       });
     }
 
-  displayEmployeeName = (empleado: any): string => {
-    return empleado ? `${empleado.apellido}, ${empleado.nombre}` : '';
+  seleccionarEmpleado(empleado: any): void {
+    console.log('Empleado seleccionado:', empleado.Id);
+    this.empleadoId = empleado.Id;  
+  }
+  
+  displayEmployeeName(empleado: Empleado): string {
+    return empleado ? `${empleado.nombre} ${empleado.apellido}` : '';
   }
 
   ngOnInit(): void {
+    this.empleadoControl.valueChanges
+        .pipe(
+          debounceTime(300),
+          filter(value => typeof value === 'string'), 
+          switchMap(value => this.empleadoService.buscarEmpleados(value))
+        )
+        .subscribe(result => {
+          this.empleadosFiltrados = result;
+    });
     this.ordenId = this.route.snapshot.paramMap.get('id') 
     if (this.ordenId){
       this.ordenIdNumeber = Number(this.ordenId)
@@ -107,10 +132,12 @@ export class OrdenTrabajoViewComponent implements OnInit{
         this.horasReales = data.horasReales
         this.necesidad = data.necesidadHoraria
         this.mes = data.mes
+        this.renovacionAutomatica = data.renovacionAutomatica;
 
         this.empleadoNombre = `${this.empleado.apellido}, ${this.empleado.nombre}`;
         this.dias = this.obtenerDias(this.necesidad);
 
+        this.empleadoId = this.empleado.Id; // Asignar el ID del empleado al cargar la orden
         // Configurar autocomplete para cada horario
         this.horarios.forEach(horario => {
           this.setupEmpleadoSuplenteAutocomplete(horario);
@@ -151,6 +178,47 @@ export class OrdenTrabajoViewComponent implements OnInit{
   toggleEditMode(horario: any): void {
     horario.editMode = !horario.editMode;
   }
+
+  activarEdicion(): void {
+    this.editModeOrden = true;
+  }
+
+  cancelarEdicion(): void {
+    this.editModeOrden = false;
+    this.cargarOrden(this.ordenIdNumeber); // Opcional: recarga para descartar cambios
+  }
+
+  editarOrdenTrabajo(): void {
+  const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
+    data: { 
+      title: 'Confirmar Edición', 
+      message: '¿Estás seguro de que deseas editar el empleado y la renovación de esta orden de trabajo?', 
+      type: 'confirm' 
+    }
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result) {
+      this.ordenTrabajoService.editarOrdenTrabajo(
+        this.ordenIdNumeber.toString(), 
+        this.empleadoId, // asegúrate de que esto sea un número
+        this.renovacionAutomatica // booleano que estás usando en el formulario
+      ).subscribe({
+        next: (response) => {
+          console.log('✅ Respuesta del backend:', response);
+          this.mostrarAlerta('Operación Exitosa', 'Orden de trabajo actualizada exitosamente.', 'success');
+          this.editModeOrden = false;
+          this.cargarOrden(this.ordenIdNumeber); // Recargar datos actualizados
+        },
+        error: (err) => {
+          console.error('❌ Error al actualizar la orden:', err);
+          this.mostrarAlerta('Error', 'No se pudo actualizar la orden de trabajo.', 'error');
+        }
+      });
+    }
+  });
+}
+
 
   saveChanges(horario: any): void {
     const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
@@ -306,4 +374,16 @@ export class OrdenTrabajoViewComponent implements OnInit{
     });
   }
 
+  abrirDialogoObservaciones(observacion: string, horarioAsignadoId:number): void {
+      if (!observacion) return;
+    
+      this.dialog.open(DialogObservacionesComponent, {
+        data: { observacion, idHorario: horarioAsignadoId },
+      });
+
+      this.dialog.afterAllClosed.subscribe(() => {
+        // Recargar la orden para reflejar los cambios en las observaciones
+        this.cargarOrden(this.ordenIdNumeber);
+      });
+    }
 }

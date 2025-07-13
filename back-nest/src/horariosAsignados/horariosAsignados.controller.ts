@@ -3,6 +3,7 @@ import { HorarioAsignadoService } from './horariosAsignados.service';
 import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto'; 
 import { UpdateHorariosAsignadoDto } from './dto/updateHorariosAsignados.entity'; 
 import { HorarioAsignado } from './entities/horariosAsignados.entity';
+import { Empleado } from 'src/empleados/entities/empleado.entity';
 
 @Controller('horariosAsignados')
 export class HorariosAsignadosController {
@@ -16,6 +17,11 @@ export class HorariosAsignadosController {
   @Get()
   async getHorariosAsignados():Promise<HorarioAsignado[]> {
     return this.horariosAsignadosService.getHorariosAsignados(); 
+  }
+
+  @Get('cantidadHorasPorEmpleado')
+  async obtenerEmpleadosDelDia(): Promise<{ empleado: Empleado; totalHoras: number }[]> {
+    return this.horariosAsignadosService.obtenerEmpleadosOrdenadosPorDiaActual();
   }
 
   @Get('buscarPorEmpleado/:empleadoId')

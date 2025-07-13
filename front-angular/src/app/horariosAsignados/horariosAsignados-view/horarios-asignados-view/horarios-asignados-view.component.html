@@ -147,7 +147,7 @@
                 <button mat-icon-button
                         [matBadge]="horario.observaciones.length > 0 ? '!' : ''"
                         matBadgeColor="warn"
-                        (click)="abrirDialogoObservaciones(horario.observaciones)">
+                        (click)="abrirDialogoObservaciones(horario.observaciones, horario.horarioAsignadoId)">
                   <mat-icon>note</mat-icon>
                 </button>
               </td>

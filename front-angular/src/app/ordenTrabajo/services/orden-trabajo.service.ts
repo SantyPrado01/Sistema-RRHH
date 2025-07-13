@@ -49,6 +49,20 @@ export class OrdenTrabajoService {
     return this.http.get<any[]>('http://localhost:3000/empleados'); 
   }
 
+
+  editarOrdenTrabajo(ordenId: string, nuevoEmpleadoId: number, renovacionAutomatica: boolean): Observable<any> {
+    const body = {
+      nuevoEmpleadoId,
+      renovacionAutomatica
+    };
+
+    return this.http.patch<any>(`${this.apiUrl}/${ordenId}/editar`, body);
+  }
+
+  ejecutarRenovacionManual(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/renovarOrdenesManualmente`, {});
+  }
+
   eliminarOrden(id: number): Observable<any> {
     return this.http.patch<any[]>(`${this.apiUrl}/delete/${id}`,{})
   }

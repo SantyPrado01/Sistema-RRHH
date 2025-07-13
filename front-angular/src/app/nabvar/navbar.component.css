@@ -1,222 +1,142 @@
+/* Contenedor general */
+.sidenav-container {
+  height: 100vh;
+  width: 100%;
+}
 
-/* Style for the mat-sidenav (your navigation bar) */
-.navbar {
-  width: 14em; /* Default width (expanded) */
+/* Sidenav lateral */
+.sidenav {
+  width: 14em;
+  transition: width 0.3s ease;
+  overflow-y: auto;
   background-color: white;
-  box-shadow: 4px 0px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 0 6px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  padding: 0;
-  overflow-x: hidden; /* Hide overflowing content when collapsed */
-  transition: width 0.3s ease-in-out; /* Añade transición al ancho */
-  height: 100vh;
 }
 
-.content-container {
-  flex-grow: 1; /* Para que ocupe el espacio restante */
-  padding: 20px;
-  overflow: auto; /* Permite el desplazamiento si el contenido excede */
-}
-
-/* Style when the sidenav is closed */
-.mat-sidenav-closed {
-    width: 4em; /* Width when collapsed (solo iconos) */
-    height: 100vh;
-}
-
-.navbar-header {
+/* Header con logo centrado */
+.sidenav-header {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 10px;
-  position: relative;
+  padding: 16px 0;
+  border-bottom: 1px solid #ddd;
 }
 
-.navbar-header .navbar-logo {
+.logo {
+  max-width: 150px;
   height: auto;
-  width: 150px; /* Logo width in expanded state */
-  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
-/* Oculta el logo cuando el sidenav está cerrado */
-.mat-sidenav-closed .navbar-header .navbar-logo {
-   width: 0;
-   opacity: 0;
+/* Lista de navegación (mat-nav-list) */
+mat-nav-list {
+  flex-grow: 1;
+  padding: 0;
+  margin: 0;
 }
 
-/* Toggle button */
-.toggle-button-bottom {
-  position: absolute;
-  bottom: 10px; /* Ajusta la distancia desde la parte inferior */
-  left: 50%;
-  transform: translateX(-50%);
+/* Botones de menú minimalistas */
+.menu-button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  margin: 10px;
+  text-transform: none; /* Texto normal */
+  border-radius: 0;
   background: none;
   border: none;
+  outline: none;
+  min-height: 40px;
+  font-size: 14px;
+  color: #000;
+}
+
+.menu-button:hover,
+.menu-link:hover {
+  background-color: #f5f5f5;
   cursor: pointer;
-  font-size: 1.2em;
-  z-index: 10;
-  transition: transform 0.3s ease-in-out;
 }
 
-/* Ajusta la posición del botón inferior cuando el sidenav está cerrado */
-.mat-sidenav-closed .toggle-button-bottom {
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-}
-
-/* Adjust button position when the sidenav is closed */
-.mat-sidenav-closed .toggle-button {
-   right: 50%;
-   transform: translate(50%, -50%) rotate(180deg);
-}
-
-.mat-divider {
-  background-color: #CC5600;
-  margin: 10px 0 20px;
-}
-
-.navbar-nav {
-  list-style-type: none;
-  padding-left: 0;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.nav-item {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  transition: padding 0.3s ease-in-out;
-  margin-bottom: 0.5em;
-}
-
-/* Ajusta el padding cuando el sidenav está cerrado para centrar el icono */
-.mat-sidenav-closed .nav-item {
-   padding: 8px 0; /* Reduce el padding horizontal */
-   display: flex;
-   justify-content: center; /* Centra el icono */
-}
-
-.nav-item.active {
-  background-color: #f0f0f0; /* Optional: Highlight active item */
-}
-
-.mat-list-item {
-  height: auto !important; /* Permite texto multilínea en el dropdown */
-}
-
-.mat-list-item-content {
-  padding: 0 !important; /* Elimina el padding por defecto */
-}
-
-.nav-link {
+/* Contenido izquierdo: ícono + texto */
+.left-content {
   display: flex;
   align-items: center;
-  font-size: 16px;
-  color: black;
-  text-decoration: none;
+  gap: 12px;
+}
+
+/* Íconos */
+.menu-icon {
+  color: #333;
+  flex-shrink: 0;
+}
+
+/* Texto */
+.menu-text {
   font-weight: 500;
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s ease-in-out;
+  font-size: 14px;
+  color: #000;
+}
+
+/* Flecha desplegable */
+.menu-arrow {
+  color: #666;
+  flex-shrink: 0;
+}
+
+/* Enlaces simples sin dropdown */
+.menu-link {
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 10px 20px; /* Padding en estado expandido */
-  justify-content: space-between; /* Espacia el icono del texto y la flecha */
-}
-
-.nav-link:hover {
-  color: #CC5600;
-  border-bottom: 2px solid #CC5600;
-}
-
-/* Oculta el texto del enlace cuando el sidenav está cerrado */
-.mat-sidenav-closed .nav-link .nav-text {
-  display: none;
-}
-
-.mat-icon {
-  margin-right: 10px;
-  transition: margin-right 0.3s ease-in-out;
-}
-
-/* Elimina el margen del icono cuando el sidenav está cerrado */
-.mat-sidenav-closed .mat-icon {
-  margin-right: 0;
-}
-
-.mat-list-item .dropdown-menu {
-  display: none;
-  background-color: white;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  position: absolute;
-  left: 100%;
-  top: 0;
-  z-index: 1050;
-  min-width: 180px;
-}
-
-.nav-item.open .dropdown-menu {
-  display: block;
-}
-
-/* Ajusta la posición del dropdown cuando el sidenav está cerrado */
-.mat-sidenav-closed .nav-item .dropdown-menu {
-    left: 60px; /* Ancho del sidenav colapsado */
-    top: 0;
-}
-
-.nav-link .dropdown-arrow {
-  transform: rotate(0deg);
-  transition: transform 0.3s ease-in-out;
-}
-
-.nav-item.open .nav-link .dropdown-arrow {
-  transform: rotate(180deg);
-}
-
-/* Oculta la flecha del dropdown cuando el sidenav está cerrado */
-.mat-sidenav-closed .nav-link .dropdown-arrow {
-  display: none;
-}
-
-.dropdown-item {
-  white-space: normal;
-  word-wrap: break-word;
-  word-break: break-word;
-  padding: 8px 20px;
+  padding: 8px 16px;
+  margin: 10px;
   text-decoration: none;
-  color: black;
-  display: block;
+  color: #000;
+  font-size: 14px;
+  text-transform: none;
 }
 
-.dropdown-item:hover {
-  background-color: #f0f0f0;
-  color: #CC5600;
+.menu-link .left-content {
+  gap: 12px;
 }
 
-.content-area {
+.menu-link:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+/* Contenedor botón toggle abajo */
+.toggle-btn-container {
+  padding: 12px 0;
+  text-align: center;
+  border-top: 1px solid #ddd;
+}
+
+/* Contenido principal */
+.mat-sidenav-content {
   padding: 20px;
-  /* Eliminamos el margin-left fijo */
-  /* transition: margin-left 0.3s ease-in-out; */
-  transition: padding-left 0.3s ease-in-out; /* Transición para el padding */
-  padding-left: 220px; /* Espacio inicial para el sidenav expandido */
-  min-height: 100vh; /* Asegura que ocupe al menos la altura de la pantalla */
 }
 
-/* Ajusta el padding-left cuando la navbar está contraída */
-.sidenav-container.mat-sidenav-closed .content-area {
-  padding-left: 60px;
+/* Estado colapsado: reduce ancho */
+.sidenav[ng-reflect-opened="false"] {
+  width: 60px !important;
 }
 
-/* Ajusta el margen del contenido cuando el sidenav está abierto */
-.sidenav-container.mat-sidenav-opened .content-area {
-  margin-left: 220px; /* Igual al ancho del sidenav expandido */
+/* Oculta texto cuando está colapsado */
+.menu-text {
+  transition: opacity 0.3s ease;
 }
 
-/* Ajusta el margen del contenido cuando el sidenav está cerrado */
-.sidenav-container.mat-sidenav-closed .content-area {
-  margin-left: 60px; /* Igual al ancho del sidenav colapsado */
+.sidenav[ng-reflect-opened="false"] .menu-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Oculta flechas y espaciado cuando está colapsado */
+.sidenav[ng-reflect-opened="false"] .menu-arrow {
+  display: none;
 }

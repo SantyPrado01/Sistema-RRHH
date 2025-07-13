@@ -1,254 +1,189 @@
+/* Estilos generales */
 .title-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
-    background-color: #333333;
-    text-align: center;
-    height: 6.2em;
-  }
-  
-  .title-item h1 {
-    color: white;
-    font-size: 2em;
-  }
-  
-  .content-container {
-    display: flex;
-    flex-direction: column;
-    margin-right: 1em;
-    margin-top: 1.5em;
-  }
-  
-  .table-container {
-    flex: 1;
-    margin-top: 2em;
-    max-height: 35em;
-    overflow-y: auto;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .form-container {
-    display: flex;
-    flex-direction: column;
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  }
-  
-  .form-container label {
-    display: block;
-    margin: 10px 0 5px;
-    color: #333;
-  }
-  
-  .form-container input[type="text"],
-  .form-container input[type="time"],
-  .form-container select {
-    width: 100%;
-    padding: 8px;
-    /*border: 1px solid #CCC;*/
-    border-radius: 4px;
-    outline: none;
-    margin-bottom: 10px;
-  }
-  
-  .form-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; 
-    gap: 1em; 
-    width: 100%; 
-  }
-  
-  .form-group {
-    flex: 1; 
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-row-footer {
-    display: flex;
-    gap: 1em; 
-    margin-left: 0;
-    margin-right: 0;
-  }
-  
-  .form-group-footer {
-    margin-right: 0.5em; 
-    margin-left: 0; 
-    width: 100%;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 6.2em;
+  background-color: #333;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
 
-  .group-right{
-    display: flex;
-  }
-  
-  .button-footer-pdf, .button-footer-excel {
-    width: auto; 
-    padding: 8px 16px; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
+.title-item h1 {
+  color: white;
+  font-size: 2em;
+}
 
-  .btn {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .btn-generar {
-    width: 10%; 
-    padding: 8px 16px; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-  }
-  
-  .btn-generar:hover {
-    background-color: grey;
-    color: white;
-  }
+.content-container mat-form-field {
+  width: 100%;
+  max-width: 300px;
+  font-size: 14px;
+  position: relative;
+}
 
-  .button-footer-pdf {
-    width: 100%; 
-    padding: 8px 16px; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    background-color: #e64a19; 
-    color: white; 
-    border: none; 
-    border-radius: 4px; 
-    font-size: 14px; 
-  }
+/* Mat form field ajustes */
+::ng-deep .mat-mdc-form-field-infix {
+  min-height: 50px !important;
+  padding: 10px 0 !important;
+}
 
-  .button-footer-excel {
-    width: 100%; 
-    padding: 8px 16px; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    background-color: #17a34a; 
-    color: white; 
-    border: none; 
-    border-radius: 4px; 
-    font-size: 14px; 
-  }
-  
-  .btn-edit{
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2em;
-  }
-  
-  .btn-save{
-    background-color:transparent;
-    color: green;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2em;
-  }
-  
-  .btn-cancel{
-    background-color:transparent;
-    color: red;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2em;
-  }
+::ng-deep .mat-mdc-floating-label,
+::ng-deep .mdc-floating-label--float-above {
+  font-size: 16px !important;
+}
 
+::ng-deep .mat-mdc-floating-label {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
 
-  /* Estilo Opciones Reportes */
-  .div-mat-reporte{
-    display: flex;
-    justify-content: space-between;
-  }
+::ng-deep .mdc-floating-label--float-above {
+  top: 0 !important;
+  transform: translateY(-50%) scale(0.85) !important;
+}
 
-  .div-mat-option-reporte{
-    width: 100%;
-    display: flex;
-  }
+::ng-deep input.mat-mdc-input-element,
+::ng-deep .mat-mdc-select-value {
+  font-size: 14px !important;
+  height: 24px !important;
+}
 
-  .mat-reportes{
-    width: 50%;
-    max-width: 100%;
-  }
+/* Tabla */
+.table-container {
+  flex: 1;
+  margin-top: 2em;
+  max-height: 35em;
+  overflow-y: auto;
+}
 
-  /* Estilo Reporte Mes Anio */
-  .div-reporte-mes-anio{
-    display: flex;
-  }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
+.mat-mdc-row .mat-mdc-cell {
+  border: 1px solid transparent;
+  cursor: pointer;
+}
 
-  /* Estilo Reportes Dia Fecha */
-  .div-reporte-fecha-dia{
-    display: flex;
-  }
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: #f5f5f5;
+}
 
-  .mat-form-field{
-    margin-right: 5%;
-  }
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
 
-  .mat-label{
-    color: grey;
-  }
+.completed { background-color: #d4edda; color: #155724; }
+.pending   { background-color: #fff3cd; color: #856404; }
+.delete    { background-color: #f8d7da; color: #721c24; }
 
-  .mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
-    color:grey
-  }
+.mat-mdc-form-field { font-size: 14px; width: 100%; }
+td, th { padding: 0 1rem !important; }
 
-  .resumen-container{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2em;
-  }
-  .title-container-resumen{
-    margin: 1em;
-  }
-  .resumen-horas{
-    display: flex;
-    margin: 1em;
-  }
-  .resumen-item{
-    margin-right: 1.5em;
-  }
+.mat-column-acciones { width: 120px; text-align: center; }
+.mat-column-estado { width: 150px; }
+.mat-column-id { width: 100px; }
 
-  .div-reporte-fecha-dia mat-form-field{
-    flex: 1;
-  }
+/* Botones */
+.btn,
+.button-footer-pdf,
+.button-footer-excel,
+.btn-generar {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 
-  @media(max-width:1360px){
-    .content-container {
-      margin-right: 1em;
-    }
-    .form-container{
-      width: 370px;
-    }
-  
-  }
+.btn-generar { width: 10%; }
+.btn-generar:hover { background-color: grey; color: white; }
+
+.button-footer-pdf { background-color: #e64a19; color: white; width: 100%; }
+.button-footer-excel { background-color: #17a34a; color: white; width: 100%; }
+
+.btn-edit, .btn-save, .btn-cancel {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.btn-save { color: green; }
+.btn-cancel { color: red; }
+
+/* Formularios */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.form-container h3 { margin-bottom: 20px; color: white; }
+.form-container label { margin: 10px 0 5px; color: #333; }
+
+.form-container input[type="text"],
+.form-container input[type="time"],
+.form-container select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+.form-row, .form-row-footer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  width: 100%;
+}
+
+.form-group, .form-group-footer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.group-right { display: flex; }
+
+/* Reportes */
+.div-mat-reporte, .div-reporte-mes-anio, .div-reporte-fecha-dia {
+  display: flex;
+  justify-content: space-between;
+}
+
+.div-mat-option-reporte { width: 100%; display: flex; }
+.mat-reportes { width: 50%; max-width: 100%; }
+
+.mat-form-field { margin-right: 5%; }
+.mat-label { color: grey; }
+
+.mat-mdc-form-field.mat-focused .mat-mdc-select-arrow { color: grey; }
+
+.resumen-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2em;
+}
+
+.title-container-resumen, .resumen-horas, .resumen-item {
+  margin: 1em;
+}
+
+.resumen-item { margin-right: 1.5em; }
+
+@media(max-width:1360px) {
+  .content-container { margin-right: 1em; }
+  .form-container { width: 370px; }
+}

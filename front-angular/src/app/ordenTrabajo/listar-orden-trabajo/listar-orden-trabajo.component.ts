@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-listar-orden-trabajo',
@@ -36,14 +37,15 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatMenuModule
   ],
   templateUrl: './listar-orden-trabajo.component.html',
   styleUrl: './listar-orden-trabajo.component.css'
 })
 export class ListarOrdenTrabajoComponent implements OnInit {
   dataSource: MatTableDataSource<OrdenTrabajo>;
-  displayedColumns: string[] = ['id', 'empresa','fechaInicio', 'fechaFin' ,'mes', 'anio', 'estado', 'horasProyectadas', 'horasReales', 'eliminado', 'acciones'];
+  displayedColumns: string[] = ['id', 'empresa','fechaInicio', 'fechaFin' ,'mes', 'anio', 'estado', 'horasProyectadas', 'horasReales', 'eliminado','renovacionAutomatica', 'acciones'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

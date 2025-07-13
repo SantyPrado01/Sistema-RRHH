@@ -8,46 +8,80 @@
   <mat-card class="form-container">
     <mat-card-content>
       <div class="form-row">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Empresa</mat-label>
           <input matInput [(ngModel)]="empresa" readonly>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" *ngIf="!editModeOrden" class="input-medium">
           <mat-label>Empleado</mat-label>
           <input matInput [(ngModel)]="empleadoNombre" readonly>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium" *ngIf="editModeOrden">
+            <mat-label class="mat-label">Buscar Empleado</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="empleadoControl"
+              [matAutocomplete]="autoEmpleado"
+            />
+            <mat-autocomplete #autoEmpleado="matAutocomplete" (optionSelected)="seleccionarEmpleado($event.option.value)" [displayWith]="displayEmployeeName">
+              <mat-option *ngFor="let empleado of empleadosFiltrados" [value]="empleado">
+                {{ empleado.apellido }} {{ empleado.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Mes</mat-label>
           <input matInput [(ngModel)]="mes" readonly>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Días</mat-label>
           <input matInput [(ngModel)]="dias" readonly>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Horas Proyectadas</mat-label>
           <input matInput [(ngModel)]="horasProyectadas" readonly>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="input-medium">
           <mat-label>Horas Reales</mat-label>
           <input matInput [(ngModel)]="horasReales" readonly>
         </mat-form-field>
       </div>
 
       <div class="form-row-footer">
-        <button mat-raised-button color="warn" (click)="descargarPdf()">
-          <mat-icon>picture_as_pdf</mat-icon>
-          <span>PDF</span>
-        </button>
-        <button mat-raised-button color="primary" (click)="descargarExcel()">
-          <mat-icon>description</mat-icon>
-          <span>Excel</span>
-        </button>
+        <div class="botones-container">
+          <button mat-raised-button color="warn" (click)="descargarPdf()" *ngIf="!editModeOrden">
+            <mat-icon>picture_as_pdf</mat-icon>
+            <span>PDF</span>
+          </button>
+          <button mat-raised-button color="primary" (click)="descargarExcel()" *ngIf="!editModeOrden">
+            <mat-icon>description</mat-icon>
+            <span>Excel</span>
+          </button>
+          <button mat-raised-button color="primary" *ngIf="!editModeOrden" (click)="activarEdicion()">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+          </button>
+          <button mat-raised-button color="primary" *ngIf="editModeOrden" (click)="editarOrdenTrabajo()">
+            <mat-icon>save</mat-icon>
+            <span>Guardar</span>
+          </button>
+          <button mat-raised-button color="primary" *ngIf="editModeOrden" (click)="cancelarEdicion()">
+            <mat-icon>cancel</mat-icon>
+            <span>Cancelar</span>
+          </button>
+        </div>
+        <div class="estadoRenovacion-container">
+          <mat-checkbox [(ngModel)]="renovacionAutomatica" color="primary" [disabled]="!editModeOrden">
+            Renovación Automática
+          </mat-checkbox>
+        </div>   
       </div>
     </mat-card-content>
   </mat-card>
@@ -74,7 +108,7 @@
         </ng-container>
 
         <!-- Hora Inicio Real Column -->
-        <ng-container matColumnDef="horaInicioReal">
+        <ng-container matColumnDef="horaInicioReal" class="input-medium">
           <th mat-header-cell *matHeaderCellDef> Horario Inicio Real </th>
           <td mat-cell *matCellDef="let horario">
             <mat-form-field appearance="outline" *ngIf="horario.editMode">
@@ -85,7 +119,7 @@
         </ng-container>
 
         <!-- Hora Fin Real Column -->
-        <ng-container matColumnDef="horaFinReal">
+        <ng-container matColumnDef="horaFinReal" class="input-medium">
           <th mat-header-cell *matHeaderCellDef> Horario Fin Real </th>
           <td mat-cell *matCellDef="let horario">
             <mat-form-field appearance="outline" *ngIf="horario.editMode">
@@ -99,7 +133,7 @@
         <ng-container matColumnDef="estado">
           <th mat-header-cell *matHeaderCellDef> Estado </th>
           <td mat-cell *matCellDef="let horario">
-            <mat-form-field appearance="outline" *ngIf="horario.editMode">
+            <mat-form-field appearance="outline" *ngIf="horario.editMode" class="input-medium">
               <mat-select [(ngModel)]="horario.estado" required>
                 <mat-option value="Asistió">Asistió</mat-option>
                 <mat-option value="Asistió">Accidente</mat-option>
@@ -121,7 +155,7 @@
           <th mat-header-cell *matHeaderCellDef> Empleado Suplente </th>
           <td mat-cell *matCellDef="let horario">
             <div *ngIf="horario.editMode" class="suplente-container">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="input-medium">
                 <input matInput
                        [formControl]="horario.empleadoSuplenteControl"
                        [matAutocomplete]="autoEmpleado"
@@ -159,6 +193,18 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="observaciones">
+              <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+              <td mat-cell *matCellDef="let horario">
+                <button mat-icon-button
+                        [matBadge]="horario.observaciones.length > 0 ? '!' : ''"
+                        matBadgeColor="warn"
+                        (click)="abrirDialogoObservaciones(horario.observaciones, horario.horarioAsignadoId)">
+                  <mat-icon>note</mat-icon>
+                </button>
+              </td>
+        </ng-container>
+
         <!-- Acciones Column -->
         <ng-container matColumnDef="acciones">
           <th mat-header-cell *matHeaderCellDef> Acciones </th>
@@ -178,8 +224,8 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['fecha', 'horaInicio', 'horaFin', 'horaInicioReal', 'horaFinReal', 'estado', 'empleadoSuplente','acciones']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['fecha', 'horaInicio', 'horaFin', 'horaInicioReal', 'horaFinReal', 'estado', 'empleadoSuplente', 'acciones'];"></tr>
+        <tr mat-header-row *matHeaderRowDef="['fecha', 'horaInicio', 'horaFin', 'horaInicioReal', 'horaFinReal', 'estado', 'empleadoSuplente','observaciones','acciones']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['fecha', 'horaInicio', 'horaFin', 'horaInicioReal', 'horaFinReal', 'estado', 'empleadoSuplente','observaciones','acciones'];"></tr>
       </table>
     </mat-card-content>
   </mat-card>

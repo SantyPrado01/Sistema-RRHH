@@ -6,19 +6,18 @@
 
 <div class="content-container">
   <div class="actions-container">
-    <div class="search-filters">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Buscar Empresa</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese el nombre de la empresa">
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+    <mat-form-field appearance="outline" class="input-medium">
+      <mat-label>Buscar Empresa</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese el nombre de la empresa">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
 
+    <div class="actions-buttons">
+      <button mat-raised-button color="primary" routerLink='/service/create'>
+        <mat-icon>add</mat-icon>
+        Nueva Empresa
+      </button>
     </div>
-
-    <button mat-raised-button color="primary" routerLink='/service/create'>
-      <mat-icon>add</mat-icon>
-      Nueva Empresa
-    </button>
   </div>
 
   <div class="table-container">

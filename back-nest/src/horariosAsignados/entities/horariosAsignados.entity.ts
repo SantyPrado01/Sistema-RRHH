@@ -8,7 +8,7 @@ export class HorarioAsignado {
     horarioAsignadoId: number;
 
     @ManyToOne(() => OrdenTrabajo, (orden) => orden.horariosAsignados)
-    ordenTrabajo: OrdenTrabajo;
+    ordenTrabajo?: OrdenTrabajo;
 
     @ManyToOne(() => Empleado, { nullable: false })
     empleado: Empleado;

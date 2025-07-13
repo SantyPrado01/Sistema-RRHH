@@ -1,209 +1,180 @@
 .title-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
-    background-color: #333333;
-    text-align: center;
-    height: 6.2em;
-    margin-bottom: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  background-color: #333;
+  text-align: center;
+  height: 6em;
+  margin-bottom: 1em;
 }
 
 .title-item h1 {
-    color: white;
-    font-size: 2em;
-    margin: 0;
+  color: #fff;
+  font-size: 1.5em;
 }
 
 .content-container {
-    padding: 20px;
+  padding-right: 20px;
+}
+
+.search-filters {
+  display: flex;
 }
 
 .actions-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.search-field {
-    flex: 1;
-    max-width: 500px;
+.actions-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-/* Estilos para el campo de búsqueda */
-::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline {
-    color: var(--color-primary) !important;
+button {
+  margin-left: 1em;
 }
 
-::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
-    color: var(--color-primary) !important;
-}
-
-::ng-deep .mat-mdc-form-field:hover .mat-mdc-form-field-outline {
-    opacity: 1;
-    color: var(--color-primary-light);
-}
-
-/* Estilos para la tabla */
-.table-container {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow: hidden;
-}
-
-.mat-elevation-z8 {
-    width: 100%;
-}
-
-/* Estilos para las filas de la tabla */
-.row-clickable {
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.row-clickable:hover {
-    background-color: rgba(0, 0, 0, 0.04) !important;
-}
-
-/* Efecto al hacer click */
-.row-clickable:active {
-    background-color: rgba(0, 0, 0, 0.08) !important;
-    color: inherit;
-}
-
-/* Estilos para las celdas de la tabla */
-.mat-mdc-cell, .mat-mdc-header-cell {
-    padding: 12px 16px;
-}
-
-/* Estilos para los botones de acción */
-.mat-mdc-icon-button {
-    margin: 0 4px;
-}
-
-/* Estilos específicos para el botón de Nuevo Empleado */
-.actions-container button[mat-raised-button] {
-    background-color: var(--color-primary) !important;
-    color: white !important;
-}
-
-.actions-container button[mat-raised-button]:hover {
-    background-color: var(--color-primary-dark) !important;
-}
-
-/* Reforzar estilos para todos los botones primarios */
-::ng-deep .mat-mdc-raised-button.mat-primary,
-::ng-deep .mat-mdc-raised-button.mat-primary .mat-mdc-button-persistent-ripple {
-    background-color: var(--color-primary) !important;
-}
-
-::ng-deep .mat-mdc-raised-button.mat-primary:hover {
-    background-color: var(--color-primary-dark) !important;
-}
-
-::ng-deep .mat-mdc-raised-button.mat-primary .mdc-button__label {
-    color: white !important;
-}
-
-::ng-deep .mat-mdc-raised-button.mat-primary .mat-icon {
-    color: white !important;
-}
-
-/* Color para los íconos */
-.mat-icon-button[color="primary"] {
-    color: var(--color-primary) !important;
-}
-
-/* Estilos para el ordenamiento */
-::ng-deep .mat-sort-header-arrow {
-    color: var(--color-primary) !important;
-}
-
-/* Estilos para el paginador */
-::ng-deep .mat-mdc-paginator {
-    border-top: 1px solid rgba(0,0,0,0.12);
-}
-
-::ng-deep .mat-mdc-paginator-icon {
-    fill: var(--color-primary) !important;
-}
-
-::ng-deep .mat-mdc-paginator-navigation-button:hover {
-    background-color: rgba(0, 0, 0, 0.04) !important;
-}
-
-/* Mensaje cuando no hay datos */
-.mat-mdc-row.mat-no-data-row {
-    height: 56px;
-}
-
-.mat-mdc-cell.mat-no-data-cell {
-    text-align: center;
-    color: rgba(0,0,0,0.54);
-}
-
-/* Ajustes para el campo de búsqueda */
-::ng-deep .mat-mdc-form-field-subscript-wrapper {
-    display: none;
-}
-
-/* Estilos para los botones */
-button[mat-raised-button] {
-    height: 48px;
-}
-
-/* Ajustes para el responsive */
-@media (max-width: 768px) {
-    .actions-container {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .search-field {
-        max-width: 100%;
-    }
-
-    .mat-mdc-cell {
-        padding: 8px;
-    }
-}
-
-.search-filter-container{
-    display: flex;
-}
-
-button{
-    margin-left: 1em;
-}
-
-.btn-edit, .btn-delete {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2em;
+.btn-edit,
+.btn-delete {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
 }
 
 .btn-edit {
-    color: grey;
+  color: grey;
 }
 
 .btn-delete {
-    color: #dc3545;
+  color: #dc3545;
 }
 
 .btn-view {
-    color: white;
-    border: none;
-    background: white;
+  color: white;
+  border: none;
+  background: white;
+}
+
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .status.deleted {
-    background-color: #f44336; /* Rojo */
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    font-weight: bold;
+  background-color: #f44336;
+  color: white;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.delete {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.table-container {
+  margin-top: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  padding: 0 1rem !important;
+}
+
+.mat-column-estado {
+  width: 150px;
+}
+
+.mat-column-id {
+  width: 100px;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: #f5f5f5;
+}
+
+.row-clickable {
+  cursor: pointer;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Estilos específicos para mat-form-field dentro del content-container */
+.content-container mat-form-field {
+  width: 100%;
+  max-width: 300px;
+  font-size: 14px;
+  position: relative;
+}
+
+.content-container mat-form-field ::ng-deep .mat-mdc-form-field-infix {
+  min-height: 50px !important;
+  padding: 10px 0 !important;
+}
+
+.content-container mat-form-field ::ng-deep .mat-mdc-floating-label {
+  font-size: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+.content-container mat-form-field ::ng-deep .mdc-floating-label--float-above {
+  font-size: 16px !important;
+  top: 0 !important;
+  transform: translateY(-50%) scale(0.85) !important;
+}
+
+.content-container mat-form-field ::ng-deep input.mat-mdc-input-element,
+.content-container mat-form-field ::ng-deep .mat-mdc-select-value {
+  font-size: 14px !important;
+  height: 24px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .actions-container {
+    flex-direction: column;
+    gap: 16px;
   }
+
+  .search-field {
+    max-width: 100%;
+  }
+
+  .mat-mdc-cell {
+    padding: 8px;
+  }
+}

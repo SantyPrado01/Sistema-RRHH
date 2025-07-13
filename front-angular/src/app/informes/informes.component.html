@@ -10,7 +10,7 @@
     <div class="form-container">
       <div class="div-mat-reporte">
         <div class="div-mat-option-reporte">
-          <mat-form-field appearance="outline" class="mat-reportes"> 
+          <mat-form-field appearance="outline" class="input-medium"> 
             <mat-label class="mat-label">Reporte:</mat-label>
             <mat-select
               [(ngModel)]="reporteSeleccionado"
@@ -28,21 +28,21 @@
         <!-- Seleccion Reporte Resumen por Empresa -->
         <div *ngIf="reporteSeleccionado === 'Reporte Resumen por Empresa'" class="div-reporte-fecha-dia">
 
-          <mat-form-field appearance="outline" class="mat-form-field">
+          <mat-form-field appearance="outline" class="input-medium" style="margin-right: 0.5em;">
             <mat-label class="mat-label">Fecha Inicio</mat-label>
             <input matInput [matDatepicker]="pickerInicio" [(ngModel)]="fechaInicio" id="fechaInicio" />
             <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
             <mat-datepicker #pickerInicio></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="mat-form-field">
+          <mat-form-field appearance="outline" class="input-medium" style="margin-right: 0.5em;">
             <mat-label class="mat-label">Fecha Fin</mat-label>
             <input matInput [matDatepicker]="pickerFin" [(ngModel)]="fechaFin" id="fechaFin" />
             <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
             <mat-datepicker #pickerFin></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="mat-form-field-ultimo">
+          <mat-form-field appearance="outline" class="input-medium" style="margin-right: 0.5em;">
             <mat-label class="mat-label">Buscar Servicios</mat-label>
             <input
               type="text"
@@ -60,7 +60,7 @@
         
         <!-- Seleccion Reporte de horas por Empleado por Empresa -->
         <div *ngIf="reporteSeleccionado === 'Reporte de horas por Empleado por Empresa'" class="div-reporte-mes-anio">
-          <mat-form-field appearance="outline" class="mat-form-field">
+          <mat-form-field appearance="outline" class="input-medium" style="margin-right: 0.5em;">
             <mat-label class="mat-label">Mes:</mat-label>
             <mat-select id="mesSelect" [(ngModel)]="mesSeleccionado" name="mesSelect">
               <mat-option value="" disabled selected>Seleccionar Mes</mat-option>
@@ -68,7 +68,7 @@
             </mat-select>
           </mat-form-field>
         
-          <mat-form-field appearance="outline" class="mat-form-field-ultimo">
+          <mat-form-field appearance="outline" class="input-medium">
             <mat-label class="mat-label">Año:</mat-label>
             <mat-select id="anioSelect" [(ngModel)]="anioSeleccionado" name="anioSelect">
                <mat-option value="" disabled selected>Seleccionar Año</mat-option>
@@ -80,21 +80,21 @@
         <!-- Seleccion Reporte de horas por Dia -->
         <div *ngIf="reporteSeleccionado === 'Reporte de horas por Dia'" class="div-reporte-fecha-dia">
 
-          <mat-form-field appearance="outline" class="mat-form-field">
+          <mat-form-field appearance="outline" class="input-medium" style="margin-right: 0.5em;">
             <mat-label class="mat-label">Fecha Inicio</mat-label>
             <input matInput [matDatepicker]="pickerInicio" [(ngModel)]="fechaInicio" id="fechaInicio" />
             <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
             <mat-datepicker #pickerInicio></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="mat-form-field">
+          <mat-form-field appearance="outline" class="input-medium" style="margin-right: 0.5em;">
             <mat-label class="mat-label">Fecha Fin</mat-label>
             <input matInput [matDatepicker]="pickerFin" [(ngModel)]="fechaFin" id="fechaFin" />
             <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
             <mat-datepicker #pickerFin></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="mat-form-field">
+          <mat-form-field appearance="outline" class="input-medium" style="margin-right: 0.5em;">
             <mat-label class="mat-label">Buscar Empleado</mat-label>
             <input
               type="text"
@@ -109,7 +109,7 @@
             </mat-autocomplete>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="mat-form-field-ultimo">
+          <mat-form-field appearance="outline" class="input-medium">
             <mat-label class="mat-label">Buscar Servicios</mat-label>
             <input
               type="text"

@@ -7,6 +7,10 @@ import { AlertDialogComponent } from '../Modales/mensajes-alerta/mensajes-alerta
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatExpansionModule } from '@angular/material/expansion';
+import {MatListModule} from '@angular/material/list';
+import {MatMenuModule} from '@angular/material/menu';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +21,10 @@ import {MatDividerModule} from '@angular/material/divider';
     RouterLinkActive,
     CommonModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSidenavModule,
+    MatListModule,
+    MatMenuModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
@@ -29,8 +36,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isCompaniesOpen = false;
   isOrdersOpen = false;
   isBillingOpen = false;
-  isUserOpen = false;
   isConfigOpen = false;
+  isUserOpen = false;
 
   private clickOutsideHandler: any;
 
