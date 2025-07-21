@@ -375,7 +375,6 @@ export class OrdenTrabajoViewComponent implements OnInit{
   }
 
   abrirDialogoObservaciones(observacion: string, horarioAsignadoId:number): void {
-      if (!observacion) return;
     
       this.dialog.open(DialogObservacionesComponent, {
         data: { observacion, idHorario: horarioAsignadoId },

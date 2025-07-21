@@ -101,11 +101,9 @@ export class ListarOrdenTrabajoComponent implements OnInit {
       next: (ordenes) => {
         this.ordenesOriginales = ordenes;
         this.dataSource.data = ordenes;
-        console.log('Órdenes cargadas:', this.dataSource.data);
         this.filtrarOrdenes();
       },
       error: (error) => {
-        console.error('Error al cargar órdenes:', error);
         this.mostrarAlerta('Error', 'No se pudieron cargar las órdenes de trabajo', 'error');
       }
     });
@@ -184,10 +182,8 @@ export class ListarOrdenTrabajoComponent implements OnInit {
   }
 
   eliminarOrden(orden: OrdenTrabajo) {
-    console.log('Estado de eliminación de la orden:', orden.eliminado);
     
     if (orden.eliminado) {
-      console.log('Intentando eliminación definitiva');
       const dialogRef = this.dialog.open(ConfirmacionDialogComponent, {
         data: {
           title: 'Confirmar eliminación definitiva',
@@ -199,18 +195,14 @@ export class ListarOrdenTrabajoComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log('Resultado del diálogo (eliminación definitiva):', result);
         if (result) {
-          console.log('Iniciando eliminación definitiva de la orden:', orden.Id);
           this.ordenTrabajoService.eliminarOrdenDef(orden.Id).subscribe({
             next: (response) => {
-              console.log('Respuesta de eliminación definitiva:', response);
               this.mostrarAlerta('Éxito', 'Orden eliminada definitivamente del sistema', 'success');
               this.cargarOrdenes();
             },
             error: (error) => {
-              console.error('Error al eliminar orden definitivamente:', error);
-              this.mostrarAlerta('Error', 'No se pudo eliminar la orden', 'error');
+              this.mostrarAlerta('Error', 'No se pudo eliminar la orden', error);
             }
           });
         }

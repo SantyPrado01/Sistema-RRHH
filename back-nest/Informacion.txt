@@ -68,6 +68,7 @@ Luego de cada produccion debo mover la caperta a:
 
 sudo cp -r /root/Sistema-RRHH/front-angular/dist/front-angular/browser/* /var/www/sistemacorsacor/front-angular/browser/
 
+sudo systemctl restart nginx
 
 
 Esto es en caso de tener problmeas de permisos en esa carpeta
