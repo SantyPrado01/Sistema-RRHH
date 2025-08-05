@@ -410,10 +410,13 @@ export class InformesComponent  {
     this.dataSource.sort = this.matSort;
     const mesNumero = this.convertirMesANumero(this.mesSeleccionado);
     this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioSeleccionado).subscribe(
-      (data: any[]) => {
+      (data: any) => {
         
-        this.dataSource.data = data;
+        this.dataSource.data = data.ordenes;
         console.log('Datos recibidos:', data);
+        console.log('Horas:', data.totales.horasProyectadas, data.totales.horasReales);
+        this.totalHorasProyectadasGlobal = data.totales.horasProyectadas;
+        this.totalHorasRealesGlobal = data.totales.horasReales;
       },
       (error) => {
         console.error('Hubo un error al obtener las órdenes de trabajo', error);
@@ -476,7 +479,7 @@ export class InformesComponent  {
             switch (columnDefName) {
                 case 'empresa': return item.servicio?.nombre || '';
                 case 'empleado': return `${item.empleadoAsignado?.nombre || ''} ${item.empleadoAsignado?.apellido || ''}`.trim();
-                case 'dias': return item.horasProyectadasCalculadas || item.horasProyectadas || '';
+                case 'dias': return this.obtenerDias(item.necesidadHoraria) || '';
                 case 'horasProyectadas': return item.horasProyectadasCalculadas || item.horasProyectadas || '';
                 
                 case 'horasReales': return item.horasRealesCalculadas || item.horasReales || '';

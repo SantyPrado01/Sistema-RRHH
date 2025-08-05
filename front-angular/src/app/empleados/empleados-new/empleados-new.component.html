@@ -58,19 +58,24 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Fecha de Contratación</mat-label>
+          <mat-label>Fecha</mat-label>
           <input matInput [matDatepicker]="picker" [(ngModel)]="empleado.fechaIngreso" name="fechaContratacion" required>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Categoría de Empleado</mat-label>
+          <mat-label>Categoría</mat-label>
           <mat-select [(ngModel)]="empleado.categoria" name="categoria" required>
             <mat-option *ngFor="let categoria of categorias" [value]="categoria.id">
               {{ categoria.nombre }}
             </mat-option>
           </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Horas Categoria</mat-label>
+          <input matInput type="number" [(ngModel)]="empleado.horasCategoria" name="horasCategoria" required min="0">
         </mat-form-field>
       </div>
       <div class="form-row">

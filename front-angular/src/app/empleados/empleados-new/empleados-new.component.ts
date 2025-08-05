@@ -49,6 +49,7 @@ export class EmpleadosNewComponent implements OnInit{
   provinciaLaRiojaId = 46;
   ciudadNombre: string = '';
   contadorCaracteres: number = 0;
+  horasCategoria: number = 0;
 
   disponibilidad = [
     { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
@@ -192,7 +193,8 @@ export class EmpleadosNewComponent implements OnInit{
       ciudad: null,
       categoria: null,
       disponibilidadID: null,
-      observaciones:''
+      observaciones:'',
+      horasCategoria: 0
     };
   }
   

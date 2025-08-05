@@ -15,4 +15,5 @@ export class CreateEmpleadoDto {
     categoriaId: number; 
     disponibilidades?: DisponibilidadHoraria[];
     fulltime?: boolean;
+    horasCategoria?: number;
 }

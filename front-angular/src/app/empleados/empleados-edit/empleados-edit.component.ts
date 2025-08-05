@@ -90,6 +90,7 @@ export class EmpleadosEditComponent implements OnInit {
   pageSize = 5;
   pageIndex = 0;
   ciudadControl = new FormControl('');
+  horasCategoria: number = 0;
 
   constructor(
     private empleadoService: EmpleadoService,

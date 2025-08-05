@@ -24,6 +24,7 @@ export class Empleado {
     disponibilidadID: number;
     disponibilidades?: Disponibilidad[];
     fulltime?: boolean;
+    horasCategoria?: number;
   
     constructor(
       Id: number,
@@ -40,7 +41,8 @@ export class Empleado {
       disponibilidadID: number,
       fechaIngreso?: string | Date,
       disponibilidades?: Disponibilidad[],
-      fulltime?: boolean
+      fulltime?: boolean,
+      horasCategoria?: number
     ) {
       this.Id = Id;
       this.legajo = legajo;
@@ -57,5 +59,6 @@ export class Empleado {
       this.ciudad = ciudad;
       this.disponibilidades = disponibilidades;
       this.fulltime = fulltime;
+      this.horasCategoria = horasCategoria;
     }
 }

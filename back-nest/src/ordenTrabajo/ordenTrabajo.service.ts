@@ -611,36 +611,49 @@ export class OrdenTrabajoService {
   }
   
   async findMesAnio(mes: number, anio: number): Promise<any> {
-    const ordenes = await this.ordenTrabajoRepository.find({
-      where: { mes: mes, anio: anio },
-      relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
+  const ordenes = await this.ordenTrabajoRepository.find({
+    where: { mes: mes, anio: anio },
+    relations: ['servicio', 'empleadoAsignado', 'horariosAsignados'],
+  });
+
+  let totalHorasProyectadas = 0;
+  let totalHorasReales = 0;
+
+  const ordenesProcesadas = ordenes.map(orden => {
+    let horasProyectadas = 0;
+    let horasReales = 0;
+
+    orden.horariosAsignados.forEach(horario => {
+      if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+        horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
+      }
+      if (horario.horaInicioReal && horario.horaFinReal) {
+        horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+      }
     });
-    const ordenesProcesadas = ordenes.map(orden => {
-      let horasProyectadas = 0;
-      let horasReales = 0;
 
-      orden.horariosAsignados.forEach(horario => {
-        if (horario.horaInicioProyectado && horario.horaFinProyectado) {
-          horasProyectadas += this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
-        }
-        if (horario.horaInicioReal && horario.horaFinReal) {
-          horasReales += this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
-        }
-      });
+    // Acumular totales
+    totalHorasProyectadas += horasProyectadas;
+    totalHorasReales += horasReales;
 
-      const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
-      const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
+    const horasProyectadasFormateadas = this.convertirAHorasYMinutos(horasProyectadas);
+    const horasRealesFormateadas = this.convertirAHorasYMinutos(horasReales);
 
-      return {
-        ...orden,
-        horasProyectadas: horasProyectadasFormateadas,
-        horasReales: horasRealesFormateadas,
-      };
+    return {
+      ...orden,
+      horasProyectadas: horasProyectadasFormateadas,
+      horasReales: horasRealesFormateadas,
+    };
+  });
+
+  return {
+    ordenes: ordenesProcesadas,
+    totales: {
+      horasProyectadas: totalHorasProyectadas,
+      horasReales:totalHorasReales
     }
-    );
-    return ordenesProcesadas;
-
-  }
+  };
+}
 
   async findForEmpleado(
     empleadoId: number

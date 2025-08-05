@@ -17,4 +17,5 @@ export class UpdateEmpleadoDto extends PartialType(CreateEmpleadoDto) {
     categoriaId: number;
     disponibilidades?: DisponibilidadHoraria[];    
     fulltime?: boolean;
+    horasCategoria?: number;
 }

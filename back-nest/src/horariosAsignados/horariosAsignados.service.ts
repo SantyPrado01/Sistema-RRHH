@@ -151,75 +151,126 @@ export class HorarioAsignadoService {
   }
 
   async obtenerHorariosPorEmpleado(
-    empleadoId: number,
-    mes?: number,
-    anio?: number,
-  ): Promise<{ horarios: HorarioAsignado[]; conteo: Record<string, number> }> {
-    let query = this.horarioAsignadoRepository
-      .createQueryBuilder('horario')
-      .leftJoinAndSelect('horario.empleado', 'empleado')
-      .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
-      .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
-      .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
-      .where(
-        `(
-          (empleado.Id = :empleadoId)
-          OR (empleadoSuplente.Id = :empleadoId)
-        )`
-      )
-      .andWhere('horario.eliminado = false')
-      .setParameter('empleadoId', empleadoId);
-  
-    // Filtro por mes y año si están presentes
-    if (mes && anio) {
-      const inicio = new Date(anio, mes - 1, 1);
-      const fin = new Date(anio, mes, 0, 23, 59, 59);
-      query = query
-        .andWhere('horario.fecha BETWEEN :inicio AND :fin')
-        .setParameters({ inicio, fin });
-    }
+  empleadoId: number,
+  mes?: number,
+  anio?: number,
+): Promise<{ horarios: HorarioAsignado[]; conteo: Record<string, number> }> {
+  let query = this.horarioAsignadoRepository
+    .createQueryBuilder('horario')
+    .leftJoinAndSelect('horario.empleado', 'empleado')
+    .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
+    .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
+    .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
+    .where(
+      `(
+        (empleado.Id = :empleadoId)
+        OR (empleadoSuplente.Id = :empleadoId)
+      )`
+    )
+    .andWhere('horario.eliminado = false')
+    .setParameter('empleadoId', empleadoId);
 
-    // Ordenar por fecha antes de obtener los resultados
-    query.orderBy('horario.fecha', 'ASC');
-  
-    const horarios = await query.getMany();
-  
-    // Inicializar el conteo con todos los estados posibles
-    const conteo: Record<string, number> = {
-      'Asistió': 0,
-      'Llegó Tarde': 0,
-      'Faltó Con Aviso': 0,
-      'Faltó Sin Aviso': 0,
-      'Enfermedad': 0,
-    };
-  
-    // Realizar el conteo
-    for (const horario of horarios) { 
-      let estadoFinal: string | undefined;
-      let horasReales: number | undefined;
-  
-      if (horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId)) {
-        // Si es suplente, usar estadoSuplente
-        estadoFinal = horario.estadoSuplente
-        console.log('estado suplente',estadoFinal)
-      } else {
-        // Si es titular, usar estado normal
-        estadoFinal = horario.estado 
-        console.log('estado titular',estadoFinal)
-      }
-
-      (horario as any).estadoDeterminado = estadoFinal;
-      // Incrementar el contador para el estado correspondiente
-      if (estadoFinal && conteo.hasOwnProperty(estadoFinal)) {
-        conteo[estadoFinal]++;
-      }
-
-    }
-    return {
-      horarios,
-      conteo,
-    };
+  // Filtro por mes y año si están presentes
+  if (mes && anio) {
+    const inicio = new Date(anio, mes - 1, 1);
+    const fin = new Date(anio, mes, 0, 23, 59, 59);
+    query = query
+      .andWhere('horario.fecha BETWEEN :inicio AND :fin')
+      .setParameters({ inicio, fin });
   }
+
+  // Ordenar por fecha antes de obtener los resultados
+  query.orderBy('horario.fecha', 'ASC');
+
+  const horarios = await query.getMany();
+
+  // Inicializar el conteo con todos los estados posibles
+  const conteo: Record<string, number> = {
+    'Asistió': 0,
+    'Llegó Tarde': 0,
+    'Faltó Con Aviso': 0,
+    'Faltó Sin Aviso': 0,
+    'Enfermedad': 0,
+  };
+
+  // Función auxiliar para calcular diferencia de horas considerando horarios nocturnos
+  const calcularHorasTrabajadas = (horaInicio: string, horaFin: string): number => {
+    if (!horaInicio || !horaFin) return 0;
+
+    // Convertir strings de hora a minutos desde medianoche
+    const convertirAMinutos = (hora: string): number => {
+      const [h, m] = hora.split(':').map(Number);
+      return h * 60 + m;
+    };
+
+    const minutosInicio = convertirAMinutos(horaInicio);
+    const minutosFin = convertirAMinutos(horaFin);
+
+    let diferenciaMinutos: number;
+
+    if (minutosFin >= minutosInicio) {
+      // Caso normal: misma fecha (ej: 08:00 a 17:00)
+      diferenciaMinutos = minutosFin - minutosInicio;
+    } else {
+      // Caso nocturno: cruza medianoche (ej: 22:00 a 02:00)
+      // Calcular desde hora inicio hasta medianoche + desde medianoche hasta hora fin
+      diferenciaMinutos = (24 * 60 - minutosInicio) + minutosFin;
+    }
+
+    // Convertir minutos a horas con decimales
+    return diferenciaMinutos / 60;
+  };
+
+  // Realizar el conteo y cálculo de horas
+  for (const horario of horarios) { 
+    let estadoFinal: string | undefined;
+
+    if (horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId)) {
+      // Si es suplente, usar estadoSuplente
+      estadoFinal = horario.estadoSuplente;
+      console.log('estado suplente', estadoFinal);
+    } else {
+      // Si es titular, usar estado normal
+      estadoFinal = horario.estado;
+      console.log('estado titular', estadoFinal);
+    }
+
+    // Calcular horas trabajadas
+    const horasTrabajadas = calcularHorasTrabajadas(
+      horario.horaInicioReal, 
+      horario.horaFinReal
+    );
+
+    // Agregar propiedades calculadas al objeto horario
+    (horario as any).estadoDeterminado = estadoFinal;
+    (horario as any).horasTrabajadas = horasTrabajadas;
+
+    // Incrementar el contador para el estado correspondiente
+    if (estadoFinal && conteo.hasOwnProperty(estadoFinal)) {
+      conteo[estadoFinal]++;
+    }
+
+    console.log(`Horario ID: ${horario.horarioAsignadoId}, Inicio: ${horario.horaInicioReal}, Fin: ${horario.horaFinReal}, Horas trabajadas: ${horasTrabajadas.toFixed(2)}`);
+  }
+
+  // Log del resultado final
+  console.log('=== RESULTADO FINAL ===');
+  console.log('Total de horarios procesados:', horarios.length);
+  console.log('Conteo por estados:', conteo);
+  
+  const totalHorasTrabajadas = horarios.reduce((total, horario) => {
+    return total + ((horario as any).horasTrabajadas || 0);
+  }, 0);
+  
+  console.log('Total horas trabajadas en el período:', totalHorasTrabajadas.toFixed(2));
+  console.log('Promedio horas por día trabajado:', horarios.length > 0 ? (totalHorasTrabajadas / horarios.length).toFixed(2) : '0');
+  console.log('========================');
+
+  return {
+    horarios,
+    conteo,
+  };
+}
   
   async obtenerHorariosPorEmpresa(
     empresaId: number,

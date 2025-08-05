@@ -50,4 +50,7 @@ export class Empleado {
     @Column({default:true})
     fulltime: boolean
 
+    @Column()
+    horasCategoria: number
+
 }
