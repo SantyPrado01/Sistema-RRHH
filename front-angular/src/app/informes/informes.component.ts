@@ -498,16 +498,16 @@ export class InformesComponent  {
     }
     }
 
-    descargarPdf(): void {
+   descargarPdf(): void {
     if (!this.dataSource.data || this.dataSource.data.length === 0) {
       console.log('No hay datos para exportar a PDF.');
       return;
     }
 
     const doc = new jsPDF();
-    const headers = this.getDisplayHeaders(); 
+    const headers = this.getDisplayHeaders();
 
-    const currentData = this.dataSource.filteredData.slice(); // Copia de datos filtrados
+    const currentData = this.dataSource.filteredData.slice();
     const sortedData = this.matSort
       ? this.dataSource.sortData(currentData, this.matSort)
       : currentData;
@@ -538,13 +538,23 @@ export class InformesComponent  {
       margin: { left: 0, right: 0 },
     });
 
-    doc.setFontSize(8);
-    doc.text('Resumen Total', 12, (doc as any).lastAutoTable.finalY + 10);
+    const finalY = (doc as any).lastAutoTable.finalY;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const bottomMargin = 20; // Espacio que se necesita para el resumen
+
+    // Si el espacio restante en la página es menor al margen que necesitamos,
+    // agregamos una nueva página.
+    if (finalY + bottomMargin > pageHeight) {
+      doc.addPage();
+      (doc as any).lastAutoTable.finalY = 10; // Reiniciamos la posición para la nueva página
+    }
 
     doc.setFontSize(8);
-    doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, (doc as any).lastAutoTable.finalY + 20);
-    doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, (doc as any).lastAutoTable.finalY + 30);
+    const resumenY = (doc as any).lastAutoTable.finalY + 10;
 
+    doc.text('Resumen Total', 12, resumenY);
+    doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, resumenY + 10);
+    doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, resumenY + 20);
 
     doc.save(
       'reporte_' +
