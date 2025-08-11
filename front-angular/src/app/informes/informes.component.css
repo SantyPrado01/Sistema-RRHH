@@ -171,12 +171,6 @@ td, th { padding: 0 1rem !important; }
 
 .mat-mdc-form-field.mat-focused .mat-mdc-select-arrow { color: grey; }
 
-.resumen-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 2em;
-}
-
 .title-container-resumen, .resumen-horas, .resumen-item {
   margin: 1em;
 }
@@ -186,4 +180,65 @@ td, th { padding: 0 1rem !important; }
 @media(max-width:1360px) {
   .content-container { margin-right: 1em; }
   .form-container { width: 370px; }
+}
+.totales-container {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.totales-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.total-item {
+  display: flex;
+  justify-content: space-between;
+  min-width: 200px;
+  padding: 5px 10px;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.resumen-container {
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.resumen-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.resumen-item.ausentismo-pago {
+  border-left: 4px solid #ff9800;
+}
+
+.resumen-item.ausentismo-impago {
+  border-left: 4px solid #f44336;
+}
+
+.resumen-item.horas-trabajadas {
+  border-left: 4px solid #4caf50;
+}
+
+.resumen-item.total-horas {
+  border-left: 4px solid #2196f3;
+  font-size: 16px;
+  font-weight: bold;
 }

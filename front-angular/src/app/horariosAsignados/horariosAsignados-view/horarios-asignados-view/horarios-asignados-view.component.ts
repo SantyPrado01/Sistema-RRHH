@@ -14,7 +14,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MAT_DATE_LOCALE, MatOptionModule } from '@angular/material/core';
 import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Empresa } from '../../../servicios/models/servicio.models';
 import { MatInputModule } from '@angular/material/input';
 import { EmpleadoService } from '../../../empleados/services/empleado.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -60,11 +59,6 @@ export class HorariosAsignadosViewComponent {
   dataSource = new MatTableDataSource<any>([]);
 
   horariosRealizados: any[] = [];
-  horasRealizadas: any[] = [];
-  empresaControl = new FormControl('');
-  empleadoControl = new FormControl('');
-  empresasFiltradas: any[] = [];
-  servicioId?: number;
   empleado: any;
   empleadoId: string = '';
 
@@ -74,27 +68,22 @@ export class HorariosAsignadosViewComponent {
   pageSize: number = 6;
   pageIndex: number = 0;
   loading: boolean = true;
-  totalHorasRealizadas: number = 0;
-  totalAsistencias: number = 0;
-  totalLT: number = 0;
-  totalFC: number = 0;
-  totalFS: number = 0;
-  totalE: number = 0;
 
-  displayedColumns: string[] = [
-    'ordenTrabajo',
-    'fecha',
-    'empresa',
-    'horasInicioProyectado',
-    'horasFinProyectado',
-    'horaInicioReal',
-    'horaFinReal',
-    'totalHoras',
-    'estado',
-    'suplente',
-    'observaciones'
-  ];
+  // Nuevas propiedades para el reporte modificado
+  diasDelMes: any[] = [];
+  servicios: string[] = [];
+  displayedColumns: string[] = [];
   
+  // Totales
+  horasAusentismoPago: number = 0;
+  horasAusentismoImpago: number = 0;
+  horasTrabajadas: number = 0;
+  totalHoras: number = 0;
+  horasDiscriminadas: any = {};
+  
+  // Días trabajados para cálculo de horas categoría
+  diasTrabajados: string[] = [];
+  horasPorDiaCategoria: number = 0;
 
   constructor(
     private empresaService: ServicioService,
@@ -102,7 +91,6 @@ export class HorariosAsignadosViewComponent {
     private horariosAsignadosService: HorariosAsignadosService,
     private empleadoService: EmpleadoService,
     private dialog: MatDialog,
-
   ) {}
 
   private matPaginator!: MatPaginator;
@@ -129,237 +117,404 @@ export class HorariosAsignadosViewComponent {
 
     this.empleadoService.getEmpleadoById(parseInt(this.empleadoId)).subscribe((data: any) => {
       this.empleado = data;
-    })
+      this.cargarDatos();
+    });
+  }
 
-
+  cargarDatos() {
     this.horariosAsignadosService.buscarHorariosPorEmpleado(parseInt(this.empleadoId), this.mes, this.anio).subscribe((data: any) => {
-      this.horariosRealizados = data
-      console.log('horariosRealizados',this.horariosRealizados)
-
-      this.horasRealizadas = data.horarios.map((item: any) => {
-      let horasCalculadas = 0;
-
-      const esTitular = item.empleado?.Id && Number(item.empleado.Id) === Number(this.empleadoId);
-      const esSuplente = item.empleadoSuplente?.Id && Number(item.empleadoSuplente.Id) === Number(this.empleadoId);
-
-      // Caso: es suplente
-      if (esSuplente || (esTitular && !item.empleadoSuplente)) {
-        if (item.horaInicioReal && item.horaFinReal) {
-          horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
-        }
+      // Verificar si el servicio devuelve la nueva estructura o la antigua
+      if (data.horarios) {
+        // Nueva estructura con totales
+        this.horariosRealizados = data.horarios || [];
+        this.horasAusentismoPago = data.horasAusentismoPago || 0;
+        this.horasAusentismoImpago = data.horasAusentismoImpago || 0;
+        this.horasTrabajadas = data.horasTrabajadas || 0;
+        this.totalHoras = this.horasAusentismoPago + this.horasAusentismoImpago + this.horasTrabajadas;
+        this.horasDiscriminadas = data.horasDiscriminadas || {};
+      } else if (Array.isArray(data)) {
+        // Estructura antigua - solo array de horarios
+        this.horariosRealizados = data;
+        this.horasAusentismoPago = 0;
+        this.horasAusentismoImpago = 0;
+        this.horasTrabajadas = 0;
+        this.totalHoras = 0;
+        this.horasDiscriminadas = {};
+      } else {
+        console.error('Estructura de datos no reconocida:', data);
+        this.horariosRealizados = [];
       }
 
-      // Caso: es titular y NO tiene suplente
-      else if (esTitular && !item.empleadoSuplente?.Id) {
-        if (item.horaInicioReal && item.horaFinReal) {
-          horasCalculadas = this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
-        }
-      }
-      // Caso: es titular y TIENE suplente → horas = 0 (ya está seteado por defecto)
-
-      item.horasTotales = horasCalculadas;
-      console.log('Horas totales calculadas:', horasCalculadas);
-      return item;
-      });
-  
-      this.dataSource.data = data.horarios;
-      
-      console.log('Conteo',this.dataSource.data)
-
-      this.totalAsistencias = data.conteo.Asistió; 
-      this.totalLT = data.conteo['Llegó Tarde']; 
-      this.totalFC = data.conteo['Faltó Con Aviso']; 
-      this.totalFS = data.conteo['Faltó Sin Aviso']; 
-      this.totalE = data.conteo['Enfermedad'];
-
-      this.totalHorasRealizadas = data.horarios
-      .filter((item: any) => {
-        // Primero, asegurar que las horas reales existan para calcular
-        if (!item.horaInicioReal || !item.horaFinReal) {
-            return false; // Excluir si no hay horas reales
-        }
-
-        const currentEmpleadoId = Number(this.empleadoId); // ID del empleado que estamos viendo/filtrando
-
-        // El empleado del item es el titular Y su ID coincide con el que estamos viendo Y NO es un horario de suplencia
-        const esTitularRelevante = Number(item.empleado?.Id) === currentEmpleadoId && item.empleadoSuplente === null;
-
-        // O el empleado del item es el suplente Y su ID coincide con el que estamos viendo Y SÍ es un horario de suplencia
-        const esSuplenteRelevante = Number(item.empleadoSuplente?.Id) === currentEmpleadoId && item.suplente === true;
-
-        // Incluir el item si el empleado que estamos viendo es el titular relevante O el suplente relevante
-        return esTitularRelevante || esSuplenteRelevante;
-    })
-    .reduce((sum: number, item: any) => {
-        return sum + this.calcularHorasDecimal(item.horaInicioReal, item.horaFinReal);
-    }, 0);
-
+      this.procesarDatos();
+      this.loading = false;
+    }, error => {
+      console.error('Error cargando datos:', error);
       this.loading = false;
     });
+  }
 
-    this.empresaControl.valueChanges
-      .pipe(
-        debounceTime(300),
-        filter(value => typeof value === 'string'), 
-        switchMap(value => this.empresaService.buscarEmpresas(value))
-      )
-      .subscribe(result => {
-        this.empresasFiltradas = result;
-        console.log('Empresas filtradas:', this.empresasFiltradas);
+  procesarDatos() {
+    
+    // Generar todos los días del mes
+    this.generarDiasDelMes();
+    // Obtener servicios únicos
+    this.obtenerServicios();
+    // Calcular días trabajados y horas por día categoría
+    this.calcularDiasTrabajados();
+    // Configurar columnas de la tabla
+    this.configurarColumnas();
+    // Crear la estructura de datos para la tabla
+    this.crearEstructuraDatos();
+  }
+
+  generarDiasDelMes() {
+    this.diasDelMes = [];
+    const diasEnMes = new Date(this.anio, this.mes, 0).getDate();
+    
+    for (let dia = 1; dia <= diasEnMes; dia++) {
+      const fecha = new Date(this.anio, this.mes - 1, dia);
+      const nombreDia = this.obtenerNombreDia(fecha.getDay());
+      const nombreMes = this.obtenerNombreMes(this.mes - 1);
+      
+      this.diasDelMes.push({
+        dia: dia,
+        fecha: fecha,
+        fechaString: fecha.toISOString().split('T')[0],
+        displayName: `${nombreDia} ${dia.toString().padStart(2, '0')}-${nombreMes}-${this.anio.toString().slice(-2)}`,
+        horasPorServicio: {},
+        horasCategoria: 0
       });
+    }
+  }
+
+  obtenerServicios() {
+    const serviciosSet = new Set<string>();
+    
+    this.horariosRealizados.forEach(horario => {
+      if (horario.ordenTrabajo?.servicio?.nombre) {
+        serviciosSet.add(horario.ordenTrabajo.servicio.nombre);
+      }
+    });
+    
+    this.servicios = Array.from(serviciosSet).sort();
+  }
+
+  calcularDiasTrabajados() {
+    // Primero procesamos los horarios para saber qué días tienen trabajo real
+    const diasConTrabajo = new Set<string>();
+    
+    this.horariosRealizados.forEach(horario => {
+      if (horario.horasDecimales && horario.horasDecimales > 0) {
+        const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
+        if (fechaHorario) {
+          diasConTrabajo.add(fechaHorario);
+        }
+      } else if (horario.horaInicioReal && horario.horaFinReal) {
+        // Si no tiene horasDecimales, calcular las horas
+        const horas = this.calcularHorasDecimal(horario.horaInicioReal, horario.horaFinReal);
+        if (horas > 0) {
+          const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
+          if (fechaHorario) {
+            diasConTrabajo.add(fechaHorario);
+          }
+        }
+      }
+    });
+    
+    const totalDiasRealesTrabajados = diasConTrabajo.size;
+    
+    // Calcular horas por día categoría = horas totales / días realmente trabajados
+    if (totalDiasRealesTrabajados > 0 && this.empleado?.horasCategoria) {
+      this.horasPorDiaCategoria = this.empleado.horasCategoria / totalDiasRealesTrabajados;
+    } else {
+      this.horasPorDiaCategoria = 0;
+      console.warn('No se pueden calcular horas por día categoría');
+      console.log('- Total días trabajados:', totalDiasRealesTrabajados);
+      console.log('- Horas categoría:', this.empleado?.horasCategoria);
+    }
+    
+    // Guardamos los días trabajados para referencia (ahora son las fechas reales)
+    this.diasTrabajados = Array.from(diasConTrabajo);
+  }
+
+  configurarColumnas() {
+    this.displayedColumns = ['dia', 'horasCategoria'];
+    this.servicios.forEach(servicio => {
+      this.displayedColumns.push(this.getServicioColumnName(servicio));
+    });
+  }
+
+  crearEstructuraDatos() {
+    console.log('Creando estructura de datos...');
+    this.horariosRealizados.forEach((horario, index) => {
+      console.log(`Procesando horario ${index + 1}:`, horario);
+      
+      const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
+      console.log('Fecha del horario:', fechaHorario);
+      
+      if (!fechaHorario) {
+        console.warn('Horario sin fecha válida:', horario);
+        return;
+      }
+      
+      const diaEncontrado = this.diasDelMes.find(dia => dia.fechaString === fechaHorario);
+      console.log('Día encontrado:', diaEncontrado ? diaEncontrado.displayName : 'No encontrado');
+      
+      if (diaEncontrado) {
+        const nombreServicio = horario.ordenTrabajo?.servicio?.nombre || 'Sin Servicio';
+        console.log('Servicio:', nombreServicio);
+        
+        if (!diaEncontrado.horasPorServicio[nombreServicio]) {
+          diaEncontrado.horasPorServicio[nombreServicio] = 0;
+        }
+        
+        // Verificar si el horario ya tiene horasDecimales, si no, calcularlas
+        let horas = 0;
+        if (horario.horasDecimales !== undefined) {
+          horas = horario.horasDecimales;
+        } else if (horario.horaInicioReal && horario.horaFinReal) {
+          horas = this.calcularHorasDecimal(horario.horaInicioReal, horario.horaFinReal);
+        }
+        
+        console.log('Horas calculadas:', horas);
+        diaEncontrado.horasPorServicio[nombreServicio] += horas;
+      }
+    });
+
+    // Asignar horas categoría solo a días que realmente trabajaron
+    let diasConHorasCategoria = 0;
+    this.diasDelMes.forEach(dia => {
+      // Verificar si este día específico tiene trabajo real
+      const tieneHoras = Object.values(dia.horasPorServicio).some(horas => (horas as number) > 0);
+      
+      if (tieneHoras) {
+        dia.horasCategoria = this.horasPorDiaCategoria;
+        diasConHorasCategoria++;
+        console.log(`Día ${dia.displayName}: asignadas ${this.horasPorDiaCategoria.toFixed(4)} horas categoría`);
+      } else {
+        dia.horasCategoria = 0;
+        console.log(`Día ${dia.displayName}: sin horas de trabajo, no se asignan horas categoría`);
+      }
+    });
+    
+    // Asignar al dataSource
+    this.dataSource.data = [...this.diasDelMes]; // Crear una nueva referencia
+    
+    // Forzar detección de cambios
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   calcularHorasDecimal(horaInicio: string, horaFin: string): number {
-  const [hInicio, mInicio] = horaInicio.split(':').map(Number);
-  const [hFin, mFin] = horaFin.split(':').map(Number);
+    if (!horaInicio || !horaFin) return 0;
 
-  const inicioEnMinutos = hInicio * 60 + mInicio;
-  const finEnMinutos = hFin * 60 + mFin;
+    const [hInicio, mInicio] = horaInicio.split(':').map(Number);
+    const [hFin, mFin] = horaFin.split(':').map(Number);
 
-  let diferenciaMinutos: number;
+    const inicioEnMinutos = hInicio * 60 + mInicio;
+    const finEnMinutos = hFin * 60 + mFin;
 
-  if (finEnMinutos >= inicioEnMinutos) {
-    // Caso normal, mismo día
-    diferenciaMinutos = finEnMinutos - inicioEnMinutos;
-  } else {
-    // Caso nocturno, cruza medianoche
-    diferenciaMinutos = (24 * 60 - inicioEnMinutos) + finEnMinutos;
+    let diferenciaMinutos: number;
+
+    if (finEnMinutos >= inicioEnMinutos) {
+      // Caso normal, mismo día
+      diferenciaMinutos = finEnMinutos - inicioEnMinutos;
+    } else {
+      // Caso nocturno, cruza medianoche
+      diferenciaMinutos = (24 * 60 - inicioEnMinutos) + finEnMinutos;
+    }
+
+    const horasDecimales = diferenciaMinutos / 60;
+    return parseFloat(horasDecimales.toFixed(2));
   }
 
-  const horasDecimales = diferenciaMinutos / 60;
-  return parseFloat(horasDecimales.toFixed(2));
+  obtenerNombreDia(numeroDia: number): string {
+    const dias = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+    return dias[numeroDia];
   }
 
-  seleccionarEmpresa(empresa: any): void {
-    console.log('Empresa seleccionada:', empresa);
-  
-    this.servicioId = empresa.servicioId;  
+  obtenerNombreMes(numeroMes: number): string {
+    const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    return meses[numeroMes];
   }
-
-  obtenerHorariosRealizados(empleadoId: number, mes: number, anio: number) {
-    this.horariosAsignadosService.buscarHorariosPorEmpleado(empleadoId, mes, anio).subscribe()
-  }
-
-  displayEmpleadoName = (empleado: any): string => {
-    return empleado ? `${empleado.nombre} ${empleado.apellido}` : '';
-  };
-  
-  displayEmpresaName = (empresa: any): string => {
-    return empresa ? empresa.nombre : '';
-  };
 
   get nombreMes(): string {
     const meses = [
       'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
     ];
-  
     return `${meses[this.mes - 1]}`;
   }
 
-  abrirDialogoObservaciones(observacion: string, horarioAsignadoId: number): void {
-    if (!observacion) return;
-  
-    this.dialog.open(DialogObservacionesComponent, {
-      data: { observacion, idHorario: horarioAsignadoId },
-    });
-
-    this.dialog.afterAllClosed.subscribe(() => {
-      // Recargar la orden para reflejar los cambios en las observaciones
-      this.obtenerHorariosRealizados(parseInt(this.empleadoId), this.mes, this.anio);
-    });
-
+  // Calcular totales por servicio
+  getTotalPorServicio(servicio: string): number {
+    return this.diasDelMes.reduce((total, dia) => {
+      return total + (dia.horasPorServicio[servicio] || 0);
+    }, 0);
   }
 
+  // Obtener total de horas categoría
+  getTotalHorasCategoria(): number {
+    return this.diasDelMes.reduce((total, dia) => {
+      return total + (dia.horasCategoria || 0);
+    }, 0);
+  }
+
+  // Función auxiliar para generar nombres de columnas de servicios
+  getServicioColumnName(servicio: string): string {
+    return `servicio_${servicio.replace(/\s+/g, '_')}`;
+  }
+
+  // Función auxiliar para obtener nombre corto de servicio
+  getServicioNombreCorto(servicio: string): string {
+    return servicio.length > 15 ? servicio.slice(0, 15) + '...' : servicio;
+  }
+
+  // Función auxiliar para obtener las claves de un objeto
+  getObjectKeys(obj: any): string[] {
+    return Object.keys(obj || {});
+  }
+
+  // TrackBy function para optimizar el renderizado
+  trackByDia(index: number, dia: any): any {
+    return dia.fechaString;
+  }
+
+  // TrackBy function para servicios
+  trackByServicio(index: number, servicio: string): string {
+    return servicio;
+  }
 
   descargarPdf(): void {
-    const doc = new jsPDF();
+    const doc = new jsPDF('landscape'); // Orientación horizontal
 
-    // Puedes agregar un título al PDF si lo deseas
-    doc.text(`Reporte de Horarios - ${this.empleado.nombre} ${this.empleado.apellido} - ${this.nombreMes} ${this.anio}`, 14, 10);
+    // Título
+    doc.setFontSize(12);
+    doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo})`, 14, 15);
+    doc.text(`${this.nombreMes} ${this.anio}`, 14, 25);
 
+    // Preparar columnas dinámicas
+    const columnas = ['Día', 'H. Categoría'];
+    this.servicios.forEach(servicio => {
+      columnas.push(servicio.length > 12 ? servicio.substring(0, 12) + '...' : servicio);
+    });
 
-    const columnas = ['N° Orden', 'Fecha', 'Empresa', 'H. Inicio Proy.', 'H. Fin Proy.', 'H. Inicio Real', 'H. Fin Real', 'Total Horas', 'Estado'];
-    const filas = this.dataSource.data.map((item: any) => [
-      item.ordenTrabajo.Id,
-      item.fecha ? item.fecha.split('T')[0] : '', // Asegúrate de que fecha exista
-      item.ordenTrabajo && item.ordenTrabajo.servicio ? item.ordenTrabajo.servicio.nombre : '', // Manejo de nulos
-      item.horaInicioProyectado,
-      item.horaFinProyectado,
-      item.horaInicioReal,
-      item.horaFinReal,
-      item.horasTotales,
-      item.estadoDeterminado
-    ]);
+    // Preparar filas
+    const filas = this.diasDelMes.map(dia => {
+      const fila = [dia.displayName, dia.horasCategoria.toFixed(2)];
+      this.servicios.forEach(servicio => {
+        fila.push((dia.horasPorServicio[servicio] || 0).toFixed(2));
+      });
+      return fila;
+    });
+
+    // Agregar fila de totales
+    const filaTotales = ['TOTALES', this.getTotalHorasCategoria().toFixed(2)];
+    this.servicios.forEach(servicio => {
+      filaTotales.push(this.getTotalPorServicio(servicio).toFixed(2));
+    });
+    filas.push(filaTotales);
 
     (doc as any).autoTable({
       head: [columnas],
       body: filas,
-      startY: 20, // Ajusta el inicio para dejar espacio al título si lo agregaste
-      styles: { fontSize: 8 },
+      startY: 35,
+      styles: { fontSize: 7 },
       headStyles: { fillColor: [204, 86, 0], textColor: [255, 255, 255] },
+      columnStyles: {
+        0: { cellWidth: 40 } // Ancho fijo para la columna de días
+      }
     });
-    const finalY = (doc as any).autoTable.previous.finalY || 10; // Obtiene el Y final de la tabla, si no hay tabla usa 10
 
-    // 5. Agregar los totales al final del PDF
-    const margenIzquierdo = 14;
-    let currentY = finalY + 10; // Deja un espacio de 10 unidades debajo de la tabla
+    const finalY = (doc as any).autoTable.previous.finalY || 35;
 
-    doc.setFontSize(10); // Tamaño de fuente para los totales
+    // Resumen final
+    doc.setFontSize(10);
+    let currentY = finalY + 15;
 
-    doc.text(`Resumen de Horarios:`, margenIzquierdo, currentY);
-    currentY += 7; // Espacio entre el título y el primer total
+    doc.text('RESUMEN:', 14, currentY);
+    currentY += 10;
 
-    doc.text(`Total Horas Realizadas: ${this.totalHorasRealizadas.toFixed(2)}`, margenIzquierdo, currentY);
+    doc.text(`Horas Ausentismo Pago: ${this.horasAusentismoPago.toFixed(2)}`, 14, currentY);
     currentY += 7;
 
-    doc.text(`Total Asistencias: ${this.totalAsistencias}`, margenIzquierdo, currentY);
+    doc.text(`Horas Ausentismo Impago: ${this.horasAusentismoImpago.toFixed(2)}`, 14, currentY);
     currentY += 7;
 
-    doc.text(`Total Llegadas Tarde (LT): ${this.totalLT}`, margenIzquierdo, currentY);
+    doc.text(`Total Horas Trabajadas: ${this.horasTrabajadas.toFixed(2)}`, 14, currentY);
     currentY += 7;
 
-    doc.text(`Total Faltas con Aviso (FC): ${this.totalFC}`, margenIzquierdo, currentY);
+    doc.text(`Total Horas: ${this.totalHoras.toFixed(2)}`, 14, currentY);
+    currentY += 10;
+
+    doc.text('HORAS DISCRIMINADAS:', 14, currentY);
     currentY += 7;
 
-    doc.text(`Total Faltas sin Aviso (FS): ${this.totalFS}`, margenIzquierdo, currentY);
-    currentY += 7;
+    Object.keys(this.horasDiscriminadas).forEach(estado => {
+      doc.text(`${estado}: ${this.horasDiscriminadas[estado].toFixed(2)}`, 14, currentY);
+      currentY += 5;
+    });
 
-    doc.text(`Total por Enfermedad (E): ${this.totalE}`, margenIzquierdo, currentY);
-    currentY += 7;
+    // Nombre del archivo
+    const nombreLimpio = this.empleado.nombre?.replace(/\s+/g, '_').toLowerCase() || '';
+    const apellidoLimpio = this.empleado.apellido?.replace(/\s+/g, '_').toLowerCase() || '';
+    const nombreArchivo = `reporte_detallado_${this.nombreMes}_${nombreLimpio}_${apellidoLimpio}.pdf`;
 
-    if (this.empleado && this.empleado.nombre && this.empleado.apellido) {
-
-      const nombreLimpio = this.empleado.nombre.replace(/\s+/g, '_').toLowerCase();
-      const apellidoLimpio = this.empleado.apellido.replace(/\s+/g, '_').toLowerCase();
-
-      const nombreArchivo = `reporte_${this.nombreMes}_${nombreLimpio}_${apellidoLimpio}.pdf`;
-
-      doc.save(nombreArchivo);
-    } else {
-      doc.save(`reporte_${this.nombreMes}_${this.anio}.pdf`);
-      console.warn('No se pudo obtener el nombre/apellido del empleado para el nombre del archivo. Usando nombre genérico.');
-    }
+    doc.save(nombreArchivo);
   }
 
   descargarExcel(): void {
-    const worksheet = XLSX.utils.json_to_sheet(this.dataSource.data.map((item: any) => ({
-      'N° Orden': item.ordenTrabajo.Id,
-      'Fecha': item.fecha.split('T')[0],
-      'Empresa': item.ordenTrabajo.servicio.nombre,
-      'Hora Inicio Proyectado': item.horasInicioProyectado,
-      'Hora Fin Proyectado': item.horasFinProyectado,
-      'Hora Inicio Real': item.horaInicioReal,
-      'Hora Fin Real': item.horaFinReal,
-      'Total Horas': item.horasTotales,
-      'Estado': item.estado
-    })));
+    // Preparar datos para Excel
+    const datosExcel = this.diasDelMes.map(dia => {
+      const fila: any = {
+        'Día': dia.displayName,
+        'Horas Categoría': dia.horasCategoria.toFixed(2)
+      };
+      
+      this.servicios.forEach(servicio => {
+        fila[servicio] = (dia.horasPorServicio[servicio] || 0).toFixed(2);
+      });
+      
+      return fila;
+    });
 
+    // Agregar fila de totales
+    const totales: any = {
+      'Día': 'TOTALES',
+      'Horas Categoría': this.getTotalHorasCategoria().toFixed(2)
+    };
+
+    this.servicios.forEach(servicio => {
+      totales[servicio] = this.getTotalPorServicio(servicio).toFixed(2);
+    });
+
+    datosExcel.push(totales);
+
+    // Agregar resumen
+    datosExcel.push({});
+    datosExcel.push({ 'Día': 'RESUMEN' });
+    datosExcel.push({ 'Día': 'Horas Ausentismo Pago', 'Horas Categoría': this.horasAusentismoPago.toFixed(2) });
+    datosExcel.push({ 'Día': 'Horas Ausentismo Impago', 'Horas Categoría': this.horasAusentismoImpago.toFixed(2) });
+    datosExcel.push({ 'Día': 'Total Horas Trabajadas', 'Horas Categoría': this.horasTrabajadas.toFixed(2) });
+    datosExcel.push({ 'Día': 'Total Horas', 'Horas Categoría': this.totalHoras.toFixed(2) });
+
+    datosExcel.push({});
+    datosExcel.push({ 'Día': 'HORAS DISCRIMINADAS' });
+    
+    Object.keys(this.horasDiscriminadas).forEach(estado => {
+      datosExcel.push({ 'Día': estado, 'Horas Categoría': this.horasDiscriminadas[estado].toFixed(2) });
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(datosExcel);
     const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    FileSaver.saveAs(blob, 'reporte' + '_' + new Date().getTime() + '.xlsx');
-  }
 
-  
+    const nombreLimpio = this.empleado.nombre?.replace(/\s+/g, '_').toLowerCase() || '';
+    const apellidoLimpio = this.empleado.apellido?.replace(/\s+/g, '_').toLowerCase() || '';
+    const nombreArchivo = `reporte_detallado_${this.nombreMes}_${nombreLimpio}_${apellidoLimpio}_${new Date().getTime()}.xlsx`;
+
+    FileSaver.saveAs(blob, nombreArchivo);
+  }
 }

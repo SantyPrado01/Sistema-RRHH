@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, LessThan, Repository } from 'typeorm';
 import { HorarioAsignado } from './entities/horariosAsignados.entity'; 
@@ -10,6 +10,27 @@ interface EmpleadoConHoras {
   empleado: Empleado;
   totalHoras: number;
 }
+
+  export interface ResumenServicio {
+    nombreServicio: string;
+    horario: string;
+    dias: string;
+    horasAutorizadas: number;
+    horasProyectadas: number;
+    horasTrabajadas: number;
+    horasAusentismoPago: number;
+    horasAusentismoNoPago: number;
+  }
+
+  export interface ResumenGeneral {
+    servicios: ResumenServicio[];
+    totales: {
+      horasProyectadas: number;
+      horasTrabajadas: number;
+      horasAusentismoPago: number;
+      horasAusentismoNoPago: number;
+    };
+  }
 
 @Injectable()
 export class HorarioAsignadoService {
@@ -23,7 +44,6 @@ export class HorarioAsignadoService {
       @InjectRepository(Empleado)
       private readonly empleadoRepository: Repository<Empleado>,
   ) {}
-
 
   async create(createHorariosDto: CreateHorariosAsignadoDto) {
       const { ordenTrabajoId } = createHorariosDto;
@@ -149,128 +169,6 @@ export class HorarioAsignadoService {
 
     return query.getMany();
   }
-
-  async obtenerHorariosPorEmpleado(
-  empleadoId: number,
-  mes?: number,
-  anio?: number,
-): Promise<{ horarios: HorarioAsignado[]; conteo: Record<string, number> }> {
-  let query = this.horarioAsignadoRepository
-    .createQueryBuilder('horario')
-    .leftJoinAndSelect('horario.empleado', 'empleado')
-    .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
-    .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
-    .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
-    .where(
-      `(
-        (empleado.Id = :empleadoId)
-        OR (empleadoSuplente.Id = :empleadoId)
-      )`
-    )
-    .andWhere('horario.eliminado = false')
-    .setParameter('empleadoId', empleadoId);
-
-  // Filtro por mes y año si están presentes
-  if (mes && anio) {
-    const inicio = new Date(anio, mes - 1, 1);
-    const fin = new Date(anio, mes, 0, 23, 59, 59);
-    query = query
-      .andWhere('horario.fecha BETWEEN :inicio AND :fin')
-      .setParameters({ inicio, fin });
-  }
-
-  // Ordenar por fecha antes de obtener los resultados
-  query.orderBy('horario.fecha', 'ASC');
-
-  const horarios = await query.getMany();
-
-  // Inicializar el conteo con todos los estados posibles
-  const conteo: Record<string, number> = {
-    'Asistió': 0,
-    'Llegó Tarde': 0,
-    'Faltó Con Aviso': 0,
-    'Faltó Sin Aviso': 0,
-    'Enfermedad': 0,
-  };
-
-  // Función auxiliar para calcular diferencia de horas considerando horarios nocturnos
-  const calcularHorasTrabajadas = (horaInicio: string, horaFin: string): number => {
-    if (!horaInicio || !horaFin) return 0;
-
-    // Convertir strings de hora a minutos desde medianoche
-    const convertirAMinutos = (hora: string): number => {
-      const [h, m] = hora.split(':').map(Number);
-      return h * 60 + m;
-    };
-
-    const minutosInicio = convertirAMinutos(horaInicio);
-    const minutosFin = convertirAMinutos(horaFin);
-
-    let diferenciaMinutos: number;
-
-    if (minutosFin >= minutosInicio) {
-      // Caso normal: misma fecha (ej: 08:00 a 17:00)
-      diferenciaMinutos = minutosFin - minutosInicio;
-    } else {
-      // Caso nocturno: cruza medianoche (ej: 22:00 a 02:00)
-      // Calcular desde hora inicio hasta medianoche + desde medianoche hasta hora fin
-      diferenciaMinutos = (24 * 60 - minutosInicio) + minutosFin;
-    }
-
-    // Convertir minutos a horas con decimales
-    return diferenciaMinutos / 60;
-  };
-
-  // Realizar el conteo y cálculo de horas
-  for (const horario of horarios) { 
-    let estadoFinal: string | undefined;
-
-    if (horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId)) {
-      // Si es suplente, usar estadoSuplente
-      estadoFinal = horario.estadoSuplente;
-      console.log('estado suplente', estadoFinal);
-    } else {
-      // Si es titular, usar estado normal
-      estadoFinal = horario.estado;
-      console.log('estado titular', estadoFinal);
-    }
-
-    // Calcular horas trabajadas
-    const horasTrabajadas = calcularHorasTrabajadas(
-      horario.horaInicioReal, 
-      horario.horaFinReal
-    );
-
-    // Agregar propiedades calculadas al objeto horario
-    (horario as any).estadoDeterminado = estadoFinal;
-    (horario as any).horasTrabajadas = horasTrabajadas;
-
-    // Incrementar el contador para el estado correspondiente
-    if (estadoFinal && conteo.hasOwnProperty(estadoFinal)) {
-      conteo[estadoFinal]++;
-    }
-
-    console.log(`Horario ID: ${horario.horarioAsignadoId}, Inicio: ${horario.horaInicioReal}, Fin: ${horario.horaFinReal}, Horas trabajadas: ${horasTrabajadas.toFixed(2)}`);
-  }
-
-  // Log del resultado final
-  console.log('=== RESULTADO FINAL ===');
-  console.log('Total de horarios procesados:', horarios.length);
-  console.log('Conteo por estados:', conteo);
-  
-  const totalHorasTrabajadas = horarios.reduce((total, horario) => {
-    return total + ((horario as any).horasTrabajadas || 0);
-  }, 0);
-  
-  console.log('Total horas trabajadas en el período:', totalHorasTrabajadas.toFixed(2));
-  console.log('Promedio horas por día trabajado:', horarios.length > 0 ? (totalHorasTrabajadas / horarios.length).toFixed(2) : '0');
-  console.log('========================');
-
-  return {
-    horarios,
-    conteo,
-  };
-}
   
   async obtenerHorariosPorEmpresa(
     empresaId: number,
@@ -531,4 +429,357 @@ export class HorarioAsignadoService {
     return parseFloat(horasDecimales.toFixed(2)); 
   }
 
+
+
+
+
+  async obtenerHorariosPorEmpleadoRefactorizado(
+    empleadoId: number,
+    mes?: number,
+    anio?: number,
+  ): Promise<{
+    horarios: HorarioAsignado[];
+    horasAusentismoPago: number;
+    horasAusentismoImpago: number;
+    horasTrabajadas: number;
+    totalHorasPorServicio: Record<string, number>;
+    horasDiscriminadas: Record<string, number>;
+  }> {
+    let query = this.horarioAsignadoRepository
+      .createQueryBuilder('horario')
+      .leftJoinAndSelect('horario.empleado', 'empleado')
+      .leftJoinAndSelect('horario.empleadoSuplente', 'empleadoSuplente')
+      .leftJoinAndSelect('horario.ordenTrabajo', 'ordenTrabajo')
+      .leftJoinAndSelect('ordenTrabajo.servicio', 'servicio')
+      .where(
+        `(
+          (empleado.Id = :empleadoId)
+          OR (empleadoSuplente.Id = :empleadoId)
+        )`
+      )
+      .andWhere('horario.eliminado = false')
+      .setParameter('empleadoId', empleadoId);
+
+    // Filtro por mes y año si están presentes
+    if (mes && anio) {
+      const inicio = new Date(anio, mes - 1, 1);
+      const fin = new Date(anio, mes, 0, 23, 59, 59);
+      query = query
+        .andWhere('horario.fecha BETWEEN :inicio AND :fin')
+        .setParameters({ inicio, fin });
+    }
+
+    // Ordenar por fecha antes de obtener los resultados
+    query.orderBy('horario.fecha', 'ASC');
+
+    const horarios = await query.getMany();
+
+    // Estados para ausentismo pago
+    const estadosAusentismoPago = ['Enfermedad', 'Vacaciones', 'Licencia', 'Accidente'];
+    // Estados para ausentismo impago
+    const estadosAusentismoImpago = ['Faltó Con Aviso', 'Faltó Sin Aviso', 'Sin Servicio'];
+
+    // Inicializar contadores
+    let horasAusentismoPago = 0;
+    let horasAusentismoImpago = 0;
+    let horasTrabajadas = 0;
+    const totalHorasPorServicio: Record<string, number> = {};
+    const horasDiscriminadas: Record<string, number> = {};
+
+    // Función auxiliar para convertir horas a formato decimal
+    const convertirHorasADecimal = (horaInicio: string, horaFin: string): number => {
+      if (!horaInicio || !horaFin) return 0;
+
+      // Convertir strings de hora a minutos desde medianoche
+      const convertirAMinutos = (hora: string): number => {
+        const [h, m] = hora.split(':').map(Number);
+        return h * 60 + m;
+      };
+
+      const minutosInicio = convertirAMinutos(horaInicio);
+      const minutosFin = convertirAMinutos(horaFin);
+
+      let diferenciaMinutos: number;
+
+      if (minutosFin >= minutosInicio) {
+        // Caso normal: misma fecha (ej: 08:00 a 17:00)
+        diferenciaMinutos = minutosFin - minutosInicio;
+      } else {
+        // Horario nocturno que cruza medianoche
+        diferenciaMinutos = (24 * 60 - minutosInicio) + minutosFin;
+      }
+
+      // Convertir minutos a horas decimales
+      return diferenciaMinutos / 60;
+    };
+
+    // Realizar el conteo y cálculo de horas
+    for (const horario of horarios) {
+      let estadoFinal: string | undefined;
+
+      // Determinar qué estado usar según si es suplente o titular
+      if (horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId)) {
+        // Si es suplente, usar estadoSuplente
+        estadoFinal = horario.estadoSuplente
+        console.log('estado suplente', estadoFinal);
+      } else {
+        // Si es titular, usar estado normal
+        estadoFinal = horario.estado
+        console.log('estado titular', estadoFinal);
+      }
+
+      // Calcular horas en formato decimal
+      const horasDecimales = convertirHorasADecimal(
+        horario.horaInicioReal,
+        horario.horaFinReal
+      );
+
+      // Agregar propiedades calculadas al objeto horario
+      (horario as any).estadoDeterminado = estadoFinal;
+      (horario as any).horasDecimales = horasDecimales;
+
+      // Clasificar horas según el estado
+      if (estadoFinal) {
+        // Inicializar contador para este estado si no existe
+        if (!horasDiscriminadas[estadoFinal]) {
+          horasDiscriminadas[estadoFinal] = 0;
+        }
+        horasDiscriminadas[estadoFinal] += horasDecimales;
+
+        if (estadosAusentismoPago.includes(estadoFinal)) {
+          horasAusentismoPago += horasDecimales;
+        } else if (estadosAusentismoImpago.includes(estadoFinal)) {
+          horasAusentismoImpago += horasDecimales;
+        } else {
+          horasTrabajadas += horasDecimales;
+        }
+      } else {
+        // Si no hay estado, considerarlo como horas trabajadas
+        horasTrabajadas += horasDecimales;
+      }
+
+      // Sumar horas por servicio
+      const nombreServicio = horario.ordenTrabajo?.servicio?.nombre || 'Sin servicio';
+      if (!totalHorasPorServicio[nombreServicio]) {
+        totalHorasPorServicio[nombreServicio] = 0;
+      }
+      totalHorasPorServicio[nombreServicio] += horasDecimales;
+
+      console.log(`Horario ID: ${horario.horarioAsignadoId}, Inicio: ${horario.horaInicioReal}, Fin: ${horario.horaFinReal}, Horas decimales: ${horasDecimales.toFixed(2)}, Estado: ${estadoFinal}`);
+    }
+
+    // Calcular total general de horas
+    const totalHoras = horasAusentismoPago + horasAusentismoImpago + horasTrabajadas;
+
+    // Log del resultado final
+    console.log('=== RESULTADO FINAL ===');
+    console.log('Total de horarios procesados:', horarios.length);
+    console.log('Horas Ausentismo Pago:', horasAusentismoPago.toFixed(2));
+    console.log('Horas Ausentismo Impago:', horasAusentismoImpago.toFixed(2));
+    console.log('Horas Trabajadas:', horasTrabajadas.toFixed(2));
+    console.log('Total Horas:', totalHoras.toFixed(2));
+    console.log('Horas por Servicio:', totalHorasPorServicio);
+    console.log('Horas Discriminadas por Estado:', horasDiscriminadas);
+    console.log('========================');
+
+    return {
+      horarios,
+      horasAusentismoPago: Number(horasAusentismoPago.toFixed(2)),
+      horasAusentismoImpago: Number(horasAusentismoImpago.toFixed(2)),
+      horasTrabajadas: Number(horasTrabajadas.toFixed(2)),
+      totalHorasPorServicio,
+      horasDiscriminadas,
+    };
+  }
+
+  
+
+  async obtenerResumenPorServicio(
+    mes: number, // 1-12
+    anio: number
+  ): Promise<ResumenGeneral> {
+    
+    // Estados para ausentismo pago
+    const estadosAusentismoPago = ['Enfermedad', 'Vacaciones', 'Licencia', 'Accidente'];
+    // Estados para ausentismo impago
+    const estadosAusentismoImpago = ['Faltó Con Aviso', 'Faltó Sin Aviso', 'Sin Servicio'];
+
+    // Obtener registros del mes y año especificado
+    console.log(`Filtrando por mes: ${mes}, año: ${anio}`);
+    
+    const horarios = await this.horarioAsignadoRepository
+      .createQueryBuilder('ha')
+      .leftJoinAndSelect('ha.ordenTrabajo', 'ot')
+      .leftJoinAndSelect('ot.servicio', 's')
+      .leftJoinAndSelect('ha.empleado', 'e')
+      .where('EXTRACT(MONTH FROM ha.fecha) = :mes', { mes })
+      .andWhere('EXTRACT(YEAR FROM ha.fecha) = :anio', { anio })
+      .andWhere('ha.eliminado = false')
+      .getMany();
+
+    console.log(`Total horarios encontrados: ${horarios.length}`);
+
+    // Agrupar por servicio
+    const serviciosMap = new Map<number, {
+      servicio: any;
+      horarios: HorarioAsignado[];
+    }>();
+
+    horarios.forEach(horario => {
+      console.log(`Horario ${horario.horarioAsignadoId}: Fecha ${horario.fecha}, Servicio: ${horario.ordenTrabajo?.servicio?.nombre}`);
+      
+      if (horario.ordenTrabajo?.servicio) {
+        const servicioId = horario.ordenTrabajo.servicio.servicioId;
+        
+        if (!serviciosMap.has(servicioId)) {
+          console.log(`Nuevo servicio encontrado: ${horario.ordenTrabajo.servicio.nombre}`);
+          serviciosMap.set(servicioId, {
+            servicio: horario.ordenTrabajo.servicio,
+            horarios: []
+          });
+        }
+        
+        serviciosMap.get(servicioId)?.horarios.push(horario);
+      }
+    });
+
+    // Procesar cada servicio
+    const resumen: ResumenServicio[] = [];
+
+    serviciosMap.forEach(({ servicio, horarios }) => {
+      // Obtener horario típico (usando el más común)
+      const horariosComunes = horarios.reduce((acc, h) => {
+        const horario = `${h.horaInicioProyectado} a ${h.horaFinProyectado}`;
+        acc[horario] = (acc[horario] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      const horarioMasComun = Object.keys(horariosComunes)
+        .reduce((a, b) => horariosComunes[a] > horariosComunes[b] ? a : b);
+
+      // Obtener días de la semana (simplificado - podrías mejorarlo analizando las fechas)
+      const dias = this.obtenerDiasSemana(horarios);
+
+      // Calcular horas
+      const horasAutorizadas = servicio.horasFijas || 0;
+      let horasProyectadas = 0;
+      let horasTrabajadas = 0;
+      let horasAusentismoPago = 0;
+      let horasAusentismoNoPago = 0;
+
+      horarios.forEach(horario => {
+        console.log(`Procesando horario: ${horario.horarioAsignadoId}, Estado: ${horario.estado}`);
+        
+        // SIEMPRE sumar horas proyectadas (independiente del estado)
+        const horasProyectadasHorario = this.calcularHoras(horario.horaInicioProyectado, horario.horaFinProyectado);
+        horasProyectadas += horasProyectadasHorario;
+        console.log(`Horas proyectadas: ${horasProyectadasHorario}`);
+        
+        // Si tiene horas reales, procesarlas
+        if (horario.horaInicioReal && 
+            horario.horaFinReal && 
+            horario.horaInicioReal.trim() !== '' && 
+            horario.horaFinReal.trim() !== '') {
+          
+          const horasReales = this.calcularHoras(horario.horaInicioReal, horario.horaFinReal);
+          if (!isNaN(horasReales)) {
+            // Clasificar las horas reales según el estado
+            if (estadosAusentismoPago.includes(horario.estado)) {
+              horasAusentismoPago += horasReales;
+              console.log(`Ausentismo pago (horas reales): ${horasReales}`);
+            } else if (estadosAusentismoImpago.includes(horario.estado)) {
+              horasAusentismoNoPago += horasReales;
+              console.log(`Ausentismo no pago (horas reales): ${horasReales}`);
+            } else {
+              // Horas trabajadas normales (Asistió, etc.)
+              horasTrabajadas += horasReales;
+              console.log(`Horas trabajadas: ${horasReales}`);
+            }
+          }
+        } else {
+          console.log(`Sin horas reales para horario: ${horario.horarioAsignadoId}`);
+        }
+      });
+
+      resumen.push({
+        nombreServicio: servicio.nombre || 'Sin nombre',
+        horario: horarioMasComun,
+        dias: dias,
+        horasAutorizadas: horasAutorizadas,
+        horasProyectadas: horasProyectadas,
+        horasTrabajadas: horasTrabajadas,
+        horasAusentismoPago: horasAusentismoPago,
+        horasAusentismoNoPago: horasAusentismoNoPago
+      });
+        });
+
+    // Calcular totales generales
+    const totales = {
+      horasProyectadas: 0,
+      horasTrabajadas: 0,
+      horasAusentismoPago: 0,
+      horasAusentismoNoPago: 0
+    };
+
+    resumen.forEach(servicio => {
+      totales.horasProyectadas += servicio.horasProyectadas;
+      totales.horasTrabajadas += servicio.horasTrabajadas;
+      totales.horasAusentismoPago += servicio.horasAusentismoPago;
+      totales.horasAusentismoNoPago += servicio.horasAusentismoNoPago;
+    });
+
+    console.log('=== TOTALES GENERALES ===');
+    console.log(`Total Horas Proyectadas: ${totales.horasProyectadas}`);
+    console.log(`Total Horas Trabajadas: ${totales.horasTrabajadas}`);
+    console.log(`Total Ausentismo Pago: ${totales.horasAusentismoPago}`);
+    console.log(`Total Ausentismo No Pago: ${totales.horasAusentismoNoPago}`);
+
+    return {
+      servicios: resumen,
+      totales: totales
+    };
+  }
+
+  // Función auxiliar para obtener días de la semana
+  obtenerDiasSemana(horarios: HorarioAsignado[]): string {
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const diasTrabajo = new Set<number>();
+    
+    horarios.forEach(horario => {
+      const dia = new Date(horario.fecha).getDay();
+      diasTrabajo.add(dia);
+    });
+    
+    const diasArray = Array.from(diasTrabajo).sort();
+    
+    if (diasArray.length === 0) return 'Sin días definidos';
+    
+    // Si es solo un día
+    if (diasArray.length === 1) {
+      return diasSemana[diasArray[0]];
+    }
+    
+    // Si son días consecutivos, mostrar rango
+    if (this.sonConsecutivos(diasArray)) {
+      return `${diasSemana[diasArray[0]]} a ${diasSemana[diasArray[diasArray.length - 1]]}`;
+    }
+    
+    // Si no son consecutivos, mostrar todos los días separados por comas
+    return diasArray.map(dia => diasSemana[dia]).join(', ');
+  }
+
+  // Función auxiliar para verificar si los días son consecutivos
+  sonConsecutivos(dias: number[]): boolean {
+    if (dias.length <= 1) return true;
+    
+    for (let i = 1; i < dias.length; i++) {
+      if (dias[i] !== dias[i-1] + 1) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }
+
+

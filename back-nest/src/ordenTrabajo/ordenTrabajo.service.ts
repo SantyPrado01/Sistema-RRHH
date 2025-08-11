@@ -371,7 +371,7 @@ export class OrdenTrabajoService {
     horarios: { diaSemana: number, horaInicio: string, horaFin: string }[], 
     fechaDesde: Date, 
     fechaHasta: Date
-) {
+  ) {
     const empleado = ordenTrabajo.empleadoAsignado;
     const horariosAsignados = [];
 

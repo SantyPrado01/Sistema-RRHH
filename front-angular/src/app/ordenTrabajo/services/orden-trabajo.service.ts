@@ -49,7 +49,6 @@ export class OrdenTrabajoService {
     return this.http.get<any[]>('http://localhost:3000/empleados'); 
   }
 
-
   editarOrdenTrabajo(ordenId: string, nuevoEmpleadoId: number, renovacionAutomatica: boolean): Observable<any> {
     const body = {
       nuevoEmpleadoId,

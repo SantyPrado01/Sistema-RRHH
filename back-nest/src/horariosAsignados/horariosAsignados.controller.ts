@@ -4,6 +4,7 @@ import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto';
 import { UpdateHorariosAsignadoDto } from './dto/updateHorariosAsignados.entity'; 
 import { HorarioAsignado } from './entities/horariosAsignados.entity';
 import { Empleado } from 'src/empleados/entities/empleado.entity';
+import { ResumenGeneral } from './horariosAsignados.service';
 
 @Controller('horariosAsignados')
 export class HorariosAsignadosController {
@@ -29,8 +30,8 @@ export class HorariosAsignadosController {
     @Param('empleadoId') empleadoId: number,
     @Query('mes') mes?: number,
     @Query('anio') anio?: number,
-  ): Promise<{ horarios: HorarioAsignado[]; conteo: Record<string, number> }> {
-    return this.horariosAsignadosService.obtenerHorariosPorEmpleado(
+  ): Promise<{ horarios: HorarioAsignado[] }> {
+    return this.horariosAsignadosService.obtenerHorariosPorEmpleadoRefactorizado(
       empleadoId,
       mes,
       anio,
@@ -80,6 +81,24 @@ export class HorariosAsignadosController {
       fechaInicio,
       fechaFin,
       empresaId
+    );
+  }
+
+  @Get('obtenerResumenPorServicio/:mes/:anio')
+  async obtenerResumenPorServicio(
+    @Param('mes') mes: string,
+    @Param('anio') anio: string,
+  ): Promise<ResumenGeneral> { // ← Cambiar este tipo de retorno
+    const mesNumero = parseInt(mes, 10);
+    const anioNumero = parseInt(anio, 10);
+
+    if (isNaN(mesNumero) || isNaN(anioNumero)) {
+      throw new Error('Mes o Año no válidos');
+    }
+
+    return this.horariosAsignadosService.obtenerResumenPorServicio(
+      mesNumero,
+      anioNumero
     );
   }
 

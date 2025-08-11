@@ -34,6 +34,12 @@ import { Empresa } from '../servicios/models/servicio.models';
 import { getSpanishPaginatorIntl } from '../spanish-paginator-intl';
 import { HttpErrorResponse } from '@angular/common/http';
 
+interface Totales {
+  horasProyectadas: number;
+  horasTrabajadas: number;
+  horasAusentismoPago: number;
+  horasAusentismoNoPago: number;
+}
 
 @Component({
   selector: 'app-informes',
@@ -100,6 +106,13 @@ export class InformesComponent  {
   horasTotalesProyectadasEmpresa: number = 0;
   horasTotalesRealesEmpresa: number = 0;
 
+  totales: Totales = {
+    horasProyectadas: 0,
+    horasTrabajadas: 0,
+    horasAusentismoPago: 0,
+    horasAusentismoNoPago: 0
+  };
+
 
   reportes:{ nombre: string, funcion: ()=> void }[] = [
     {nombre:'Reporte de horas por Empleado por Empresa', funcion: this.obtenerOrdenesMesAnio.bind(this)},
@@ -140,10 +153,13 @@ export class InformesComponent  {
 
   displayedColumnsObtenerOrdenes: string[] = [
     'empresa',
-    'empleado',
+    'horarioAsignado',
     'dias',
+    'horasAutorizadas',
     'horasProyectadas',
-    'horasReales'
+    'horasTrabajadas',
+    'horasAusentismoPago',
+    'horasAusentismoNoPago',
   ]
 
   displayedColumnsObtenerResumenPorEmpresa: string[] = [
@@ -409,17 +425,12 @@ export class InformesComponent  {
     this.dataSource.data = [];
     this.dataSource.sort = this.matSort;
     const mesNumero = this.convertirMesANumero(this.mesSeleccionado);
-    this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioSeleccionado).subscribe(
+    this.horariosAsignadosService.obtenerResumenPorServicio(mesNumero, this.anioSeleccionado).subscribe(
       (data: any) => {
-        
-        this.dataSource.data = data.ordenes;
+        console.log('Datos:', mesNumero, this.anioSeleccionado);
+        this.dataSource.data = data.servicios;
+        this.totales = data.totales;
         console.log('Datos recibidos:', data);
-        console.log('Horas:', data.totales.horasProyectadas, data.totales.horasReales);
-        this.totalHorasProyectadasGlobal = data.totales.horasProyectadas;
-        this.totalHorasRealesGlobal = data.totales.horasReales;
-      },
-      (error) => {
-        console.error('Hubo un error al obtener las órdenes de trabajo', error);
       }
     );
     }
@@ -477,13 +488,14 @@ export class InformesComponent  {
             }
         case 'Reporte de horas por Empleado por Empresa':
             switch (columnDefName) {
-                case 'empresa': return item.servicio?.nombre || '';
-                case 'empleado': return `${item.empleadoAsignado?.nombre || ''} ${item.empleadoAsignado?.apellido || ''}`.trim();
-                case 'dias': return this.obtenerDias(item.necesidadHoraria) || '';
-                case 'horasProyectadas': return item.horasProyectadasCalculadas || item.horasProyectadas || '';
-                
-                case 'horasReales': return item.horasRealesCalculadas || item.horasReales || '';
-
+                case 'empresa': return item.nombreServicio || '';
+                case 'horarioAsignado': return item.horario || '';
+                case 'dias': return item.dias || '';
+                case 'horasAutorizadas': return item.horasAutorizadas || '';
+                case 'horasProyectadas': return item.horasProyectadas || '';
+                case 'horasTrabajadas': return item.horasTrabajadas || '';
+                case 'horasAusentismoPago': return item.horasAusentismoPago || '';
+                case 'horasAusentismoNoPago': return item.horasAusentismoNoPago || '';
                 default: return (item as any)[columnDefName] || '';
             }
         case 'Reporte Resumen por Empresa':
@@ -503,6 +515,7 @@ export class InformesComponent  {
       console.log('No hay datos para exportar a PDF.');
       return;
     }
+    console.log('Reporte Seleccionado', this.reporteSeleccionado);
 
     const doc = new jsPDF();
     const headers = this.getDisplayHeaders();
@@ -552,9 +565,26 @@ export class InformesComponent  {
     doc.setFontSize(8);
     const resumenY = (doc as any).lastAutoTable.finalY + 10;
 
-    doc.text('Resumen Total', 12, resumenY);
-    doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, resumenY + 10);
-    doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, resumenY + 20);
+    const reporte = this.reporteSeleccionado.trim().normalize('NFC');
+    console.log('Reporte para resumen:', reporte);
+
+    if (reporte === 'Reporte de horas por Dia' ) {
+      doc.text('Resumen Total', 12, resumenY);
+      doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, resumenY + 10);
+      doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, resumenY + 20);
+    }
+    else if (reporte === 'Reporte Resumen por Empresa') {
+      doc.text('Resumen Total', 12, resumenY);
+      doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, resumenY + 10);
+      doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, resumenY + 20);
+    }
+    else if (reporte === 'Reporte de horas por Empleado por Empresa') {
+      doc.text('Resumen Total', 12, resumenY);
+      doc.text(`Horas Proyectadas: ${this.totales.horasProyectadas.toFixed(2)}`, 10, resumenY + 10);
+      doc.text(`Horas Reales: ${this.totales.horasTrabajadas.toFixed(2)}`, 10, resumenY + 20);
+      doc.text(`Horas Reales: ${this.totales.horasAusentismoPago.toFixed(2)}`, 10, resumenY + 30);
+      doc.text(`Horas Reales: ${this.totales.horasAusentismoNoPago.toFixed(2)}`, 10, resumenY + 40);
+    }
 
     doc.save(
       'reporte_' +

@@ -6,7 +6,7 @@ export class UpdateHorariosAsignadoDto extends PartialType(CreateHorariosAsignad
 
     horarioAsignadoId: number; 
  
-    ordenTrabajoId: number;
+    ordenTrabajoId?: number;
 
     empleadoAsignadoId: number;
 

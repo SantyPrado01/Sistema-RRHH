@@ -3,7 +3,7 @@ import { Empleado } from "src/empleados/entities/empleado.entity";
 export class CreateHorariosAsignadoDto {
     horarioAsignadoId: number; 
  
-    ordenTrabajoId: number;
+    ordenTrabajoId?: number;
 
     empleadoAsignadoId: number;
 

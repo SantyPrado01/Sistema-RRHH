@@ -87,11 +87,21 @@ export class HorariosAsignadosComponent implements OnInit {
   ) {
     this.dataSource = new MatTableDataSource<HorarioAsignado>([]);
     
-    // Configurar el filtro personalizado
-    this.dataSource.filterPredicate = (data: HorarioAsignado, filter: string) => {
+      // Configurar el filtro personalizado
+      this.dataSource.filterPredicate = (data: HorarioAsignado, filter: string) => {
+      const filterLower = filter.toLowerCase();
+      
+      // Filtro por empleado (nombre y apellido en diferentes órdenes)
       const nombreCompleto = `${data.empleado.nombre} ${data.empleado.apellido}`.toLowerCase();
       const apellidoNombre = `${data.empleado.apellido} ${data.empleado.nombre}`.toLowerCase();
-      return nombreCompleto.includes(filter) || apellidoNombre.includes(filter);
+      const empleadoMatch = nombreCompleto.includes(filterLower) || apellidoNombre.includes(filterLower);
+      
+      // Filtro por empresa
+      const empresaNombre = data.ordenTrabajo.servicio.nombre.toLowerCase();
+      const empresaMatch = empresaNombre.includes(filterLower);
+      
+      // Retorna true si coincide con empleado O empresa
+      return empleadoMatch || empresaMatch;
     };
   }
   

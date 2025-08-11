@@ -232,7 +232,7 @@ export class OrdenTrabajoViewComponent implements OnInit{
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Horario a actualizar:', horario); // Para debug
-        console.log('Hora Inicio Real:', horario.estado);
+        console.log('Estado:', horario.estado);
         console.log('Empleado suplente:', horario.empleadoSuplente);
         console.log('Empleado suplente control:', horario.empleadoSuplenteControl); // Para debug
 
