@@ -111,7 +111,7 @@ export class HomeComponent {
     )
     this.ordenTrabajoService.getOrdenesPorMesAnio(mesNumero, this.anioActual).subscribe(
       (data) => {
-        this.dataSource.data = data;
+        this.dataSource.data = data.ordenes;
         this.loading = false
         console.log('Órdenes de trabajo obtenidas:', data);
       },

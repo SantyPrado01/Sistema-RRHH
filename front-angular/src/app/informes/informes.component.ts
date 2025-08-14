@@ -475,7 +475,7 @@ export class InformesComponent  {
                 case 'horasFinProyectado': return item.horaFinProyectado || '';
                 case 'horaInicioReal': return item.horaInicioReal || '';
                 case 'horaFinReal': return item.horaFinReal || '';
-                case 'horasTotales': return item.horasTotales || '';
+                case 'horasTotales': return item.horasTotales.toFixed(2) || '';
                 
                 default: return (item as any)[columnDefName] || '';
             }
@@ -484,11 +484,11 @@ export class InformesComponent  {
                 case 'empresa': return item.nombreServicio || '';
                 case 'horarioAsignado': return item.horario || '';
                 case 'dias': return item.dias || '';
-                case 'horasAutorizadas': return item.horasAutorizadas || '';
-                case 'horasProyectadas': return item.horasProyectadas || '';
-                case 'horasTrabajadas': return item.horasTrabajadas || '';
-                case 'horasAusentismoPago': return item.horasAusentismoPago || '';
-                case 'horasAusentismoNoPago': return item.horasAusentismoNoPago || '';
+                case 'horasAutorizadas': return item.horasAutorizadas.toFixed(2) || '';
+                case 'horasProyectadas': return item.horasProyectadas.toFixed(2) || '';
+                case 'horasTrabajadas': return item.horasTrabajadas.toFixed(2) || '';
+                case 'horasAusentismoPago': return item.horasAusentismoPago.toFixed(2) || '';
+                case 'horasAusentismoNoPago': return item.horasAusentismoNoPago.toFixed(2) || '';
                 default: return (item as any)[columnDefName] || '';
             }
         case 'Reporte Resumen por Empresa':
@@ -1031,7 +1031,7 @@ export class InformesComponent  {
       rightCurrentY += 6;
 
       doc.text(`Horas Categoria:`, rightColumnX, rightCurrentY);
-      doc.text(`${this.horasTrabajadas.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+      doc.text(`${this.horasCategoria.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
       rightCurrentY += 6;
       // Total General (destacado)
       doc.setFont('bold');
