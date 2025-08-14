@@ -484,8 +484,8 @@ export class InformesComponent  {
                 case 'empresa': return item.nombreServicio || '';
                 case 'horarioAsignado': return item.horario || '';
                 case 'dias': return item.dias || '';
-                case 'horasAutorizadas': return item.horasAutorizadas.toFixed(2) || '';
-                case 'horasProyectadas': return item.horasProyectadas.toFixed(2) || '';
+                case 'horasAutorizadas': return item.horasAutorizadas || '';
+                case 'horasProyectadas': return item.horasProyectadas || '';
                 case 'horasTrabajadas': return item.horasTrabajadas.toFixed(2) || '';
                 case 'horasAusentismoPago': return item.horasAusentismoPago.toFixed(2) || '';
                 case 'horasAusentismoNoPago': return item.horasAusentismoNoPago.toFixed(2) || '';
