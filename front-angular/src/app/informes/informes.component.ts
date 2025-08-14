@@ -150,6 +150,12 @@ export class InformesComponent  {
     'dias': 'Dias', // Solo en ObtenerOrdenesMesAnio
     'horasProyectadas': 'Horas Proyectadas',
     'horasTotales': 'Total', // Solo en ObtenerOrdenesMesAnio
+    'horarioAsignado': 'Horario Asignado', // Solo en ObtenerOrdenesMesAnio
+    'horasFijas': 'Horas Fijas', // Solo en Resumen por Empresa
+    'horasTrabajadas': 'Horas Trabajadas', // Solo en Resumen por Empresa
+    'horasAutorizadas': 'Horas Autorizadas', // Solo en ObtenerOrdenesMesAnio
+    'horasAusentismoPago': 'Horas Ausentismo Pago', // Solo en ObtenerOrdenesMesAnio
+    'horasAusentismoNoPago': 'Horas Ausentismo No Pago', // Solo en ObtenerOrdenesMesAnio
   };
 
   displayedColumnsHorasPorDia: string[] = [
@@ -473,7 +479,7 @@ export class InformesComponent  {
                 
                 default: return (item as any)[columnDefName] || '';
             }
-        case 'Reporte de horas por Empleado por Empresa':
+        case 'Resumen por Empresa':
             switch (columnDefName) {
                 case 'empresa': return item.nombreServicio || '';
                 case 'horarioAsignado': return item.horario || '';
@@ -502,9 +508,14 @@ export class InformesComponent  {
       console.log('No hay datos para exportar a PDF.');
       return;
     }
+
     console.log('Reporte Seleccionado', this.reporteSeleccionado);
 
-    const doc = new jsPDF();
+    const isResumenPorEmpresa = this.reporteSeleccionado.trim() === 'Resumen por Empresa';
+    const doc = new jsPDF({
+      orientation: isResumenPorEmpresa ? 'landscape' : 'portrait'
+    });
+
     const headers = this.getDisplayHeaders();
 
     const currentData = this.dataSource.filteredData.slice();
@@ -513,11 +524,12 @@ export class InformesComponent  {
       : currentData;
 
     const rows = sortedData.map(item => {
-      const currentColumnDefs = this.reporteSeleccionado === 'Reporte de horas por Dia'
-      ? this.displayedColumnsHorasPorDia
-      : this.reporteSeleccionado === 'Resumen por Empresa'
-        ? this.displayedColumnsResumenPorEmpresa
-        : this.displayedColumnsObtenerOrdenes;
+      const currentColumnDefs =
+        this.reporteSeleccionado === 'Reporte de horas por Dia'
+          ? this.displayedColumnsHorasPorDia
+          : this.reporteSeleccionado === 'Resumen por Empresa'
+          ? this.displayedColumnsResumenPorEmpresa
+          : this.displayedColumnsObtenerOrdenes;
 
       return currentColumnDefs.map(colDefName => this.getCellValue(item, colDefName));
     });
@@ -540,13 +552,11 @@ export class InformesComponent  {
 
     const finalY = (doc as any).lastAutoTable.finalY;
     const pageHeight = doc.internal.pageSize.getHeight();
-    const bottomMargin = 20; // Espacio que se necesita para el resumen
+    const bottomMargin = 20;
 
-    // Si el espacio restante en la página es menor al margen que necesitamos,
-    // agregamos una nueva página.
     if (finalY + bottomMargin > pageHeight) {
       doc.addPage();
-      (doc as any).lastAutoTable.finalY = 10; // Reiniciamos la posición para la nueva página
+      (doc as any).lastAutoTable.finalY = 10;
     }
 
     doc.setFontSize(8);
@@ -555,22 +565,16 @@ export class InformesComponent  {
     const reporte = this.reporteSeleccionado.trim().normalize('NFC');
     console.log('Reporte para resumen:', reporte);
 
-    if (reporte === 'Reporte de horas por Dia' ) {
+    if (reporte === 'Reporte de horas por Dia') {
       doc.text('Resumen Total', 12, resumenY);
       doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, resumenY + 10);
       doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, resumenY + 20);
-    }
-    else if (reporte === 'Reporte Resumen por Empresa') {
-      doc.text('Resumen Total', 12, resumenY);
-      doc.text(`Horas Proyectadas: ${this.totalHorasProyectadasGlobal.toFixed(2)}`, 10, resumenY + 10);
-      doc.text(`Horas Reales: ${this.totalHorasRealesGlobal.toFixed(2)}`, 10, resumenY + 20);
-    }
-    else if (reporte === 'Reporte de horas por Empleado por Empresa') {
+    } else if (reporte === 'Resumen por Empresa') {
       doc.text('Resumen Total', 12, resumenY);
       doc.text(`Horas Proyectadas: ${this.totales.horasProyectadas.toFixed(2)}`, 10, resumenY + 10);
-      doc.text(`Horas Reales: ${this.totales.horasTrabajadas.toFixed(2)}`, 10, resumenY + 20);
-      doc.text(`Horas Reales: ${this.totales.horasAusentismoPago.toFixed(2)}`, 10, resumenY + 30);
-      doc.text(`Horas Reales: ${this.totales.horasAusentismoNoPago.toFixed(2)}`, 10, resumenY + 40);
+      doc.text(`Horas Trabajadas: ${this.totales.horasTrabajadas.toFixed(2)}`, 10, resumenY + 20);
+      doc.text(`Horas Ausentismo Pago: ${this.totales.horasAusentismoPago.toFixed(2)}`, 10, resumenY + 30);
+      doc.text(`Horas Ausentismo No Pago: ${this.totales.horasAusentismoNoPago.toFixed(2)}`, 10, resumenY + 40);
     }
 
     doc.save(
@@ -581,6 +585,7 @@ export class InformesComponent  {
         '.pdf'
     );
   }
+
   
   descargarExcel(): void {
   if (!this.dataSource.data || this.dataSource.data.length === 0) {
@@ -1024,16 +1029,17 @@ export class InformesComponent  {
       doc.text(`Total Horas Trabajadas:`, rightColumnX, rightCurrentY);
       doc.text(`${this.horasTrabajadas.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
       rightCurrentY += 6;
-  
+
+      doc.text(`Horas Categoria:`, rightColumnX, rightCurrentY);
+      doc.text(`${this.horasTrabajadas.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+      rightCurrentY += 6;
       // Total General (destacado)
       doc.setFont('bold');
       doc.setFontSize(10);
       doc.text(`TOTAL GENERAL:`, rightColumnX, rightCurrentY);
       doc.text(`${this.totalHoras.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
 
-      doc.text(`Horas Categoria:`, rightColumnX, rightCurrentY);
-      doc.text(`${this.horasTrabajadas.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
-      rightCurrentY += 6;
+      
   
       // Nombre del archivo
       const nombreLimpio = this.empleado.nombre?.replace(/\s+/g, '_').toLowerCase() || '';
