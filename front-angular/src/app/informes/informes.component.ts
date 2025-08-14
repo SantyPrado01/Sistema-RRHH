@@ -913,7 +913,7 @@ export class InformesComponent  {
   
       // Título
       doc.setFontSize(12);
-      doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.nombreMes} ${this.anio}`, margin, 15);
+      doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.mesSeleccionado} ${this.anio}`, margin, 15);
   
       // Preparar columnas dinámicas
       const columnas = ['Día', 'H. Categoría'];
@@ -1044,7 +1044,7 @@ export class InformesComponent  {
       // Nombre del archivo
       const nombreLimpio = this.empleado.nombre?.replace(/\s+/g, '_').toLowerCase() || '';
       const apellidoLimpio = this.empleado.apellido?.replace(/\s+/g, '_').toLowerCase() || '';
-      const nombreArchivo = `informe_mensual_${this.nombreMes}_${nombreLimpio}_${apellidoLimpio}.pdf`;
+      const nombreArchivo = `informe_mensual_${this.mesSeleccionado}_${nombreLimpio}_${apellidoLimpio}.pdf`;
   
       doc.save(nombreArchivo);
   }
