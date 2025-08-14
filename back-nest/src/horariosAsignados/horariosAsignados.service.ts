@@ -6,11 +6,6 @@ import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto';
 import { OrdenTrabajo } from 'src/ordenTrabajo/entities/ordenTrabajo.entity'; 
 import { Empleado } from 'src/empleados/entities/empleado.entity';
 
-interface EmpleadoConHoras {
-  empleado: Empleado;
-  totalHoras: number;
-}
-
   export interface ResumenServicio {
     nombreServicio: string;
     horario: string;
@@ -397,8 +392,6 @@ export class HorarioAsignadoService {
     return Array.from(mapa.values()).sort((a, b) => a.totalHoras - b.totalHoras);
   }
 
-
-
   calcularHoras(horaInicio: string, horaFin: string): number {
   const [h1, m1] = horaInicio.split(':').map(Number);
   const [h2, m2] = horaFin.split(':').map(Number);
@@ -414,7 +407,7 @@ export class HorarioAsignadoService {
     const minutosHastaMedianoche = 24 * 60 - minutosInicio;
     return (minutosHastaMedianoche + minutosFin) / 60;
   }
-}
+  }
 
   calcularHorasDecimal(horaInicio: string, horaFin: string): number {
     const [hInicio, mInicio] = horaInicio.split(':').map(Number);
@@ -428,10 +421,6 @@ export class HorarioAsignadoService {
   
     return parseFloat(horasDecimales.toFixed(2)); 
   }
-
-
-
-
 
   async obtenerHorariosPorEmpleadoRefactorizado(
     empleadoId: number,
@@ -483,6 +472,7 @@ export class HorarioAsignadoService {
     let horasAusentismoPago = 0;
     let horasAusentismoImpago = 0;
     let horasTrabajadas = 0;
+    let horasCategoria = 0
     const totalHorasPorServicio: Record<string, number> = {};
     const horasDiscriminadas: Record<string, number> = {};
 
@@ -521,22 +511,36 @@ export class HorarioAsignadoService {
       if (horario.empleadoSuplente?.Id && Number(horario.empleadoSuplente.Id) === Number(empleadoId)) {
         // Si es suplente, usar estadoSuplente
         estadoFinal = horario.estadoSuplente
+        horasCategoria = horario.empleadoSuplente.horasCategoria
         console.log('estado suplente', estadoFinal);
       } else {
         // Si es titular, usar estado normal
         estadoFinal = horario.estado
+        horasCategoria = horario.empleado.horasCategoria
         console.log('estado titular', estadoFinal);
       }
 
-      // Calcular horas en formato decimal
-      const horasDecimales = convertirHorasADecimal(
+      // Calcular horas reales (siempre para mostrar en el horario individual)
+      const horasReales = convertirHorasADecimal(
         horario.horaInicioReal,
         horario.horaFinReal
       );
 
+      // Para "Sin Servicio", calcular también las horas proyectadas para los totales
+      let horasParaConteo: number;
+      if (estadoFinal === 'Sin Servicio') {
+        horasParaConteo = convertirHorasADecimal(
+          horario.horaInicioProyectado,
+          horario.horaFinProyectado
+        );
+        console.log(`Sin Servicio - horas reales: ${horasReales.toFixed(2)}, horas proyectadas para conteo: ${horasParaConteo.toFixed(2)}`);
+      } else {
+        horasParaConteo = horasReales;
+      }
+
       // Agregar propiedades calculadas al objeto horario
       (horario as any).estadoDeterminado = estadoFinal;
-      (horario as any).horasDecimales = horasDecimales;
+      (horario as any).horasDecimales = horasReales; // Siempre mostrar horas reales en el horario individual
 
       // Clasificar horas según el estado
       if (estadoFinal) {
@@ -544,31 +548,36 @@ export class HorarioAsignadoService {
         if (!horasDiscriminadas[estadoFinal]) {
           horasDiscriminadas[estadoFinal] = 0;
         }
-        horasDiscriminadas[estadoFinal] += horasDecimales;
+        horasDiscriminadas[estadoFinal] += horasParaConteo;
 
-        if (estadosAusentismoPago.includes(estadoFinal)) {
-          horasAusentismoPago += horasDecimales;
-        } else if (estadosAusentismoImpago.includes(estadoFinal)) {
-          horasAusentismoImpago += horasDecimales;
-        } else {
-          horasTrabajadas += horasDecimales;
+        // Solo sumar a totales si NO es "Sin Servicio"
+        if (estadoFinal !== 'Sin Servicio') {
+          if (estadosAusentismoPago.includes(estadoFinal)) {
+            horasAusentismoPago += horasParaConteo;
+          } else if (estadosAusentismoImpago.includes(estadoFinal)) {
+            horasAusentismoImpago += horasParaConteo;
+          } else {
+            horasTrabajadas += horasParaConteo;
+          }
         }
       } else {
         // Si no hay estado, considerarlo como horas trabajadas
-        horasTrabajadas += horasDecimales;
+        horasTrabajadas += horasParaConteo;
       }
 
-      // Sumar horas por servicio
-      const nombreServicio = horario.ordenTrabajo?.servicio?.nombre || 'Sin servicio';
-      if (!totalHorasPorServicio[nombreServicio]) {
-        totalHorasPorServicio[nombreServicio] = 0;
+      // Sumar horas por servicio (excepto para "Sin Servicio")
+      if (estadoFinal !== 'Sin Servicio') {
+        const nombreServicio = horario.ordenTrabajo?.servicio?.nombre || 'Sin servicio';
+        if (!totalHorasPorServicio[nombreServicio]) {
+          totalHorasPorServicio[nombreServicio] = 0;
+        }
+        totalHorasPorServicio[nombreServicio] += horasParaConteo;
       }
-      totalHorasPorServicio[nombreServicio] += horasDecimales;
 
-      console.log(`Horario ID: ${horario.horarioAsignadoId}, Inicio: ${horario.horaInicioReal}, Fin: ${horario.horaFinReal}, Horas decimales: ${horasDecimales.toFixed(2)}, Estado: ${estadoFinal}`);
+      console.log(`Horario ID: ${horario.horarioAsignadoId}, Estado: ${estadoFinal}, Horas reales: ${horasReales.toFixed(2)}, Horas para conteo: ${horasParaConteo.toFixed(2)}`);
     }
 
-    // Calcular total general de horas
+    // Calcular total general de horas (sin incluir "Sin Servicio")
     const totalHoras = horasAusentismoPago + horasAusentismoImpago + horasTrabajadas;
 
     // Log del resultado final
@@ -577,7 +586,7 @@ export class HorarioAsignadoService {
     console.log('Horas Ausentismo Pago:', horasAusentismoPago.toFixed(2));
     console.log('Horas Ausentismo Impago:', horasAusentismoImpago.toFixed(2));
     console.log('Horas Trabajadas:', horasTrabajadas.toFixed(2));
-    console.log('Total Horas:', totalHoras.toFixed(2));
+    console.log('Total Horas (sin Sin Servicio):', totalHoras.toFixed(2));
     console.log('Horas por Servicio:', totalHorasPorServicio);
     console.log('Horas Discriminadas por Estado:', horasDiscriminadas);
     console.log('========================');
@@ -591,8 +600,6 @@ export class HorarioAsignadoService {
       horasDiscriminadas,
     };
   }
-
-  
 
   async obtenerResumenPorServicio(
     mes: number, // 1-12

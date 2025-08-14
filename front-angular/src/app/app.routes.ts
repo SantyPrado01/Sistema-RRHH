@@ -24,6 +24,7 @@ import { FacturasEditComponent } from './facturas/facturas-edit/facturas-edit.co
 import { ManualComponent } from './manual/manual.component';
 import { InformesComponent } from './informes/informes.component';
 import { HorariosAsignadosViewComponent } from './horariosAsignados/horariosAsignados-view/horarios-asignados-view/horarios-asignados-view.component';
+import { NuevoHorarioComponent } from './horariosAsignados/horariosAsignado-create/horarios-asignados.component';
 
 export const routes: Routes = [
     {
@@ -122,6 +123,12 @@ export const routes: Routes = [
     {
         path:'cargarHorarios',
         component: HorariosAsignadosComponent,
+        canActivate:[AuthGuard],
+        data:{expectedRole:'Administrador'}
+    },
+    {
+        path:'nuevoHorario',
+        component: NuevoHorarioComponent,
         canActivate:[AuthGuard],
         data:{expectedRole:'Administrador'}
     },

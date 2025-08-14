@@ -86,11 +86,9 @@ export class HorariosAsignadosViewComponent {
   horasPorDiaCategoria: number = 0;
 
   constructor(
-    private empresaService: ServicioService,
     private route: ActivatedRoute,
     private horariosAsignadosService: HorariosAsignadosService,
     private empleadoService: EmpleadoService,
-    private dialog: MatDialog,
   ) {}
 
   private matPaginator!: MatPaginator;
@@ -154,16 +152,10 @@ export class HorariosAsignadosViewComponent {
   }
 
   procesarDatos() {
-    
-    // Generar todos los días del mes
     this.generarDiasDelMes();
-    // Obtener servicios únicos
     this.obtenerServicios();
-    // Calcular días trabajados y horas por día categoría
     this.calcularDiasTrabajados();
-    // Configurar columnas de la tabla
     this.configurarColumnas();
-    // Crear la estructura de datos para la tabla
     this.crearEstructuraDatos();
   }
 
@@ -189,52 +181,48 @@ export class HorariosAsignadosViewComponent {
 
   obtenerServicios() {
     const serviciosSet = new Set<string>();
-    
     this.horariosRealizados.forEach(horario => {
       if (horario.ordenTrabajo?.servicio?.nombre) {
         serviciosSet.add(horario.ordenTrabajo.servicio.nombre);
       }
     });
-    
     this.servicios = Array.from(serviciosSet).sort();
   }
 
-  calcularDiasTrabajados() {
-    // Primero procesamos los horarios para saber qué días tienen trabajo real
-    const diasConTrabajo = new Set<string>();
+    calcularDiasTrabajados() {
+    // Procesamos los horarios para saber qué días tienen horas PROYECTADAS
+    const diasConHorasProyectadas = new Set<string>();
     
     this.horariosRealizados.forEach(horario => {
-      if (horario.horasDecimales && horario.horasDecimales > 0) {
-        const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
-        if (fechaHorario) {
-          diasConTrabajo.add(fechaHorario);
-        }
-      } else if (horario.horaInicioReal && horario.horaFinReal) {
-        // Si no tiene horasDecimales, calcular las horas
-        const horas = this.calcularHorasDecimal(horario.horaInicioReal, horario.horaFinReal);
-        if (horas > 0) {
+      if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+        // Calcular las horas proyectadas
+        const horasProyectadas = this.calcularHorasDecimal(horario.horaInicioProyectado, horario.horaFinProyectado);
+        if (horasProyectadas > 0) {
           const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
           if (fechaHorario) {
-            diasConTrabajo.add(fechaHorario);
+            diasConHorasProyectadas.add(fechaHorario);
           }
         }
       }
     });
     
-    const totalDiasRealesTrabajados = diasConTrabajo.size;
+    const totalDiasConHorasProyectadas = diasConHorasProyectadas.size;
     
-    // Calcular horas por día categoría = horas totales / días realmente trabajados
-    if (totalDiasRealesTrabajados > 0 && this.empleado?.horasCategoria) {
-      this.horasPorDiaCategoria = this.empleado.horasCategoria / totalDiasRealesTrabajados;
+    // Calcular horas por día categoría = horas totales / días con horas proyectadas
+    if (totalDiasConHorasProyectadas > 0 && this.empleado?.horasCategoria) {
+      this.horasPorDiaCategoria = this.empleado.horasCategoria / totalDiasConHorasProyectadas;
     } else {
       this.horasPorDiaCategoria = 0;
       console.warn('No se pueden calcular horas por día categoría');
-      console.log('- Total días trabajados:', totalDiasRealesTrabajados);
+      console.log('- Total días con horas proyectadas:', totalDiasConHorasProyectadas);
       console.log('- Horas categoría:', this.empleado?.horasCategoria);
     }
     
-    // Guardamos los días trabajados para referencia (ahora son las fechas reales)
-    this.diasTrabajados = Array.from(diasConTrabajo);
+    // Guardamos los días con horas proyectadas para referencia
+    this.diasTrabajados = Array.from(diasConHorasProyectadas);
+
+    console.log('Días con horas proyectadas:', totalDiasConHorasProyectadas);
+    console.log('Horas por día categoría:', this.horasPorDiaCategoria);
   }
 
   configurarColumnas() {
@@ -245,12 +233,8 @@ export class HorariosAsignadosViewComponent {
   }
 
   crearEstructuraDatos() {
-    console.log('Creando estructura de datos...');
     this.horariosRealizados.forEach((horario, index) => {
-      console.log(`Procesando horario ${index + 1}:`, horario);
-      
       const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
-      console.log('Fecha del horario:', fechaHorario);
       
       if (!fechaHorario) {
         console.warn('Horario sin fecha válida:', horario);
@@ -258,11 +242,9 @@ export class HorariosAsignadosViewComponent {
       }
       
       const diaEncontrado = this.diasDelMes.find(dia => dia.fechaString === fechaHorario);
-      console.log('Día encontrado:', diaEncontrado ? diaEncontrado.displayName : 'No encontrado');
       
       if (diaEncontrado) {
         const nombreServicio = horario.ordenTrabajo?.servicio?.nombre || 'Sin Servicio';
-        console.log('Servicio:', nombreServicio);
         
         if (!diaEncontrado.horasPorServicio[nombreServicio]) {
           diaEncontrado.horasPorServicio[nombreServicio] = 0;
@@ -281,26 +263,31 @@ export class HorariosAsignadosViewComponent {
       }
     });
 
-    // Asignar horas categoría solo a días que realmente trabajaron
+    // Asignar horas categoría a días que tienen horas PROYECTADAS
     let diasConHorasCategoria = 0;
     this.diasDelMes.forEach(dia => {
-      // Verificar si este día específico tiene trabajo real
-      const tieneHoras = Object.values(dia.horasPorServicio).some(horas => (horas as number) > 0);
+      // Verificar si este día específico tiene horas proyectadas
+      const tieneHorasProyectadas = this.horariosRealizados.some(horario => {
+        const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
+        if (fechaHorario === dia.fechaString && horario.horaInicioProyectado && horario.horaFinProyectado) {
+          const horasProyectadas = this.calcularHorasDecimal(horario.horaInicioProyectado, horario.horaFinProyectado);
+          return horasProyectadas > 0;
+        }
+        return false;
+      });
       
-      if (tieneHoras) {
+      if (tieneHorasProyectadas) {
         dia.horasCategoria = this.horasPorDiaCategoria;
         diasConHorasCategoria++;
-        console.log(`Día ${dia.displayName}: asignadas ${this.horasPorDiaCategoria.toFixed(4)} horas categoría`);
+        console.log(`Día ${dia.displayName}: asignadas ${this.horasPorDiaCategoria.toFixed(4)} horas categoría (tiene horas proyectadas)`);
       } else {
         dia.horasCategoria = 0;
-        console.log(`Día ${dia.displayName}: sin horas de trabajo, no se asignan horas categoría`);
+        console.log(`Día ${dia.displayName}: sin horas proyectadas, no se asignan horas categoría`);
       }
     });
     
-    // Asignar al dataSource
     this.dataSource.data = [...this.diasDelMes]; // Crear una nueva referencia
     
-    // Forzar detección de cambios
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -387,17 +374,22 @@ export class HorariosAsignadosViewComponent {
   }
 
   descargarPdf(): void {
-    const doc = new jsPDF('landscape'); // Orientación horizontal
+    const doc = new jsPDF('portrait'); // Orientación vertical
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 14;
+    const columnWidth = (pageWidth - margin * 3) / 2; // Ancho para cada columna
+    const leftColumnX = margin;
+    const rightColumnX = margin * 2 + columnWidth;
 
     // Título
     doc.setFontSize(12);
-    doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo})`, 14, 15);
-    doc.text(`${this.nombreMes} ${this.anio}`, 14, 25);
+    doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.nombreMes} ${this.anio}`, margin, 15);
 
     // Preparar columnas dinámicas
     const columnas = ['Día', 'H. Categoría'];
     this.servicios.forEach(servicio => {
-      columnas.push(servicio.length > 12 ? servicio.substring(0, 12) + '...' : servicio);
+      columnas.push(servicio.length > 10 ? servicio.substring(0, 10) + '...' : servicio);
     });
 
     // Preparar filas
@@ -416,45 +408,104 @@ export class HorariosAsignadosViewComponent {
     });
     filas.push(filaTotales);
 
+    // Tabla principal
     (doc as any).autoTable({
       head: [columnas],
       body: filas,
-      startY: 35,
-      styles: { fontSize: 7 },
-      headStyles: { fillColor: [204, 86, 0], textColor: [255, 255, 255] },
+      startY: 20,
+      styles: { 
+        fontSize: 7,
+        cellPadding: 2
+      },
+      headStyles: { 
+        fillColor: [204, 86, 0], 
+        textColor: [255, 255, 255],
+        fontSize: 8
+      },
       columnStyles: {
-        0: { cellWidth: 40 } // Ancho fijo para la columna de días
-      }
+        0: { cellWidth: 25 }, // Día
+        1: { cellWidth: 20 }  // H. Categoría
+      },
+      margin: { left: margin, right: margin }
     });
 
     const finalY = (doc as any).autoTable.previous.finalY || 35;
+    let currentY = finalY + 8;
 
-    // Resumen final
-    doc.setFontSize(10);
-    let currentY = finalY + 15;
+    // Verificar si necesitamos una nueva página
+    if (currentY > pageHeight - 32) {
+      doc.addPage();
+      currentY = 8;
+    }
 
-    doc.text('RESUMEN:', 14, currentY);
-    currentY += 10;
+    // === COLUMNA IZQUIERDA: HORAS DISCRIMINADAS DIVIDIDA EN DOS ===
+    doc.setFontSize(8);
+    doc.setFont('bold');
+    doc.text('HORAS DISCRIMINADAS:', leftColumnX, currentY);
+    doc.setFont('normal');
 
-    doc.text(`Horas Ausentismo Pago: ${this.horasAusentismoPago.toFixed(2)}`, 14, currentY);
-    currentY += 7;
+    let leftCurrentY = currentY + 5;
+    let middleColumnX = leftColumnX + (columnWidth / 2); // segunda subcolumna
 
-    doc.text(`Horas Ausentismo Impago: ${this.horasAusentismoImpago.toFixed(2)}`, 14, currentY);
-    currentY += 7;
+    doc.setFontSize(8);
 
-    doc.text(`Total Horas Trabajadas: ${this.horasTrabajadas.toFixed(2)}`, 14, currentY);
-    currentY += 7;
+    // Estados para la primera subcolumna
+    const primeraColumnaEstados = ['Asistió', 'Enfermedad', 'Vacaciones'];
+    // El resto para la segunda subcolumna
+    const segundaColumnaEstados = Object.keys(this.horasDiscriminadas)
+      .filter(e => !primeraColumnaEstados.includes(e));
 
-    doc.text(`Total Horas: ${this.totalHoras.toFixed(2)}`, 14, currentY);
-    currentY += 10;
-
-    doc.text('HORAS DISCRIMINADAS:', 14, currentY);
-    currentY += 7;
-
-    Object.keys(this.horasDiscriminadas).forEach(estado => {
-      doc.text(`${estado}: ${this.horasDiscriminadas[estado].toFixed(2)}`, 14, currentY);
-      currentY += 5;
+    // Primera subcolumna
+    primeraColumnaEstados.forEach(estado => {
+      const valor = this.horasDiscriminadas[estado];
+      if (valor !== undefined) {
+        doc.text(`${estado}: ${valor.toFixed(2)}`, leftColumnX, leftCurrentY);
+        leftCurrentY += 6;
+      }
     });
+
+    // Segunda subcolumna (alineada con la primera fila de la primera subcolumna)
+    let rightColCurrentY = currentY + 5;
+    segundaColumnaEstados.forEach(estado => {
+      const valor = this.horasDiscriminadas[estado];
+      if (valor !== undefined) {
+        doc.text(`${estado}: ${valor.toFixed(2)}`, middleColumnX, rightColCurrentY);
+        rightColCurrentY += 6;
+      }
+    });
+
+
+    // === COLUMNA DERECHA: RESUMEN FINAL ===
+    let rightCurrentY = currentY;
+    
+    doc.setFontSize(10);
+    doc.setFont('bold');
+    doc.text('Resumen Final:', rightColumnX, rightCurrentY);
+    doc.setFont('normal');
+    rightCurrentY += 6;
+
+    doc.setFontSize(8);
+    
+    // Horas Ausentismo Pago
+    doc.text(`Horas Ausentismo Pago:`, rightColumnX, rightCurrentY);
+    doc.text(`${this.horasAusentismoPago.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+    rightCurrentY += 6;
+
+    // Horas Ausentismo Impago
+    doc.text(`Horas Ausentismo Impago:`, rightColumnX, rightCurrentY);
+    doc.text(`${this.horasAusentismoImpago.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+    rightCurrentY += 6;
+
+    // Total Horas Trabajadas
+    doc.text(`Total Horas Trabajadas:`, rightColumnX, rightCurrentY);
+    doc.text(`${this.horasTrabajadas.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+    rightCurrentY += 6;
+
+    // Total General (destacado)
+    doc.setFont('bold');
+    doc.setFontSize(10);
+    doc.text(`TOTAL GENERAL:`, rightColumnX, rightCurrentY);
+    doc.text(`${this.totalHoras.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
 
     // Nombre del archivo
     const nombreLimpio = this.empleado.nombre?.replace(/\s+/g, '_').toLowerCase() || '';

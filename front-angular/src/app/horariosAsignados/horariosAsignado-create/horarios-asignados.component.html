@@ -1,0 +1,111 @@
+<div class="title-container">
+  <div class="title-item">
+    <h1>Cargar Horarios Individuales</h1>
+  </div>
+</div>
+
+<div class="content-container">
+  <div class="form-container">
+    <form [formGroup]="horariosForm" (ngSubmit)="guardar()">
+      <div formArrayName="horarios">
+        <div *ngFor="let horario of horarios.controls; let i = index" [formGroupName]="i" class="form-row">
+
+          <!-- Fecha -->
+          <mat-form-field appearance="outline" class="input-medium">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fecha">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <!-- Empresa -->
+          <mat-form-field appearance="outline" class="input-medium">
+            <mat-label class="mat-label">Buscar Servicios</mat-label>
+            <input
+              type="text"
+              matInput 
+              formControlName="empresa" 
+              [matAutocomplete]="autoServicio"
+            />
+            <mat-autocomplete 
+              #autoServicio="matAutocomplete"
+              [displayWith]="displayEmpresaName">
+              <mat-option *ngFor="let empresa of horariosFiltradosEmpresas[i]" [value]="empresa">
+                {{ empresa.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <!-- Empleado -->
+          <mat-form-field appearance="outline" class="input-medium">
+            <mat-label>Buscar Empleado</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="empleado"
+              [matAutocomplete]="autoEmpleado"
+            />
+            <mat-autocomplete #autoEmpleado="matAutocomplete" [displayWith]="displayEmployeeName">
+              <mat-option *ngFor="let empleado of horariosFiltradosEmpleados[i]" [value]="empleado">
+                {{ empleado.apellido }} {{ empleado.nombre }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="input-medium">
+            <mat-label>Hora Inicio Real</mat-label>
+            <input matInput type="time" [(ngModel)]="horaInicioReal" name="inicioReal"/>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="input-medium">
+            <mat-label>Hora Fin Real</mat-label>
+            <input matInput type="time" [(ngModel)]="horaFinReal" name="finReal"/>
+          </mat-form-field>
+
+          <!-- Estado -->
+          <mat-form-field appearance="outline" class="input-medium">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="estado" required>
+              <mat-option value="Asistió">Asistió</mat-option>
+              <mat-option value="Accidente">Accidente</mat-option>
+              <mat-option value="Llegada Tarde">Llegada Tarde</mat-option>
+              <mat-option value="Faltó Con Aviso">Faltó Con Aviso</mat-option>
+              <mat-option value="Faltó Sin Aviso">Faltó Sin Aviso</mat-option>
+              <mat-option value="Enfermedad">Enfermedad</mat-option>
+              <mat-option value="Sin Servicio">Sin Servicio</mat-option>
+              <mat-option value="Licencia">Licencia</mat-option>
+              <mat-option value="Vacaciones">Vacaciones</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Observaciones -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Observaciones</mat-label>
+            <textarea matInput formControlName="observaciones"></textarea>
+          </mat-form-field>
+
+          <!-- Botón eliminar -->
+          <button 
+            mat-icon-button 
+            color="warn" 
+            (click)="eliminarFila(i)" 
+            type="button"
+            [disabled]="horarios.length === 1">
+            <mat-icon>delete</mat-icon>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="modal-footer">
+        <button mat-raised-button color="primary" type="button" (click)="agregarFila()">
+          Agregar fila
+        </button>
+        <button mat-raised-button color="accent" type="submit" [disabled]="!horariosForm.valid">
+          Guardar todos
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

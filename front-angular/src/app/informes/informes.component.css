@@ -129,7 +129,7 @@ td, th { padding: 0 1rem !important; }
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
-.form-container h3 { margin-bottom: 20px; color: white; }
+.form-container h3 { margin-bottom: 20px; color: rgb(0, 0, 0); }
 .form-container label { margin: 10px 0 5px; color: #333; }
 
 .form-container input[type="text"],
@@ -182,9 +182,8 @@ td, th { padding: 0 1rem !important; }
   .form-container { width: 370px; }
 }
 .totales-container {
-  margin: 20px 0;
   padding: 15px;
-  background-color: #f8f9fa;
+  background-color:rgb(235, 235, 235);
   border-radius: 5px;
 }
 
@@ -192,6 +191,7 @@ td, th { padding: 0 1rem !important; }
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  margin: 20px 0;
 }
 
 .total-item {
@@ -203,9 +203,10 @@ td, th { padding: 0 1rem !important; }
   border-radius: 3px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
 .resumen-container {
-  margin: 20px 0;
   padding: 15px;
+  background-color: rgb(235, 235, 235);
   border-radius: 5px;
 }
 
@@ -241,4 +242,30 @@ td, th { padding: 0 1rem !important; }
   border-left: 4px solid #2196f3;
   font-size: 16px;
   font-weight: bold;
+}
+
+.discriminadas-container {
+  margin-top: 15px;
+}
+
+.discriminadas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.discriminada-item {
+  display: flex;
+  justify-content: space-between;
+  min-width: 150px;
+  padding: 5px 10px;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-size: 14px;
+}
+.resumen-container h3,
+.totales-container h3,
+.discriminadas-container h3 {
+  font-size: 1.2em;
 }
