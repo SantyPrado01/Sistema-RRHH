@@ -44,7 +44,7 @@
 
 ::ng-deep input.mat-mdc-input-element,
 ::ng-deep .mat-mdc-select-value {
-  font-size: 14px !important;
+  font-size: 16px !important;
   height: 24px !important;
 }
 
@@ -62,8 +62,9 @@ table {
 }
 
 .mat-mdc-row .mat-mdc-cell {
-  border: 1px solid transparent;
+  border-bottom: 1px solid #c1c1c1;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
@@ -81,7 +82,7 @@ table {
 .pending   { background-color: #fff3cd; color: #856404; }
 .delete    { background-color: #f8d7da; color: #721c24; }
 
-.mat-mdc-form-field { font-size: 14px; width: 100%; }
+.mat-mdc-form-field { font-size: 16px; width: 100%; }
 td, th { padding: 0 1rem !important; }
 
 .mat-column-acciones { width: 120px; text-align: center; }
@@ -264,8 +265,17 @@ td, th { padding: 0 1rem !important; }
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   font-size: 14px;
 }
+
 .resumen-container h3,
 .totales-container h3,
 .discriminadas-container h3 {
   font-size: 1.2em;
+}
+
+.table-container .mat-row {
+  border-bottom: 1px solid #515151;
+}
+
+.table-container .mat-header-row {
+  border-bottom: 1px solid #515151;
 }
