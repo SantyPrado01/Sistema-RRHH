@@ -75,7 +75,6 @@ h3 {
   outline: none;
 }
 
-
 .status {
   padding: 5px 10px;
   border-radius: 3px;
@@ -109,6 +108,4 @@ h3 {
   .orden-trabajo-container {
     width: 80%;
   }
-
-
 }

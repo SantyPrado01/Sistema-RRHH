@@ -325,21 +325,21 @@ export class InformesComponent  {
           // Función auxiliar para convertir "HH:mm" a minutos desde la medianoche
           const timeStringToMinutes = (timeString: string | null | undefined): number => {
             if (!timeString) {
-              return 0; // Si la hora no está definida, retorna 0 minutos
+              return 0;
             }
-            const parts = timeString.split(':');
-            if (parts.length !== 2) {
-                  console.warn('Formato de hora inválido:', timeString);
-                  return 0; // Formato incorrecto
-            }
+
+            const parts = timeString.split(':'); // puede ser ["HH","mm"] o ["HH","mm","ss"]
+
             const hours = parseInt(parts[0], 10);
             const minutes = parseInt(parts[1], 10);
+            const seconds = parts.length === 3 ? parseInt(parts[2], 10) : 0;
 
-            if (isNaN(hours) || isNaN(minutes)) {
-                  console.warn('Números en formato de hora inválidos:', timeString);
-                  return 0; // Partes no numéricas
+            if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+              console.warn('Formato de hora inválido:', timeString);
+              return 0;
             }
-            return (hours * 60) + minutes;
+
+            return (hours * 60) + minutes + Math.floor(seconds / 60); // segundos redondeados a minutos
           };
           
           //Calcular duracion real por cada fila
@@ -471,11 +471,11 @@ export class InformesComponent  {
                 case 'empleadoSuplente': return `${item.empleadoSuplente?.nombre || ''} ${item.empleadoSuplente?.apellido || ''}`.trim();
                 case 'estadoSulente': return item.estadoSuplente || '';
                 case 'fecha': return this.datePipe.transform(item.fecha, 'yyyy-MM-dd') || '';
-                case 'horasInicioProyectado': return item.horaInicioProyectado || '';
-                case 'horasFinProyectado': return item.horaFinProyectado || '';
-                case 'horaInicioReal': return item.horaInicioReal || '';
+                case 'horasInicioProyectado': return item.horaInicioProyectado?.substring(0,5) || '';
+                case 'horasFinProyectado': return item.horaFinProyectado?.substring(0,5) || '';
+                case 'horaInicioReal': return item.horaInicioReal?.substring(0,5) || '';
                 case 'horaFinReal': return item.horaFinReal || '';
-                case 'horasTotales': return item.horasTotales.toFixed(2) || '';
+                case 'horasTotales': return item.duracionReal || '';
                 
                 default: return (item as any)[columnDefName] || '';
             }

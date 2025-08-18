@@ -98,13 +98,13 @@
         <!-- Hora Inicio Column -->
         <ng-container matColumnDef="horaInicio">
           <th mat-header-cell *matHeaderCellDef> Hora Inicio </th>
-          <td mat-cell *matCellDef="let horario"> {{horario.horaInicioProyectado}} </td>
+          <td mat-cell *matCellDef="let horario"> {{horario.horaInicioProyectado?.substring(0,5)}} </td>
         </ng-container>
 
         <!-- Hora Fin Column -->
         <ng-container matColumnDef="horaFin">
           <th mat-header-cell *matHeaderCellDef> Hora Fin </th>
-          <td mat-cell *matCellDef="let horario"> {{horario.horaFinProyectado}} </td>
+          <td mat-cell *matCellDef="let horario"> {{horario.horaFinProyectado?.substring(0,5)}} </td>
         </ng-container>
 
         <!-- Hora Inicio Real Column -->
@@ -114,7 +114,7 @@
             <mat-form-field appearance="outline" *ngIf="horario.editMode">
               <input matInput type="time" [(ngModel)]="horario.horaInicioReal">
             </mat-form-field>
-            <span *ngIf="!horario.editMode">{{horario.horaInicioReal}}</span>
+            <span *ngIf="!horario.editMode">{{horario.horaInicioReal?.substring(0,5)}}</span>
           </td>
         </ng-container>
 
@@ -125,7 +125,7 @@
             <mat-form-field appearance="outline" *ngIf="horario.editMode">
               <input matInput type="time" [(ngModel)]="horario.horaFinReal">
             </mat-form-field>
-            <span *ngIf="!horario.editMode">{{horario.horaFinReal}}</span>
+            <span *ngIf="!horario.editMode">{{horario.horaFinReal?.substring(0,5)}}</span>
           </td>
         </ng-container>
 
