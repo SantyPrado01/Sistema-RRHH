@@ -474,7 +474,7 @@ export class InformesComponent  {
                 case 'horasInicioProyectado': return item.horaInicioProyectado?.substring(0,5) || '';
                 case 'horasFinProyectado': return item.horaFinProyectado?.substring(0,5) || '';
                 case 'horaInicioReal': return item.horaInicioReal?.substring(0,5) || '';
-                case 'horaFinReal': return item.horaFinReal || '';
+                case 'horaFinReal': return item.horaFinReal?.substring(0,5) || '';
                 case 'horasTotales': return item.duracionReal || '';
                 
                 default: return (item as any)[columnDefName] || '';
