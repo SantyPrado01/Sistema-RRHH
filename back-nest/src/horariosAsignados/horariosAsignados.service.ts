@@ -521,10 +521,17 @@ export class HorarioAsignadoService {
       }
 
       // Calcular horas reales (siempre para mostrar en el horario individual)
-      const horasReales = convertirHorasADecimal(
-        horario.horaInicioReal,
-        horario.horaFinReal
-      );
+      let horasReales: number;
+      if (estadoFinal === 'Faltó Con Aviso' || estadoFinal === 'Faltó Sin Aviso') {
+        // Para faltas, mostrar 0 horas reales
+        horasReales = 0;
+      } else {
+        // Para otros estados, calcular normalmente
+        horasReales = convertirHorasADecimal(
+          horario.horaInicioReal,
+          horario.horaFinReal
+        );
+      }
 
       // Para "Sin Servicio", calcular también las horas proyectadas para los totales
       let horasParaConteo: number;
@@ -535,7 +542,10 @@ export class HorarioAsignadoService {
         );
         console.log(`Sin Servicio - horas reales: ${horasReales.toFixed(2)}, horas proyectadas para conteo: ${horasParaConteo.toFixed(2)}`);
       } else {
-        horasParaConteo = horasReales;
+        horasParaConteo = convertirHorasADecimal(
+          horario.horaInicioReal,
+          horario.horaFinReal
+        );
       }
 
       // Agregar propiedades calculadas al objeto horario
@@ -566,7 +576,7 @@ export class HorarioAsignadoService {
       }
 
       // Sumar horas por servicio (excepto para "Sin Servicio")
-      if (estadoFinal !== 'Sin Servicio') {
+      if (estadoFinal !== 'Sin Servicio' && estadoFinal !== 'Faltó Con Aviso' && estadoFinal !== 'Faltó Sin Aviso') {
         const nombreServicio = horario.ordenTrabajo?.servicio?.nombre || 'Sin servicio';
         if (!totalHorasPorServicio[nombreServicio]) {
           totalHorasPorServicio[nombreServicio] = 0;
