@@ -522,7 +522,7 @@ export class HorarioAsignadoService {
 
       // Calcular horas reales (siempre para mostrar en el horario individual)
       let horasReales: number;
-      if (estadoFinal === 'Faltó Con Aviso' || estadoFinal === 'Faltó Sin Aviso') {
+      if (estadoFinal === 'Faltó Con Aviso' || estadoFinal === 'Faltó Sin Aviso' || estadoFinal === 'Enfermedad' || estadoFinal === 'Licencia' || estadoFinal === 'Vacaciones' || estadoFinal === 'Accidente') {
         // Para faltas, mostrar 0 horas reales
         horasReales = 0;
       } else {
@@ -541,7 +541,13 @@ export class HorarioAsignadoService {
           horario.horaFinProyectado
         );
         console.log(`Sin Servicio - horas reales: ${horasReales.toFixed(2)}, horas proyectadas para conteo: ${horasParaConteo.toFixed(2)}`);
-      } else {
+      } else if((estadoFinal === 'Faltó Con Aviso' || estadoFinal === 'Faltó Sin Aviso') && !horario.empleadoSuplente){
+        horasParaConteo = convertirHorasADecimal(
+          horario.horaInicioProyectado,
+          horario.horaFinProyectado
+        );
+      }
+      else {
         horasParaConteo = convertirHorasADecimal(
           horario.horaInicioReal,
           horario.horaFinReal

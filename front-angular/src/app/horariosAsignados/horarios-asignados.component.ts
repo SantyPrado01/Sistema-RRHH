@@ -208,6 +208,11 @@ export class HorariosAsignadosComponent implements OnInit {
       return;
     }
 
+    if ((this.estado === 'Faltó Con Aviso' || this.estado === 'Faltó Sin Aviso') && !this.empleadoSup) {
+      this.horaInicioReal = '';
+      this.horaFinReal = '';
+    }
+
     const updatedHorario: HorarioAsignado = {
       ...this.selectedHorario,
       horaInicioReal: this.horaInicioReal,
