@@ -522,7 +522,7 @@ export class HorarioAsignadoService {
 
       // Calcular horas reales (siempre para mostrar en el horario individual)
       let horasReales: number;
-      if (estadoFinal === 'Faltó Con Aviso' || estadoFinal === 'Faltó Sin Aviso' || estadoFinal === 'Enfermedad' || estadoFinal === 'Licencia' || estadoFinal === 'Vacaciones' || estadoFinal === 'Accidente') {
+      if (estadoFinal === 'Faltó Con Aviso' || estadoFinal === 'Faltó Sin Aviso' || estadoFinal === 'Enfermedad' || estadoFinal === 'Licencia' || estadoFinal === 'Vacaciones' || estadoFinal === 'Accidente' || estadoFinal === 'Sin Servicio') {
         // Para faltas, mostrar 0 horas reales
         horasReales = 0;
       } else {
