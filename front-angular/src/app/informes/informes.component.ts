@@ -911,140 +911,157 @@ export class InformesComponent  {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 14;
-    const columnWidth = (pageWidth - margin * 3) / 2; // Ancho para cada columna
+    const columnWidth = (pageWidth - margin * 3) / 2;
     const leftColumnX = margin;
     const rightColumnX = margin * 2 + columnWidth;
-
-    // Título
-    doc.setFontSize(12);
-    doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.mesSeleccionado} ${this.anio}`, margin, 15);
-
-    // Preparar columnas dinámicas
-    const columnas = ['Día', 'H. Categoría'];
-    this.servicios.forEach(servicio => {
-      columnas.push(servicio.length > 10 ? servicio.substring(0, 10) + '...' : servicio);
-    });
-
-    // Preparar filas
-    const filas = this.diasDelMes.map(dia => {
-      const fila = [dia.displayName, dia.horasCategoria.toFixed(2)];
-      this.servicios.forEach(servicio => {
-        const horas = dia.horasPorServicio[servicio] || 0;
-        fila.push(horas === 0 ? "" : horas.toFixed(2));
-      });
-      return fila;
-    });
-
-    // Agregar fila de totales
-    const filaTotales = ['TOTALES', this.getTotalHorasCategoria().toFixed(2)];
-    this.servicios.forEach(servicio => {
-      filaTotales.push(this.getTotalPorServicio(servicio).toFixed(2));
-    });
-    filas.push(filaTotales);
-
-    // Tabla principal
-    (doc as any).autoTable({
-      head: [columnas],
-      body: filas,
-      startY: 20,
-      styles: { 
-        fontSize: 7,
-        cellPadding: 2
-      },
-      headStyles: { 
-        fillColor: [204, 86, 0], 
-        textColor: [255, 255, 255],
-        fontSize: 8
-      },
-      columnStyles: {
-        0: { cellWidth: 25 }, // Día
-        1: { cellWidth: 20 }  // H. Categoría
-      },
-      margin: { left: margin, right: margin }
-    });
-
-    const finalY = (doc as any).autoTable.previous.finalY || 35;
-    let currentY = finalY + 8;
-
-    // Verificar si necesitamos una nueva página
-    if (currentY > pageHeight - 32) {
-      doc.addPage();
-      currentY = 8;
+    
+    const maxServiciosPorHoja = 6;
+    const serviciosChunks = [];
+    
+    // Dividir servicios en chunks de máximo 6
+    for (let i = 0; i < this.servicios.length; i += maxServiciosPorHoja) {
+        serviciosChunks.push(this.servicios.slice(i, i + maxServiciosPorHoja));
     }
 
-    // === COLUMNA IZQUIERDA: HORAS DISCRIMINADAS DIVIDIDA EN DOS ===
-    doc.setFontSize(8);
-    doc.setFont('bold');
-    doc.text('HORAS DISCRIMINADAS:', leftColumnX, currentY);
-    doc.setFont('normal');
+    // Generar cada hoja
+    serviciosChunks.forEach((serviciosChunk, indexHoja) => {
+        if (indexHoja > 0) {
+            doc.addPage();
+        }
 
-    let leftCurrentY = currentY + 5;
-    let middleColumnX = leftColumnX + (columnWidth / 2); // segunda subcolumna
+        // Título
+        doc.setFontSize(12);
+        const tituloHoja = serviciosChunks.length > 1 ? ` - Hoja ${indexHoja + 1}` : '';
+        doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.mesSeleccionado} ${this.anio}${tituloHoja}`, margin, 15);
 
-    doc.setFontSize(8);
+        // Preparar columnas dinámicas para esta hoja
+        const columnas = ['Día', 'H. Categoría'];
+        serviciosChunk.forEach(servicio => {
+            columnas.push(servicio.length > 10 ? servicio.substring(0, 10) + '...' : servicio);
+        });
 
-    // Estados para la primera subcolumna
-    const primeraColumnaEstados = ['Asistió', 'Enfermedad', 'Vacaciones'];
-    // El resto para la segunda subcolumna
-    const segundaColumnaEstados = Object.keys(this.horasDiscriminadas)
-      .filter(e => !primeraColumnaEstados.includes(e));
+        // Preparar filas para esta hoja
+        const filas = this.diasDelMes.map(dia => {
+            const fila = [dia.displayName, dia.horasCategoria.toFixed(2)];
+            serviciosChunk.forEach(servicio => {
+                const horas = dia.horasPorServicio[servicio] || 0;
+                fila.push(horas === 0 ? "" : horas.toFixed(2));
+            });
+            return fila;
+        });
 
-    // Primera subcolumna
-    primeraColumnaEstados.forEach(estado => {
-      const valor = this.horasDiscriminadas[estado];
-      if (valor !== undefined) {
-        doc.text(`${estado}: ${valor.toFixed(2)}`, leftColumnX, leftCurrentY);
-        leftCurrentY += 6;
-      }
+        // Agregar fila de totales para esta hoja
+        const filaTotales = ['TOTALES', this.getTotalHorasCategoria().toFixed(2)];
+        serviciosChunk.forEach(servicio => {
+            filaTotales.push(this.getTotalPorServicio(servicio).toFixed(2));
+        });
+        filas.push(filaTotales);
+
+        // Tabla principal de la hoja actual
+        (doc as any).autoTable({
+            head: [columnas],
+            body: filas,
+            startY: 20,
+            styles: { 
+                fontSize: 7,
+                cellPadding: 2
+            },
+            headStyles: { 
+                fillColor: [204, 86, 0], 
+                textColor: [255, 255, 255],
+                fontSize: 8
+            },
+            columnStyles: {
+                0: { cellWidth: 25 }, // Día
+                1: { cellWidth: 20 }  // H. Categoría
+            },
+            margin: { left: margin, right: margin }
+        });
+
+        const finalY = (doc as any).autoTable.previous.finalY || 35;
+        let currentY = finalY + 8;
+
+        // Solo agregar el resumen en la última hoja
+        if (indexHoja === serviciosChunks.length - 1) {
+            // Verificar si necesitamos una nueva página para el resumen
+            if (currentY > pageHeight - 60) {
+                doc.addPage();
+                currentY = 20;
+            }
+
+            // === COLUMNA IZQUIERDA: HORAS DISCRIMINADAS DIVIDIDA EN DOS ===
+            doc.setFontSize(8);
+            doc.setFont('bold');
+            doc.text('HORAS DISCRIMINADAS:', leftColumnX, currentY);
+            doc.setFont('normal');
+
+            let leftCurrentY = currentY + 5;
+            let middleColumnX = leftColumnX + (columnWidth / 2);
+
+            doc.setFontSize(8);
+
+            // Estados para la primera subcolumna
+            const primeraColumnaEstados = ['Asistió', 'Enfermedad', 'Vacaciones'];
+            // El resto para la segunda subcolumna
+            const segundaColumnaEstados = Object.keys(this.horasDiscriminadas)
+                .filter(e => !primeraColumnaEstados.includes(e));
+
+            // Primera subcolumna
+            primeraColumnaEstados.forEach(estado => {
+                const valor = this.horasDiscriminadas[estado];
+                if (valor !== undefined) {
+                    doc.text(`${estado}: ${valor.toFixed(2)}`, leftColumnX, leftCurrentY);
+                    leftCurrentY += 6;
+                }
+            });
+
+            // Segunda subcolumna
+            let rightColCurrentY = currentY + 5;
+            segundaColumnaEstados.forEach(estado => {
+                const valor = this.horasDiscriminadas[estado];
+                if (valor !== undefined) {
+                    doc.text(`${estado}: ${valor.toFixed(2)}`, middleColumnX, rightColCurrentY);
+                    rightColCurrentY += 6;
+                }
+            });
+
+            // === COLUMNA DERECHA: RESUMEN FINAL ===
+            let rightCurrentY = currentY;
+            
+            doc.setFontSize(10);
+            doc.setFont('bold');
+            doc.text('Resumen Final:', rightColumnX, rightCurrentY);
+            doc.setFont('normal');
+            rightCurrentY += 6;
+
+            doc.setFontSize(8);
+            
+            // Horas Ausentismo Pago
+            doc.text(`Horas Ausentismo Pago:`, rightColumnX, rightCurrentY);
+            doc.text(`${this.horasAusentismoPago.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+            rightCurrentY += 6;
+
+            // Horas Ausentismo Impago
+            doc.text(`Horas Ausentismo Impago:`, rightColumnX, rightCurrentY);
+            doc.text(`${this.horasAusentismoImpago.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+            rightCurrentY += 6;
+
+            // Total Horas Trabajadas
+            doc.text(`Total Horas Trabajadas:`, rightColumnX, rightCurrentY);
+            doc.text(`${this.horasTrabajadas.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+            rightCurrentY += 6;
+
+            doc.text(`Horas Categoria:`, rightColumnX, rightCurrentY);
+            doc.text(`${this.horasCategoria.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+            rightCurrentY += 6;
+
+            // Total General (destacado)
+            doc.setFont('bold');
+            doc.setFontSize(10);
+            doc.text(`TOTAL GENERAL:`, rightColumnX, rightCurrentY);
+            doc.text(`${this.totalHoras.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+        }
     });
-
-    // Segunda subcolumna (alineada con la primera fila de la primera subcolumna)
-    let rightColCurrentY = currentY + 5;
-    segundaColumnaEstados.forEach(estado => {
-      const valor = this.horasDiscriminadas[estado];
-      if (valor !== undefined) {
-        doc.text(`${estado}: ${valor.toFixed(2)}`, middleColumnX, rightColCurrentY);
-        rightColCurrentY += 6;
-      }
-    });
-
-
-    // === COLUMNA DERECHA: RESUMEN FINAL ===
-    let rightCurrentY = currentY;
-    
-    doc.setFontSize(10);
-    doc.setFont('bold');
-    doc.text('Resumen Final:', rightColumnX, rightCurrentY);
-    doc.setFont('normal');
-    rightCurrentY += 6;
-
-    doc.setFontSize(8);
-    
-    // Horas Ausentismo Pago
-    doc.text(`Horas Ausentismo Pago:`, rightColumnX, rightCurrentY);
-    doc.text(`${this.horasAusentismoPago.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
-    rightCurrentY += 6;
-
-    // Horas Ausentismo Impago
-    doc.text(`Horas Ausentismo Impago:`, rightColumnX, rightCurrentY);
-    doc.text(`${this.horasAusentismoImpago.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
-    rightCurrentY += 6;
-
-    // Total Horas Trabajadas
-    doc.text(`Total Horas Trabajadas:`, rightColumnX, rightCurrentY);
-    doc.text(`${this.horasTrabajadas.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
-    rightCurrentY += 6;
-
-    doc.text(`Horas Categoria:`, rightColumnX, rightCurrentY);
-    doc.text(`${this.horasCategoria.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
-    rightCurrentY += 6;
-    // Total General (destacado)
-    doc.setFont('bold');
-    doc.setFontSize(10);
-    doc.text(`TOTAL GENERAL:`, rightColumnX, rightCurrentY);
-    doc.text(`${this.totalHoras.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
-
-    
 
     // Nombre del archivo
     const nombreLimpio = this.empleado.nombre?.replace(/\s+/g, '_').toLowerCase() || '';
