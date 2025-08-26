@@ -932,10 +932,10 @@ export class InformesComponent  {
         // Título
         doc.setFontSize(12);
         const tituloHoja = serviciosChunks.length > 1 ? ` - Hoja ${indexHoja + 1}` : '';
-        doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.mesSeleccionado} ${this.anio}${tituloHoja}`, margin, 15);
+        doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.nombreMes} ${this.anio}${tituloHoja}`, margin, 15);
 
         // Preparar columnas dinámicas para esta hoja
-        const columnas = ['Día', 'H. Categoría'];
+        const columnas = ['Día', 'H. Cat'];
         serviciosChunk.forEach(servicio => {
             columnas.push(servicio.length > 10 ? servicio.substring(0, 10) + '...' : servicio);
         });
@@ -978,15 +978,38 @@ export class InformesComponent  {
             margin: { left: margin, right: margin }
         });
 
-        const finalY = (doc as any).autoTable.previous.finalY || 35;
-        let currentY = finalY + 8;
+        const finalY = (doc as any).autoTable.previous.finalY || 20;
+        let currentY = finalY + 6;
 
         // Solo agregar el resumen en la última hoja
         if (indexHoja === serviciosChunks.length - 1) {
-            // Verificar si necesitamos una nueva página para el resumen
-            if (currentY > pageHeight - 60) {
+            // Calcular el espacio necesario para el resumen completo de manera más precisa
+            const primeraColumnaEstados = ['Asistió', 'Enfermedad', 'Vacaciones'];
+            const segundaColumnaEstados = Object.keys(this.horasDiscriminadas)
+                .filter(e => !primeraColumnaEstados.includes(e));
+            
+            // Contar estados reales con valores
+            const filasColumna1 = primeraColumnaEstados.filter(e => this.horasDiscriminadas[e] !== undefined).length;
+            const filasColumna2 = segundaColumnaEstados.filter(e => this.horasDiscriminadas[e] !== undefined).length;
+            
+            // El espacio real será determinado por la columna más alta
+            const filasHorasDiscriminadas = Math.max(filasColumna1, filasColumna2);
+            
+            // Espacio necesario más preciso
+            const espacioTituloHoras = 6;  // Solo título "HORAS DISCRIMINADAS"
+            const espacioTituloResumen = 6; // Solo título "Resumen Final"
+            const espacioHorasDiscriminadas = filasHorasDiscriminadas * 6; // Líneas de horas discriminadas
+            const espacioResumenFinal = 5 * 6; // 5 filas del resumen final (sin contar título)
+            
+            // El espacio total es el mayor entre las dos secciones más sus títulos
+            const espacioSeccionIzquierda = espacioTituloHoras + espacioHorasDiscriminadas;
+            const espacioSeccionDerecha = espacioTituloResumen + espacioResumenFinal;
+            const espacioTotalNecesario = Math.max(espacioSeccionIzquierda, espacioSeccionDerecha) + 5; // margen mínimo
+
+            // Verificar si necesitamos una nueva página (más permisivo)
+            if (currentY > pageHeight - 40) {  
                 doc.addPage();
-                currentY = 20;
+                currentY = margin;
             }
 
             // === COLUMNA IZQUIERDA: HORAS DISCRIMINADAS DIVIDIDA EN DOS ===
@@ -999,12 +1022,6 @@ export class InformesComponent  {
             let middleColumnX = leftColumnX + (columnWidth / 2);
 
             doc.setFontSize(8);
-
-            // Estados para la primera subcolumna
-            const primeraColumnaEstados = ['Asistió', 'Enfermedad', 'Vacaciones'];
-            // El resto para la segunda subcolumna
-            const segundaColumnaEstados = Object.keys(this.horasDiscriminadas)
-                .filter(e => !primeraColumnaEstados.includes(e));
 
             // Primera subcolumna
             primeraColumnaEstados.forEach(estado => {

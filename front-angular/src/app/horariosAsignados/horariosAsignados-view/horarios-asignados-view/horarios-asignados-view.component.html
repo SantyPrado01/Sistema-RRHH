@@ -90,7 +90,7 @@
               {{ getServicioNombreCorto(servicio) }}
             </th>
             <td mat-cell *matCellDef="let dia" class="cell-servicio">
-              {{ (dia.horasPorServicio[servicio] || 0) | number: '1.2-2' }}
+              {{ (dia.horasPorServicio[servicio] || '') | number: '1.2-2' }}
             </td>
           </ng-container>
 
