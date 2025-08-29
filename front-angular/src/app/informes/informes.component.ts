@@ -277,7 +277,12 @@ export class InformesComponent  {
               case 'empleado': return `${item.empleado.nombre} ${item.empleado.apellido}`;
               default: return (item as any)[headerId]; 
             }
-
+          }
+          else if (item && item.nombreServicio) {
+            switch (headerId) {
+              case 'empresa': return item.nombreServicio;
+              default: return (item as any)[headerId]; 
+            }
           }
           
         };

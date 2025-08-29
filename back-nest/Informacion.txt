@@ -56,20 +56,29 @@ Un estándar para la creación de tokens de acceso que se utilizan para autentic
 Un token JWT contiene información del usuario y una firma digital, permitiendo verificar su autenticidad.
 
 
+-----------
+
+
 Configuracion para el despliegue:
 
-Cambios desde Github: git pull origin main
+Cambios desde Github: 
+-git pull origin main
 
-Preparar el backend: npm run build
-Ejecutar PM2 con el backend: pm2 start dist/main.js --name corsacor-api
+*Preparar el backend: 
+- npm run build
+*Ejecutar PM2 con el backend: 
+- pm2 start dist/main.js --name corsacor-api
 
-Preparar el frontend: ng build --configuration production
-Luego de cada produccion debo mover la caperta a: 
+* Preparar el frontend: 
+- ng build --configuration production
 
-sudo cp -r /root/Sistema-RRHH/front-angular/dist/front-angular/browser/* /var/www/sistemacorsacor/front-angular/browser/
+*Luego de cada produccion debo mover la caperta a: 
+- sudo cp -r /root/Sistema-RRHH/front-angular/dist/front-angular/browser/* /var/www/sistemacorsacor/front-angular/browser/
 
+*Reiniciar el frontend
 sudo systemctl restart nginx
 
+-----------------
 
 Esto es en caso de tener problmeas de permisos en esa carpeta
 sudo chown -R www-data:www-data /var/www/sistemacorsacor/front-angular
