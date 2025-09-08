@@ -18,8 +18,6 @@ import { MatInputModule } from '@angular/material/input';
 import { EmpleadoService } from '../../../empleados/services/empleado.service';
 import { MatButtonModule } from '@angular/material/button';
 import { getSpanishPaginatorIntl } from '../../../spanish-paginator-intl';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogObservacionesComponent } from '../../../Modales/dialog-observaciones/dialog-observaciones.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';

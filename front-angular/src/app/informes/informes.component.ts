@@ -25,6 +25,7 @@ import {MatSelect, MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSort } from '@angular/material/sort';
@@ -33,6 +34,7 @@ import { Empleado } from '../empleados/models/empleado.models';
 import { Empresa } from '../servicios/models/servicio.models';
 import { getSpanishPaginatorIntl } from '../spanish-paginator-intl';
 import { HttpErrorResponse } from '@angular/common/http';
+import JSZip from 'jszip';
 
 interface Totales {
   horasProyectadas: number;
@@ -64,6 +66,7 @@ interface Totales {
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatSortModule,
+    MatProgressBarModule
   ],
   providers: [
     DatePipe,
@@ -99,6 +102,8 @@ export class InformesComponent  {
   empleadosFiltrados: any[] = [];
   empresaControl = new FormControl('');
   empresasFiltradas: any[] = [];
+  todosEmpleados: any[] = [];
+  descargandoZip: boolean = false;
 
   totalHorasRealesGlobal: number = 0;
   totalHorasProyectadasGlobal: number = 0;
@@ -310,6 +315,17 @@ export class InformesComponent  {
     displayEmpresaName(empresa: Empresa): string {
       return empresa ? empresa.nombre: '';
     }
+
+    cargarEmpleados() {
+    this.empleadoService.getEmpleados().subscribe({
+      next: (data) => {
+        this.todosEmpleados = data;
+      },
+      error: (error) => {
+        console.error('Error al cargar empleados:', error);
+      }
+    });
+  }
 
   //Funcion reporte de horas por dia  
   reporteHorasPorDia(): void {
@@ -1146,4 +1162,476 @@ export class InformesComponent  {
   
       FileSaver.saveAs(blob, nombreArchivo);
   }
+
+  //Descargar resumen para todos los empleados ------------------------------------------
+
+  mostrarModalProgreso: boolean = false;
+  estadoDescarga: 'descargando' | 'completado' | 'error' = 'descargando';
+  empleadoActualIndex: number = 0;
+  totalEmpleados: number = 0;
+  empleadoActualNombre: string = '';
+  porcentajeProgreso: number = 0;
+  mensajeError: string = '';
+
+  async descargarTodosLosPdfs(): Promise<void> {
+  try {
+    // Mostrar loading
+    this.loading = true;
+    
+    // Obtener todos los empleados
+    const empleados = await this.empleadoService.getEmpleados().toPromise();
+    
+    if (!empleados || empleados.length === 0) {
+      console.warn('No se encontraron empleados');
+      this.loading = false;
+      return;
+    }
+    this.iniciarModalProgreso(empleados.length);
+    const mesNumero = this.convertirMesANumero(this.mesSeleccionado);
+    // Crear instancia de JSZip
+    const zip = new JSZip();
+    const folder = zip.folder(`reportes_${this.mesSeleccionado}_${this.anio}`);
+
+    // Procesar cada empleado
+    for (let i = 0; i < empleados.length; i++) {
+      const empleado = empleados[i];
+      this.actualizarProgreso(i + 1, `${empleado.nombre} ${empleado.apellido}`);
+      
+      // Pequeña pausa para permitir que se actualice la UI
+      await this.esperar(100);
+      console.log(`Procesando empleado ${i + 1}/${empleados.length}: ${empleado.nombre} ${empleado.apellido}`);
+      
+      try {
+        // Obtener datos del empleado para el mes/año actual
+        const datosEmpleado = await this.horariosAsignadosService
+          .buscarHorariosPorEmpleado(empleado.Id, mesNumero, this.anio)
+          .toPromise();
+          console.log('Mes y anio:', mesNumero, this.anio);
+
+        // Generar PDF para este empleado
+        const pdfBlob = await this.generarPdfParaEmpleado(empleado, datosEmpleado);
+        
+        if (pdfBlob) {
+          // Crear nombre de archivo limpio
+          const nombreLimpio = empleado.nombre?.replace(/\s+/g, '_').toLowerCase() || '';
+          const apellidoLimpio = empleado.apellido?.replace(/\s+/g, '_').toLowerCase() || '';
+          const legajoLimpio = empleado.legajo?.toString() || 'sin_legajo';
+          const nombreArchivo = `${legajoLimpio}_${nombreLimpio}_${apellidoLimpio}.pdf`;
+
+          // Agregar PDF al ZIP
+          folder?.file(nombreArchivo, pdfBlob);
+        }
+      } catch (error) {
+        console.error(`Error procesando empleado ${empleado.nombre} ${empleado.apellido}:`, error);
+        // Continuar con el siguiente empleado en caso de error
+      }
+    }
+    this.actualizarProgreso(empleados.length, 'Generando archivo ZIP...');
+    await this.esperar(500);
+    // Generar y descargar el ZIP
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const nombreZip = `reportes_mensuales_${this.mesSeleccionado}_${this.anio}.zip`;
+    
+    // Descargar usando FileSaver o crear link de descarga
+    this.descargarBlob(zipBlob, nombreZip);
+    
+    this.completarDescarga();
+    console.log('ZIP generado exitosamente');
+    
+  } catch (error) {
+    console.error('Error generando ZIP:', error);
+    this.loading = false;
+  }
+}
+
+private async generarPdfParaEmpleado(empleado: any, datosEmpleado: any): Promise<Blob | null> {
+  try {
+    // Procesar datos del empleado (similar a tu método cargarDatos)
+    let horariosRealizados: any[] = [];
+    let horasAusentismoPago = 0;
+    let horasAusentismoImpago = 0;
+    let horasTrabajadas = 0;
+    let totalHoras = 0;
+    let horasDiscriminadas: any = {};
+
+    if (datosEmpleado?.horarios) {
+      horariosRealizados = datosEmpleado.horarios || [];
+      horasAusentismoPago = datosEmpleado.horasAusentismoPago || 0;
+      horasAusentismoImpago = datosEmpleado.horasAusentismoImpago || 0;
+      horasTrabajadas = datosEmpleado.horasTrabajadas || 0;
+      totalHoras = horasAusentismoPago + horasAusentismoImpago + horasTrabajadas;
+      horasDiscriminadas = datosEmpleado.horasDiscriminadas || {};
+    } else if (Array.isArray(datosEmpleado)) {
+      horariosRealizados = datosEmpleado;
+    } else {
+      console.warn(`Sin datos para empleado ${empleado.nombre} ${empleado.apellido}`);
+      return null;
+    }
+
+    // Generar estructura de datos similar a procesarDatos()
+    const diasDelMes = this.generarDiasDelMesParaEmpleado();
+    const servicios = this.obtenerServiciosParaEmpleado(horariosRealizados);
+    const { diasTrabajados, horasPorDiaCategoria } = this.calcularDiasTrabajadosParaEmpleado(horariosRealizados, empleado);
+    
+    // Crear estructura de datos
+    this.crearEstructuraDatosParaEmpleado(diasDelMes, horariosRealizados, servicios, horasPorDiaCategoria);
+
+    // Generar PDF
+    const pdfBlob = this.generarPdfConDatos(empleado, diasDelMes, servicios, {
+      horasAusentismoPago,
+      horasAusentismoImpago,
+      horasTrabajadas,
+      totalHoras,
+      horasDiscriminadas,
+      horasCategoria: empleado.horasCategoria || 0
+    });
+
+    return pdfBlob;
+    
+  } catch (error) {
+    console.error(`Error generando PDF para ${empleado.nombre} ${empleado.apellido}:`, error);
+    return null;
+  }
+}
+
+private generarDiasDelMesParaEmpleado(): any[] {
+  const diasDelMes: any[] = [];
+  const diasEnMes = new Date(this.anio, this.convertirMesANumero(this.mesSeleccionado), 0).getDate();
+  
+  for (let dia = 1; dia <= diasEnMes; dia++) {
+    const fecha = new Date(this.anio, this.convertirMesANumero(this.mesSeleccionado) - 1, dia);
+    const nombreDia = this.obtenerNombreDia(fecha.getDay());
+    const nombreMes = this.obtenerNombreMes(this.convertirMesANumero(this.mesSeleccionado) - 1);
+    
+    diasDelMes.push({
+      dia: dia,
+      fecha: fecha,
+      fechaString: fecha.toISOString().split('T')[0],
+      displayName: `${nombreDia} ${dia.toString().padStart(2, '0')}-${nombreMes}-${this.anio.toString().slice(-2)}`,
+      horasPorServicio: {},
+      horasCategoria: 0
+    });
+  }
+  
+  return diasDelMes;
+}
+
+private obtenerServiciosParaEmpleado(horariosRealizados: any[]): string[] {
+  const serviciosSet = new Set<string>();
+  horariosRealizados.forEach(horario => {
+    if (horario.ordenTrabajo?.servicio?.nombre) {
+      serviciosSet.add(horario.ordenTrabajo.servicio.nombre);
+    }
+  });
+  return Array.from(serviciosSet).sort();
+}
+
+private calcularDiasTrabajadosParaEmpleado(horariosRealizados: any[], empleado: any): { diasTrabajados: string[], horasPorDiaCategoria: number } {
+  const diasConHorasProyectadas = new Set<string>();
+  
+  horariosRealizados.forEach(horario => {
+    if (horario.horaInicioProyectado && horario.horaFinProyectado) {
+      const horasProyectadas = this.calcularHorasDecimal(horario.horaInicioProyectado, horario.horaFinProyectado);
+      if (horasProyectadas > 0) {
+        const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
+        if (fechaHorario) {
+          diasConHorasProyectadas.add(fechaHorario);
+        }
+      }
+    }
+  });
+  
+  const totalDiasConHorasProyectadas = diasConHorasProyectadas.size;
+  let horasPorDiaCategoria = 0;
+  
+  if (totalDiasConHorasProyectadas > 0 && empleado?.horasCategoria) {
+    horasPorDiaCategoria = empleado.horasCategoria / totalDiasConHorasProyectadas;
+  }
+  
+  return {
+    diasTrabajados: Array.from(diasConHorasProyectadas),
+    horasPorDiaCategoria
+  };
+}
+
+private crearEstructuraDatosParaEmpleado(diasDelMes: any[], horariosRealizados: any[], servicios: string[], horasPorDiaCategoria: number): void {
+  horariosRealizados.forEach(horario => {
+    const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
+    
+    if (!fechaHorario) return;
+    
+    const diaEncontrado = diasDelMes.find(dia => dia.fechaString === fechaHorario);
+    
+    if (diaEncontrado) {
+      const nombreServicio = horario.ordenTrabajo?.servicio?.nombre || 'Sin Servicio';
+      
+      if (!diaEncontrado.horasPorServicio[nombreServicio]) {
+        diaEncontrado.horasPorServicio[nombreServicio] = 0;
+      }
+      
+      let horas = 0;
+      if (horario.horasDecimales !== undefined) {
+        horas = horario.horasDecimales;
+      } else if (horario.horaInicioReal && horario.horaFinReal) {
+        horas = this.calcularHorasDecimal(horario.horaInicioReal, horario.horaFinReal);
+      }
+      
+      diaEncontrado.horasPorServicio[nombreServicio] += horas;
+    }
+  });
+
+  // Asignar horas categoría
+  diasDelMes.forEach(dia => {
+    const tieneHorasProyectadas = horariosRealizados.some(horario => {
+      const fechaHorario = horario.fecha ? horario.fecha.split('T')[0] : null;
+      if (fechaHorario === dia.fechaString && horario.horaInicioProyectado && horario.horaFinProyectado) {
+        const horasProyectadas = this.calcularHorasDecimal(horario.horaInicioProyectado, horario.horaFinProyectado);
+        return horasProyectadas > 0;
+      }
+      return false;
+    });
+    
+    dia.horasCategoria = tieneHorasProyectadas ? horasPorDiaCategoria : 0;
+  });
+}
+
+private generarPdfConDatos(empleado: any, diasDelMes: any[], servicios: string[], totales: any): Blob {
+  const doc = new jsPDF('portrait');
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 14;
+  const columnWidth = (pageWidth - margin * 3) / 2;
+  const leftColumnX = margin;
+  const rightColumnX = margin * 2 + columnWidth;
+  
+  const maxServiciosPorHoja = 6;
+  const serviciosChunks = [];
+  
+  // Dividir servicios en chunks
+  for (let i = 0; i < servicios.length; i += maxServiciosPorHoja) {
+    serviciosChunks.push(servicios.slice(i, i + maxServiciosPorHoja));
+  }
+
+  // Si no hay servicios, crear al menos un chunk vacío para el resumen
+  if (serviciosChunks.length === 0) {
+    serviciosChunks.push([]);
+  }
+
+  // Generar cada hoja
+  serviciosChunks.forEach((serviciosChunk, indexHoja) => {
+    if (indexHoja > 0) {
+      doc.addPage();
+    }
+
+    // Título
+    doc.setFontSize(12);
+    const tituloHoja = serviciosChunks.length > 1 ? ` - Hoja ${indexHoja + 1}` : '';
+    doc.text(`Reporte Detallado - ${empleado.nombre} ${empleado.apellido} (Legajo: ${empleado.legajo}) / ${this.mesSeleccionado} ${this.anioSeleccionado}${tituloHoja}`, margin, 15);
+
+    // Preparar columnas
+    const columnas = ['Día', 'H. Cat'];
+    serviciosChunk.forEach(servicio => {
+      columnas.push(servicio.length > 10 ? servicio.substring(0, 10) + '...' : servicio);
+    });
+
+    // Preparar filas
+    const filas = diasDelMes.map(dia => {
+      const fila = [dia.displayName, dia.horasCategoria.toFixed(2)];
+      serviciosChunk.forEach(servicio => {
+        const horas = dia.horasPorServicio[servicio] || 0;
+        fila.push(horas === 0 ? "" : horas.toFixed(2));
+      });
+      return fila;
+    });
+
+    // Agregar totales
+    const filaTotales = ['TOTALES', this.getTotalHorasCategoriaParaEmpleado(diasDelMes).toFixed(2)];
+    serviciosChunk.forEach(servicio => {
+      filaTotales.push(this.getTotalPorServicioParaEmpleado(diasDelMes, servicio).toFixed(2));
+    });
+    filas.push(filaTotales);
+
+    // Crear tabla
+    (doc as any).autoTable({
+      head: [columnas],
+      body: filas,
+      startY: 20,
+      styles: { 
+        fontSize: 7,
+        cellPadding: 2
+      },
+      headStyles: { 
+        fillColor: [204, 86, 0], 
+        textColor: [255, 255, 255],
+        fontSize: 8
+      },
+      columnStyles: {
+        0: { cellWidth: 25 },
+        1: { cellWidth: 20 }
+      },
+      margin: { left: margin, right: margin }
+    });
+
+    // Solo en la última hoja agregar resumen
+    if (indexHoja === serviciosChunks.length - 1) {
+      const finalY = (doc as any).autoTable.previous.finalY || 20;
+      let currentY = finalY + 6;
+
+      // Verificar espacio disponible
+      if (currentY > pageHeight - 60) {
+        doc.addPage();
+        currentY = margin;
+      }
+
+      // Horas discriminadas (columna izquierda)
+      doc.setFontSize(8);
+      doc.setFont('bold');
+      doc.text('HORAS DISCRIMINADAS:', leftColumnX, currentY);
+      doc.setFont('normal');
+
+      let leftCurrentY = currentY + 5;
+      const primeraColumnaEstados = ['Asistió', 'Enfermedad', 'Vacaciones'];
+      const segundaColumnaEstados = Object.keys(totales.horasDiscriminadas)
+        .filter(e => !primeraColumnaEstados.includes(e));
+      
+      let middleColumnX = leftColumnX + (columnWidth / 2);
+
+      // Primera subcolumna
+      primeraColumnaEstados.forEach(estado => {
+        const valor = totales.horasDiscriminadas[estado];
+        if (valor !== undefined) {
+          doc.text(`${estado}: ${valor.toFixed(2)}`, leftColumnX, leftCurrentY);
+          leftCurrentY += 6;
+        }
+      });
+
+      // Segunda subcolumna
+      let rightColCurrentY = currentY + 5;
+      segundaColumnaEstados.forEach(estado => {
+        const valor = totales.horasDiscriminadas[estado];
+        if (valor !== undefined) {
+          doc.text(`${estado}: ${valor.toFixed(2)}`, middleColumnX, rightColCurrentY);
+          rightColCurrentY += 6;
+        }
+      });
+
+      // Resumen final (columna derecha)
+      let rightCurrentY = currentY;
+      
+      doc.setFontSize(10);
+      doc.setFont('bold');
+      doc.text('Resumen Final:', rightColumnX, rightCurrentY);
+      doc.setFont('normal');
+      rightCurrentY += 6;
+
+      doc.setFontSize(8);
+      
+      doc.text(`Horas Ausentismo Pago:`, rightColumnX, rightCurrentY);
+      doc.text(`${totales.horasAusentismoPago.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+      rightCurrentY += 6;
+
+      doc.text(`Horas Ausentismo Impago:`, rightColumnX, rightCurrentY);
+      doc.text(`${totales.horasAusentismoImpago.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+      rightCurrentY += 6;
+
+      doc.text(`Total Horas Trabajadas:`, rightColumnX, rightCurrentY);
+      doc.text(`${totales.horasTrabajadas.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+      rightCurrentY += 6;
+
+      doc.text(`Horas Categoria:`, rightColumnX, rightCurrentY);
+      doc.text(`${totales.horasCategoria.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+      rightCurrentY += 6;
+
+      doc.setFont('bold');
+      doc.setFontSize(10);
+      doc.text(`TOTAL GENERAL:`, rightColumnX, rightCurrentY);
+      doc.text(`${totales.totalHoras.toFixed(2)}`, rightColumnX + 50, rightCurrentY);
+    }
+  });
+
+  // Convertir a Blob
+  const pdfOutput = doc.output('blob');
+  return pdfOutput;
+}
+
+private getTotalHorasCategoriaParaEmpleado(diasDelMes: any[]): number {
+  return diasDelMes.reduce((total, dia) => total + (dia.horasCategoria || 0), 0);
+}
+
+private getTotalPorServicioParaEmpleado(diasDelMes: any[], servicio: string): number {
+  return diasDelMes.reduce((total, dia) => total + (dia.horasPorServicio[servicio] || 0), 0);
+}
+
+private descargarBlob(blob: Blob, nombreArchivo: string): void {
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = nombreArchivo;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+}
+
+// Métodos para manejar el modal de progreso
+private iniciarModalProgreso(total: number): void {
+  this.mostrarModalProgreso = true;
+  this.estadoDescarga = 'descargando';
+  this.totalEmpleados = total;
+  this.empleadoActualIndex = 0;
+  this.empleadoActualNombre = '';
+  this.porcentajeProgreso = 0;
+  this.mensajeError = '';
+  this.loading = true;
+}
+
+private actualizarProgreso(index: number, nombreEmpleado: string): void {
+  this.empleadoActualIndex = index;
+  this.empleadoActualNombre = nombreEmpleado;
+  this.porcentajeProgreso = (index / this.totalEmpleados) * 100;
+}
+
+public reintentar(): void {
+  this.cerrarModalProgreso();
+  // Pequeña pausa antes de reintentar
+  setTimeout(() => {
+    this.descargarTodosLosPdfs();
+  }, 500);
+}
+
+
+private completarDescarga(): void {
+  this.estadoDescarga = 'completado';
+  this.porcentajeProgreso = 100;
+  this.loading = false;
+  
+  // Auto-cerrar después de 3 segundos (opcional)
+  setTimeout(() => {
+    this.cerrarModalProgreso();
+  }, 3000);
+}
+
+private mostrarErrorDescarga(mensaje: string): void {
+  this.estadoDescarga = 'error';
+  this.mensajeError = mensaje;
+  this.loading = false;
+}
+
+public cerrarModalProgreso(): void {
+  this.mostrarModalProgreso = false;
+  this.loading = false;
+  // Reset de valores
+  this.estadoDescarga = 'descargando';
+  this.empleadoActualIndex = 0;
+  this.totalEmpleados = 0;
+  this.empleadoActualNombre = '';
+  this.porcentajeProgreso = 0;
+  this.mensajeError = '';
+}
+
+// Función auxiliar para crear pausas
+private esperar(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 }

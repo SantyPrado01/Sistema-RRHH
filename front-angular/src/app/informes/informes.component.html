@@ -154,6 +154,18 @@
               <mat-icon>get_app</mat-icon> Excel
               </button>
           </div>
+          <div class="form-group-footer" *ngIf="reporteSeleccionado == 'Informe mensual empleado'">
+              <button 
+                mat-raised-button 
+                color="accent" 
+                (click)="descargarTodosLosPdfs()"
+                [disabled]="loading"
+                class="download-button">
+                <mat-icon>archive</mat-icon>
+                <span *ngIf="!loading">Descargar ZIP</span>
+                <span *ngIf="loading">Generando ZIP...</span>
+              </button>
+          </div>
         </div>
       </div>        
 
@@ -433,5 +445,114 @@
         </div>
       </div>
     </div> 
+  </div>
+</div>
+
+
+<!-- Modal de descarga de PDF u Excel -->
+ <div 
+  *ngIf="mostrarModalProgreso" 
+  class="modal-overlay"
+  style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+  
+  <!-- Contenido del modal -->
+  <div class="modal-content" style="background: white; border-radius: 12px; padding: 32px; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;">
+    
+    <!-- Título -->
+    <h3 style="margin: 0 0 24px 0; color: #333; font-size: 20px; font-weight: 500;">
+      {{ estadoDescarga === 'completado' ? 'Descarga Completada' : 'Generando Reportes' }}
+    </h3>
+    
+    <!-- Contenido cuando está descargando -->
+    <div *ngIf="estadoDescarga === 'descargando'">
+      <!-- Spinner -->
+      <mat-spinner diameter="50" style="margin: 0 auto 20px auto;"></mat-spinner>
+      
+      <!-- Contador de empleados -->
+      <div style="margin-bottom: 16px;">
+        <p style="font-size: 16px; color: #555; margin: 8px 0;">
+          Procesando empleado {{ empleadoActualIndex }} de {{ totalEmpleados }}
+        </p>
+        <p style="font-size: 14px; color: #777; margin: 0;" *ngIf="empleadoActualNombre">
+          <strong>{{ empleadoActualNombre }}</strong>
+        </p>
+      </div>
+      
+      <!-- Barra de progreso -->
+      <mat-progress-bar 
+        mode="determinate" 
+        [value]="porcentajeProgreso"
+        style="margin: 20px 0; height: 8px; border-radius: 4px;">
+      </mat-progress-bar>
+      
+      <!-- Porcentaje -->
+      <p style="font-size: 14px; color: #888; margin: 8px 0 0 0;">
+        {{ porcentajeProgreso.toFixed(1) }}% completado
+      </p>
+      
+      <!-- Mensaje de estado -->
+      <p style="font-size: 12px; color: #999; margin: 16px 0 0 0; font-style: italic;">
+        Por favor, no cierre esta ventana...
+      </p>
+    </div>
+    
+    <!-- Contenido cuando completó -->
+    <div *ngIf="estadoDescarga === 'completado'">
+      <!-- Icono de éxito -->
+      <mat-icon style="font-size: 64px; height: 64px; width: 64px; color: #4CAF50; margin-bottom: 16px;">
+        check_circle
+      </mat-icon>
+      
+      <!-- Mensaje de éxito -->
+      <p style="font-size: 16px; color: #333; margin: 16px 0;">
+        ¡Descarga completada exitosamente!
+      </p>
+      <p style="font-size: 14px; color: #777; margin: 0 0 24px 0;">
+        Se procesaron {{ totalEmpleados }} empleados
+      </p>
+      
+      <!-- Botón cerrar -->
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="cerrarModalProgreso()"
+        style="min-width: 120px;">
+        Cerrar
+      </button>
+    </div>
+    
+    <!-- Contenido cuando hay error -->
+    <div *ngIf="estadoDescarga === 'error'">
+      <!-- Icono de error -->
+      <mat-icon style="font-size: 64px; height: 64px; width: 64px; color: #f44336; margin-bottom: 16px;">
+        error
+      </mat-icon>
+      
+      <!-- Mensaje de error -->
+      <p style="font-size: 16px; color: #333; margin: 16px 0;">
+        Error en la descarga
+      </p>
+      <p style="font-size: 14px; color: #777; margin: 0 0 24px 0;">
+        {{ mensajeError || 'Ocurrió un error inesperado durante la generación' }}
+      </p>
+      
+      <!-- Botones -->
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button 
+          mat-stroked-button 
+          (click)="cerrarModalProgreso()"
+          style="min-width: 100px;">
+          Cerrar
+        </button>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="reintentar()"
+          style="min-width: 100px;">
+          Reintentar
+        </button>
+      </div>
+    </div>
+    
   </div>
 </div>

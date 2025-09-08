@@ -487,7 +487,9 @@ export class HorarioAsignadoService {
       };
 
       const minutosInicio = convertirAMinutos(horaInicio);
+      console.log('minutos inicio', minutosInicio);
       const minutosFin = convertirAMinutos(horaFin);
+      console.log('minutos fin', minutosFin);
 
       let diferenciaMinutos: number;
 
@@ -535,7 +537,7 @@ export class HorarioAsignadoService {
 
       // Para "Sin Servicio", calcular también las horas proyectadas para los totales
       let horasParaConteo: number;
-      if (estadoFinal === 'Sin Servicio') {
+      if (estadoFinal === 'Sin Servicio' || estadoFinal === 'Enfermedad' || estadoFinal === 'Licencia' || estadoFinal === 'Vacaciones' || estadoFinal === 'Accidente') {
         horasParaConteo = convertirHorasADecimal(
           horario.horaInicioProyectado,
           horario.horaFinProyectado
