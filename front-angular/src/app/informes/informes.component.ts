@@ -953,7 +953,7 @@ export class InformesComponent  {
         // Título
         doc.setFontSize(12);
         const tituloHoja = serviciosChunks.length > 1 ? ` - Hoja ${indexHoja + 1}` : '';
-        doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.nombreMes} ${this.anio}${tituloHoja}`, margin, 15);
+        doc.text(`Reporte Detallado - ${this.empleado.nombre} ${this.empleado.apellido} (Legajo: ${this.empleado.legajo}) / ${this.mesSeleccionado} ${this.anio}${tituloHoja}`, margin, 15);
 
         // Preparar columnas dinámicas para esta hoja
         const columnas = ['Día', 'H. Cat'];
