@@ -102,6 +102,7 @@ export class HorarioAsignadoService {
               fecha: LessThanOrEqual(today), 
           },
           relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'], 
+          take: 100,
       });
   }
 
