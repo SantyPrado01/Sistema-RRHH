@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, LessThan, Repository } from 'typeorm';
+import { Between, LessThan, LessThanOrEqual, Repository } from 'typeorm';
 import { HorarioAsignado } from './entities/horariosAsignados.entity'; 
 import { CreateHorariosAsignadoDto } from './dto/createHorariosAsignados.dto'; 
 import { OrdenTrabajo } from 'src/ordenTrabajo/entities/ordenTrabajo.entity'; 
@@ -99,7 +99,7 @@ export class HorarioAsignadoService {
       return this.horarioAsignadoRepository.find({
           where: {
               comprobado: false,
-              fecha: LessThan(today), 
+              fecha: LessThanOrEqual(today), 
           },
           relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'], 
       });
