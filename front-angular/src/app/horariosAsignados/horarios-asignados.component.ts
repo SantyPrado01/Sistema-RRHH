@@ -106,6 +106,7 @@ export class HorariosAsignadosComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    console.log('Componente HorariosAsignados inicializado');
     this.fetchHorarios();
     this.setupEmpleadoSuplenteAutocomplete();
   }
