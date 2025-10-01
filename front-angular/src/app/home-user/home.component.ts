@@ -61,7 +61,6 @@ export class HomeComponent {
   ngOnInit(): void {
     this.username = this.authService.getUsername();
     this.obtenerOrdenes();
-    this.ordenTrabajoService.getAll()
 
   }
   displayedColumns: string[] = ['Id', 'empresa', 'empleado', 'horasProyectadas', 'horasReales', 'estado', 'acciones'];
