@@ -95,13 +95,14 @@ export class HorarioAsignadoService {
   }
 
   async getHorariosAsignados(): Promise<HorarioAsignado[]> {
+      console.log('Obteniendo horarios asignados no comprobados hasta hoy...');
       const today = new Date();
       return this.horarioAsignadoRepository.find({
           where: {
               comprobado: false,
               fecha: LessThanOrEqual(today), 
           },
-          relations: ['ordenTrabajo', 'empleado', 'empleadoSuplente'], 
+          relations: ['ordenTrabajo', 'empleado'], 
           take: 100,
       });
   }

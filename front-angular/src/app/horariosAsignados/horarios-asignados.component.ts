@@ -182,6 +182,7 @@ export class HorariosAsignadosComponent implements OnInit {
   }
   
   fetchHorarios(): void {
+    console.log('Obteniendo horarios asignados...');
     this.horarioService.getHorariosAsignados().subscribe(data => {
       this.horariosAsignados = data;
       console.log('Horarios asignados obtenidos:', data);
