@@ -50,15 +50,16 @@ export class EmpleadosNewComponent implements OnInit{
   ciudadNombre: string = '';
   contadorCaracteres: number = 0;
   horasCategoria: number = 0;
+  esCiudadObligatoria = false; 
 
   disponibilidad = [
-    { diaSemana: 1, nombre: 'Lunes', horaInicio: '', horaFin: '' },
-    { diaSemana: 2, nombre: 'Martes', horaInicio: '', horaFin: '' },
-    { diaSemana: 3, nombre: 'Miércoles', horaInicio: '', horaFin: ''},
-    { diaSemana: 4, nombre: 'Jueves', horaInicio: '', horaFin: ''},
-    { diaSemana: 5, nombre: 'Viernes', horaInicio: '', horaFin: ''},
-    { diaSemana: 6, nombre: 'Sábado', horaInicio: '', horaFin: ''},
-    { diaSemana: 7, nombre: 'Domingo', horaInicio: '', horaFin: ''}
+    { diaSemana: 1, nombre: 'Lunes', horaInicio: '00:00', horaFin: '00:00' },
+    { diaSemana: 2, nombre: 'Martes', horaInicio: '00:00', horaFin: '00:00' },
+    { diaSemana: 3, nombre: 'Miércoles', horaInicio: '00:00', horaFin: '00:00'},
+    { diaSemana: 4, nombre: 'Jueves', horaInicio: '00:00', horaFin: '00:00'},
+    { diaSemana: 5, nombre: 'Viernes', horaInicio: '00:00', horaFin: '00:00'},
+    { diaSemana: 6, nombre: 'Sábado', horaInicio: '00:00', horaFin: '00:00'},
+    { diaSemana: 7, nombre: 'Domingo', horaInicio: '00:00', horaFin: '00:00'}
   ];
   fullTime: boolean = true;
 
@@ -107,13 +108,14 @@ export class EmpleadosNewComponent implements OnInit{
         console.error('Error al obtener las categorías', err);
       }
     });
+
   }
 
   toggleFullTime() {
     if (this.fullTime) {
       this.disponibilidad.forEach(dia => {
-        dia.horaInicio = '';
-        dia.horaFin = '';
+        dia.horaInicio = '00:00';
+        dia.horaFin = '00:00';
       });
     }
   }
@@ -153,16 +155,11 @@ export class EmpleadosNewComponent implements OnInit{
   
   guardarEmpleado() {
     this.empleado.disponibilidades = this.disponibilidad
-      .filter(dia => dia.horaInicio !== '' || dia.horaFin !== '')  
-      .map(dia => ({
-        diaSemana: dia.diaSemana,
-        horaInicio: dia.horaInicio,
-        horaFin: dia.horaFin,
-      }));
-      this.empleado.fulltime = this.fullTime
+    this.empleado.fulltime = this.fullTime
     const fechaFormateada = this.datePipe.transform(this.empleado.fechaIngreso, 'yyyy/MM/dd');
     
     this.empleado.fechaIngreso = fechaFormateada!;
+    this.empleado.ciudad = this.empleado.ciudad || null;
 
     this.empleadoService.createEmpleado(this.empleado).subscribe({
       
@@ -174,6 +171,7 @@ export class EmpleadosNewComponent implements OnInit{
       },
       error: (err) => {
         console.error('Error al guardar el empleado:', err);
+        console.log('Datos del empleado en error:', this.empleado);
         this.mostrarAlerta('Error Operación', 'Error al guardar el empleado. Campos requeridos no completados.', 'error');
       }
     });

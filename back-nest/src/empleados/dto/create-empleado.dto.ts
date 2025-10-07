@@ -10,7 +10,7 @@ export class CreateEmpleadoDto {
     email: string;
     fechaIngreso?: Date;
     eliminado: boolean;
-    ciudad: number;
+    ciudad?: number;
     observaciones?: string;
     categoriaId: number; 
     disponibilidades?: DisponibilidadHoraria[];

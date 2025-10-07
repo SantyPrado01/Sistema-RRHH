@@ -2,7 +2,7 @@
   <h1>Registrar Nuevo Empleado</h1>
 </div>
 
-<form #empleadoForm="ngForm" (ngSubmit)="guardarEmpleado()">
+<form (ngSubmit)="guardarEmpleado()">
 
   <!-- Contenedor con Grid -->
   <div class="form-grid">
@@ -40,7 +40,7 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Ciudad</mat-label>
-          <input matInput id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" (input)="buscarCiudad($event)" [matAutocomplete]="auto">
+          <input matInput id="ciudad" [(ngModel)]="ciudadNombre" name="ciudadNombre" (input)="buscarCiudad($event)" [required]="esCiudadObligatoria" [matAutocomplete]="auto">
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="seleccionarCiudad($event)">
             <mat-option *ngFor="let ciudad of ciudades" [value]="ciudad.nombre">
               {{ ciudad.nombre }}
@@ -59,7 +59,7 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Fecha</mat-label>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="empleado.fechaIngreso" name="fechaContratacion" required>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="empleado.fechaIngreso" name="fechaIngreso" required>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -67,7 +67,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Categoría</mat-label>
           <mat-select [(ngModel)]="empleado.categoria" name="categoria" required>
-            <mat-option *ngFor="let categoria of categorias" [value]="categoria.id">
+            <mat-option *ngFor="let categoria of categorias" [value]="categoria">
               {{ categoria.nombre }}
             </mat-option>
           </mat-select>
@@ -111,7 +111,7 @@
 
   <!-- Botones debajo -->
   <div class="button-row">
-    <button mat-raised-button color="primary" type="submit" [disabled]="empleadoForm.invalid">Guardar Empleado</button>
+    <button mat-raised-button color="primary" type="submit" >Guardar Empleado</button>
     <button mat-button color="warn" type="button" (click)="cancelar()">Cancelar</button>
   </div>
 </form>

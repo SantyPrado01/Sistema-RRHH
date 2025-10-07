@@ -35,7 +35,7 @@ export class Empleado {
     @Column({default: false})
     eliminado: boolean
 
-    @Column()
+    @Column({nullable:true})
     ciudad: number;
 
     @Column({default:''})

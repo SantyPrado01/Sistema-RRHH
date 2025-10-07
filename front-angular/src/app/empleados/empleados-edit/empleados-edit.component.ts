@@ -75,7 +75,7 @@ interface HorarioAsignado {
 export class EmpleadosEditComponent implements OnInit {
   selectedIndex: number = 0;
   empleado: Empleado = new Empleado(
-    0, 0, '', '', 0, 0, '', false, 0, { id: 0, nombre: '', eliminado: false }, '', 0
+    0, 0, '', '', 0, 0, '', false, 0, '', 0
   );
   empleadoId: string | null = null;
   categorias: CategoriaEmpleado[] = [];
