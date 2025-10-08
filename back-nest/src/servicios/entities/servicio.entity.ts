@@ -21,7 +21,7 @@ export class Servicio {
     @Column()
     direccion: string
 
-    @Column()
+    @Column({nullable:true})
     ciudad: number;
 
     @Column({default:'0'})

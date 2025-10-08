@@ -22,6 +22,7 @@ export class EmpleadosService {
   ){}
 
   async createEmpleado(createEmpleadoDto: CreateEmpleadoDto): Promise<Empleado> {
+    
     const newEmpleado = this.empleadoRepository.create(createEmpleadoDto);
     const savedEmpleado = await this.empleadoRepository.save(newEmpleado);
     console.log('Empleado creado:', savedEmpleado);

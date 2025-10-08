@@ -21,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressBar, MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-servicios-list',
@@ -39,7 +40,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSelectModule,
     MatButtonModule,
     MatDialogModule,
-    MatTabsModule
+    MatTabsModule,
+    MatProgressBarModule
   ],
   templateUrl: './servicios-list.component.html',
   styleUrls: ['./servicios-list.component.css'] 
@@ -56,6 +58,7 @@ export class ServiciosListComponent implements OnInit {
   provincias: any[] = []; 
   provinciaCórdobaId: number = 14;
   selectedTabIndex: number = 0; // Para el control de tabs
+  isLoading: boolean = true; // Indicador de carga
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -135,6 +138,7 @@ export class ServiciosListComponent implements OnInit {
 
       forkJoin(ciudadRequests).subscribe((empresasActualizadas) => {
         this.empresas = empresasActualizadas;
+        this.isLoading = false; // Desactivar indicador de carga
         this.actualizarTablaSegunFiltros();
       });
     });

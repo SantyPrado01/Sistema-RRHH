@@ -8,7 +8,7 @@
   <mat-tab-group [(selectedIndex)]="selectedIndex" animationDuration="0ms">
     <mat-tab label="Datos Empresa">
       <div class="form-container">
-        <form (ngSubmit)="guardarEmpresa()" #form="ngForm">
+        <form (ngSubmit)="guardarEmpresa()">
           <!-- Fila 1 -->
           <div class="form-row">
             <mat-form-field appearance="outline">
@@ -139,8 +139,7 @@
           <div class="button-row">
             <button mat-raised-button
                     color="primary"
-                    type="submit"
-                    [disabled]="!form.valid">
+                    type="submit">
               <mat-icon>save</mat-icon>
               Guardar Empresa
             </button>
