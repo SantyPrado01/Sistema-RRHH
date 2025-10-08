@@ -119,21 +119,21 @@ export class ServiciosListComponent implements OnInit {
     this.servicioService.getServicios().subscribe((data: Empresa[]) => {
       this.empresas = data;
       const ciudadRequests = this.empresas.map(empresa => {
-        if (empresa.ciudad) {
-          return this.obtenerNombreCiudad(empresa.ciudad.toString()).pipe(
-            map(response => {
-              const nombreCiudad = response.localidades_censales[0]?.nombre || 'Desconocido';
-              empresa.ciudad = nombreCiudad; 
-              return empresa; 
-            }),
-            catchError(() => {
-              console.error('Error al obtener el nombre de la ciudad');
-              return of(empresa); 
-            })
-          );
-        } else {
+        // if (!empresa.ciudad) {
+          //return this.obtenerNombreCiudad(empresa.ciudad.toString()).pipe(
+            //map(response => {
+              //const nombreCiudad = response.localidades_censales[0]?.nombre || 'Desconocido';
+              //empresa.ciudad = nombreCiudad; 
+              //return empresa; 
+            //}),
+            //catchError(() => {
+              //console.error('Error al obtener el nombre de la ciudad');
+              //return of(empresa); 
+            //})
+          //);
+        //} else {
           return of(empresa);
-        }
+        //}
       });
 
       forkJoin(ciudadRequests).subscribe((empresasActualizadas) => {
