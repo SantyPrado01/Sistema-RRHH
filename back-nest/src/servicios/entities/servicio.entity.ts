@@ -18,8 +18,8 @@ export class Servicio {
     @Column({default:'0'})
     cuit: string
 
-    @Column()
-    direccion: string
+    @Column({nullable:true})
+    direccion: string | null;
 
     @Column({nullable:true})
     ciudad: number;
